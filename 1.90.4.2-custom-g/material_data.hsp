@@ -1,0 +1,319 @@
+*mRefDefine
+	dim matval, 4
+	dim matref, 5, MAX_MATERIAL_COUNT
+	dim matspot, 5, MAX_MATERIAL_COUNT
+	sdim matname, 40, MAX_MATERIAL_COUNT
+	sdim matdesc, 80, MAX_MATERIAL_COUNT
+
+	matref(MATREF_LEVEL, MATERIAL_GARBAGE) = 0, 1, 240
+	matname(MATERIAL_GARBAGE) = lang("ƒNƒY", "Garbage")
+	matdesc(MATERIAL_GARBAGE) = lang("‰½‚Ì‰¿’l‚à‚È‚¢ƒNƒY", "Just garbage.")
+	matspot(0, MATERIAL_GARBAGE) = ATX_GLOBAL1
+
+	matref(MATREF_LEVEL, MATERIAL_CASINO_CHIP) = 20, 200, 434
+	matname(MATERIAL_CASINO_CHIP) = lang("ƒJƒWƒmƒ`ƒbƒv", "Casino chip")
+	matdesc(MATERIAL_CASINO_CHIP) = lang("ƒJƒWƒm‚ÅŽg‚¤ƒ`ƒbƒv", "Chips used in casinos.")
+	matspot(0, MATERIAL_CASINO_CHIP) = ATX_GLOBAL1
+
+	matref(MATREF_LEVEL, MATERIAL_CHARCOAL) = 20, 50, 239
+	matname(MATERIAL_CHARCOAL) = lang("’Y", "Charcoal")
+	matdesc(MATERIAL_CHARCOAL) = lang("—ÇŽ¿‚È’Y", "This is good quality charcoal.")
+	matspot(0, MATERIAL_CHARCOAL) = ATX_GLOBAL1
+
+	matref(MATREF_LEVEL, MATERIAL_DRIFTWOOD) = 20, 50, 239
+	matname(MATERIAL_DRIFTWOOD) = lang("—¬–Ø", "Driftwood")
+	matdesc(MATERIAL_DRIFTWOOD) = lang("‚ ‚Ü‚èŽ¿‚Ì—Ç‚­‚È‚¢–ØÞ", "Common driftwood.")
+	matspot(0, MATERIAL_DRIFTWOOD) = ATX_GLOBAL1
+
+	matref(MATREF_LEVEL, MATERIAL_BIRDS_FEATHER) = 10, 20, 436
+	matname(MATERIAL_BIRDS_FEATHER) = lang("’¹‚Ì‰H", "Bird's feather")
+	matdesc(MATERIAL_BIRDS_FEATHER) = lang("•’Ê‚Ì’¹‚Ì‰H", "A piece of Feather.")
+	matspot(0, MATERIAL_BIRDS_FEATHER) = ATX_REMAIN1
+
+	matref(MATREF_LEVEL, MATERIAL_WATERDROP) = 10, 20, 354
+	matname(MATERIAL_WATERDROP) = lang("…“H", "Waterdrop")
+	matdesc(MATERIAL_WATERDROP) = lang("…“H", "A drop of water.")
+	matspot(0, MATERIAL_WATERDROP) = ATX_WATER1
+
+	matref(MATREF_LEVEL, MATERIAL_STICK) = 10, 50, 239
+	matname(MATERIAL_STICK) = lang("ñ", "Stick")
+	matdesc(MATERIAL_STICK) = lang("ñ", "A specially shaped piece of wood.")
+	matspot(0, MATERIAL_STICK) = ATX_GLOBAL1
+
+	matref(MATREF_LEVEL, MATERIAL_MITHRIL_FRAGMENT) = 25, 20, 209
+	matname(MATERIAL_MITHRIL_FRAGMENT) = lang("ƒ~ƒXƒŠƒ‹‚ÌŒ‡•Ð", "Mithril fragment")
+	matdesc(MATERIAL_MITHRIL_FRAGMENT) = lang("ƒ~ƒXƒŠƒ‹‚ðŠÜ‚ñ‚¾zÎ‚ÌŒ‡•Ð", "Contains mithril.")
+	matspot(0, MATERIAL_MITHRIL_FRAGMENT) = ATX_MINE1
+
+	matref(MATREF_LEVEL, MATERIAL_ETHER_FRAGMENT) = 60, 30, 209
+	matname(MATERIAL_ETHER_FRAGMENT) = lang("ƒG[ƒeƒ‹‚ÌŒ‡•Ð", "Ether fragment")
+	matdesc(MATERIAL_ETHER_FRAGMENT) = lang("ƒG[ƒeƒ‹‚ðŠÜ‚ñ‚¾zÎ‚ÌŒ‡•Ð", "Contains ether.")
+	matspot(0, MATERIAL_ETHER_FRAGMENT) = ATX_MINE1
+
+	matref(MATREF_LEVEL, MATERIAL_IRON_FRAGMENT) = 10, 20, 209
+	matname(MATERIAL_IRON_FRAGMENT) = lang("“S‚ÌŒ‡•Ð", "Iron fragment")
+	matdesc(MATERIAL_IRON_FRAGMENT) = lang("“S•ª‚ðŠÜ‚ñ‚¾zÎ‚ÌŒ‡•Ð", "Contains iron.")
+	matspot(0, MATERIAL_IRON_FRAGMENT) = ATX_MINE1
+
+	matref(MATREF_LEVEL, MATERIAL_ANGELS_TEAR) = 60, 40, 354
+	matname(MATERIAL_ANGELS_TEAR) = lang("“VŽg‚Ì—Ü", "Angel's tear")
+	matdesc(MATERIAL_ANGELS_TEAR) = lang("•sŽv‹c‚È‹P‚«‚ð•ú‚Â—Ü", "Hard to gather.")
+	matspot(0, MATERIAL_ANGELS_TEAR) = ATX_WATER1
+
+	matref(MATREF_LEVEL, MATERIAL_WITCHS_TEAR) = 50, 30, 354
+	matname(MATERIAL_WITCHS_TEAR) = lang("–‚—‚Ì—Ü", "Witch's tear")
+	matdesc(MATERIAL_WITCHS_TEAR) = lang("Œˆ‚µ‚ÄŠ£‚©‚È‚¢—Ü", "Never dries up.")
+	matspot(0, MATERIAL_WITCHS_TEAR) = ATX_WATER1
+
+	matref(MATREF_LEVEL, MATERIAL_SEAWATER) = 30, 20, 354
+	matname(MATERIAL_SEAWATER) = lang("ŠC…", "Seawater")
+	matdesc(MATERIAL_SEAWATER) = lang("‚µ‚å‚Á‚Ï‚¢…", "Very salty.")
+	matspot(0, MATERIAL_SEAWATER) = ATX_WATER1
+
+	matref(MATREF_LEVEL, MATERIAL_HOWLING_WEED) = 10, 10, 170
+	matname(MATERIAL_HOWLING_WEED) = lang("šX‚é‘", "Howling weed")
+	matdesc(MATERIAL_HOWLING_WEED) = lang("•Ï‚È‰¹‚ðo‚·‘", "It's making a whining sound.")
+	matspot(0, MATERIAL_HOWLING_WEED) = ATX_BUSH1
+
+	matref(MATREF_LEVEL, MATERIAL_RED_WEED) = 10, 20, 170
+	matname(MATERIAL_RED_WEED) = lang("Ô‚¢‘", "Red weed")
+	matdesc(MATERIAL_RED_WEED) = lang("‚Ù‚ñ‚Ì‚èÔ‚¢‘", "A faintly reddish weed.")
+	matspot(0, MATERIAL_RED_WEED) = ATX_BUSH1
+
+	matref(MATREF_LEVEL, MATERIAL_BLUE_WEED) = 10, 20, 170
+	matname(MATERIAL_BLUE_WEED) = lang("Â‚¢‘", "Blue weed")
+	matdesc(MATERIAL_BLUE_WEED) = lang("‚Ù‚ñ‚Ì‚èÂ‚¢‘", "A faintly blueish weed.")
+	matspot(0, MATERIAL_BLUE_WEED) = ATX_BUSH1
+
+	matref(MATREF_LEVEL, MATERIAL_CURSE_WEED) = 20, 10, 170
+	matname(MATERIAL_CURSE_WEED) = lang("Žô‚¢‚Ì‘", "Curse weed")
+	matdesc(MATERIAL_CURSE_WEED) = lang("Žô‚í‚ê‚½‘", "A cursed weed.")
+	matspot(0, MATERIAL_CURSE_WEED) = ATX_BUSH1
+
+	matref(MATREF_LEVEL, MATERIAL_HOLY_WEED) = 60, 30, 170
+	matname(MATERIAL_HOLY_WEED) = lang("¹‚È‚é‘", "Holy weed")
+	matdesc(MATERIAL_HOLY_WEED) = lang("j•Ÿ‚³‚ê‚½‘", "It's blessed.")
+	matspot(0, MATERIAL_HOLY_WEED) = ATX_BUSH1
+
+	matref(MATREF_LEVEL, MATERIAL_RABBITS_TAIL) = 10, 80, 301
+	matname(MATERIAL_RABBITS_TAIL) = lang("ƒEƒTƒM‚ÌK”ö", "Rabbit's tail")
+	matdesc(MATERIAL_RABBITS_TAIL) = lang("K‰^‚ðŒÄ‚ÔK”ö", "Scut.")
+	matspot(0, MATERIAL_RABBITS_TAIL) = ATX_REMAIN1
+
+	matref(MATREF_LEVEL, MATERIAL_TROLL_GENE) = 50, 20, 304
+	matname(MATERIAL_TROLL_GENE) = lang("ƒgƒ[ƒ‹‚Ìˆâ“`Žq", "Troll gene")
+	matdesc(MATERIAL_TROLL_GENE) = lang("Ä¶‚·‚éˆâ“`Žq", "It's regenerating.")
+	matspot(0, MATERIAL_TROLL_GENE) = ATX_REMAIN1
+
+	matref(MATREF_LEVEL, MATERIAL_SNOW) = 40, 25, 7
+	matname(MATERIAL_SNOW) = lang("á", "Snow")
+	matdesc(MATERIAL_SNOW) = lang("‚È‚º‚©—n‚¯‚È‚¢", "It won't melt somehow.")
+	matspot(0, MATERIAL_SNOW) = ATX_WATER1
+
+	matref(MATREF_LEVEL, MATERIAL_FAIRY_DUST) = 65, 20, 209
+	matname(MATERIAL_FAIRY_DUST) = lang("ƒtƒFƒAƒŠ[ƒ_ƒXƒg", "Fairy dust")
+	matdesc(MATERIAL_FAIRY_DUST) = lang("—d¸‚Ì—Ó•²", "Fairies leave it.")
+	matspot(0, MATERIAL_FAIRY_DUST) = ATX_REMAIN1
+
+	matref(MATREF_LEVEL, MATERIAL_ELEMENT_FRAGMENT) = 80, 40, 209
+	matname(MATERIAL_ELEMENT_FRAGMENT) = lang("•—ØÎ", "Element fragment")
+	matdesc(MATERIAL_ELEMENT_FRAGMENT) = lang("•—‚ð—ô‚­•sŽv‹c‚ÈÎ", "Elemental.")
+	matspot(0, MATERIAL_ELEMENT_FRAGMENT) = ATX_MINE1
+
+	matref(MATREF_LEVEL, MATERIAL_ELECTRICITY) = 60, 70, 7
+	matname(MATERIAL_ELECTRICITY) = lang("“d‹C", "Electricity")
+	matdesc(MATERIAL_ELECTRICITY) = lang("•ú“d‚µ‚Ä‚¢‚é", "It is discharging.")
+	matspot(0, MATERIAL_ELECTRICITY) = ATX_GLOBAL1
+
+	matref(MATREF_LEVEL, MATERIAL_BLACK_MIST) = 40, 20, 8
+	matname(MATERIAL_BLACK_MIST) = lang("•‚¢–¶", "Black mist")
+	matdesc(MATERIAL_BLACK_MIST) = lang("^‚Á•‚È–¶", "It's as black as coal.")
+	matspot(0, MATERIAL_BLACK_MIST) = ATX_BUSH1
+
+	matref(MATREF_LEVEL, MATERIAL_HOT_WATER) = 20, 20, 354
+	matname(MATERIAL_HOT_WATER) = lang("‚¨“’", "Hot water")
+	matdesc(MATERIAL_HOT_WATER) = lang("‚È‚º‚©—â‚ß‚È‚¢", "Somehow it's not cooling down.")
+	matspot(0, MATERIAL_HOT_WATER) = ATX_WATER1
+
+	matref(MATREF_LEVEL, MATERIAL_FIRE_STONE) = 20, 20, 209
+	matname(MATERIAL_FIRE_STONE) = lang("‰Î‰ŠÎ", "Fire stone")
+	matdesc(MATERIAL_FIRE_STONE) = lang("”M‚ð‘Ñ‚Ñ‚½Î", "This is hot.")
+	matspot(0, MATERIAL_FIRE_STONE) = ATX_MINE1
+
+	matref(MATREF_LEVEL, MATERIAL_ICE_STONE) = 30, 20, 209
+	matname(MATERIAL_ICE_STONE) = lang("—â“€Î", "Ice stone")
+	matdesc(MATERIAL_ICE_STONE) = lang("—â‚½‚¢Î", "This is cool.")
+	matspot(0, MATERIAL_ICE_STONE) = ATX_MINE1
+
+	matref(MATREF_LEVEL, MATERIAL_DISCHARGING_STONE) = 40, 20, 209
+	matname(MATERIAL_DISCHARGING_STONE) = lang("‘Ñ“dÎ", "Discharging stone")
+	matdesc(MATERIAL_DISCHARGING_STONE) = lang("“d‹C‚ð‘Ñ‚Ñ‚½Î", "It's electrified.")
+	matspot(0, MATERIAL_DISCHARGING_STONE) = ATX_MINE1
+
+	matref(MATREF_LEVEL, MATERIAL_SHINING_WEED) = 50, 30, 170
+	matname(MATERIAL_SHINING_WEED) = lang("ƒqƒJƒŠƒ\ƒE", "Shining weed")
+	matdesc(MATERIAL_SHINING_WEED) = lang("Œõ‹P‚­‘", "A shiny weed.")
+	matspot(0, MATERIAL_SHINING_WEED) = ATX_BUSH1
+
+	matref(MATREF_LEVEL, MATERIAL_MAGIC_MASS) = 50, 70, 7
+	matname(MATERIAL_MAGIC_MASS) = lang("ƒ}ƒWƒbƒNƒ}ƒX", "Magic mass")
+	matdesc(MATERIAL_MAGIC_MASS) = lang("“ä‚Ì–‚—Í‚Ì‰ò", "Unknown magical mass.")
+	matspot(0, MATERIAL_MAGIC_MASS) = ATX_GLOBAL1
+
+	matref(MATREF_LEVEL, MATERIAL_HUMAN_GENE) = 20, 20, 304
+	matname(MATERIAL_HUMAN_GENE) = lang("ƒqƒg‚Ìˆâ“`Žq", "Human gene")
+	matdesc(MATERIAL_HUMAN_GENE) = lang("•’Ê‚Ìˆâ“`Žq", "It's common.")
+	matspot(0, MATERIAL_HUMAN_GENE) = ATX_REMAIN1
+
+	matref(MATREF_LEVEL, MATERIAL_WITCHS_EYE) = 60, 30, 304
+	matname(MATERIAL_WITCHS_EYE) = lang("–‚—‚Ì“µ", "Witch's eye")
+	matdesc(MATERIAL_WITCHS_EYE) = lang("‚Ü‚¾“®‚¢‚Ä‚¢‚é", "These eyes are still moving.")
+	matspot(0, MATERIAL_WITCHS_EYE) = ATX_REMAIN1
+
+	matref(MATREF_LEVEL, MATERIAL_LEATHER) = 50, 20, 155
+	matname(MATERIAL_LEATHER) = lang("Šv", "Leather")
+	matdesc(MATERIAL_LEATHER) = lang("‚È‚ß‚µ‚½”ç", "A tanned hide.")
+	matspot(0, MATERIAL_LEATHER) = ATX_FOREST1
+
+	matref(MATREF_LEVEL, MATERIAL_SAP_OF_YAGGDRASIL) = 70, 30, 354
+	matname(MATERIAL_SAP_OF_YAGGDRASIL) = lang("¢ŠEŽ÷‚ÌŽ÷‰t", "Sap of Yaggdrasil")
+	matdesc(MATERIAL_SAP_OF_YAGGDRASIL) = lang("‚Ç‚ñ‚È‚à–ü‚·Ž÷‰t", "It's pretty rare.")
+	matspot(0, MATERIAL_SAP_OF_YAGGDRASIL) = ATX_BUSH1, ATX_FOREST1
+
+	matref(MATREF_LEVEL, MATERIAL_MAGIC_PAPER) = 30, 30, 470
+	matname(MATERIAL_MAGIC_PAPER) = lang("–‚–@‚ÌŽ†", "Magic paper")
+	matdesc(MATERIAL_MAGIC_PAPER) = lang("–‚—Í‚ð”é‚ß‚½Ž†", "Magical paper.")
+	matspot(0, MATERIAL_MAGIC_PAPER) = ATX_BUILDING1
+
+	matref(MATREF_LEVEL, MATERIAL_MAGIC_INK) = 60, 40, 354
+	matname(MATERIAL_MAGIC_INK) = lang("–‚–@‚ÌƒCƒ“ƒN", "Magic ink")
+	matdesc(MATERIAL_MAGIC_INK) = lang("–‚—Í‚ð”é‚ß‚½ƒCƒ“ƒN", "Wizards love to use it.")
+	matspot(0, MATERIAL_MAGIC_INK) = ATX_BUILDING1
+
+	matref(MATREF_LEVEL, MATERIAL_CURVED_STICK) = 30, 20, 471
+	matname(MATERIAL_CURVED_STICK) = lang("‹È‚ª‚Á‚½ñ", "Curved stick")
+	matdesc(MATERIAL_CURVED_STICK) = lang("ñ‚Ì–ðŠ„‚ð‰Ê‚½‚³‚È‚¢", "Almost unusable.")
+	matspot(0, MATERIAL_CURVED_STICK) = ATX_FOREST1
+
+	matref(MATREF_LEVEL, MATERIAL_YELLING_MADMAN) = 40, 60, 8
+	matname(MATERIAL_YELLING_MADMAN) = lang("‚í‚ß‚­‹¶l", "Yelling madman")
+	matdesc(MATERIAL_YELLING_MADMAN) = lang("–Ù‚ç‚È‚¢", "It never shuts up.")
+	matspot(0, MATERIAL_YELLING_MADMAN) = ATX_GLOBAL1
+
+	matref(MATREF_LEVEL, MATERIAL_BEARS_TAIL) = 30, 20, 301
+	matname(MATERIAL_BEARS_TAIL) = lang("ƒNƒ}‚ÌK”ö", "Bear's tail")
+	matdesc(MATERIAL_BEARS_TAIL) = lang("‚Æ‚Ä‚à’Z‚¢", "Very short.")
+	matspot(0, MATERIAL_BEARS_TAIL) = ATX_REMAIN1
+
+	matref(MATREF_LEVEL, MATERIAL_100_YEN_COIN) = 30, 300, 437
+	matname(MATERIAL_100_YEN_COIN) = lang("100Yend‰Ý", "100 Yen coin")
+	matdesc(MATERIAL_100_YEN_COIN) = lang("ˆÙ‘‚Ì‚¨‹à", "Foreign money.")
+	matspot(0, MATERIAL_100_YEN_COIN) = ATX_GLOBAL1
+
+	matref(MATREF_LEVEL, MATERIAL_500_YEN_COIN) = 40, 450, 437
+	matname(MATERIAL_500_YEN_COIN) = lang("500Yend‰Ý", "500 Yen coin")
+	matdesc(MATERIAL_500_YEN_COIN) = lang("ˆÙ‘‚Ì‚¨‹à", "Foreign money.")
+	matspot(0, MATERIAL_500_YEN_COIN) = ATX_GLOBAL1
+
+	matref(MATREF_LEVEL, MATERIAL_MEDICINAL_WEED) = 30, 20, 170
+	matname(MATERIAL_MEDICINAL_WEED) = lang("–ò‘", "Medicinal weed")
+	matdesc(MATERIAL_MEDICINAL_WEED) = lang("­‚µ‚ð–ü‚·", "Slightly cures wounds.")
+	matspot(0, MATERIAL_MEDICINAL_WEED) = ATX_BUSH1
+
+	matref(MATREF_LEVEL, MATERIAL_PAPER) = 20, 50, 470
+	matname(MATERIAL_PAPER) = lang("Ž†", "Paper")
+	matdesc(MATERIAL_PAPER) = lang("”’Ž†", "Blank paper.")
+	matspot(0, MATERIAL_PAPER) = ATX_GLOBAL1
+
+	matref(MATREF_LEVEL, MATERIAL_GENERATOR) = 70, 70, 7
+	matname(MATERIAL_GENERATOR) = lang("¶¬‹@ŠB", "Generator")
+	matdesc(MATERIAL_GENERATOR) = lang("‰½‚©‚ð¶‚Ýo‚·‹@ŠB", "This machine generates something.")
+	matspot(0, MATERIAL_GENERATOR) = ATX_GLOBAL1
+
+	matref(MATREF_LEVEL, MATERIAL_CLOTH) = 10, 50, 155
+	matname(MATERIAL_CLOTH) = lang("•z‚«‚ê", "Cloth")
+	matdesc(MATERIAL_CLOTH) = lang("‚½‚¾‚Ì•z‚«‚ê", "A piece of cloth.")
+	matspot(0, MATERIAL_CLOTH) = ATX_GLOBAL1
+
+	matref(MATREF_LEVEL, MATERIAL_BRANCH) = 20, 20, 239
+	matname(MATERIAL_BRANCH) = lang("Ž}", "Branch")
+	matdesc(MATERIAL_BRANCH) = lang("Ž}", "Broken off of a tree.")
+	matspot(0, MATERIAL_BRANCH) = ATX_FOREST1
+
+	matref(MATREF_LEVEL, MATERIAL_THICK_WOOD) = 60, 20, 239
+	matname(MATERIAL_THICK_WOOD) = lang("Šæä‚ÈŽ}", "Thick wood")
+	matdesc(MATERIAL_THICK_WOOD) = lang("‚È‚©‚È‚©Ü‚ê‚È‚¢", "This doesn't break down easily.")
+	matspot(0, MATERIAL_THICK_WOOD) = ATX_FOREST1
+
+	matref(MATREF_LEVEL, MATERIAL_PEBBLE) = 20, 50, 209
+	matname(MATERIAL_PEBBLE) = lang("Î‚±‚ë", "Pebble")
+	matdesc(MATERIAL_PEBBLE) = lang("‚Ç‚±‚É‚Å‚à—Ž‚¿‚Ä‚¢‚é", "These are around everywhere.")
+	matspot(0, MATERIAL_PEBBLE) = ATX_GLOBAL1
+
+	matref(MATREF_LEVEL, MATERIAL_MEMORY_FRAGMENT) = 40, 20, 150
+	matname(MATERIAL_MEMORY_FRAGMENT) = lang("‹L‰¯‚ÌŒ‡•Ð", "Memory fragment")
+	matdesc(MATERIAL_MEMORY_FRAGMENT) = lang("Žv‚¢o‚ªŽc‚Á‚Ä‚¢‚é", "Reminds you of something.")
+	matspot(0, MATERIAL_MEMORY_FRAGMENT) = ATX_BUILDING1
+
+	matref(MATREF_LEVEL, MATERIAL_MAGIC_FRAGMENT) = 10, 30, 209
+	matname(MATERIAL_MAGIC_FRAGMENT) = lang("–‚—Í‚ÌŒ‡•Ð", "Magic fragment")
+	matdesc(MATERIAL_MAGIC_FRAGMENT) = lang("–‚—Í‚ªž‚ß‚ç‚ê‚Ä‚¢‚é", "This is magical.")
+	matspot(0, MATERIAL_MAGIC_FRAGMENT) = ATX_MINE1
+
+	matref(MATREF_LEVEL, MATERIAL_CHAOS_STONE) = 70, 30, 209
+	matname(MATERIAL_CHAOS_STONE) = lang("¬“×‚ÌÎ", "Chaos stone")
+	matdesc(MATERIAL_CHAOS_STONE) = lang("¬“×‚Ì—Í‚ª••‚¶‚ç‚ê‚½Î", "Chaotic.")
+	matspot(0, MATERIAL_CHAOS_STONE) = ATX_MINE1
+
+	matref(MATREF_LEVEL, MATERIAL_FINE_STONE) = 50, 30, 209
+	matname(MATERIAL_FINE_STONE) = lang("ã“™‚ÈÎ", "Fine stone")
+	matdesc(MATERIAL_FINE_STONE) = lang("ó‘Ô‚Ì—Ç‚¢Î", "A good quality stone.")
+	matspot(0, MATERIAL_FINE_STONE) = ATX_MINE1
+
+	matref(MATREF_LEVEL, MATERIAL_VEIN) = 40, 20, 202
+	matname(MATERIAL_VEIN) = lang("ƒcƒ‹", "Vein")
+	matdesc(MATERIAL_VEIN) = lang("ƒcƒ‹", "Vein.")
+	matspot(0, MATERIAL_VEIN) = ATX_FOREST1
+
+	matref(MATREF_LEVEL, MATERIAL_ADHESIVE) = 10, 20, 354
+	matname(MATERIAL_ADHESIVE) = lang("Ú’…Ü", "Adhesive")
+	matdesc(MATERIAL_ADHESIVE) = lang("ƒlƒgƒlƒg‚µ‚Ä‚¢‚é", "It's sticky.")
+	matspot(0, MATERIAL_ADHESIVE) = ATX_BUILDING1
+
+	matref(MATREF_LEVEL, MATERIAL_GOOD_PAPER) = 25, 25, 470
+	matname(MATERIAL_GOOD_PAPER) = lang("ãŽ¿Ž†", "Good paper")
+	matdesc(MATERIAL_GOOD_PAPER) = lang("ŽèG‚è‚Ì‚æ‚¢Ž†", "Good touch.")
+	matspot(0, MATERIAL_GOOD_PAPER) = ATX_BUILDING1
+
+	matref(MATREF_LEVEL, MATERIAL_DURABLE_CLOTH) = 30, 55, 155
+	matname(MATERIAL_DURABLE_CLOTH) = lang("ä•v‚È•z", "Durable cloth")
+	matdesc(MATERIAL_DURABLE_CLOTH) = lang("—ô‚¯‚È‚¢", "Not torn.")
+	matspot(0, MATERIAL_DURABLE_CLOTH) = ATX_GLOBAL1
+
+	matref(MATREF_LEVEL, MATERIAL_LOG) = 15, 20, 239
+	matname(MATERIAL_LOG) = lang("ŠÛ‘¾", "Log")
+	matdesc(MATERIAL_LOG) = lang("Žè‚²‚ë‚È‘¾‚³", "Affordable thickness.")
+	matspot(0, MATERIAL_LOG) = ATX_FOREST1
+
+	matref(MATREF_LEVEL, MATERIAL_WHITE_WEED) = 25, 25, 170
+	matname(MATERIAL_WHITE_WEED) = lang("”’‚¢‘", "White weed")
+	matdesc(MATERIAL_WHITE_WEED) = lang("”’‚Á‚Û‚¢‘", "A faintly whitish weed.")
+	matspot(0, MATERIAL_WHITE_WEED) = ATX_BUSH1
+	return
+
+#defcfunc prodcheck
+	locvar_prodcheck_f = 1
+	if ( matval(1) > sdata(matval, CHARA_PLAYER) ) {
+		locvar_prodcheck_f = -1
+	}
+	repeat 6
+		locvar_prodcheck_j = matneed(cnt * 2), matneed(cnt * 2 + 1)
+		if ( locvar_prodcheck_j == (-1) ) {
+			break
+		}
+		if ( mat(locvar_prodcheck_j) < locvar_prodcheck_j(1) ) {
+			locvar_prodcheck_f = -1
+		}
+	loop
+	return locvar_prodcheck_f
+

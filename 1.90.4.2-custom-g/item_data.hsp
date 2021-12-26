@@ -1,0 +1,3201 @@
+#deffunc getinheritance int getinheritance_arg1, array getinheritance_arg2, var getinheritance_arg3
+	randomize inv(INV_ITEM_TURN, getinheritance_arg1) + 1
+	dim getinheritance_arg2, 15
+	getinheritance_arg3 = 0
+	repeat 10
+		locvar_getinheritance_p = rnd(15)
+		if ( inv(STARTING_INV_ITEM_ENCHANT + locvar_getinheritance_p * 2, getinheritance_arg1) == 0 ) {
+			continue
+		}
+		locvar_getinheritance_f = 0
+		repeat getinheritance_arg3 + 1
+			if ( locvar_getinheritance_p == getinheritance_arg2(cnt) ) {
+				locvar_getinheritance_f = 1
+				break
+			}
+		loop
+		if ( locvar_getinheritance_f == 1 ) {
+			continue
+		}
+		if ( rnd(4) > getinheritance_arg3 | inv(STARTING_INV_ITEM_ENCHANT + locvar_getinheritance_p * 2 + 1, getinheritance_arg1) < 0 ) {
+			getinheritance_arg2(getinheritance_arg3) = locvar_getinheritance_p
+			getinheritance_arg3++
+		}
+	loop
+	randomize
+	return
+
+#defcfunc calcobjlv int calcobjlv_arg1
+	if ( calcobjlv_arg1 <= 0 ) {
+		locvar_calcobjlv_objlv = gdata(GDATA_LEVEL)
+	}
+	else {
+		locvar_calcobjlv_objlv = calcobjlv_arg1
+	}
+	if ( gdata(GDATA_AREA) == AREA_SHELTER ) {
+		locvar_calcobjlv_objlv = 1
+	}
+	repeat 3, 1
+		locvar_calcobjlv_p = rnd(30 + cnt * 5)
+		if ( locvar_calcobjlv_p == 0 ) {
+			locvar_calcobjlv_objlv += rnd(10 * cnt)
+			continue
+		}
+		break
+	loop
+	if ( calcobjlv_arg1 <= 3 ) {
+		if ( rnd(4) != 0 ) {
+			locvar_calcobjlv_objlv = rnd(3) + 1
+		}
+	}
+	return locvar_calcobjlv_objlv
+
+#defcfunc calcfixlv int calcfixlv_startquality
+	if ( calcfixlv_startquality == FIX_QUALITY_NONE ) {
+		locvar_calcfixlv_fixlv = FIX_QUALITY_GOOD
+	}
+	else {
+		locvar_calcfixlv_fixlv = calcfixlv_startquality
+	}
+	repeat 3, 1
+		locvar_calcobjlv_p = rnd(30 + cnt * 5)
+		if ( locvar_calcobjlv_p == 0 ) {
+			locvar_calcfixlv_fixlv++
+			continue
+		}
+		if ( locvar_calcobjlv_p < 3 ) {
+			locvar_calcfixlv_fixlv--
+			continue
+		}
+		break
+	loop
+	if ( locvar_calcfixlv_fixlv < FIX_QUALITY_BAD ) {
+		locvar_calcfixlv_fixlv = FIX_QUALITY_BAD
+	}
+	if ( locvar_calcfixlv_fixlv > FIX_QUALITY_GODLY ) {
+		locvar_calcfixlv_fixlv = FIX_QUALITY_GODLY
+	}
+	return locvar_calcfixlv_fixlv
+
+#deffunc flt int flt_objlv, int flt_qualitylv
+	filtermax = 0
+	fltselect = 0
+	flttypemajor = FILTER_NOTHING
+	flttypeminor = FILTER_NOTHING
+	fltnrace = ""
+	if ( flt_objlv == 0 ) {
+		objlv = calcobjlv(gdata(GDATA_LEVEL))
+	}
+	else {
+		objlv = flt_objlv
+	}
+	if ( flt_qualitylv == FIX_QUALITY_NONE ) {
+		fixlv = calcfixlv(FIX_QUALITY_GOOD)
+	}
+	else {
+		fixlv = flt_qualitylv
+	}
+	return
+
+#deffunc fltn str fltn_arg1
+	locvar_fltn_s2 = fltn_arg1
+	locvar_fltn_p = 0
+	repeat 10
+		getstr filtern(cnt), locvar_fltn_s2, locvar_fltn_p, 47
+		if ( strsize == 0 ) {
+			break
+		}
+		filtern(cnt) = "/" + filtern(cnt) + "/"
+		locvar_fltn_p += strsize
+		filtermax++
+	loop
+	return
+
+#defcfunc discsetmc
+	return rnd(MUSICLIST_MAX - STARTING_MUSICLIST - 2)
+
+#defcfunc fltsetdungeon
+	if ( rnd(20) == 0 ) {
+		return fsetrare(rnd(length(fsetrare)))
+	}
+	if ( rnd(3) == 0 ) {
+		return fsetwear(rnd(length(fsetwear)))
+	}
+	return fsetitem(rnd(length(fsetitem)))
+
+#defcfunc randomele
+	locvar_randomele_p = rnd(MAX_SKILL_RESIST - STARTING_SKILL_RESIST) + STARTING_SKILL_RESIST
+	if ( locvar_randomele_p != 1 ) {
+		repeat sdataref(SKILL_DATAREF_RARE, locvar_randomele_p)
+			locvar_randomele_i = rnd(MAX_SKILL_RESIST - STARTING_SKILL_RESIST) + STARTING_SKILL_RESIST
+			if ( sdataref(SKILL_DATAREF_RARE, locvar_randomele_i) < sdataref(SKILL_DATAREF_RARE, locvar_randomele_p) ) {
+				if ( rnd(2) == 0 ) {
+					locvar_randomele_p = locvar_randomele_i
+				}
+			}
+		loop
+	}
+	return locvar_randomele_p
+
+#deffunc putenclv int putenclv_arg1
+	repeat abs(putenclv_arg1) + 1
+		if ( cnt > 4 ) {
+			s += "+"
+			break
+		}
+		s += lang("*", "#")
+	loop
+	return
+
+#defcfunc encflt int encflt_filter1, int encflt_filter2
+	if ( encflt_filter2 == 2 ) {
+		if ( (encflt_filter1 >= FILTER_HELM & encflt_filter1 < FILTER_RANGE) == 0 ) {
+			return 0
+		}
+		else {
+			return 1
+		}
+	}
+	if ( encflt_filter2 == 1 ) {
+		if ( (encflt_filter1 >= FILTER_ACCESSORY & encflt_filter1 < FILTER_ITEM_MIN) == 0 ) {
+			return 0
+		}
+		else {
+			return 1
+		}
+	}
+	if ( encflt_filter2 == 3 ) {
+		if ( (encflt_filter1 >= FILTER_HELM & encflt_filter1 < FILTER_RANGE) == 1 | encflt_filter1 == FILTER_WEAPON ) {
+			return 1
+		}
+		else {
+			return 0
+		}
+	}
+	if ( encflt_filter1 == encflt_filter2 ) {
+		return 1
+	}
+	else {
+		return 0
+	}
+
+*item_encInit
+	dim encref, 8, MAX_ENCHANTMENT
+	dim enclist, 2, MAX_ENCHANTMENT
+	dim encammoref, 3, ENCHANT_AMMO_MAX
+	sdim ammoname, ENCHANT_AMMO_MAX
+	encammoref(0, ENCHANT_AMMO_RAPID) = 30, 70, 1
+	encammoref(0, ENCHANT_AMMO_EXPLOSIVE) = 5, 15, 10
+	encammoref(0, ENCHANT_AMMO_MAGIC) = 20, 35, 2
+	encammoref(0, ENCHANT_AMMO_PIERCING) = 15, 30, 2
+	encammoref(0, ENCHANT_AMMO_TIME_STOP) = 2, 5, 25
+	encammoref(0, ENCHANT_AMMO_BURST) = 2, 5, 15
+	ammoname = lang("連射弾", "rapid ammo"), lang("炸裂弾", "explosive ammo"), lang("貫通弾", "piercing ammo"), lang("魔弾", "magic ammo"), lang("時止弾", "time stop ammo"), lang("バースト", "burst ammo")
+	// level, value%, rarity, filter types
+	encref(0, ENCHANT_RANDOM_TELEPORT) = -1, 50, 75, FILTER_NOTHING
+	encref(0, ENCHANT_SUCK_BLOOD) = -1, 50, 100, FILTER_NOTHING
+	encref(0, ENCHANT_DISTURB_GROWTH) = -1, 50, 100, FILTER_NOTHING
+	encref(0, ENCHANT_SUCK_MP) = -1, 50, 100, FILTER_NOTHING
+	encref(0, ENCHANT_ATTRACT_MONSTER) = -1, 50, 50, FILTER_NOTHING
+	encref(0, ENCHANT_GOD_SIGNALS) = 0, 200, 30, FILTER_NOTHING
+	encref(0, ENCHANT_SHOW_RELIGION) = 0, 200, 30, FILTER_NOTHING
+	encref(0, ENCHANT_SKILL) = 0, 120, 4500, FILTER_NOTHING
+	encref(0, ENCHANT_SUSTAIN) = 0, 120, 4500, FILTER_NOTHING
+	encref(0, ENCHANT_ELEMENTAL_DMG) = 1, 120, 300, FILTER_WEAPON, FILTER_RANGE
+	encref(0, ENCHANT_AMMO) = 1, 120, 50000, FILTER_AMMO
+	encref(0, ENCHANT_RES_BLIND) = 1, 120, 400, FILTER_NOTHING
+	encref(0, ENCHANT_ATTRIBUTE) = 1, 120, 3000, FILTER_NOTHING
+	encref(0, ENCHANT_PREVENT_TELEPORT) = 1, 150, 150, FILTER_NOTHING
+	encref(0, ENCHANT_RES_CONFUSE) = 1, 120, 400, FILTER_NOTHING
+	encref(0, ENCHANT_RESISTANCE) = 2, 150, 2500, FILTER_NOTHING
+	encref(0, ENCHANT_RES_PARALYZE) = 2, 120, 300, FILTER_NOTHING
+	encref(0, ENCHANT_RES_FEAR) = 1, 120, 600, FILTER_NOTHING
+	encref(0, ENCHANT_RES_SLEEP) = 1, 120, 600, FILTER_NOTHING
+	encref(0, ENCHANT_RES_POISON) = 2, 120, 500, FILTER_NOTHING
+	encref(0, ENCHANT_FAST_TRAVEL) = 3, 200, 25, FILTER_BOOTS
+	encref(0, ENCHANT_RES_ETHERWIND) = 3, 200, 25, FILTER_CLOAK
+	encref(0, ENCHANT_RES_WEATHER) = 2, 200, 40, FILTER_ACCESSORY_RING
+	encref(0, ENCHANT_RES_PREGNANCY) = 1, 120, 300, FILTER_NOTHING
+	encref(0, ENCHANT_EXTRA_MELEE) = 3, 180, 150, FILTER_ACCESSORY_RING, FILTER_ACCESSORY_AMULET
+	encref(0, ENCHANT_EXTRA_RANGED) = 3, 180, 150, FILTER_ACCESSORY_RING, FILTER_ACCESSORY_AMULET
+	encref(0, ENCHANT_FLOAT) = 1, 130, 250, FILTER_NOTHING
+	encref(0, ENCHANT_CURE_BLEEDING) = 3, 130, 40, FILTER_GIRDLE, FILTER_ACCESSORY_AMULET
+	encref(0, ENCHANT_RES_MUTATION) = 3, 160, 200, FILTER_NOTHING
+	encref(0, ENCHANT_ENHANCE_SPELL) = 3, 170, 250, FILTER_WEAPON
+	encref(0, ENCHANT_BANE_DRAGON) = 2, 170, 200, FILTER_WEAPON, FILTER_RANGE
+	encref(0, ENCHANT_BANE_UNDEAD) = 2, 170, 200, FILTER_WEAPON, FILTER_RANGE
+	encref(0, ENCHANT_RES_PHYSICAL) = 1, 140, 100, FILTER_SHIELD
+	encref(0, ENCHANT_IMMUNE_DAMAGE) = 2, 160, 80, FILTER_SHIELD
+	encref(0, ENCHANT_REFLECT_DAMAGE) = 3, 180, 250, FILTER_SHIELD, FILTER_ARMOR
+	encref(0, ENCHANT_SEE_INVISIBLE) = 2, 170, 100, FILTER_HELM, FILTER_ACCESSORY_RING
+	encref(0, ENCHANT_CRIT_CHANCE) = 99, 300, 10000, FILTER_WEAPON, FILTER_ACCESSORY_AMULET
+	encref(0, ENCHANT_EAT_ROTTEN) = 99, 300, 2000, FILTER_NOTHING
+	encref(0, ENCHANT_ABSORB_STAMINA) = 99, 300, 1000, FILTER_WEAPON, FILTER_RANGE
+	encref(0, ENCHANT_ABSORB_MP) = 99, 300, 1000, FILTER_WEAPON, FILTER_RANGE
+	encref(0, ENCHANT_RAGNAROK) = 99, 100, 1000, FILTER_WEAPON, FILTER_RANGE
+	encref(0, ENCHANT_PIERCING_CHANCE) = 99, 300, 500, FILTER_WEAPON, FILTER_GLOVES
+	encref(0, ENCHANT_TIME_STOP) = 99, 300, 500, FILTER_WEAPON, FILTER_RANGE
+	encref(0, ENCHANT_CHARGING) = 3, 120, 1500, FILTER_RANGE
+	encref(0, ENCHANT_RES_STEAL) = 99, 300, 1500, FILTER_NOTHING
+	encref(0, ENCHANT_RES_CURSE) = 99, 150, 2000, FILTER_NOTHING
+	encref(0, ENCHANT_PROC) = 99, 300, 15000, FILTER_NOTHING
+	encref(0, ENCHANT_REWARD_QUALITY) = 100, 120, 300, FILTER_FURNITURE
+	encref(0, ENCHANT_DRUNK_LISTENER) = 100, 120, 300, FILTER_FURNITURE
+	encref(0, ENCHANT_FOOD) = 100, 120, 300, FILTER_ITEM_FOOD
+	encref(0, ENCHANT_BANE_GOD) = 2, 170, 150, FILTER_WEAPON, FILTER_RANGE
+	encref(0, ENCHANT_REFLECT_MAGIC) = 3, 180, 250, FILTER_SHIELD, FILTER_CLOAK
+	encref(0, ENCHANT_REMOTE_BLOW) = 100, 120, 5000, FILTER_WEAPON
+	encref(0, ENCHANT_DEC_ENEMY_CRIT_CHANCE) = 99, 300, 5000, FILTER_ARMOR, FILTER_HELM, FILTER_GIRDLE
+	encref(0, ENCHANT_SHOOTING_MECHANISM) = 99, 300, 1500, FILTER_WEAPON, FILTER_CLOAK, FILTER_SHIELD
+	encref(0, ENCHANT_PROXIMITY_ASSIST) = 99, 300, 1500, FILTER_BOOTS, FILTER_RANGE, FILTER_GLOVES
+	encref(0, ENCHANT_MANA_TO_ATTACK) = 100, 170, 150, FILTER_WEAPON, FILTER_RANGE
+	encref(0, ENCHANT_ENHANCE_BREATH) = 3, 170, 300, FILTER_ARMOR, FILTER_HELM, FILTER_GLOVES
+	encref(0, ENCHANT_ROCK_THROWING) = 100, 120, 300, FILTER_WEAPON
+	encref(0, ENCHANT_QUICK_SHOOTING) = 99, 300, 500, FILTER_RANGE
+	encref(0, ENCHANT_FIRE_AND_COLD) = 3, 150, 350, FILTER_ACCESSORY_RING, FILTER_CLOAK
+	encref(0, ENCHANT_MIND_AND_SOUND) = 3, 150, 350, FILTER_HELM, FILTER_SHIELD
+	encref(0, ENCHANT_POISON_AND_NERVE) = 3, 150, 350, FILTER_GLOVES, FILTER_BOOTS
+	encref(0, ENCHANT_BANE_FLYING) = 2, 170, 150, FILTER_WEAPON, FILTER_GLOVES
+
+	dim encprocref, 6, MAX_EHCHANTMENT_PROC
+	encprocref(0, 0) = SKILL_SPELL_ELEMENT_SCAR, TARGET_TYPE_ENEMY, 1000, FILTER_WEAPON, FILTER_RANGE, 10
+	encprocref(0, 1) = SKILL_SPACT_DRAW_SHADOW, TARGET_TYPE_ENEMY, 6000, FILTER_RANGE, FILTER_NOTHING, 50
+	encprocref(0, 2) = SKILL_SPELL_NIGHTMARE, TARGET_TYPE_ENEMY, 1000, FILTER_WEAPON, FILTER_RANGE, 10
+	encprocref(0, 3) = SKILL_SPELL_RAGING_ROAR, TARGET_TYPE_ENEMY, 800, FILTER_WEAPON, FILTER_RANGE, 12
+	encprocref(0, 4) = SKILL_SPELL_CHAOS_BALL, TARGET_TYPE_ENEMY, 600, FILTER_WEAPON, FILTER_RANGE, 12
+	encprocref(0, 5) = SKILL_SPACT_LULWYS_TRICK, TARGET_TYPE_SELF, 400, FILTER_WEAPON, FILTER_RANGE, 2
+	encprocref(0, 6) = SKILL_SPACT_DIMENSIONAL_MOVE, TARGET_TYPE_SELF, 1000, FILTER_WEAPON, FILTER_RANGE, 50
+	encprocref(0, 7) = SKILL_SPELL_FEATHER, TARGET_TYPE_SELF, 1000, FILTER_WEAPON, FILTER_RANGE, 2
+	encprocref(0, 8) = SKILL_SPACT_LIGHTNING_BREATH, TARGET_TYPE_ENEMY, 1000, FILTER_WEAPON, FILTER_RANGE, 45
+	encprocref(0, 9) = SKILL_SPACT_NERVE_BREATH, TARGET_TYPE_ENEMY, 1000, FILTER_WEAPON, FILTER_RANGE, 45
+	encprocref(0, 10) = SKILL_SPACT_NETHER_BREATH, TARGET_TYPE_ENEMY, 1000, FILTER_WEAPON, FILTER_RANGE, 45
+	encprocref(0, 11) = SKILL_SPELL_DIVINE_WISDOM, TARGET_TYPE_SELF, 1000, FILTER_WEAPON, FILTER_RANGE, 4
+	encprocref(0, 12) = SKILL_SPELL_HOLY_VEIL, TARGET_TYPE_SELF, 1000, FILTER_WEAPON, FILTER_RANGE, 4
+	encprocref(0, 13) = SKILL_SPELL_HERO, TARGET_TYPE_SELF, 1000, FILTER_WEAPON, FILTER_RANGE, 4
+	encprocref(0, 14) = SKILL_SPELL_SPEED, TARGET_TYPE_SELF, 400, FILTER_WEAPON, FILTER_RANGE, 1
+	encprocref(0, 15) = SKILL_SPELL_REGENERATION, TARGET_TYPE_SELF, 1000, FILTER_WEAPON, FILTER_RANGE, 3
+	encprocref(0, 16) = SKILL_SPELL_HOLY_SHIELD, TARGET_TYPE_SELF, 1000, FILTER_WEAPON, FILTER_RANGE, 2
+	encprocref(0, 17) = SKILL_SPELL_MIST_OF_SILENCE, TARGET_TYPE_ENEMY, 800, FILTER_WEAPON, FILTER_RANGE, 10
+	encprocref(0, 18) = SKILL_SPELL_WEB, TARGET_TYPE_ENEMY, 1000, FILTER_WEAPON, FILTER_RANGE, 10
+	encprocref(0, 19) = SKILL_SPELL_LIGHTNING_BOLT, TARGET_TYPE_ENEMY, 1000, FILTER_WEAPON, FILTER_RANGE, 20
+	encprocref(0, 20) = SKILL_SPELL_DARKNESS_BOLT, TARGET_TYPE_ENEMY, 1000, FILTER_WEAPON, FILTER_RANGE, 20
+	encprocref(0, 21) = SKILL_SPELL_MIND_BOLT, TARGET_TYPE_ENEMY, 1000, FILTER_WEAPON, FILTER_RANGE, 20
+	encprocref(0, 22) = SKILL_SPELL_ICE_BOLT, TARGET_TYPE_ENEMY, 1000, FILTER_WEAPON, FILTER_RANGE, 20
+	encprocref(0, 23) = SKILL_SPELL_HEALING_RAIN, TARGET_TYPE_SELF, 800, FILTER_WEAPON, FILTER_RANGE, 2
+	encprocref(0, 24) = SKILL_SPACT_GRENADE, TARGET_TYPE_ENEMY, 1000, FILTER_WEAPON, FILTER_RANGE, 20
+	encprocref(0, 25) = SKILL_SPACT_DECAPITATION2, TARGET_TYPE_ENEMY, 20, FILTER_WEAPON, FILTER_NOTHING, 44
+	encprocref(0, 26) = SKILL_SPACT_GRAVITY_SPHERE, TARGET_TYPE_ENEMY, 500, FILTER_WEAPON, FILTER_RANGE, 60
+	encprocref(0, 27) = SKILL_SPACT_SHINING_WAVE, TARGET_TYPE_ENEMY, 500, FILTER_WEAPON, FILTER_RANGE, 4
+	return
+
+*item_encdetail
+	rtval = 4, 0
+	s = "error:" + val + "/" + val(1)
+	val(10) = val / EXT_ENCHANTMENT
+	if ( val(10) != 0 ) {
+		if ( val(2) == 1 ) {
+			s = ""
+			return
+		}
+		sid = val \ EXT_ENCHANTMENT
+		if ( val(10) == ENCHANT_ATTRIBUTE ) {
+			rtval = 2
+			if ( val(1) / 50 + 1 < 0 ) {
+				rtval = 9
+				s = lang("" + skillname(sid) + "を" + abs(val(1) / 50 + 1) + "下げる", "decreases your " + skillname(sid) + " by " + abs(val(1) / 50 + 1) + ".")
+				if ( val(3) == FILTER_ITEM_FOOD ) {
+					s = lang("" + skillname(sid) + "を減衰させる毒素を含んでいる", "has toxins that deteriorate your " + skillname(sid) + ".") + " ["
+					putenclv val(1) / 50
+					s += "]"
+
+					/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+					item_find ITEM_ID_OBJET_HEART, 3
+					if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+						s += "(" + val(1) + ")"
+					}
+
+					/********** ANNA CUSTOM - ENDING **********/
+
+				}
+			}
+			else {
+				s = lang("" + skillname(sid) + "を" + abs(val(1) / 50 + 1) + "上げる", "increases your " + skillname(sid) + " by " + abs(val(1) / 50 + 1) + ".")
+				if ( val(3) == FILTER_ITEM_FOOD ) {
+					s = lang("" + skillname(sid) + "を増強させる栄養をもっている", "has essential nutrients to enhance your " + skillname(sid) + ".") + " ["
+					putenclv val(1) / 50
+					s += "]"
+
+					/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+					item_find ITEM_ID_OBJET_HEART, 3
+					if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+						s += "(" + val(1) + ")"
+					}
+
+					/********** ANNA CUSTOM - ENDING **********/
+
+				}
+			}
+		}
+		if ( val(10) == ENCHANT_FOOD ) {
+			rtval = 2
+			if ( val(1) / 50 + 1 < 0 ) {
+				rtval = 9
+				s = lang("" + skillname(sid) + "を消耗させる毒素を含んでいる", "has toxins which hurt your " + skillname(sid) + ".") + " ["
+				putenclv val(1) / 50
+				s += "]"
+			}
+			else {
+				s = lang("" + skillname(sid) + "を回復させる栄養をもっている", "has essential nutrients to heal your " + skillname(sid) + ".") + " ["
+				putenclv val(1) / 50
+				s += "]"
+			}
+
+			/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+			item_find ITEM_ID_OBJET_HEART, 3
+			if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+				s += "(" + val(1) + ")"
+			}
+
+			/********** ANNA CUSTOM - ENDING **********/
+
+		}
+		if ( val(10) == ENCHANT_RESISTANCE ) {
+			rtval = 3
+			i = val(1) / 2 / 50
+			if ( val(1) / 2 < 0 ) {
+				rtval = 9
+				s = lang("" + skillname(sid) + "への耐性を弱化する", "weakens your resistance to " + skillname(sid) + ".")
+			}
+			else {
+				s = skillencdesc(sid)
+				if ( s == "" ) {
+					s = lang("" + skillname(sid) + "への耐性を授ける", "grants you resistance to " + skillname(sid) + ".")
+				}
+			}
+			s += " ["
+			putenclv i
+			s += "]"
+
+			/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+			item_find ITEM_ID_OBJET_HEART, 3
+			if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+				s += "(" + val(1) + ")"
+			}
+
+			/********** ANNA CUSTOM - ENDING **********/
+
+		}
+		if ( val(10) == ENCHANT_SKILL ) {
+			rtval = 1
+			i = val(1) / 50 + 1
+			if ( val(1) / 50 + 1 < 0 ) {
+				rtval = 9
+				s = lang("" + skillname(sid) + "の技能を下げる", "decreases your " + skillname(sid) + " skill.")
+				if ( val(3) == FILTER_ITEM_FOOD ) {
+					s = lang("" + skillname(sid) + "の技術を損なう", "impairs your " + skillname(sid) + " skill.")
+				}
+			}
+			else {
+				s = skillencdesc(sid)
+				if ( s == "" ) {
+					s = lang("" + skillname(sid) + "の技能を上げる", "improves your " + skillname(sid) + " skill.")
+				}
+				if ( val(3) == FILTER_ITEM_FOOD ) {
+					s = lang("" + skillname(sid) + "の見識を深める", "deepens your understanding of " + skillname(sid) + ".")
+				}
+			}
+			s += " ["
+			putenclv i / 5
+			s += "]"
+
+			/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+			item_find ITEM_ID_OBJET_HEART, 3
+			if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+				s += "(" + val(1) + ")"
+			}
+
+			/********** ANNA CUSTOM - ENDING **********/
+
+		}
+		if ( val(10) == ENCHANT_SUSTAIN ) {
+			rtval = 8
+			s = lang(skillname(sid) + "を維持する", "maintains " + skillname(sid) + ".")
+			if ( val(3) == FILTER_ITEM_FOOD ) {
+				s = lang("" + skillname(sid) + "の成長を助ける栄養をもっている", "can help you exercise your " + skillname(sid) + " faster.") + " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+			}
+		}
+		if ( val(10) == ENCHANT_ELEMENTAL_DMG ) {
+			rtval = 4
+			i = val(1) / 2 / 50
+			s = skillencdesc(sid)
+			if ( s == "" ) {
+				s = lang("" + skillname(sid) + "属性の追加ダメージを与える", "deals " + skillname(sid) + " damage.")
+			}
+			s += " ["
+			putenclv i
+			s += "]"
+
+			/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+			item_find ITEM_ID_OBJET_HEART, 3
+			if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+				s += "(" + val(1) + ")"
+			}
+
+			/********** ANNA CUSTOM - ENDING **********/
+
+		}
+		if ( val(10) == ENCHANT_PROC ) {
+			rtval = 4
+			i = val(1) / 50
+			sid = encprocref(0, sid)
+			s = lang("" + skillname(sid) + "を発動する", "invokes " + skillname(sid) + ".")
+			s += " ["
+			putenclv i
+			s += "]"
+
+			/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+			item_find ITEM_ID_OBJET_HEART, 3
+			if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+				s += "(" + val(1) + ")"
+			}
+
+			/********** ANNA CUSTOM - ENDING **********/
+
+		}
+		if ( val(10) == ENCHANT_AMMO ) {
+			rtval = 4
+			s = lang("" + ammoname(sid) + "を装填できる", "can be loaded with " + ammoname(sid) + ".")
+			s += lang(" [最大", " [Max ") + val(1) / EXT_ENCHANTMENT_AMMO + lang("発]", "]")
+		}
+		return
+	}
+	if ( val == 0 ) {
+		s = "?????"
+	}
+	if ( val == ENCHANT_RANDOM_TELEPORT ) {
+		rtval = 9
+		s = lang("ランダムなテレポートを引き起こす", "causes random teleport.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_SUCK_BLOOD ) {
+		rtval = 9
+		s = lang("使用者の生き血を吸う", "sucks the blood of the wielder.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_SUCK_MP ) {
+		rtval = 9
+		s = lang("使用者のＭＰを吸う", "sucks MP of the wielder.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_DISTURB_GROWTH ) {
+		rtval = 9
+		s = lang("あなたの成長を妨げる", "disturbs your growth.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_ATTRACT_MONSTER ) {
+		rtval = 9
+		s = lang("魔物を呼び寄せる", "attracts monsters.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_PREVENT_TELEPORT ) {
+		rtval = 4
+		s = lang("テレポートを妨害する", "prevents you from teleporting.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_RES_BLIND ) {
+		rtval = 4
+		s = lang("盲目を無効にする", "negates the effect of blindness.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_RES_PARALYZE ) {
+		rtval = 4
+		s = lang("麻痺を無効にする", "negates the effect of paralysis.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_RES_CONFUSE ) {
+		rtval = 4
+		s = lang("混乱を無効にする", "negates the effect of confusion.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_RES_FEAR ) {
+		rtval = 4
+		s = lang("恐怖を無効にする", "negates the effect of fear.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_RES_SLEEP ) {
+		rtval = 4
+		s = lang("睡眠を無効にする", "negates the effect of sleep.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_RES_POISON ) {
+		rtval = 4
+		s = lang("毒を無効にする", "negates the effect of poison.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_RES_STEAL ) {
+		rtval = 4
+		s = lang("アイテムを盗まれなくする", "protects you from thieves.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_EAT_ROTTEN ) {
+		rtval = 4
+		s = lang("腐ったものを難なく消化させる", "allows you to digest rotten food.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_FAST_TRAVEL ) {
+		rtval = 4
+		s = lang("速度を上げ、ワールドマップでの移動時間を短くする", "speeds up your travel progress.")
+		if ( val(1) / 100 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 100
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 100
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_RES_ETHERWIND ) {
+		rtval = 4
+		s = lang("エーテルの風からあなたを保護する", "protects you from Etherwind.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_RES_WEATHER ) {
+		rtval = 4
+		s = lang("雷雨と雪による足止めを無効にする", "negates the effect of being stranded by bad weather.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_RES_PREGNANCY ) {
+		rtval = 4
+		s = lang("異物の体内への侵入を防ぐ", "prevents aliens from entering your body.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_FLOAT ) {
+		rtval = 4
+		s = lang("あなたを浮遊させる", "floats you.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_RES_MUTATION ) {
+		rtval = 4
+		s = lang("あなたを変異から保護する", "protects you from mutation.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_ENHANCE_SPELL ) {
+		rtval = 4
+		s = lang("魔法の威力を高める", "enhances your spells.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_ENHANCE_BREATH ) {
+		rtval = 4
+		s = lang("放射の威力を高める", "enhances your breath.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_ROCK_THROWING ) {
+		rtval = 4
+		s = lang("投石の性能を高める", "enhances your rock throwing.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_FIRE_AND_COLD ) {
+		rtval = 4
+		s = lang("火炎と冷気の複合詠唱を可能にする", "combines fire and cold spells.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_MIND_AND_SOUND ) {
+		rtval = 4
+		s = lang("幻惑と音の複合詠唱を可能にする", "combines mind and sound spells.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_POISON_AND_NERVE ) {
+		rtval = 4
+		s = lang("毒と神経の複合詠唱を可能にする", "combines poison and nerve spells.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_CHARGING ) {
+		rtval = 4
+		s = lang("チャージ時に性能を高める", "enhances when charging.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_QUICK_SHOOTING ) {
+		rtval = 4
+		s = lang("早撃ちを可能にする", "allows quick shooting.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_SEE_INVISIBLE ) {
+		rtval = 4
+		s = lang("透明な存在を見ることを可能にする", "allows you to see invisible creatures.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_ABSORB_STAMINA ) {
+		rtval = 4
+		s = lang("攻撃対象からスタミナを吸収する", "absorbs stamina from an enemy.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_RAGNAROK ) {
+		rtval = 4
+		s = lang("全てを終結させる", "brings an end.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_ABSORB_MP ) {
+		rtval = 4
+		s = lang("攻撃対象からマナを吸収する", "absorbs MP from an enemy.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_PIERCING_CHANCE ) {
+		rtval = 4
+		s = lang("完全貫通攻撃発動の機会を増やす", "gives you a chance to throw an absolute piercing attack.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_CRIT_CHANCE ) {
+		rtval = 4
+		s = lang("クリティカルヒットの機会を増やす", "increases your chance to deliver critical hits.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_EXTRA_MELEE ) {
+		rtval = 4
+		s = lang("追加打撃の機会を増やす", "increases the chance of an extra melee attack.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_EXTRA_RANGED ) {
+		rtval = 4
+		s = lang("追加射撃の機会を増やす", "increases the chance of an extra ranged attack.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_TIME_STOP ) {
+		rtval = 4
+		s = lang("稀に時を止める", "occasionally stops time.")
+		if ( val(1) / 100 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 100
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 100
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_DEC_ENEMY_CRIT_CHANCE ) {
+		rtval = 4
+		s = lang("クリティカルを受ける機会を減らす", "decreases enemy chance to deliver critical hits.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_SHOOTING_MECHANISM ) {
+		rtval = 4
+		s = lang("連動射撃機構を備える", "provides an interlocking shooting mechanism.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_PROXIMITY_ASSIST ) {
+		rtval = 4
+		s = lang("近接補助武器を備える", "provides a proximity assist weapon.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_MANA_TO_ATTACK ) {
+		rtval = 4
+		s = lang("使用者のマナを攻撃力に変える", "change mana to attack power.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_RES_CURSE ) {
+		rtval = 4
+		s = lang("呪いの言葉から保護する", "protects you from cursing words.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_REWARD_QUALITY ) {
+		rtval = 4
+		s = lang("演奏報酬の品質を上げる", "increases the quality of rewards.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_RES_PHYSICAL ) {
+		rtval = 4
+		s = lang("被る物理ダメージを軽減する", "decreases physical damage you take.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_IMMUNE_DAMAGE ) {
+		rtval = 4
+		s = lang("被るダメージを稀に無効にする", "sometimes nullifies the damage you take.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_REFLECT_DAMAGE ) {
+		rtval = 4
+		s = lang("攻撃された時、相手に切り傷のダメージを与える", "deals cut damage to the attacker.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_CURE_BLEEDING ) {
+		rtval = 4
+		s = lang("出血を抑える", "diminishes bleeding.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_GOD_SIGNALS ) {
+		rtval = 4
+		s = lang("神が発する電波をキャッチする", "catches signals from the gods.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_BANE_DRAGON ) {
+		rtval = 4
+		s = lang("竜族に対して強力な威力を発揮する", "inflicts massive damage to dragons.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_BANE_UNDEAD ) {
+		rtval = 4
+		s = lang("不死者に対して強力な威力を発揮する", "inflicts massive damage to undeads.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_BANE_FLYING ) {
+		rtval = 4
+		s = lang("空中の敵に対して威力を発揮する", "inflicts massive damage to enemy in flight.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_SHOW_RELIGION ) {
+		rtval = 4
+		s = lang("他者の信仰を明らかにする", "reveals religion.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_DRUNK_LISTENER ) {
+		rtval = 4
+		s = lang("深い音色で聴衆を酔わす", "makes audience drunk with haunting tones.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_BANE_GOD ) {
+		rtval = 4
+		s = lang("神に対して強力な威力を発揮する", "inflicts massive damage to gods.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_REFLECT_MAGIC ) {
+		rtval = 4
+		s = lang("魔法攻撃された時、相手にその属性のダメージを与える", "deals magic damage to the magic attacker.")
+		if ( val(1) / 50 == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv val(1) / 50
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = val(1) / 50
+				return
+			}
+		}
+	}
+	if ( val == ENCHANT_REMOTE_BLOW ) {
+		rtval = 4
+		s = lang("遠隔打撃を可能とする", "makes it possible to remote blow.")
+		if ( (-1) == (-1) ) {
+			return
+		}
+		else {
+			if ( val(2) == 0 ) {
+				s += " ["
+				putenclv -1
+				s += "]"
+
+				/********** ANNA CUSTOM - BEGINNING **********/ // Show Enchant Strength With Objet of Heart
+
+				item_find ITEM_ID_OBJET_HEART, 3
+				if ( stat != (-1) & TweakData(TWEAK_UI_SHOW_ENCHANT_STRENGTH, TWEAK_CATEGORY_UI) == 1 ) {
+					s += "(" + val(1) + ")"
+				}
+
+				/********** ANNA CUSTOM - ENDING **********/
+
+				return
+			}
+			else {
+				rtval(1) = -1
+				return
+			}
+		}
+	}
+	return
+
+#defcfunc randomenc int randomenc_arg1
+	locvar_randomenc_sum = 0
+	locvar_randomenc_max = 0
+	repeat MAX_ENCHANTMENT
+		if ( encref(0, cnt) > randomenc_arg1 ) {
+			continue
+		}
+		if ( randomenc_arg1 >= 0 ) {
+			if ( encref(0, cnt) < 0 ) {
+				continue
+			}
+		}
+		if ( encref(3, cnt) != 0 ) {
+			if ( encflt(reftype, encref(3, cnt)) == 0 ) {
+				if ( encref(4, cnt) == 0 ) {
+					continue
+				}
+				else {
+					if ( encflt(reftype, encref(4, cnt)) == 0 ) {
+						if ( encref(5, cnt) == 0 ) {
+							continue
+						}
+						else {
+							if ( encflt(reftype, encref(5, cnt)) == 0 ) {
+								continue
+							}
+						}
+					}
+				}
+			}
+		}
+		locvar_randomenc_sum += encref(2, cnt)
+		enclist(0, locvar_randomenc_max) = cnt, locvar_randomenc_sum
+		locvar_randomenc_max++
+	loop
+	if ( locvar_randomenc_max == 0 ) {
+		return 0
+	}
+	locvar_randomenc_i = 0
+	exrand_rnd locvar_randomenc_p, locvar_randomenc_sum
+	repeat locvar_randomenc_max
+		if ( locvar_randomenc_p < enclist(1, cnt) ) {
+			locvar_randomenc_i = enclist(0, cnt)
+			break
+		}
+	loop
+	return locvar_randomenc_i
+
+#defcfunc randomenclv int randomenclv_arg1
+	locvar_randomenclv_enclv = limit(randomenclv_arg1, 0, 4)
+	locvar_randomenclv_enclv = rnd(locvar_randomenclv_enclv + 1)
+	return locvar_randomenclv_enclv
+
+#defcfunc randomencp int randomencp_arg1
+	locvar_randomencp_encp = rnd(rnd(500) + 1) + 1
+	if ( trait(TRAIT_GOD_EHEKATL) == 0 ) {
+		if ( rnd(5) == 0 ) {
+			locvar_randomencp_encp += rnd(51)
+		}
+	}
+	if ( trait(TRAIT_GOD_EHEKATL) != 0 ) {
+		locvar_randomencp_encp += rnd(51)
+	}
+	if ( randomencp_arg1 != 0 ) {
+		locvar_randomencp_encp = locvar_randomencp_encp * randomencp_arg1 / 100
+	}
+	return locvar_randomencp_encp
+
+#deffunc sortenc int sortenc_arg1
+	repeat
+		locvar_sortenc_f = 0
+		repeat 15 - 1
+			locvar_sortenc_cnt2 = cnt + 1
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, sortenc_arg1) < inv(STARTING_INV_ITEM_ENCHANT + locvar_sortenc_cnt2 * 2, sortenc_arg1) ) {
+				locvar_randomenc_p = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, sortenc_arg1), inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, sortenc_arg1)
+				inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, sortenc_arg1) = inv(STARTING_INV_ITEM_ENCHANT + locvar_sortenc_cnt2 * 2, sortenc_arg1)
+				inv(STARTING_INV_ITEM_ENCHANT + locvar_sortenc_cnt2 * 2, sortenc_arg1) = locvar_randomenc_p
+				inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, sortenc_arg1) = inv(STARTING_INV_ITEM_ENCHANT + locvar_sortenc_cnt2 * 2 + 1, sortenc_arg1)
+				inv(STARTING_INV_ITEM_ENCHANT + locvar_sortenc_cnt2 * 2 + 1, sortenc_arg1) = locvar_randomenc_p(1)
+				locvar_sortenc_f = 1
+			}
+		loop
+		if ( locvar_sortenc_f == 0 ) {
+			break
+		}
+	loop
+	return
+
+#deffunc encremove int encremove_arg1, int encremove_arg2, int encremove_arg3
+	if ( encremove_arg2 == 0 ) {
+		return
+	}
+	if ( encremove_arg2 >= EXT_ENCHANTMENT ) {
+		locvar_encremove_enc = encremove_arg2 / EXT_ENCHANTMENT
+	}
+	else {
+		locvar_encremove_enc = encremove_arg2
+	}
+	locvar_encremove_enc = encremove_arg2
+	locvar_encremove_encp = encremove_arg3
+	repeat RANGE_INV_ITEM_ENCHANT
+		if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, encremove_arg1) == locvar_encremove_enc ) {
+			inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, encremove_arg1) -= locvar_encremove_encp
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, encremove_arg1) == 0 ) {
+				inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, encremove_arg1) = 0
+			}
+			break
+		}
+	loop
+	if ( encremove_arg2 < EXT_ENCHANTMENT ) {
+		locvar_encremove_p = encremove_arg2
+	}
+	else {
+		locvar_encremove_p = encremove_arg2 / EXT_ENCHANTMENT
+	}
+	inv(INV_ITEM_VALUE, encremove_arg1) = inv(INV_ITEM_VALUE, encremove_arg1) * 100 / encref(1, locvar_encremove_p)
+	sortenc encremove_arg1
+	return
+
+#deffunc encadd int encadd_arg1, int encadd_arg2, int encadd_arg3, int encadd_arg4, int encadd_arg5, int encadd_arg6, int encadd_arg7
+	if ( encadd_arg2 == 0 ) {
+		return
+	}
+	if ( encadd_arg2 >= 10000 ) {
+		locvar_encremove_enc = encadd_arg2 / EXT_ENCHANTMENT
+	}
+	else {
+		locvar_encremove_enc = encadd_arg2
+	}
+	if ( encadd_arg7 == 0 ) {
+		if ( encref(3, locvar_encremove_enc) != 0 ) {
+			if ( encflt(reftype, encref(3, locvar_encremove_enc)) == 0 ) {
+				if ( encref(4, locvar_encremove_enc) == 0 ) {
+					return
+				}
+				else {
+					if ( encflt(reftype, encref(4, locvar_encremove_enc)) == 0 ) {
+						if ( encref(5, locvar_encremove_enc) == 0 ) {
+							return
+						}
+						else {
+							if ( encflt(reftype, encref(5, locvar_encremove_enc)) == 0 ) {
+								return
+							}
+						}
+					}
+				}
+			}
+		}
+		else {
+			if ( reftype == FILTER_AMMO ) {
+				if ( encadd_arg5 == 0 ) {
+					return
+				}
+			}
+		}
+	}
+	locvar_encremove_enc = encadd_arg2
+	locvar_encremove_encp = encadd_arg3
+	if ( locvar_encremove_enc < STARTING_ENCHANT_NORMAL ) {
+		if ( locvar_encremove_enc == ENCHANT_ATTRIBUTE ) {
+			locvar_encremove_enc = rnd(MAX_SKILL_ATTR - STARTING_SKILL_ATTR) + STARTING_SKILL_ATTR
+			locvar_encremove_enc += ENCHANT_ATTRIBUTE * EXT_ENCHANTMENT
+			if ( encadd_arg4 != 0 ) {
+				if ( rnd(100) < encadd_arg4 ) {
+					locvar_encremove_encp = encadd_arg3 * (-2)
+				}
+			}
+		}
+		if ( locvar_encremove_enc == ENCHANT_FOOD ) {
+			locvar_encremove_enc = rnd(MAX_SKILL_ATTR - STARTING_SKILL_ATTR) + STARTING_SKILL_ATTR
+			locvar_encremove_enc += ENCHANT_FOOD * EXT_ENCHANTMENT
+			if ( encadd_arg4 != 0 ) {
+				if ( rnd(100) < encadd_arg4 ) {
+					locvar_encremove_encp = encadd_arg3 * (-2)
+				}
+			}
+		}
+		if ( locvar_encremove_enc == ENCHANT_RESISTANCE ) {
+			locvar_encremove_enc = randomele()
+			locvar_encremove_enc += ENCHANT_RESISTANCE * EXT_ENCHANTMENT
+			if ( encadd_arg4 != 0 ) {
+				if ( rnd(100) < encadd_arg4 ) {
+					locvar_encremove_encp = encadd_arg3 * (-2)
+				}
+			}
+		}
+		if ( locvar_encremove_enc == ENCHANT_SKILL ) {
+			locvar_encremove_enc = rnd(MAX_SKILL_NORMAL - STARTING_SKILL_NORMAL) + STARTING_SKILL_NORMAL
+			locvar_encremove_enc += ENCHANT_SKILL * EXT_ENCHANTMENT
+			if ( encadd_arg4 != 0 ) {
+				if ( rnd(100) < encadd_arg4 ) {
+					locvar_encremove_encp = encadd_arg3 * (-2)
+				}
+			}
+		}
+		if ( locvar_encremove_enc == ENCHANT_SUSTAIN ) {
+			locvar_encremove_enc = rnd(MAX_SKILL_ATTR - STARTING_SKILL_ATTR) + STARTING_SKILL_ATTR
+			locvar_encremove_enc += ENCHANT_SUSTAIN * EXT_ENCHANTMENT
+		}
+		if ( locvar_encremove_enc == ENCHANT_ELEMENTAL_DMG ) {
+			locvar_encremove_enc = randomele()
+			locvar_encremove_enc += ENCHANT_ELEMENTAL_DMG * EXT_ENCHANTMENT
+		}
+		if ( locvar_encremove_enc == ENCHANT_PROC ) {
+			locvar_encadd_sum = 0
+			locvar_encadd_max = 0
+			repeat MAX_EHCHANTMENT_PROC
+				if ( encprocref(3, cnt) != 0 ) {
+					if ( encflt(reftype, encprocref(3, cnt)) == 0 ) {
+						if ( encprocref(4, cnt) == 0 ) {
+							continue
+						}
+						else {
+							if ( encflt(reftype, encprocref(4, cnt)) == 0 ) {
+								continue
+							}
+						}
+					}
+				}
+				locvar_encadd_sum += encprocref(2, cnt)
+				enclist(0, locvar_encadd_max) = cnt, locvar_encadd_sum
+				locvar_encadd_max++
+			loop
+			if ( locvar_encadd_max == 0 ) {
+				return
+			}
+			locvar_encadd_i = 0
+			exrand_rnd locvar_encremove_p, locvar_encadd_sum
+			repeat locvar_encadd_max
+				if ( locvar_encremove_p < enclist(1, cnt) ) {
+					locvar_encadd_i = enclist(0, cnt)
+					break
+				}
+			loop
+			locvar_encremove_enc = ENCHANT_PROC * EXT_ENCHANTMENT + locvar_encadd_i
+		}
+		if ( locvar_encremove_enc == ENCHANT_AMMO ) {
+			locvar_encremove_enc = rnd(rnd(ENCHANT_AMMO_MAX) + 1)
+			locvar_encremove_encp = limit(locvar_encremove_encp, 0, 500) * encammoref(1, locvar_encremove_enc) / 500 + encammoref(0, locvar_encremove_enc)
+			locvar_encremove_enc += ENCHANT_AMMO * EXT_ENCHANTMENT
+			locvar_encremove_encp += locvar_encremove_encp * 1000
+		}
+	}
+	locvar_encadd_i = -1
+	repeat RANGE_INV_ITEM_ENCHANT
+		if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, encadd_arg1) == locvar_encremove_enc ) {
+			locvar_encadd_i = cnt
+			continue
+		}
+		if ( locvar_encadd_i == (-1) ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, encadd_arg1) == 0 ) {
+				locvar_encadd_i = cnt
+			}
+		}
+	loop
+	if ( locvar_encadd_i == (-1) ) {
+		return 0
+	}
+	if ( inv(STARTING_INV_ITEM_ENCHANT + locvar_encadd_i * 2, encadd_arg1) == locvar_encremove_enc ) {
+		if ( reftype == FILTER_AMMO ) {
+			return
+		}
+		if ( encadd_arg5 == 0 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + locvar_encadd_i * 2 + 1, encadd_arg1) > 300 | ibit(ITEM_BIT_PRECIOUS, encadd_arg1) == 1 ) {
+				locvar_encremove_encp /= 2
+			}
+		}
+	}
+	if ( encadd_arg6 ) {
+		rtval = locvar_encremove_enc, locvar_encremove_encp
+		return
+	}
+	if ( inv(STARTING_INV_ITEM_ENCHANT + locvar_encadd_i * 2, encadd_arg1) == locvar_encremove_enc ) {
+		locvar_encremove_encp += inv(STARTING_INV_ITEM_ENCHANT + locvar_encadd_i * 2 + 1, encadd_arg1)
+	}
+	inv(STARTING_INV_ITEM_ENCHANT + locvar_encadd_i * 2, encadd_arg1) = locvar_encremove_enc, locvar_encremove_encp
+	if ( encadd_arg2 < 10000 ) {
+		locvar_encremove_p = encadd_arg2
+	}
+	else {
+		locvar_encremove_p = encadd_arg2 / 10000
+	}
+	if ( inv(INV_ITEM_VALUE, encadd_arg1) * encref(1, locvar_encremove_p) / 100 > 0 ) {
+		inv(INV_ITEM_VALUE, encadd_arg1) = inv(INV_ITEM_VALUE, encadd_arg1) * encref(1, locvar_encremove_p) / 100
+	}
+	sortenc encadd_arg1
+	return 1
+
+#deffunc egoadd int egoadd_arg1, int egoadd_arg2
+	repeat 18
+		if ( egoenc(cnt * 2, egoadd_arg2) == 0 ) {
+			break
+		}
+		encadd egoadd_arg1, egoenc(cnt * 2, egoadd_arg2), randomencp(egoenc(cnt * 2 + 1, egoadd_arg2))
+	loop
+	return
+
+*item_egoInit
+	sdim egoname
+	dim egoenc, 18 * 2, 19
+	dim egoref, 2, 19
+	dim egolist, 19
+
+	p = 0
+	egoname(p) = lang("烈火の", "of fire")
+	egoref(0, p) = 1, 3
+	egoenc(0, p) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_FIRE, 120, ENCHANT_ELEMENTAL_DMG * EXT_ENCHANTMENT + SKILL_RES_FIRE, 120
+	p++
+	egoname(p) = lang("静寂の", "of silence")
+	egoref(0, p) = 0, 1
+	egoenc(0, p) = ENCHANT_SKILL * EXT_ENCHANTMENT + SKILL_NORMAL_STEALTH, 100, ENCHANT_PREVENT_TELEPORT, 100
+	p++
+	egoname(p) = lang("氷結の", "of cold")
+	egoref(0, p) = 1, 3
+	egoenc(0, p) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_COLD, 120, ENCHANT_ELEMENTAL_DMG * EXT_ENCHANTMENT + SKILL_RES_COLD, 120
+	p++
+	egoname(p) = lang("稲妻の", "of lightning")
+	egoref(0, p) = 1, 3
+	egoenc(0, p) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_LIGHTNING, 120, ENCHANT_ELEMENTAL_DMG * EXT_ENCHANTMENT + SKILL_RES_LIGHTNING, 120
+	p++
+	egoname(p) = lang("防衛者の", "of defender")
+	egoref(0, p) = 3, 10000
+	egoenc(0, p) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_FIRE, 100, ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_COLD, 100, ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_LIGHTNING, 100
+	p++
+	egoname(p) = lang("癒し手の", "of healing")
+	egoref(0, p) = 1, 1
+	egoenc(0, p) = ENCHANT_SKILL * EXT_ENCHANTMENT + SKILL_NORMAL_HEALING, 100
+	p++
+	egoname(p) = lang("耐盲目の", "of resist blind")
+	egoref(0, p) = 1, 1
+	egoenc(0, p) = ENCHANT_RES_BLIND, 100
+	p++
+	egoname(p) = lang("耐麻痺の", "of resist paralysis")
+	egoref(0, p) = 1, 1
+	egoenc(0, p) = ENCHANT_RES_PARALYZE, 100
+	p++
+	egoname(p) = lang("耐混乱の", "of resist confusion")
+	egoref(0, p) = 1, 1
+	egoenc(0, p) = ENCHANT_RES_CONFUSE, 100
+	p++
+	egoname(p) = lang("耐恐怖の", "of resist fear")
+	egoref(0, p) = 0, 1
+	egoenc(0, p) = ENCHANT_RES_FEAR, 100
+	p++
+	egoname(p) = lang("睡眠防止の", "of resist sleep")
+	egoref(0, p) = 0, 1
+	egoenc(0, p) = ENCHANT_RES_SLEEP, 100
+	p++
+	egoname(p) = lang("闇夜の", "of night")
+	egoref(0, p) = 2, 3
+	egoenc(0, p) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_DARKNESS, 120, ENCHANT_ELEMENTAL_DMG * EXT_ENCHANTMENT + SKILL_RES_DARKNESS, 120
+	p++
+	egoname(p) = lang("幻の", "of illusion")
+	egoref(0, p) = 2, 3
+	egoenc(0, p) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_MIND, 120, ENCHANT_ELEMENTAL_DMG * EXT_ENCHANTMENT + SKILL_RES_MIND, 120
+	p++
+	egoname(p) = lang("蠱毒の", "of Poison")
+	egoref(0, p) = 2, 3
+	egoenc(0, p) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_POISON, 120, ENCHANT_ELEMENTAL_DMG * EXT_ENCHANTMENT + SKILL_RES_POISON, 120
+	p++
+	egoname(p) = lang("冥府の", "of hell")
+	egoref(0, p) = 2, 3
+	egoenc(0, p) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_NETHER, 120, ENCHANT_ELEMENTAL_DMG * EXT_ENCHANTMENT + SKILL_RES_NETHER, 120
+	p++
+	egoname(p) = lang("旋律の", "of sound")
+	egoref(0, p) = 2, 3
+	egoenc(0, p) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_SOUND, 120, ENCHANT_ELEMENTAL_DMG * EXT_ENCHANTMENT + SKILL_RES_SOUND, 120
+	p++
+	egoname(p) = lang("神経の", "of nerve")
+	egoref(0, p) = 2, 3
+	egoenc(0, p) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_NERVE, 120, ENCHANT_ELEMENTAL_DMG * EXT_ENCHANTMENT + SKILL_RES_NERVE, 120
+	p++
+	egoname(p) = lang("混沌の", "of chaos")
+	egoref(0, p) = 2, 3
+	egoenc(0, p) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_CHAOS, 120, ENCHANT_ELEMENTAL_DMG * EXT_ENCHANTMENT + SKILL_RES_CHAOS, 120
+	p++
+	egoname(p) = lang("魔の", "of magic")
+	egoref(0, p) = 3, 3
+	egoenc(0, p) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_MAGIC, 100, ENCHANT_ELEMENTAL_DMG * EXT_ENCHANTMENT + SKILL_RES_MAGIC, 100
+
+	egominorn(0) = lang("唄う", "singing"), lang("召使の", "servant's"), lang("従者の", "follower's"), lang("呻く", "howling"), lang("輝く", "glowing")
+	egominorn(5) = lang("異彩の", "conspicuous"), lang("魔力を帯びた", "magical"), lang("闇を砕く", "enchanted"), lang("強力な", "mighty"), lang("頼れる", "trustworthy")
+	maxegominorn = length(egominorn)
+	return
+
+*item_egoMinor
+	repeat rnd(rnd(5) + 1) + 1
+		encadd ci, randomenc(randomenclv(egolv)), randomencp(), 8
+	loop
+	inv(INV_ITEM_SUB_NAME, ci) = 20000 + rnd(maxegominorn)
+	return
+
+*item_ego
+	p = 0
+	repeat 19
+		if ( egoref(0, cnt) != egolv ) {
+			continue
+		}
+		if ( egoref(1, cnt) != 0 ) {
+			if ( encflt(reftype, egoref(1, cnt)) == 0 ) {
+				continue
+			}
+		}
+		egolist(p) = cnt
+		p++
+	loop
+	if ( p == 0 ) {
+		return
+	}
+	p = egolist(rnd(p))
+	inv(INV_ITEM_SUB_NAME, ci) = 10000 + p
+	egoadd ci, p
+	if ( rnd(2) == 0 ) {
+		encadd ci, randomenc(randomenclv(egolv)), randomencp(), 20
+	}
+	if ( rnd(4) == 0 ) {
+		encadd ci, randomenc(randomenclv(egolv)), randomencp(), 25
+	}
+	return
+
+*item_enc
+	if ( reftype == FILTER_AMMO ) {
+		inv(INV_ITEM_AMMO, ci) = -1
+	}
+	if ( fixlv <= FIX_QUALITY_GOOD ) {
+		return
+	}
+	if ( fixlv == FIX_QUALITY_UNIQUE ) {
+		egolv = MAX_ENCHANTMENT_LEVEL
+	}
+	else {
+		egolv = rnd(limit(rnd(objlv / 10 + 3), 0, MAX_ENCHANTMENT_LEVEL) + 1)
+		inv(INV_ITEM_VALUE, ci) = inv(INV_ITEM_VALUE, ci) * 3
+		inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 50 + rnd(abs(fixlv - 2) * 100 + 100)
+	}
+	if ( reftypeminor == FILTER_WEAPON_STAVE ) {
+		if ( fixlv != FIX_QUALITY_UNIQUE ) {
+			repeat 1
+				if ( rnd(10) == 0 ) {
+					encadd ci, ENCHANT_ROCK_THROWING, 100
+				}
+				if ( rnd(10) == 0 ) {
+					encadd ci, ENCHANT_ENHANCE_SPELL, randomencp()
+				}
+				if ( rnd(10) == 0 ) {
+					encadd ci, ENCHANT_ATTRIBUTE * EXT_ENCHANTMENT + SKILL_ATTR_MAG, randomencp()
+				}
+				if ( rnd(10) == 0 ) {
+					encadd ci, ENCHANT_SKILL * EXT_ENCHANTMENT + SKILL_NORMAL_CASTING, randomencp()
+					break
+				}
+				if ( rnd(10) == 0 ) {
+					encadd ci, ENCHANT_ATTRIBUTE * EXT_ENCHANTMENT + SKILL_ATTR_MANA, randomencp()
+					break
+				}
+				if ( rnd(10) == 0 ) {
+					encadd ci, ENCHANT_SKILL * EXT_ENCHANTMENT + SKILL_NORMAL_MAGIC_CAPACITY, randomencp()
+					break
+				}
+			loop
+		}
+	}
+	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_PISTOL | inv(INV_ITEM_ID, ci) == ITEM_ID_SHORT_BOW ) {
+		if ( rnd(10) == 0 ) {
+			encadd ci, ENCHANT_QUICK_SHOOTING, 300
+		}
+	}
+	if ( fixlv < FIX_QUALITY_MIRACLE ) {
+		if ( rnd(2) ) {
+			gosub *item_egoMinor
+		}
+		else {
+			gosub *item_ego
+		}
+	}
+	if ( fixlv == FIX_QUALITY_MIRACLE | fixlv == FIX_QUALITY_GODLY ) {
+		inv(INV_ITEM_SUB_NAME, ci) = 40000 + rnd(30000)
+		if ( gdata(GDATA_FLAG_RARE_DROP) == 100 & rnd(20) == 0 ) {
+			if ( reftype == FILTER_RANGE | reftype == FILTER_WEAPON ) {
+				ibitmod ITEM_BIT_ALIVE, ci, 1
+				inv(INV_ITEM_PARAM1, ci) = 1
+				if ( fixlv == FIX_QUALITY_GODLY ) {
+					encadd ci, randomenc(99), (randomencp() + 1) / 2 + 200
+				}
+				if ( fixlv == FIX_QUALITY_MIRACLE ) {
+					encadd ci, randomenc(99), (randomencp() + 1) / 3 + 150
+				}
+				return
+			}
+		}
+		if ( fixlv == FIX_QUALITY_GODLY | (fixlv == FIX_QUALITY_MIRACLE & rnd(10) == 0) ) {
+			encadd ci, randomenc(99), randomencp()
+		}
+		if ( fixlv == FIX_QUALITY_MIRACLE ) {
+			p = rnd(rnd(rnd(10) + 1) + 3) + 3
+		}
+		if ( fixlv == FIX_QUALITY_GODLY ) {
+			p = rnd(rnd(rnd(10) + 1) + 3) + 6
+		}
+		if ( p > 11 ) {
+			if ( reftype == FILTER_WEAPON | reftype == FILTER_RANGE ) {
+				if ( rnd(10) == 0 ) {
+					ibitmod ITEM_BIT_ULTIMATE, ci, 1
+					encadd ci, randomenc(99), randomencp()
+					inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_BLESSED
+				}
+			}
+		}
+		repeat p
+			encadd ci, randomenc(randomenclv(egolv)), randomencp() + (fixlv == FIX_QUALITY_GODLY) * 200 + (ibit(ITEM_BIT_ULTIMATE, ci) == 1) * 100, 20 - (fixlv == FIX_QUALITY_GODLY) * 10 - (ibit(ITEM_BIT_ULTIMATE, ci) == 1) * 20
+		loop
+	}
+	if ( fixlv == FIX_QUALITY_GODLY ) {
+		repeat rnd(2) + 1
+			encadd ci, ENCHANT_RESISTANCE, randomencp() * 2 / 3 + 151
+		loop
+	}
+	if ( inv(INV_ITEM_STATUS, ci) <= ITEM_STATUS_CURSED ) {
+		encadd ci, randomenc(randomenclv(egolv)), limit(randomencp(), 250, 10000) * (125 + (inv(INV_ITEM_STATUS, ci) == ITEM_STATUS_DOOMED) * 25) / 100
+		repeat 1 + (inv(INV_ITEM_STATUS, ci) == ITEM_STATUS_DOOMED) + rnd(2)
+			if ( rnd(3) == 0 ) {
+				encadd ci, ENCHANT_RESISTANCE, randomencp() * 3 / 2, 100
+				continue
+			}
+			if ( rnd(3) == 0 ) {
+				encadd ci, ENCHANT_ATTRIBUTE, randomencp() * 5 / 2, 100
+				continue
+			}
+			encadd ci, randomenc(-1), randomencp()
+		loop
+	}
+	return
+
+*item_materialInit
+	sdim mtname, 18, 2, ITEM_MATERIAL_MAX
+	dim mtref, 10, ITEM_MATERIAL_MAX
+	dim mtenc, MAX_ITEM_MATERIAL_ENCHANT * 2, ITEM_MATERIAL_MAX
+	dim mtbit, 10, ITEM_MATERIAL_MAX
+
+	mtname(0, ITEM_MATERIAL_SAND) = lang("砂", "sand"), lang("子供のおもちゃの", "toy")
+	mtref(0, ITEM_MATERIAL_SAND) = 10, 80, -5, -5, -5, -5, 100
+	mtenc(0, ITEM_MATERIAL_SAND) = ENCHANT_NONE
+
+	mtname(0, ITEM_MATERIAL_LEATHER) = lang("革", "leather"), lang("全てを包む", "mysterious")
+	mtref(0, ITEM_MATERIAL_LEATHER) = 100, 150, 12, 2, 13, 6, 100, 6
+	mtenc(0, ITEM_MATERIAL_LEATHER) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_SOUND, 25
+
+	mtname(0, ITEM_MATERIAL_SILK) = lang("シルク", "silk"), lang("美しき", "beautiful")
+	mtref(0, ITEM_MATERIAL_SILK) = 40, 190, 9, -2, 10, 2, 100, 5
+	mtenc(0, ITEM_MATERIAL_SILK) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_MIND, 50
+
+	mtname(0, ITEM_MATERIAL_CLOTH) = lang("布", "cloth"), lang("艶やかなる", "charming")
+	mtref(0, ITEM_MATERIAL_CLOTH) = 20, 30, 6, -5, 7, 2, 100, 10
+	mtenc(0, ITEM_MATERIAL_CLOTH) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_COLD, 25
+
+	mtname(0, ITEM_MATERIAL_SCALE) = lang("鱗", "scale"), lang("逆鱗に触れし", "wrath")
+	mtref(0, ITEM_MATERIAL_SCALE) = 180, 250, 14, 6, 12, 11, 120, 10
+	mtenc(0, ITEM_MATERIAL_SCALE) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_FIRE, 50
+
+	mtname(0, ITEM_MATERIAL_GLASS) = lang("硝子", "glass"), lang("透き通る", "transparent")
+	mtref(0, ITEM_MATERIAL_GLASS) = 180, 150, 19, 0, 17, 0, 100, 4
+	mtenc(0, ITEM_MATERIAL_GLASS) = ENCHANT_ATTRIBUTE * EXT_ENCHANTMENT + SKILL_ATTR_SPD, 150
+	mtbit(0, ITEM_MATERIAL_GLASS) = ITEM_BIT_FIREPROOF
+
+	mtname(0, ITEM_MATERIAL_MITHRIL) = lang("ミスリル", "mithril"), lang("古なる", "ancient")
+	mtref(0, ITEM_MATERIAL_MITHRIL) = 200, 750, 20, 18, 25, 17, 190, 2
+	mtenc(0, ITEM_MATERIAL_MITHRIL) = ENCHANT_SKILL * EXT_ENCHANTMENT + SKILL_NORMAL_CASTING, 100
+	mtbit(0, ITEM_MATERIAL_MITHRIL) = ITEM_BIT_ACIDPROOF, ITEM_BIT_FIREPROOF
+
+	mtname(0, ITEM_MATERIAL_ETHER) = lang("エーテル", "ether"), lang("永遠なる", "eternal")
+	mtref(0, ITEM_MATERIAL_ETHER) = 80, 1200, 8, 45, 35, 8, 250, 4
+	mtenc(0, ITEM_MATERIAL_ETHER) = ENCHANT_ATTRIBUTE * EXT_ENCHANTMENT + SKILL_ATTR_SPD, 200
+	mtbit(0, ITEM_MATERIAL_ETHER) = ITEM_BIT_ACIDPROOF, ITEM_BIT_FIREPROOF
+
+	mtname(0, ITEM_MATERIAL_STEEL) = lang("スティール", "steel"), lang("由緒ある", "historic")
+	mtref(0, ITEM_MATERIAL_STEEL) = 270, 280, 12, 13, 8, 18, 140, 0
+	mtenc(0, ITEM_MATERIAL_STEEL) = ENCHANT_ATTRIBUTE * EXT_ENCHANTMENT + SKILL_ATTR_WIL, 100
+	mtbit(0, ITEM_MATERIAL_STEEL) = ITEM_BIT_FIREPROOF
+
+	mtname(0, ITEM_MATERIAL_METAL) = lang("鉄", "metal"), lang("鉄塊と呼ばれる", "mass")
+	mtref(0, ITEM_MATERIAL_METAL) = 280, 190, 8, 8, 3, 14, 130, 0
+	mtenc(0, ITEM_MATERIAL_METAL) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_FIRE, 25
+	mtbit(0, ITEM_MATERIAL_METAL) = ITEM_BIT_FIREPROOF
+
+	mtname(0, ITEM_MATERIAL_CRYSTAL) = lang("水晶", "crystal"), lang("異光を放つ", "rainbow")
+	mtref(0, ITEM_MATERIAL_CRYSTAL) = 200, 800, 19, 14, 16, 19, 150, 12
+	mtenc(0, ITEM_MATERIAL_CRYSTAL) = ENCHANT_ATTRIBUTE * EXT_ENCHANTMENT + SKILL_ATTR_MAG, 100
+
+	mtname(0, ITEM_MATERIAL_BRONZE) = lang("ブロンズ", "bronze"), lang("気高き", "noble")
+	mtref(0, ITEM_MATERIAL_BRONZE) = 200, 70, 2, 5, 1, 5, 100, 6
+	mtenc(0, ITEM_MATERIAL_BRONZE) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_LIGHTNING, 50
+
+	mtname(0, ITEM_MATERIAL_DIAMOND) = lang("ダイヤ", "diamond"), lang("うつろいなき", "ever lasting")
+	mtref(0, ITEM_MATERIAL_DIAMOND) = 330, 1100, 19, 27, 13, 31, 220, 0
+	mtenc(0, ITEM_MATERIAL_DIAMOND) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_LIGHTNING, 100
+
+	mtname(0, ITEM_MATERIAL_SPIRIT) = lang("霊布", "spirit cloth"), lang("この世ならざる", "amazing")
+	mtref(0, ITEM_MATERIAL_SPIRIT) = 40, 750, 3, 2, 34, 6, 100, 4
+	mtenc(0, ITEM_MATERIAL_SPIRIT) = ENCHANT_ATTRIBUTE * EXT_ENCHANTMENT + SKILL_ATTR_SPD, 200
+	mtbit(0, ITEM_MATERIAL_SPIRIT) = ITEM_BIT_ACIDPROOF
+
+	mtname(0, ITEM_MATERIAL_RUBYNUS) = lang("ルビナス", "rubynus"), lang("赤く染まった", "crimson")
+	mtref(0, ITEM_MATERIAL_RUBYNUS) = 250, 1000, 38, 18, 31, 24, 190, 3
+	mtenc(0, ITEM_MATERIAL_RUBYNUS) = ENCHANT_ATTRIBUTE * EXT_ENCHANTMENT + SKILL_ATTR_LIFE, 125
+	mtbit(0, ITEM_MATERIAL_RUBYNUS) = ITEM_BIT_ACIDPROOF, ITEM_BIT_FIREPROOF
+
+	mtname(0, ITEM_MATERIAL_PAPER) = lang("紙", "paper"), lang("ふざけた", "silly")
+	mtref(0, ITEM_MATERIAL_PAPER) = 10, 20, 15, -10, 12, 0, 100, 0
+	mtenc(0, ITEM_MATERIAL_PAPER) = ENCHANT_SKILL * EXT_ENCHANTMENT + SKILL_NORMAL_EVASION, 100
+
+	mtname(0, ITEM_MATERIAL_DUSK) = lang("宵晒", "dawn cloth"), lang("宵闇を纏いし", "dawn")
+	mtref(0, ITEM_MATERIAL_DUSK) = 45, 850, 10, 8, 35, 15, 100, 4
+	mtenc(0, ITEM_MATERIAL_DUSK) = ENCHANT_ATTRIBUTE * EXT_ENCHANTMENT + SKILL_ATTR_MANA, 200
+
+	mtname(0, ITEM_MATERIAL_BONE) = lang("ボーン", "bone"), lang("不死なる", "immortal")
+	mtref(0, ITEM_MATERIAL_BONE) = 120, 300, 10, 6, 12, 11, 140, 0
+	mtenc(0, ITEM_MATERIAL_BONE) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_NETHER, 100
+	mtbit(0, ITEM_MATERIAL_BONE) = ITEM_BIT_FIREPROOF
+
+	mtname(0, ITEM_MATERIAL_CHAIN) = lang("鉄鎖", "chain"), lang("連鎖せし", "spiral")
+	mtref(0, ITEM_MATERIAL_CHAIN) = 200, 300, 11, 8, 17, 14, 100, 0
+	mtenc(0, ITEM_MATERIAL_CHAIN) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_DARKNESS, 50
+	mtbit(0, ITEM_MATERIAL_CHAIN) = ITEM_BIT_FIREPROOF
+
+	mtname(0, ITEM_MATERIAL_OBSIDIAN) = lang("オブシディアン", "obsidian"), lang("神殺しの", "godbane")
+	mtref(0, ITEM_MATERIAL_OBSIDIAN) = 160, 350, 16, 10, 13, 14, 130, 0
+	mtenc(0, ITEM_MATERIAL_OBSIDIAN) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_CHAOS, 100
+
+	mtname(0, ITEM_MATERIAL_MICA) = lang("ミカ", "mica"), lang("儚き", "ephemeral")
+	mtref(0, ITEM_MATERIAL_MICA) = 40, 150, 10, -2, 12, 0, 100, 0
+	mtenc(0, ITEM_MATERIAL_MICA) = ENCHANT_ATTRIBUTE * EXT_ENCHANTMENT + SKILL_ATTR_LUC, 100
+
+	mtname(0, ITEM_MATERIAL_PEARL) = lang("真珠", "pearl"), lang("闇を照らす", "shining")
+	mtref(0, ITEM_MATERIAL_PEARL) = 240, 400, 18, 6, 18, 12, 140, 10
+	mtenc(0, ITEM_MATERIAL_PEARL) = ENCHANT_ATTRIBUTE * EXT_ENCHANTMENT + SKILL_ATTR_PER, 100
+
+	mtname(0, ITEM_MATERIAL_EMERALD) = lang("エメラルド", "emerald"), lang("奇跡を呼ぶ", "miracle")
+	mtref(0, ITEM_MATERIAL_EMERALD) = 240, 1050, 22, 23, 18, 28, 190, 2
+	mtenc(0, ITEM_MATERIAL_EMERALD) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_NERVE, 100
+
+	mtname(0, ITEM_MATERIAL_DRAGON) = lang("竜鱗", "dragon scale"), lang("竜を統べし", "dragonbane")
+	mtref(0, ITEM_MATERIAL_DRAGON) = 220, 800, 26, 27, 29, 26, 190, 2
+	mtenc(0, ITEM_MATERIAL_DRAGON) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_FIRE, 50, 2 * EXT_ENCHANTMENT + SKILL_RES_COLD, 50
+	mtbit(0, ITEM_MATERIAL_DRAGON) = ITEM_BIT_ACIDPROOF, ITEM_BIT_FIREPROOF
+
+	mtname(0, ITEM_MATERIAL_SILVER) = lang("シルバー", "silver"), lang("闇を砕く", "dreadbane")
+	mtref(0, ITEM_MATERIAL_SILVER) = 230, 250, 10, 7, 7, 11, 130, 0
+	mtenc(0, ITEM_MATERIAL_SILVER) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_DARKNESS, 50
+	mtbit(0, ITEM_MATERIAL_SILVER) = ITEM_BIT_FIREPROOF
+
+	mtname(0, ITEM_MATERIAL_PLATINUM) = lang("白銀", "platinum"), lang("光を纏いし", "brilliant")
+	mtref(0, ITEM_MATERIAL_PLATINUM) = 260, 350, 16, 11, 14, 17, 140, 0
+	mtenc(0, ITEM_MATERIAL_PLATINUM) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_DARKNESS, 100
+	mtbit(0, ITEM_MATERIAL_PLATINUM) = ITEM_BIT_FIREPROOF
+
+	mtname(0, ITEM_MATERIAL_ZYLON) = lang("ザイロン", "zylon"), lang("異国からもたらされし", "foreign")
+	mtref(0, ITEM_MATERIAL_ZYLON) = 50, 500, 5, 4, 21, 16, 100, 4
+	mtenc(0, ITEM_MATERIAL_ZYLON) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_NETHER, 50
+
+	mtname(0, ITEM_MATERIAL_GRIFFON) = lang("翼鳥鱗", "griffon scale"), lang("翼を折られし", "fallen")
+	mtref(0, ITEM_MATERIAL_GRIFFON) = 70, 1000, 16, 17, 32, 24, 120, 2
+	mtenc(0, ITEM_MATERIAL_GRIFFON) = ENCHANT_SKILL * EXT_ENCHANTMENT + SKILL_NORMAL_EVASION, 100
+
+	mtname(0, ITEM_MATERIAL_TITANIUM) = lang("チタン", "titanium"), lang("色褪せぬ", "fadeless")
+	mtref(0, ITEM_MATERIAL_TITANIUM) = 200, 750, 21, 18, 19, 22, 160, 0
+	mtenc(0, ITEM_MATERIAL_TITANIUM) = ENCHANT_ATTRIBUTE * EXT_ENCHANTMENT + SKILL_ATTR_STR, 100
+	mtbit(0, ITEM_MATERIAL_TITANIUM) = ITEM_BIT_FIREPROOF
+
+	mtname(0, ITEM_MATERIAL_CHROME) = lang("クロム", "chrome"), lang("真実を暴く", "pure")
+	mtref(0, ITEM_MATERIAL_CHROME) = 320, 500, 15, 17, 12, 22, 150, 0
+	mtenc(0, ITEM_MATERIAL_CHROME) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_POISON, 100
+
+	mtname(0, ITEM_MATERIAL_ADAMANTIUM) = lang("アダマンタイト", "adamantium"), lang("大地を揺るがす", "earth")
+	mtref(0, ITEM_MATERIAL_ADAMANTIUM) = 360, 1150, 11, 38, 8, 42, 240, 10
+	mtenc(0, ITEM_MATERIAL_ADAMANTIUM) = ENCHANT_ATTRIBUTE * EXT_ENCHANTMENT + SKILL_ATTR_CON, 100
+	mtbit(0, ITEM_MATERIAL_ADAMANTIUM) = ITEM_BIT_ACIDPROOF, ITEM_BIT_FIREPROOF
+
+	mtname(0, ITEM_MATERIAL_GOLD) = lang("ゴールデン", "gold"), lang("黄金に輝く", "golden")
+	mtref(0, ITEM_MATERIAL_GOLD) = 300, 800, 13, 18, 14, 22, 140, 5
+	mtenc(0, ITEM_MATERIAL_GOLD) = ENCHANT_ATTRIBUTE * EXT_ENCHANTMENT + SKILL_ATTR_STR, 100
+	mtbit(0, ITEM_MATERIAL_GOLD) = ITEM_BIT_FIREPROOF
+
+	mtname(0, ITEM_MATERIAL_CORAL) = lang("珊瑚", "coral"), lang("海からもたらされし", "ocean")
+	mtref(0, ITEM_MATERIAL_CORAL) = 180, 240, 7, 2, 10, 7, 120, 5
+	mtenc(0, ITEM_MATERIAL_CORAL) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_LIGHTNING, 100
+
+	mtname(0, ITEM_MATERIAL_IRON) = lang("鉛", "iron"), lang("重き", "heavy")
+	mtref(0, ITEM_MATERIAL_IRON) = 300, 50, 3, 4, -3, 11, 100, 0
+	mtenc(0, ITEM_MATERIAL_IRON) = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_POISON, 50
+	mtbit(0, ITEM_MATERIAL_IRON) = ITEM_BIT_ACIDPROOF
+
+	mtname(0, ITEM_MATERIAL_RAW) = lang("生もの", "raw"), lang("食用", "candy")
+	mtref(0, ITEM_MATERIAL_RAW) = 100, 50, -5, -5, -5, -5, 100, 0
+	mtenc(0, ITEM_MATERIAL_RAW) = ENCHANT_NONE
+	
+	mtname(0, ITEM_MATERIAL_BAMBOO) = lang("竹", "bamboo"), lang("渋い", "tasteful")
+	mtref(0, ITEM_MATERIAL_BAMBOO) = 120, 30, 17, 3, 14, 9, 100, 2
+	mtenc(0, ITEM_MATERIAL_BAMBOO) = ENCHANT_SKILL * EXT_ENCHANTMENT + SKILL_NORMAL_MEDITATION, 100
+	
+	mtname(0, ITEM_MATERIAL_NANOMACHINE) = lang("ナノマシン", "nanomachine"), lang("変形する", "variable")
+	mtref(0, ITEM_MATERIAL_NANOMACHINE) = 230, 900, 13, 30, 26, 30, 200, 9
+	mtenc(0, ITEM_MATERIAL_NANOMACHINE) = ENCHANT_SKILL * EXT_ENCHANTMENT + SKILL_NORMAL_HEALING, 100
+	mtbit(0, ITEM_MATERIAL_NANOMACHINE) = ITEM_BIT_FIREPROOF
+
+	mtname(0, ITEM_MATERIAL_PLANT_VEGETABLE) = lang("野菜", "a vegetable plant")
+	mtname(0, ITEM_MATERIAL_PLANT_FRUIT) = lang("果実", "a fruit plant")
+	mtname(0, ITEM_MATERIAL_PLANT_HERB) = lang("ハーブ", "an herb plant")
+	mtname(0, ITEM_MATERIAL_PLANT_UNKNOWN) = lang("謎の物体", "an unknown plant")
+	mtname(0, ITEM_MATERIAL_PLANT_ARTIFACT) = lang("アーティファクト", "an artifact plant")
+	mtname(0, ITEM_MATERIAL_PLANT_GEM) = lang("宝石", "a gem plant")
+	mtname(0, ITEM_MATERIAL_PLANT_MAGIC) = lang("魔法の木", "a magic plant")
+
+	mtname(0, ITEM_MATERIAL_WOOD) = lang("木", "wood"), lang("古き", "old")
+	mtref(0, ITEM_MATERIAL_WOOD) = 150, 80, 14, 7, 20, 13, 120, 6
+	mtenc(0, ITEM_MATERIAL_WOOD) = 2 * 10000 + 54, 100
+
+	dim mtlistmetal, ITEM_MATERIA_GROUP_MAX, ITEM_MATERIAL_LEVEL_MAX
+	dim mtlistleather, ITEM_MATERIA_GROUP_MAX, ITEM_MATERIAL_LEVEL_MAX
+	mtlistmetal(0, 0) = ITEM_MATERIAL_BRONZE, ITEM_MATERIAL_IRON, ITEM_MATERIAL_MICA, ITEM_MATERIAL_CORAL
+	mtlistmetal(0, 1) = ITEM_MATERIAL_METAL, ITEM_MATERIAL_SILVER, ITEM_MATERIAL_GLASS, ITEM_MATERIAL_OBSIDIAN
+	mtlistmetal(0, 2) = ITEM_MATERIAL_STEEL, ITEM_MATERIAL_PLATINUM, ITEM_MATERIAL_PEARL, ITEM_MATERIAL_MITHRIL
+	mtlistmetal(0, 3) = ITEM_MATERIAL_CHROME, ITEM_MATERIAL_CRYSTAL, ITEM_MATERIAL_EMERALD, ITEM_MATERIAL_ADAMANTIUM
+	mtlistmetal(0, 4) = ITEM_MATERIAL_TITANIUM, ITEM_MATERIAL_DIAMOND, ITEM_MATERIAL_RUBYNUS, ITEM_MATERIAL_ETHER
+	mtlistleather(0, 0) = ITEM_MATERIAL_CLOTH, ITEM_MATERIAL_SILK, ITEM_MATERIAL_PAPER, ITEM_MATERIAL_BONE
+	mtlistleather(0, 1) = ITEM_MATERIAL_LEATHER, ITEM_MATERIAL_SCALE, ITEM_MATERIAL_GLASS, ITEM_MATERIAL_OBSIDIAN
+	mtlistleather(0, 2) = ITEM_MATERIAL_CHAIN, ITEM_MATERIAL_PLATINUM, ITEM_MATERIAL_PEARL, ITEM_MATERIAL_MITHRIL
+	mtlistleather(0, 3) = ITEM_MATERIAL_ZYLON, ITEM_MATERIAL_GOLD, ITEM_MATERIAL_SPIRIT, ITEM_MATERIAL_DRAGON
+	mtlistleather(0, 4) = ITEM_MATERIAL_DUSK, ITEM_MATERIAL_GRIFFON, ITEM_MATERIAL_RUBYNUS, ITEM_MATERIAL_ETHER
+	return
+
+*item_material
+	gosub *choose_material
+	gosub *apply_material
+	return
+
+*choose_material
+	if ( cm ) {
+		mtlv = cdata(CDATA_LEVEL, rc) / 15 + 1
+	}
+	else {
+		mtlv = rnd(objlv + 1) / 10 + 1
+	}
+	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_MATERIAL_KIT ) {
+		mtlv = rnd(mtlv + 1)
+		if ( rnd(2) == 0 ) {
+			inv(INV_ITEM_MATERIAL, ci) = ITEM_MATERIAL_TYPE_METAL
+		}
+		else {
+			inv(INV_ITEM_MATERIAL, ci) = ITEM_MATERIAL_TYPE_LEATHER
+		}
+	}
+	p = rnd(100)
+	repeat 1
+		if ( p < 5 ) {
+			p = 3
+			break
+		}
+		if ( p < 25 ) {
+			p = 2
+			break
+		}
+		if ( p < 55 ) {
+			p = 1
+			break
+		}
+		p = 0
+	loop
+	if ( mode == MODELIST_CHARA_CREATION ) {
+		mtlv = 0
+		p = 0
+	}
+	if ( fixmaterial != ITEM_MATERIAL_SAND ) {
+		inv(INV_ITEM_MATERIAL, ci) = fixmaterial
+		fixmaterial = ITEM_MATERIAL_SAND
+	}
+	else {
+		if ( mtlv >= 5 ) {
+			mtlv = 5 - 1
+		}
+		mtlv = limit(rnd(mtlv + 1) + objfix, 0, 5 - 1)
+		objfix = 0
+		if ( reftype == FILTER_FURNITURE ) {
+			if ( rnd(2) == 0 ) {
+				inv(INV_ITEM_MATERIAL, ci) = ITEM_MATERIAL_TYPE_METAL
+			}
+			else {
+				inv(INV_ITEM_MATERIAL, ci) = ITEM_MATERIAL_TYPE_LEATHER
+			}
+		}
+		if ( inv(INV_ITEM_MATERIAL, ci) == ITEM_MATERIAL_TYPE_METAL ) {
+			if ( rnd(10) != 0 ) {
+				inv(INV_ITEM_MATERIAL, ci) = mtlistmetal(p, mtlv)
+			}
+			else {
+				inv(INV_ITEM_MATERIAL, ci) = mtlistleather(p, mtlv)
+			}
+			if ( mtlv >= 3 ) {
+				if ( rnd(12) == 0 ) {
+					inv(INV_ITEM_MATERIAL, ci) = ITEM_MATERIAL_NANOMACHINE
+				}
+			}
+		}
+		if ( inv(INV_ITEM_MATERIAL, ci) == ITEM_MATERIAL_TYPE_LEATHER ) {
+			if ( rnd(10) != 0 ) {
+				inv(INV_ITEM_MATERIAL, ci) = mtlistleather(p, mtlv)
+			}
+			else {
+				inv(INV_ITEM_MATERIAL, ci) = mtlistmetal(p, mtlv)
+			}
+			if ( mtlv == 1 ) {
+				if ( rnd(6) == 0 ) {
+					inv(INV_ITEM_MATERIAL, ci) = ITEM_MATERIAL_BAMBOO
+				}
+			}
+			if ( mtlv == 2 ) {
+				if ( rnd(6) == 0 ) {
+					inv(INV_ITEM_MATERIAL, ci) = ITEM_MATERIAL_WOOD
+				}
+			}
+		}
+		if ( rnd(25) == 0 ) {
+			inv(INV_ITEM_MATERIAL, ci) = ITEM_MATERIAL_RAW
+		}
+	}
+	return
+
+*remake_material
+	inv(INV_ITEM_COL, ci) = COLOR_DEFAULT
+	p = inv(INV_ITEM_MATERIAL, ci)
+	reftype = refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE)
+	fixlv = inv(INV_ITEM_QUALITY, ci)
+	repeat 8
+		if ( mtenc(cnt * 2, p) == 0 ) {
+			break
+		}
+		encremove ci, mtenc(cnt * 2, p), mtenc(cnt * 2 + 1, p)
+	loop
+	if ( reftype == FILTER_FURNITURE ) {
+		if ( inv(INV_ITEM_SUB_NAME, ci) != 0 ) {
+			originalvalue = inv(INV_ITEM_VALUE, ci) * 100 / (80 + inv(INV_ITEM_SUB_NAME, ci) * 20)
+		}
+		else {
+			originalvalue = inv(INV_ITEM_VALUE, ci)
+		}
+		originalvalue = originalvalue - mtref(MTREF_VALUE, p) * 2
+	}
+	else {
+		originalvalue = inv(INV_ITEM_VALUE, ci) * 400 / (mtref(MTREF_VALUE, p) / 4 + 200)
+	}
+	if ( inv(INV_ITEM_ATTACK, ci) != 0 | inv(INV_ITEM_DAMAGE, ci) != 0 | inv(INV_ITEM_DV, ci) != 0 | inv(INV_ITEM_PV, ci) != 0 ) {
+		inv(INV_ITEM_ATTACK, ci) = 0
+		inv(INV_ITEM_DAMAGE, ci) = 0
+		inv(INV_ITEM_DV, ci) = 0
+		inv(INV_ITEM_PV, ci) = 0
+	}
+	dbid = inv(INV_ITEM_ID, ci)
+	dbmode = DBMODE_SET_STATS
+	gosub *db_item
+	inv(INV_ITEM_VALUE, ci) = originalvalue
+	if ( fixmaterial != ITEM_MATERIAL_SAND ) {
+		inv(INV_ITEM_MATERIAL, ci) = fixmaterial
+		fixmaterial = ITEM_MATERIAL_SAND
+	}
+	else {
+		gosub *choose_material
+	}
+	if ( saiseiseimode != 50 ) {
+		gosub *apply_material
+	}
+	else {
+		gosub *apply_materialEnc
+	}
+	gosub *item_value
+	r1 = cc
+	gosub *charaRefresh
+	return
+
+*apply_material
+	p = inv(INV_ITEM_MATERIAL, ci)
+	inv(INV_ITEM_WEIGHT, ci) = inv(INV_ITEM_WEIGHT, ci) * mtref(MTREF_WEIGHT, p) / 100
+	if ( reftype == FILTER_FURNITURE ) {
+		inv(INV_ITEM_VALUE, ci) += mtref(MTREF_VALUE, p) * 2
+	}
+	else {
+		inv(INV_ITEM_VALUE, ci) = inv(INV_ITEM_VALUE, ci) * (mtref(MTREF_VALUE, p) / 4 + 200) / 400
+	}
+	if ( inv(INV_ITEM_COL, ci) == COLOR_DEFAULT ) {
+		inv(INV_ITEM_COL, ci) = mtref(MTREF_COL, p)
+	}
+	p(1) = 120, 80
+	if ( fixlv == FIX_QUALITY_BAD ) {
+		p(1) = 150, 80
+	}
+	if ( fixlv == FIX_QUALITY_GREAT ) {
+		p(1) = 100, 70
+	}
+	if ( fixlv >= FIX_QUALITY_MIRACLE ) {
+		p(1) = 80, 70
+	}
+	if ( saiseiseimode == 100 ) {
+		if ( inv(INV_ITEM_ATTACK, ci) > 0 ) {
+			inv(INV_ITEM_ATTACK, ci) = mtref(MTREF_ATTACK, p) * inv(INV_ITEM_ATTACK, ci) * 9 / (p(1) - 29)
+		}
+		if ( inv(INV_ITEM_DAMAGE, ci) > 0 ) {
+			inv(INV_ITEM_DAMAGE, ci) = mtref(MTREF_DAMAGE, p) * inv(INV_ITEM_DAMAGE, ci) * 5 / (p(1) - 29)
+		}
+		if ( inv(INV_ITEM_DV, ci) > 0 ) {
+			inv(INV_ITEM_DV, ci) = mtref(MTREF_DV, p) * inv(INV_ITEM_DV, ci) * 7 / (p(1) - 29)
+		}
+		if ( inv(INV_ITEM_PV, ci) > 0 ) {
+			inv(INV_ITEM_PV, ci) = mtref(MTREF_PV, p) * inv(INV_ITEM_PV, ci) * 9 / (p(1) - 29)
+		}
+		if ( inv(INV_ITEM_ATTACK, ci) < 0 ) {
+			inv(INV_ITEM_ATTACK, ci) = mtref(MTREF_ATTACK, p) * inv(INV_ITEM_ATTACK, ci) * 9 / (p(1) - 0)
+		}
+		if ( inv(INV_ITEM_DAMAGE, ci) < 0 ) {
+			inv(INV_ITEM_DAMAGE, ci) = mtref(MTREF_DAMAGE, p) * inv(INV_ITEM_DAMAGE, ci) * 5 / (p(1) - 0)
+		}
+		if ( inv(INV_ITEM_DV, ci) < 0 ) {
+			inv(INV_ITEM_DV, ci) = mtref(MTREF_DV, p) * inv(INV_ITEM_DV, ci) * 7 / (p(1) - 0)
+		}
+		if ( inv(INV_ITEM_PV, ci) < 0 ) {
+			inv(INV_ITEM_PV, ci) = mtref(MTREF_PV, p) * inv(INV_ITEM_PV, ci) * 9 / (p(1) - 0)
+		}
+		if ( inv(INV_ITEM_DICE2, ci) != 0 ) {
+			inv(INV_ITEM_DICE2, ci) = inv(INV_ITEM_DICE2, ci) * mtref(MTREF_DICE, p) / p(1)
+		}
+	}
+	if ( saiseiseimode == 0 ) {
+		if ( inv(INV_ITEM_ATTACK, ci) != 0 ) {
+			inv(INV_ITEM_ATTACK, ci) = mtref(MTREF_ATTACK, p) * inv(INV_ITEM_ATTACK, ci) * 9 / (p(1) - rnd(30))
+		}
+		if ( inv(INV_ITEM_DAMAGE, ci) != 0 ) {
+			inv(INV_ITEM_DAMAGE, ci) = mtref(MTREF_DAMAGE, p) * inv(INV_ITEM_DAMAGE, ci) * 5 / (p(1) - rnd(30))
+		}
+		if ( inv(INV_ITEM_DV, ci) != 0 ) {
+			inv(INV_ITEM_DV, ci) = mtref(MTREF_DV, p) * inv(INV_ITEM_DV, ci) * 7 / (p(1) - rnd(30))
+		}
+		if ( inv(INV_ITEM_PV, ci) != 0 ) {
+			inv(INV_ITEM_PV, ci) = mtref(MTREF_PV, p) * inv(INV_ITEM_PV, ci) * 9 / (p(1) - rnd(30))
+		}
+		if ( inv(INV_ITEM_DICE2, ci) != 0 ) {
+			inv(INV_ITEM_DICE2, ci) = inv(INV_ITEM_DICE2, ci) * mtref(MTREF_DICE, p) / (p(1) + rnd(25))
+		}
+	}
+	gosub *apply_materialEnc
+	return
+
+*apply_materialEnc
+	p = inv(INV_ITEM_MATERIAL, ci)
+	repeat MAX_ITEM_MATERIAL_ENCHANT
+		if ( mtenc(cnt * 2, p) == 0 ) {
+			break
+		}
+		encadd ci, mtenc(cnt * 2, p), mtenc(cnt * 2 + 1, p), 0, 1
+	loop
+	repeat RANGE_INV_ITEM_FIXED_ENCHANT
+		if ( mtbit(cnt, p) == 0 ) {
+			break
+		}
+		ibitmod mtbit(cnt, p), ci, 1
+	loop
+	return
+
+*fish_init
+	p = 0
+	dim fishdata, 10, MAX_FISH
+	sdim fishdatan, 24, MAX_FISH
+	fishdatan(p) = lang("バグ", "bug")
+	fishdata(FISHDATA_PIC, p) = xy2pic(0, 0), 0, 0, 0, 100, 250, 100, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("金魚", "goldfish")
+	fishdata(FISHDATA_PIC, p) = xy2pic(0, 25), 0, 1000, 2, 100, 200, 180, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("亀", "turtle")
+	fishdata(FISHDATA_PIC, p) = xy2pic(1, 25), 0, 250, 4, 100, 250, 450, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("ゼニタナゴ", "bitterling")
+	fishdata(FISHDATA_PIC, p) = xy2pic(2, 25), 0, 50, 5, 100, 1500, 2200, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("おたまじゃくし", "tadpole")
+	fishdata(FISHDATA_PIC, p) = xy2pic(3, 25), 0, 1000, 0, 100, 150, 80, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("海水パンツ", "swimming trunks")
+	fishdata(FISHDATA_PIC, p) = xy2pic(4, 25), 0, 400, 0, 100, 250, 40, ITEM_ID_FISH_JUNK
+	p++
+	fishdatan(p) = lang("小汚い長靴", "dirty long boots")
+	fishdata(FISHDATA_PIC, p) = xy2pic(5, 25), 0, 100, 0, 100, 250, 25, ITEM_ID_FISH_JUNK
+	p++
+	fishdatan(p) = lang("コイ", "carp")
+	fishdata(FISHDATA_PIC, p) = xy2pic(6, 25), 1, 1000, 4, 100, 350, 400, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("ウナギ", "eel")
+	fishdata(FISHDATA_PIC, p) = xy2pic(7, 25), 1, 800, 6, 100, 300, 750, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("ハゼ", "goby")
+	fishdata(FISHDATA_PIC, p) = xy2pic(8, 25), 1, 250, 8, 100, 400, 1250, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("キンメダイ", "sea bream")
+	fishdata(FISHDATA_PIC, p) = xy2pic(9, 25), 1, 50, 12, 100, 350, 3500, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("空き缶", "empty can")
+	fishdata(FISHDATA_PIC, p) = xy2pic(10, 25), 1, 400, 0, 100, 250, 40, ITEM_ID_FISH_JUNK
+	p++
+	fishdatan(p) = lang("壊れた機械", "broken machine")
+	fishdata(FISHDATA_PIC, p) = xy2pic(11, 25), 1, 400, 0, 100, 250, 25, ITEM_ID_FISH_JUNK
+	p++
+	fishdatan(p) = lang("カジカ", "sculpin")
+	fishdata(FISHDATA_PIC, p) = xy2pic(12, 25), 2, 1000, 8, 100, 250, 800, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("スズキ", "sea bass")
+	fishdata(FISHDATA_PIC, p) = xy2pic(13, 25), 2, 800, 10, 100, 300, 1200, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("ウニ", "sea urchin")
+	fishdata(FISHDATA_PIC, p) = xy2pic(14, 25), 2, 250, 12, 100, 400, 1800, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("シロアマダイ", "red sea bream")
+	fishdata(FISHDATA_PIC, p) = xy2pic(15, 25), 2, 50, 16, 100, 350, 4500, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("空きビン", "empty bottle")
+	fishdata(FISHDATA_PIC, p) = xy2pic(16, 25), 2, 400, 0, 100, 250, 40, ITEM_ID_FISH_JUNK
+	p++
+	fishdatan(p) = lang("汚い指輪", "dirty ring")
+	fishdata(FISHDATA_PIC, p) = xy2pic(17, 25), 2, 400, 0, 100, 250, 325, ITEM_ID_FISH_JUNK
+	p++
+	fishdatan(p) = lang("キレアジ", "sword fish")
+	fishdata(FISHDATA_PIC, p) = xy2pic(18, 25), 3, 1000, 15, 100, 250, 1500, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("アロワナ", "moonfish")
+	fishdata(FISHDATA_PIC, p) = xy2pic(19, 25), 3, 800, 18, 100, 1300, 1900, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("ハリマグロ", "tuna fish")
+	fishdata(FISHDATA_PIC, p) = xy2pic(20, 25), 3, 250, 22, 100, 1400, 2400, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("古代魚", "ancient fish")
+	fishdata(FISHDATA_PIC, p) = xy2pic(21, 25), 3, 50, 28, 100, 1350, 7200, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("破れた傘", "broken umbrella")
+	fishdata(FISHDATA_PIC, p) = xy2pic(22, 25), 3, 1000, 0, 100, 250, 40, ITEM_ID_FISH_JUNK
+	p++
+	fishdatan(p) = lang("かつら", "hairpiece")
+	fishdata(FISHDATA_PIC, p) = xy2pic(23, 25), 3, 1000, 0, 100, 250, 425, ITEM_ID_FISH_JUNK
+	p++
+	fishdatan(p) = lang("カツオ", "bonito")
+	fishdata(FISHDATA_PIC, p) = xy2pic(24, 25), 4, 1000, 19, 100, 1250, 2200, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("アユ", "sweetfish")
+	fishdata(FISHDATA_PIC, p) = xy2pic(25, 25), 4, 800, 22, 100, 300, 2600, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("シマアジ", "yellow jack")
+	fishdata(FISHDATA_PIC, p) = xy2pic(26, 25), 4, 250, 25, 100, 400, 4500, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("ブラックバス", "black bass")
+	fishdata(FISHDATA_PIC, p) = xy2pic(27, 25), 4, 50, 30, 100, 850, 11200, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("北からの漂着物", "ashore from the north")
+	fishdata(FISHDATA_PIC, p) = xy2pic(28, 25), 4, 400, 0, 100, 250, 240, ITEM_ID_FISH_JUNK
+	p++
+	fishdatan(p) = lang("エロ本", "pornographic book")
+	fishdata(FISHDATA_PIC, p) = xy2pic(29, 25), 4, 400, 0, 100, 250, 525, ITEM_ID_FISH_JUNK
+	p++
+	fishdatan(p) = lang("サバ", "mackerel")
+	fishdata(FISHDATA_PIC, p) = xy2pic(30, 25), 5, 1000, 25, 100, 350, 3500, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("大食いマグロ", "big tuna fish")
+	fishdata(FISHDATA_PIC, p) = xy2pic(31, 25), 5, 800, 29, 100, 2000, 6400, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("コバンザメ", "remora")
+	fishdata(FISHDATA_PIC, p) = xy2pic(32, 25), 5, 250, 33, 100, 800, 9550, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("クジラ", "whale")
+	fishdata(FISHDATA_PIC, p) = xy2pic(0, 26), 5, 50, 40, 100, 13500, 25000, ITEM_ID_FISH
+	p++
+	fishdatan(p) = lang("空き箱", "empty box")
+	fishdata(FISHDATA_PIC, p) = xy2pic(1, 26), 5, 400, 0, 100, 250, 40, ITEM_ID_FISH_JUNK
+	p++
+	fishdatan(p) = lang("壊れた携帯", "broken cell phone")
+	fishdata(FISHDATA_PIC, p) = xy2pic(2, 26), 5, 400, 0, 100, 250, 25, ITEM_ID_FISH_JUNK
+	p++
+	return
+
