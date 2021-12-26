@@ -5626,7 +5626,7 @@
 		fusipn = encfindpower(cc, ENCHANT_POISON_AND_NERVE)
 	}
 	if ( efid == SKILL_SPELL_DARK_EYE | efid == SKILL_SPELL_NETHER_ARROW | efid == SKILL_SPELL_DARKNESS_BOLT | efid == SKILL_SPELL_NETHER_BOLT | efid == SKILL_SPELL_ECLIPSE | efid == SKILL_SPELL_NETHER_WAVE ) {
-		fusidne = encfindpower(cc, MAX_ENCHANTMENT)
+		fusidne = encfindpower(cc, ENCHANT_DARKNESS_AND_NETHER)
 	}
 	if ( rapidmagic ) {
 		repeat rapidmagic
