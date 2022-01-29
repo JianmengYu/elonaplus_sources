@@ -4022,7 +4022,7 @@
 				}
 			}
 		}
-		if ( animeid == ANIMATION_OVER_LONG_THROW ) {
+		if ( animeid == ANIMATION_SHINING_THROW ) {
 			gsel BUFFER_ITEM
 			color 0
 			boxf 0, 960, chipi(CHIPI_WIDTH, xy2pic(15, 36)), chipi(CHIPI_HEIGHT, xy2pic(15, 36)) + 960

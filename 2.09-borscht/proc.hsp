@@ -12163,7 +12163,7 @@
 		if ( cdata(CDATA_POWER_GAUGE, cc) > 200 ) {
 			cdata(CDATA_POWER_GAUGE, cc) = 200
 		}
-		animeid = ANIMATION_OVER_LONG_THROW
+		animeid = ANIMATION_SHINING_THROW
 		gosub *anime
 		tcbbk = -1
 		magc = 0
@@ -16751,7 +16751,7 @@
 		cfg_animewait = waitbk
 		cdata(CDATA_CONDITION_MPOISON, tc) += 50
 		p = limit(sdata(SKILL_ATTR_CON, tc) * 3, 0, 1200)
-		addbuff tc, BUFF_LIFE_TASTING, p, 50
+		addbuff tc, BUFF_MOGRANIC_AURA, p, 50
 		goto *effect_end
 		_switch_sw++
 	}

@@ -161,7 +161,7 @@
 #define global	ANIMATION_BURN_SCROLLS	57
 #define global	ANIMATION_LINEAR_LAUNCHER	58
 #define global	ANIMATION_SAND_CANNON	59
-#define global	ANIMATION_OVER_LONG_THROW	60
+#define global	ANIMATION_SHINING_THROW	60
 
 // Group: area_id
 #define global	MAX_AREA_COUNT	500
@@ -383,7 +383,8 @@
 #define global	BUFF_DATA_SCAN	63
 #define global	BUFF_JYUSOU_GOUSHIN	64
 #define global	BUFF_HARMONIC_ASSAULT	65
-#define global	BUFF_LIFE_TASTING	66
+#define global	BUFF_LIFE_TASTING	67
+#define global	BUFF_MOGRANIC_AURA	66
 
 // Group: buff_type
 #define global	BUFF_TYPE_BUFF	1
@@ -6042,7 +6043,6 @@
 #define global	SKILL_SPACT_MULTIPLE_GATHER	752
 #define global	SKILL_SPACT_PSYCHIC_WAVE	753
 #define global	SKILL_SPACT_READING_PARTY	754
-#define global	SKILL_SPACT_OVER_LONG_THROW	755
 #define global	SKILL_SPACT_DUPLICANE	756
 #define global	SKILL_SPACT_LOCK_BREAK	757
 #define global	SKILL_SPACT_MEMORY_POISON	758
@@ -6131,6 +6131,7 @@
 #define global	SKILL_SPACT_E_MAG_CAGE	834
 #define global	SKILL_SPACT_E_MAG_TORNADO	835
 #define global	SKILL_SPACT_WIRE_WORLD	836
+#define global	SKILL_SPACT_SHINING_THROW	755
 #define global	SKILL_SPACT_SAND_CANNON	837
 #define global	SKILL_SPACT_ROCRUSHER	838
 #define global	SKILL_SPACT_MOGRANIC_AURA	839

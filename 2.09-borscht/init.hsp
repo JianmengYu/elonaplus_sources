@@ -255,9 +255,9 @@
 	bdataref(BDATAREF_BUFF_TYPE, BUFF_ATTRIBUTE_SHIELD) = BUFF_TYPE_BUFF, 1, 0
 	buffname(BUFF_ATTRIBUTE_SHIELD) = lang("属性保護", "Attribution Shield")
 	bufftxt(0, BUFF_ATTRIBUTE_SHIELD) = lang("は属性への耐性を得た。", "obtain"), " resistance to attribution."
-	bdataref(BDATAREF_BUFF_TYPE, BUFF_LIFE_TASTING) = BUFF_TYPE_BUFF, 1, 0
-	buffname(BUFF_LIFE_TASTING) = lang("土竜闘気", "Mogranic Aura")
-	bufftxt(0, BUFF_LIFE_TASTING) = lang("は闘気を纏った。", "wore"), " anti-magic aura."
+	bdataref(BDATAREF_BUFF_TYPE, BUFF_MOGRANIC_AURA) = BUFF_TYPE_BUFF, 1, 0
+	buffname(BUFF_MOGRANIC_AURA) = lang("土竜闘気", "Mogranic Aura")
+	bufftxt(0, BUFF_MOGRANIC_AURA) = lang("は闘気を纏った。", "wore"), " anti-magic aura."
 	bdataref(BDATAREF_BUFF_TYPE, BUFF_SPEED) = BUFF_TYPE_BUFF, 1, 0
 	buffname(BUFF_SPEED) = lang("加速", "Speed")
 	bufftxt(0, BUFF_SPEED) = lang("は機敏になった。", "speed"), " up."
@@ -345,9 +345,9 @@
 	bdataref(BDATAREF_BUFF_TYPE, BUFF_LUCK) = BUFF_TYPE_BUFF, 1, 0
 	buffname(BUFF_LUCK) = lang("幸運", "Luck")
 	bufftxt(0, BUFF_LUCK) = lang("に幸運な日が訪れた！", "feel"), " very lucky today!"
-	bdataref(BDATAREF_BUFF_TYPE, MAX_BUFF) = BUFF_TYPE_FOOD, 1, 0
-	buffname(MAX_BUFF) = lang("人生の含味", "Life Tasting")
-	bufftxt(0, MAX_BUFF) = lang("はスキルの成長期に突入した。", "enters"), " a period of rapid skill growth."
+	bdataref(BDATAREF_BUFF_TYPE, BUFF_LIFE_TASTING) = BUFF_TYPE_FOOD, 1, 0
+	buffname(BUFF_LIFE_TASTING) = lang("人生の含味", "Life Tasting")
+	bufftxt(0, BUFF_LIFE_TASTING) = lang("はスキルの成長期に突入した。", "enters"), " a period of rapid skill growth."
 	bdataref(BDATAREF_BUFF_TYPE, BUFF_GROW_STRENGTH) = BUFF_TYPE_FOOD, 1, 0
 	buffname(BUFF_GROW_STRENGTH) = lang("筋力の成長", "Grow Strength")
 	bufftxt(0, BUFF_GROW_STRENGTH) = lang("は筋力の成長期に突入した。", "enters"), " a period of rapid STR growth."
@@ -460,7 +460,7 @@
 		cdata(STARTING_CDATA_FOOD_EXP + (calcbuff_buffid - 20 + 10) - 10, calcbuff_charid) = locvar_calcbuff_p
 		return
 	}
-	if ( calcbuff_buffid == MAX_BUFF ) {
+	if ( calcbuff_buffid == BUFF_LIFE_TASTING ) {
 		dur = 10 + calcbuff_power / 10
 		locvar_calcbuff_p = calcbuff_power
 		if ( calcbuff_charid < CHARA_PLAYER ) {
@@ -561,7 +561,7 @@
 		sdata(SKILL_RES_DARKNESS, calcbuff_charid) += 80 + calcbuff_power / 20
 		return
 	}
-	if ( calcbuff_buffid == BUFF_LIFE_TASTING ) {
+	if ( calcbuff_buffid == BUFF_MOGRANIC_AURA ) {
 		dur = 10 + calcbuff_power / 20
 		if ( calcbuff_charid < CHARA_PLAYER ) {
 			if ( calcbuff_charid == CALCBUFF_DURATION ) {
@@ -2595,11 +2595,11 @@
 	if ( 809 < 600 ) {
 		skillencdesc(SKILL_SPACT_DATA_DELETE) = lang("", "")
 	}
-	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_OVER_LONG_THROW) = SKILL_ATTR_WIL, SKILL_TYPE_SP, 40, 2000 + 7, 0
-	skillname(SKILL_SPACT_OVER_LONG_THROW) = lang("シャイニングスロー", "Shining Throw")
-	skilldesc(SKILL_SPACT_OVER_LONG_THROW) = lang("PVDV範囲攻撃/ゲージ5％増加", "Surround(PVDV)/gauge5gain")
+	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_SHINING_THROW) = SKILL_ATTR_WIL, SKILL_TYPE_SP, 40, 2000 + 7, 0
+	skillname(SKILL_SPACT_SHINING_THROW) = lang("シャイニングスロー", "Shining Throw")
+	skilldesc(SKILL_SPACT_SHINING_THROW) = lang("PVDV範囲攻撃/ゲージ5％増加", "Surround(PVDV)/gauge5gain")
 	if ( 755 < 600 ) {
-		skillencdesc(SKILL_SPACT_OVER_LONG_THROW) = lang("", "")
+		skillencdesc(SKILL_SPACT_SHINING_THROW) = lang("", "")
 	}
 	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_SAND_CANNON) = SKILL_ATTR_CON, SKILL_TYPE_SP, 5, 9000 + 6, 0
 	skillname(SKILL_SPACT_SAND_CANNON) = lang("砂塵砲", "Sand Cannon")

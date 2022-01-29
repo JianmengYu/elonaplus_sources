@@ -3446,10 +3446,10 @@
 			if ( rnd(2) == 0 ) {
 				gdata(GDATA_FLAG_COLLECTED_WISHES) = 1
 				if ( rnd(2) == 0 ) {
-					gosub *label_4500
+					gosub *map_riverHorizontal
 				}
 				else {
-					gosub *label_4503
+					gosub *map_riverVertical
 				}
 			}
 		}
@@ -3475,10 +3475,10 @@
 			if ( rnd(3) == 0 ) {
 				gdata(GDATA_FLAG_COLLECTED_WISHES) = 3
 				if ( rnd(2) == 0 ) {
-					gosub *label_4500
+					gosub *map_riverHorizontal
 				}
 				else {
-					gosub *label_4503
+					gosub *map_riverVertical
 				}
 			}
 		}
@@ -3594,10 +3594,10 @@
 			if ( rnd(4) == 0 ) {
 				gdata(GDATA_FLAG_COLLECTED_WISHES) = 5
 				if ( rnd(2) == 0 ) {
-					gosub *label_4500
+					gosub *map_riverHorizontal
 				}
 				else {
-					gosub *label_4503
+					gosub *map_riverVertical
 				}
 			}
 		}
@@ -3635,10 +3635,10 @@
 			if ( rnd(4) == 0 ) {
 				gdata(GDATA_FLAG_COLLECTED_WISHES) = 5
 				if ( rnd(2) == 0 ) {
-					gosub *label_4500
+					gosub *map_riverHorizontal
 				}
 				else {
-					gosub *label_4503
+					gosub *map_riverVertical
 				}
 			}
 		}

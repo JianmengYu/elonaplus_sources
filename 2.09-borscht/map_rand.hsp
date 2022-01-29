@@ -1549,7 +1549,7 @@
 	loop
 	return
 
-*label_4500
+*map_riverHorizontal
 	v = 6 + gdata(GDATA_FLAG_COLLECTED_WISHES) * 2
 	dy = mdata(MDATA_HEIGHT) / 2 - v / 2 - 5
 	p = 0
@@ -1595,7 +1595,7 @@
 	loop
 	return
 
-*label_4503
+*map_riverVertical
 	w = 6 + gdata(GDATA_FLAG_COLLECTED_WISHES) * 2
 	dx = mdata(MDATA_WIDTH) / 2 - w / 2 - 5
 	p = 0

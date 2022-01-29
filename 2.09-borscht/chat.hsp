@@ -44722,7 +44722,7 @@
 						snd SOUNDLIST_DRINK1
 					}
 					cdata(CDATA_EMO_ICON, tc) = 6 + 100 * 3
-					addbuff tc, MAX_BUFF, 10, 5000
+					addbuff tc, BUFF_LIFE_TASTING, 10, 5000
 					cdata(CDATA_THIRST, tc) = 15000
 					if ( cdata(CDATA_HUNGER, tc) < 15000 - 1000 ) {
 						cdata(CDATA_HUNGER, tc) += 1000

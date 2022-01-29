@@ -2076,7 +2076,7 @@
 						act = SKILL_SPACT_STRUCK_OUT
 					}
 					if ( rnd(10) == 0 ) {
-						act = SKILL_SPACT_OVER_LONG_THROW
+						act = SKILL_SPACT_SHINING_THROW
 					}
 					if ( cdata(CDATA_MP, cc) >= cdata(CDATA_MAX_MP, cc) / 3 ) {
 						if ( findbuff(cc, BUFF_OVERLIMIT_THROW) == (-1) ) {
@@ -3008,7 +3008,7 @@
 		}
 	}
 	if ( cdata(CDATA_ID, cc) == CREATURE_ID_MEGA_MOLE | cdata(CDATA_ID, cc) == CREATURE_ID_TALPIDAE | cdata(CDATA_ID, cc) == CREATURE_ID_SUPER_DRAGONEWT ) {
-		if ( findbuff(cc, BUFF_LIFE_TASTING) == (-1) ) {
+		if ( findbuff(cc, BUFF_MOGRANIC_AURA) == (-1) ) {
 			if ( cdata(CDATA_CONDITION_MPOISON, cc) == 0 ) {
 				if ( rnd(2) == 0 ) {
 					act = SKILL_SPACT_MOGRANIC_AURA
