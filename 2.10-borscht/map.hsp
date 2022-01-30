@@ -1562,12 +1562,12 @@
 	if ( gdata(GDATA_AREA) == AREA_TRUCE_GROUND ) {
 		map_initcustom "shrine_1"
 		mdata(MDATA_MODERATE_CROWD) = 10
-		if ( gdata(250 + 441) == 1 ) {
+		if ( gdata(GDATA_FLAG_TALKA_IN_TRUCE_GROUND) == 1 ) {
 			flt
-			characreate -1, 1056, 16, 4
+			characreate -1, CREATURE_ID_TALKA_THE_LONG_TWINTAIL, 16, 4
 			cdata(CDATA_ROLE, rc) = ROLE_SPECIAL
 			flt
-			itemcreate -1, 1249, 25, 16, 0
+			itemcreate -1, ITEM_ID_AURTEHOM, 25, 16, 0
 		}
 		flt
 		itemcreate -1, ITEM_ID_ALTAR, 10, 8, 0
@@ -3453,10 +3453,10 @@
 			if ( rnd(2) == 0 ) {
 				gdata(GDATA_FLAG_COLLECTED_WISHES) = 1
 				if ( rnd(2) == 0 ) {
-					gosub *label_4502
+					gosub *map_riverHorizontal
 				}
 				else {
-					gosub *label_4505
+					gosub *map_riverVertical
 				}
 			}
 		}
@@ -3482,10 +3482,10 @@
 			if ( rnd(3) == 0 ) {
 				gdata(GDATA_FLAG_COLLECTED_WISHES) = 3
 				if ( rnd(2) == 0 ) {
-					gosub *label_4502
+					gosub *map_riverHorizontal
 				}
 				else {
-					gosub *label_4505
+					gosub *map_riverVertical
 				}
 			}
 		}
@@ -3601,10 +3601,10 @@
 			if ( rnd(4) == 0 ) {
 				gdata(GDATA_FLAG_COLLECTED_WISHES) = 5
 				if ( rnd(2) == 0 ) {
-					gosub *label_4502
+					gosub *map_riverHorizontal
 				}
 				else {
-					gosub *label_4505
+					gosub *map_riverVertical
 				}
 			}
 		}
@@ -3642,10 +3642,10 @@
 			if ( rnd(4) == 0 ) {
 				gdata(GDATA_FLAG_COLLECTED_WISHES) = 5
 				if ( rnd(2) == 0 ) {
-					gosub *label_4502
+					gosub *map_riverHorizontal
 				}
 				else {
-					gosub *label_4505
+					gosub *map_riverVertical
 				}
 			}
 		}
@@ -10123,12 +10123,12 @@
 		}
 	}
 	if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_TRUCE_GROUND ) {
-		if ( gdata(250 + 441) == 0 ) {
-			if ( findchara(1056) != 0 ) {
-				chara_vanquish findchara(1056)
+		if ( gdata(GDATA_FLAG_TALKA_IN_TRUCE_GROUND) == 0 ) {
+			if ( findchara(CREATURE_ID_TALKA_THE_LONG_TWINTAIL) != 0 ) {
+				chara_vanquish findchara(CREATURE_ID_TALKA_THE_LONG_TWINTAIL)
 			}
 			evadd EVENT_SPAWN_EVENT_NPCS
-			gdata(250 + 441) = 1
+			gdata(GDATA_FLAG_TALKA_IN_TRUCE_GROUND) = 1
 		}
 	}
 	if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_SISTER_MANSION ) {

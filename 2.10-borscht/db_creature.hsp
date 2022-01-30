@@ -34999,7 +34999,7 @@
 			return
 		}
 		if ( dbmode == DBMODE_SET ) {
-			cdata(CDATA_ID, rc) = 1056
+			cdata(CDATA_ID, rc) = CREATURE_ID_TALKA_THE_LONG_TWINTAIL
 			if ( initlv != 0 ) {
 				cdata(CDATA_LEVEL, rc) = initlv
 			}
@@ -133341,8 +133341,8 @@
 	}
 	return 0
 
-*label_8809
-	maxnpcid = 1059
+*db_setFilterCreature
+	maxnpcid = MAX_CREATURE_ID
 	dim cbitorg, 30, maxnpcid
 	filter_creature(2) = ""
 	filter_creature(3) = "/nefia4/"

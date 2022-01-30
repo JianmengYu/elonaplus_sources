@@ -23,7 +23,7 @@
 	if ( filtermax != 0 ) {
 		dbtmp = 1
 		repeat filtermax
-			if ( instr(filter_item(1249), 0, filtern(cnt)) == (-1) ) {
+			if ( instr(filter_item(ITEM_ID_AURTEHOM), 0, filtern(cnt)) == (-1) ) {
 				dbtmp = 0
 				break
 			}
@@ -41275,7 +41275,7 @@
 			inv(INV_ITEM_WEIGHT, ci) = 400
 		}
 		if ( dbmode == DBMODE_SET ) {
-			inv(INV_ITEM_ID, ci) = 1249
+			inv(INV_ITEM_ID, ci) = ITEM_ID_AURTEHOM
 			inv(INV_ITEM_PIC, ci) = xy2pic(13, 36)
 			reftype = FILTER_ITEM_BOOK
 			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
@@ -124034,8 +124034,8 @@
 	return -999
 
 *db_setFilterItem
-	filter_item(1249) = ""
-	rffilter_item(1249) = ""
+	filter_item(ITEM_ID_AURTEHOM) = ""
+	rffilter_item(ITEM_ID_AURTEHOM) = ""
 	filter_item(ITEM_ID_SOCKS2) = ""
 	rffilter_item(ITEM_ID_SOCKS2) = ""
 	filter_item(ITEM_ID_SPELLBOOK_OF_THUNDER_VORTEX) = ""
@@ -126537,24 +126537,24 @@
 	return
 
 *db_setItem
-	ilight(1249) = LIGHT_TYPE_ITEM
-	ialphanameref(1249) = ""
-	iorgweight(1249) = 400
+	ilight(ITEM_ID_AURTEHOM) = LIGHT_TYPE_ITEM
+	ialphanameref(ITEM_ID_AURTEHOM) = ""
+	iorgweight(ITEM_ID_AURTEHOM) = 400
 	if ( jp ) {
-		ioriginalnameref(1249) = "アウルテホム"
+		ioriginalnameref(ITEM_ID_AURTEHOM) = "アウルテホム"
 	}
 	else {
-		ioriginalnameref(1249) = "Aurtehom"
-		ioriginalnameref2(1249) = "horrible book"
+		ioriginalnameref(ITEM_ID_AURTEHOM) = "Aurtehom"
+		ioriginalnameref2(ITEM_ID_AURTEHOM) = "horrible book"
 	}
-	ipicref(1249) = xy2pic(13, 36)
+	ipicref(ITEM_ID_AURTEHOM) = xy2pic(13, 36)
 	if ( jp ) {
-		iknownnameref(1249) = "おぞましき本"
+		iknownnameref(ITEM_ID_AURTEHOM) = "おぞましき本"
 	}
 	else {
-		iknownnameref(1249) = ""
+		iknownnameref(ITEM_ID_AURTEHOM) = ""
 	}
-	icolref(1249) = COLOR_DEFAULT
+	icolref(ITEM_ID_AURTEHOM) = COLOR_DEFAULT
 	ilight(ITEM_ID_SOCKS2) = LIGHT_TYPE_NONE
 	ialphanameref(ITEM_ID_SOCKS2) = ""
 	iorgweight(ITEM_ID_SOCKS2) = 200

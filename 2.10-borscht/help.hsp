@@ -11757,10 +11757,10 @@
 		}
 		if ( gdata(GDATA_AREA) == AREA_TRUCE_GROUND ) {
 			flt
-			characreate -1, 1056, 16, 4
+			characreate -1, CREATURE_ID_TALKA_THE_LONG_TWINTAIL, 16, 4
 			cdata(CDATA_ROLE, rc) = ROLE_SPECIAL
 			flt
-			itemcreate -1, 1249, 25, 16, 0
+			itemcreate -1, ITEM_ID_AURTEHOM, 25, 16, 0
 		}
 		if ( gdata(GDATA_AREA) == AREA_PALMIA ) {
 			flt

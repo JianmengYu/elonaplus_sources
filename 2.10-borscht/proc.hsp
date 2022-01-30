@@ -5411,7 +5411,7 @@
 		}
 		return 1
 	}
-	if ( inv(INV_ITEM_ID, ci) == 1249 ) {
+	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_AURTEHOM ) {
 		txt lang("未実装。", "under development!")
 		return 1
 	}
