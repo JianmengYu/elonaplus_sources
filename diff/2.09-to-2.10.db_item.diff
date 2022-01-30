@@ -1,0 +1,182 @@
+--- ../2.09-borscht/db_item.hsp	2022-01-30 12:50:57.182966000 -0800
++++ ../2.10-borscht/db_item.hsp	2022-01-30 12:51:04.014426400 -0800
+@@ -5,10 +5,43 @@
+ 	dbmax = 0
+ 	dbsum = 0
+ 	if ( 1 > objlv ) {
+ 		goto *label_
+ 	}
++	if ( fltselect != 3 ) {
++		goto *label_
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_BOOK ) {
++			goto *label_
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *label_
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(1249), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *label_
++		}
++	}
++	dbsum += 10000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1249, dbsum
++	dbmax++
++
++*label_
++	if ( 1 > objlv ) {
++		goto *label_
++	}
+ 	if ( fltselect != 1 ) {
+ 		goto *label_
+ 	}
+ 	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
+ 		if ( flttypemajor != FILTER_ITEM_TOOL ) {
+@@ -41234,10 +41267,80 @@
+ 		dbid = 25
+ 	}
+ 	return
+ 
+ *label_
++	if ( dbid == 1249 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 666
++			inv(INV_ITEM_WEIGHT, ci) = 400
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = 1249
++			inv(INV_ITEM_PIC, ci) = xy2pic(13, 36)
++			reftype = FILTER_ITEM_BOOK
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			ibitmod ITEM_BIT_PRECIOUS, ci, TRUE
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			fixlv = FIX_QUALITY_UNIQUE
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_BOOK
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 55000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 666
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 2 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 10
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_ON_READ ) {
++			gosub *read
++			return -1
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "\t\t波長が合う者の前に姿を現すとされる。冷たくはないのに手に持つと異様に背筋が冷え、魂を鷲掴みにされているような感覚に陥る。ページはどれも黒く半透明だが、光に反射して奇妙な文字が浮かび上がる。この世界のものではない物質で構成されており、その正体は本ではなく深淵を映す窓なのだという説もある。\n#～イルヴァ幻想辞典～\n"
++				description(1) = ""
++				description(2) = "\t\t「私は　利用されていた」\n#～挟まれていた紙片の殴り書き～\n"
++				description(3) = "\t\t深淵魔術を行使できる本。何度でも読める。\n#～鑑定報告書：＜秘宝＞カテゴリ～\n"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
+ 	if ( dbid == 1248 ) {
+ 		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_VALUE, ci) = 300
+ 			inv(INV_ITEM_WEIGHT, ci) = 200
+ 		}
+@@ -123929,10 +124032,12 @@
+ 		return 0
+ 	}
+ 	return -999
+ 
+ *db_setFilterItem
++	filter_item(1249) = ""
++	rffilter_item(1249) = ""
+ 	filter_item(ITEM_ID_SOCKS2) = ""
+ 	rffilter_item(ITEM_ID_SOCKS2) = ""
+ 	filter_item(ITEM_ID_SPELLBOOK_OF_THUNDER_VORTEX) = ""
+ 	rffilter_item(ITEM_ID_SPELLBOOK_OF_THUNDER_VORTEX) = ""
+ 	filter_item(ITEM_ID_SPELLBOOK_OF_ECLIPSE_JAIL) = ""
+@@ -126430,10 +126535,28 @@
+ 	filter_item(ITEM_ID_DUMMY) = ""
+ 	rffilter_item(ITEM_ID_DUMMY) = ""
+ 	return
+ 
+ *db_setItem
++	ilight(1249) = LIGHT_TYPE_ITEM
++	ialphanameref(1249) = ""
++	iorgweight(1249) = 400
++	if ( jp ) {
++		ioriginalnameref(1249) = "アウルテホム"
++	}
++	else {
++		ioriginalnameref(1249) = "Aurtehom"
++		ioriginalnameref2(1249) = "horrible book"
++	}
++	ipicref(1249) = xy2pic(13, 36)
++	if ( jp ) {
++		iknownnameref(1249) = "おぞましき本"
++	}
++	else {
++		iknownnameref(1249) = ""
++	}
++	icolref(1249) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_SOCKS2) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_SOCKS2) = ""
+ 	iorgweight(ITEM_ID_SOCKS2) = 200
+ 	if ( jp ) {
+ 		ioriginalnameref(ITEM_ID_SOCKS2) = "靴下"
+@@ -144324,11 +144447,11 @@
+ 		ioriginalnameref2(ITEM_ID_DUMMY) = ""
+ 	}
+ 	ipicref(ITEM_ID_DUMMY) = xy2pic(0, 1)
+ 	iknownnameref(ITEM_ID_DUMMY) = ioriginalnameref(ITEM_ID_DUMMY)
+ 	icolref(ITEM_ID_DUMMY) = COLOR_DEFAULT
+-	maxitemid = 1251
++	maxitemid = 1252
+ 	return
+ 	goto *recipe_ref
+ 
+ #deffunc calcweaponfix int calcweaponfix_itemid
+ 	pierce = 0
