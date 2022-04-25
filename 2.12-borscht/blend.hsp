@@ -877,7 +877,7 @@
 	rpdatan(rpid) = lang("魔剣転生", "makenn tensei")
 	rpdata(RPDATA_ITEM, rpid) = ITEM_ID_SKULL_SWORD, 20 + 1 * 10000
 	rpdata(RPDATA_SKILL + 0 * 2, rpid) = SKILL_NORMAL_ANATOMY, 2, SKILL_NORMAL_ALCHEMY, 6
-	rpdata(RPDATA_MAT + 0, rpid) = ITEM_ID_BROKEN_SWORD, ITEM_ID_BONE_FRAGMENT
+	rpdata(RPDATA_MAT + 0, rpid) = (50 /*!!!@[FILTER_RACE_KUSOSUGI @@@ ITEM_ID_BROKEN_SWORD]@!!! */), ITEM_ID_BONE_FRAGMENT
 	rpid = STARTING_RPID + 40
 	rplistdef(length(rplistdef)) = 1 * EXT_RECIPES + rpid
 	rpdatan(rpid) = lang("真・魔剣転生", "shin makenn tensei")
@@ -901,7 +901,7 @@
 	rpdatan(rpid) = lang("ファーストエイド", "first aid kit")
 	rpdata(RPDATA_ITEM, rpid) = ITEM_ID_FIRST_AID_KIT, 20
 	rpdata(RPDATA_SKILL + 0 * 2, rpid) = SKILL_NORMAL_TAILORING, 1
-	rpdata(RPDATA_MAT + 0, rpid) = RF_LEAF, ITEM_ID_BOTTLE_WHISKY, (47 /*!!!@[FILTER_RACE_KOBOLT4 @@@ ITEM_ID_WASHINGS]@!!! */)
+	rpdata(RPDATA_MAT + 0, rpid) = RF_LEAF, ITEM_ID_BOTTLE_WHISKY, (47 /*!!!@[FILTER_RACE_INVADER @@@ FILTER_RACE_KOBOLT4 @@@ ITEM_ID_WASHINGS]@!!! */)
 	rpid = STARTING_RPID + 44
 	rplistdef(length(rplistdef)) = 1 * EXT_RECIPES + rpid
 	rpdatan(rpid) = lang("特殊矢弾箱", "special ammos box")

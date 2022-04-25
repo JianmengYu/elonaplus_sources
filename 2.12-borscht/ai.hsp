@@ -2975,7 +2975,7 @@
 			}
 		}
 	}
-	if ( cdata(CDATA_ID, cc) == 1065 ) {
+	if ( cdata(CDATA_ID, cc) == CREATURE_ID_HELRAUNE ) {
 		if ( cdata(CDATA_POWER_GAUGE, cc) < 80 ) {
 			if ( cdata(CDATA_POWER_GAUGE, cc) >= 25 ) {
 				if ( rnd(10) == 0 ) {

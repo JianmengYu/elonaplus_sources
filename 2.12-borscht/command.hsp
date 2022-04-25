@@ -3578,7 +3578,7 @@
 
 *com_reserve_loop
 	if ( 1 == 0 ) {
-		goto *label_5434
+		goto *com_jukebox
 	}
 	redraw 0
 	s = lang("予約リスト", "Reserve List"), strhint2 + strhint3
@@ -3720,7 +3720,7 @@
 	}
 	goto *com_reserve_loop
 
-*label_5434
+*com_jukebox
 	snd SOUNDLIST_POP2
 	listmax = 0
 	page = 0
@@ -3734,7 +3734,7 @@
 	loop
 	gosub *sort_list
 
-*label_5437
+*com_jukebox_loop_pgchk
 	redraw 0
 	cs_bk = -1
 	pagemax = (listmax - 1) / pagesize
@@ -4052,26 +4052,26 @@
 	loop
 	if ( p != (-1) ) {
 		music = p + 1
-		if ( music >= 137 ) {
+		if ( music >= MUSICLIST_MAX ) {
 			music = 137 - 1
 		}
 		mdata(MDATA_MUSIC) = music
 		gosub *music_play
 		snd SOUNDLIST_OK1
-		goto *label_5437
+		goto *com_jukebox_loop_pgchk
 	}
 	if ( key == key_pageup ) {
 		if ( pagemax != 0 ) {
 			snd SOUNDLIST_POP1
 			page++
-			goto *label_5437
+			goto *com_jukebox_loop_pgchk
 		}
 	}
 	if ( key == key_pagedown ) {
 		if ( pagemax != 0 ) {
 			snd SOUNDLIST_POP1
 			page--
-			goto *label_5437
+			goto *com_jukebox_loop_pgchk
 		}
 	}
 	if ( key == key_cancel ) {
@@ -5019,7 +5019,7 @@
 			redraw 1
 			goto *pc_turn
 		}
-		if ( efid < 843 ) {
+		if ( efid < MAX_SKILL ) {
 			if ( spact(efid - STARTING_SKILL_SPACT) == 0 ) {
 				txt lang("もうその行動はできない。", "You can't use this shortcut any more.")
 				gosub *screen_draw

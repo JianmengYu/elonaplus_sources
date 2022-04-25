@@ -4096,7 +4096,7 @@
 				}
 			}
 		}
-		if ( animeid == 61 ) {
+		if ( animeid == ANIMATION_POLLEN_CANNON ) {
 			gsel BUFFER_ITEM
 			color 0
 			boxf 0, 960, chipi(CHIPI_WIDTH, xy2pic(12, 36)), chipi(CHIPI_HEIGHT, xy2pic(12, 36)) + 960

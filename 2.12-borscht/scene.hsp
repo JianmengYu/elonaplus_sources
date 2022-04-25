@@ -357,8 +357,8 @@
 			music = MUSICLIST_MCHOME0
 		}
 		if ( music == MUSICLIST_NONE2 ) {
-			musicfile(MUSICLIST_MAX) = s(1)
-			music = MUSICLIST_MAX
+			musicfile(MUSICLIST_SCENE_MUSIC) = s(1)
+			music = MUSICLIST_SCENE_MUSIC
 			gosub *music_play
 		}
 		else {

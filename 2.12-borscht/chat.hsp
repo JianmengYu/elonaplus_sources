@@ -12379,7 +12379,7 @@
 			cdata(CDATA_GOLD, CHARA_PLAYER) -= 10000
 			snd SOUNDLIST_PAYGOLD1
 			flt
-			itemcreate -1, 1251, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), 3
+			itemcreate -1, ITEM_ID_ANERING, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), 3
 			inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_BLESSED
 			txt lang("何かが足元に転がってきた。", "Something is put on the ground.")
 			goto *chat_end
@@ -12419,11 +12419,11 @@
 					goto *chat_end
 				}
 			}
-			if ( spact(842 - STARTING_SKILL_SPACT) == 0 ) {
-				spact(842 - STARTING_SKILL_SPACT) = 1
+			if ( spact(SKILL_SPACT_EYE_OF_ANE - STARTING_SKILL_SPACT) == 0 ) {
+				spact(SKILL_SPACT_EYE_OF_ANE - STARTING_SKILL_SPACT) = 1
 				txtmore
 				txtef COLOR_YELLOW
-				txt lang("あなたは「" + skillname(842) + "」の能力を得た。", "You have learned new ability, " + skillname(842) + ".")
+				txt lang("あなたは「" + skillname(SKILL_SPACT_EYE_OF_ANE) + "」の能力を得た。", "You have learned new ability, " + skillname(SKILL_SPACT_EYE_OF_ANE) + ".")
 			}
 			cdata(CDATA_MATERIAL3_COUNTER, CHARA_PLAYER) = 1
 			goto *chat_end

@@ -3188,11 +3188,11 @@
 	if ( 652 < 600 ) {
 		skillencdesc(SKILL_SPACT_EYE_OF_MANA) = lang("", "")
 	}
-	sdataref(SKILL_DATAREF_USE, 842) = SKILL_ATTR_WIL, SKILL_TYPE_SP, 50, 2000 + 2, 0
-	skillname(842) = lang("姉の眼差し", "Eye of Ane")
-	skilldesc(842) = lang("対象の姉になって精神的上位に立つ", "Become the target's sister")
+	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_EYE_OF_ANE) = SKILL_ATTR_WIL, SKILL_TYPE_SP, 50, 2000 + 2, 0
+	skillname(SKILL_SPACT_EYE_OF_ANE) = lang("姉の眼差し", "Eye of Ane")
+	skilldesc(SKILL_SPACT_EYE_OF_ANE) = lang("対象の姉になって精神的上位に立つ", "Become the target's sister")
 	if ( 842 < 600 ) {
-		skillencdesc(842) = lang("", "")
+		skillencdesc(SKILL_SPACT_EYE_OF_ANE) = lang("", "")
 	}
 	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_EYE_OF_STIFFEN) = SKILL_ATTR_MAG, SKILL_TYPE_SP, 8, 2000 + 2, 0
 	skillname(SKILL_SPACT_EYE_OF_STIFFEN) = lang("硬直の眼差し", "Eye of Stiffen")
@@ -3836,11 +3836,11 @@
 	if ( 821 < 600 ) {
 		skillencdesc(SKILL_SPACT_TUIN_DER_LUSTEN) = lang("", "")
 	}
-	sdataref(SKILL_DATAREF_USE, MAX_SKILL) = SKILL_ATTR_LER, SKILL_TYPE_SP, 8, 2000 + 6, 500
-	skillname(MAX_SKILL) = lang("強烈花粉砲", "Pollen cannon")
-	skilldesc(MAX_SKILL) = lang("対象弱体・マナダメージ・神特効", "Damage MP and weaken")
+	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_POLLEN_CANNON) = SKILL_ATTR_LER, SKILL_TYPE_SP, 8, 2000 + 6, 500
+	skillname(SKILL_SPACT_POLLEN_CANNON) = lang("強烈花粉砲", "Pollen cannon")
+	skilldesc(SKILL_SPACT_POLLEN_CANNON) = lang("対象弱体・マナダメージ・神特効", "Damage MP and weaken")
 	if ( 841 < 600 ) {
-		skillencdesc(MAX_SKILL) = lang("", "")
+		skillencdesc(SKILL_SPACT_POLLEN_CANNON) = lang("", "")
 	}
 	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_MISTELTEIN) = SKILL_ATTR_LER, SKILL_TYPE_SP, 8, 2000 + 6, 500
 	skillname(SKILL_SPACT_MISTELTEIN) = lang("ミストルティン", "Misteltein")
@@ -6772,7 +6772,7 @@
 					music = MUSICLIST_MCBOSS5
 				}
 				else {
-					music = MUSICLIST_MAX
+					music = MUSICLIST_SCENE_MUSIC
 				}
 			}
 		}
@@ -6820,7 +6820,7 @@
 				music = MUSICLIST_MCTOWN7
 			}
 			if ( gdata(GDATA_LEVEL) == 5 ) {
-				music = MUSICLIST_SCENE_MUSIC
+				music = MUSICLIST_MCCHURCH
 			}
 		}
 		if ( gdata(GDATA_AREA) == AREA_SOUTH_RASKILIS ) {
@@ -6915,7 +6915,7 @@
 			music = MUSICLIST_MCMARCH2
 		}
 		if ( gdata(GDATA_AREA) == AREA_DEVIL_CAPE ) {
-			music = MUSICLIST_MAX
+			music = MUSICLIST_SCENE_MUSIC
 		}
 	}
 	if ( musicloop == 1 ) {
@@ -6924,7 +6924,7 @@
 	else {
 		musicloop = 65535
 	}
-	if ( musicprev != music | music == MUSICLIST_MAX ) {
+	if ( musicprev != music | music == MUSICLIST_SCENE_MUSIC ) {
 		musicprev = music
 		mmstop
 		if ( cfg_music == 1 ) {
@@ -19753,7 +19753,7 @@
 	gosub *del_userNpc
 	gosub *del_userTemp
 	gosub *db_setFilterRace
-	gosub *label_8859
+	gosub *db_setFilterCreature
 	gosub *db_setFilterItem
 	gosub *chip_init
 	gosub *building_init

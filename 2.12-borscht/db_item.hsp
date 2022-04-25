@@ -23,7 +23,7 @@
 	if ( filtermax != 0 ) {
 		dbtmp = 1
 		repeat filtermax
-			if ( instr(filter_item(1251), 0, filtern(cnt)) == (-1) ) {
+			if ( instr(filter_item(ITEM_ID_ANERING), 0, filtern(cnt)) == (-1) ) {
 				dbtmp = 0
 				break
 			}
@@ -41341,13 +41341,13 @@
 			inv(INV_ITEM_WEIGHT, ci) = 20
 		}
 		if ( dbmode == DBMODE_SET ) {
-			inv(INV_ITEM_ID, ci) = 1251
+			inv(INV_ITEM_ID, ci) = ITEM_ID_ANERING
 			inv(INV_ITEM_PIC, ci) = xy2pic(11, 36)
 			reftype = FILTER_ITEM_TOOL
 			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
 			inv(INV_ITEM_NUM, ci) = 1
 			fixeditemenc = 0
-			inv(INV_ITEM_EFFECT, ci) = 127
+			inv(INV_ITEM_EFFECT, ci) = EFFECT_ANERING
 			inv(INV_ITEM_PARAM1, ci) = 0
 			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
 			return
@@ -62518,7 +62518,7 @@
 			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
 			inv(INV_ITEM_NUM, ci) = 1
 			fixeditemenc = 0
-			inv(INV_ITEM_EFFECT, ci) = 128
+			inv(INV_ITEM_EFFECT, ci) = EFFECT_DRUG
 			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
 			return
 		}
@@ -124231,8 +124231,8 @@
 	return -999
 
 *db_setFilterItem
-	filter_item(1251) = ""
-	rffilter_item(1251) = ""
+	filter_item(ITEM_ID_ANERING) = ""
+	rffilter_item(ITEM_ID_ANERING) = ""
 	filter_item(ITEM_ID_COMMAND_WHISTLE) = ""
 	rffilter_item(ITEM_ID_COMMAND_WHISTLE) = ""
 	filter_item(ITEM_ID_AURTEHOM) = ""
@@ -126738,19 +126738,19 @@
 	return
 
 *db_setItem
-	ilight(1251) = LIGHT_TYPE_NONE
-	ialphanameref(1251) = ""
-	iorgweight(1251) = 20
+	ilight(ITEM_ID_ANERING) = LIGHT_TYPE_NONE
+	ialphanameref(ITEM_ID_ANERING) = ""
+	iorgweight(ITEM_ID_ANERING) = 20
 	if ( jp ) {
-		ioriginalnameref(1251) = "アネワッシャー"
+		ioriginalnameref(ITEM_ID_ANERING) = "アネワッシャー"
 	}
 	else {
-		ioriginalnameref(1251) = "anering"
-		ioriginalnameref2(1251) = ""
+		ioriginalnameref(ITEM_ID_ANERING) = "anering"
+		ioriginalnameref2(ITEM_ID_ANERING) = ""
 	}
-	ipicref(1251) = xy2pic(11, 36)
-	iknownnameref(1251) = ioriginalnameref(1251)
-	icolref(1251) = COLOR_DEFAULT
+	ipicref(ITEM_ID_ANERING) = xy2pic(11, 36)
+	iknownnameref(ITEM_ID_ANERING) = ioriginalnameref(ITEM_ID_ANERING)
+	icolref(ITEM_ID_ANERING) = COLOR_DEFAULT
 	ilight(ITEM_ID_COMMAND_WHISTLE) = LIGHT_TYPE_NONE
 	ialphanameref(ITEM_ID_COMMAND_WHISTLE) = ""
 	iorgweight(ITEM_ID_COMMAND_WHISTLE) = 20

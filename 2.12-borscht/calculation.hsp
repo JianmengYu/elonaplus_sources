@@ -1349,7 +1349,7 @@
 	if ( cdata(CDATA_ID, r1) == CREATURE_ID_HEQET ) {
 		skillinit SKILL_NORMAL_ALCHEMY, r1, 3
 	}
-	if ( cdata(CDATA_ID, r1) == 1065 ) {
+	if ( cdata(CDATA_ID, r1) == CREATURE_ID_HELRAUNE ) {
 		skillinit SKILL_NORMAL_GENE_ENGINEER, r1, 4
 	}
 	if ( necrop2 > 0 ) {

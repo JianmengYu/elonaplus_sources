@@ -1,5 +1,5 @@
---- ../2.11-borscht/db_creature.hsp	2022-04-25 13:55:21.459127900 -0700
-+++ ../2.12-borscht/db_creature.hsp	2022-04-25 13:55:26.211492100 -0700
+--- ../2.11-borscht/db_creature.hsp	2022-04-25 14:21:57.268752000 -0700
++++ ../2.12-borscht/db_creature.hsp	2022-04-25 14:22:01.470010200 -0700
 @@ -2,110 +2,11 @@
  	if ( dbmode != DBMODE_FIND ) {
  		goto *db_creature2
@@ -304,7 +304,7 @@
  	}
  	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
 -		if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
-+		if ( flttypemajor != 50 ) {
++		if ( flttypemajor != FILTER_RACE_KUSOSUGI ) {
  			goto *label_6732
  		}
  	}
@@ -3673,7 +3673,7 @@
  	}
  	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
 -		if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
-+		if ( flttypemajor != FILTER_RACE_KOBOLT4 ) {
++		if ( flttypemajor != (47 /*!!!@[FILTER_RACE_INVADER @@@ FILTER_RACE_KOBOLT4]@!!! */) ) {
  			goto *label_6908
  		}
  	}
@@ -14175,9 +14175,10 @@
  	}
 -	dbsum += 100000 / (500 + abs(objlv - 57) * 400) + 1
 -	dblist(0, dbmax) = 692, dbsum
+-	dbmax++
 +	dbsum += 20000 / (500 + abs(objlv - 150) * 400) + 1
 +	dblist(0, dbmax) = 702, dbsum
- 	dbmax++
++	dbmax++
  
  *label_7452
 -	if ( 86 > objlv ) {
@@ -41179,7 +41180,7 @@
 +			return
 +		}
 +		if ( dbmode == DBMODE_SET ) {
-+			cdata(CDATA_ID, rc) = 1066
++			cdata(CDATA_ID, rc) = CREATURE_ID_SIST_THE_OLDER_SISTER
 +			if ( initlv != 0 ) {
 +				cdata(CDATA_LEVEL, rc) = initlv
 +			}
@@ -41195,7 +41196,7 @@
 +			cdata(CDATA_AI_DISTANCE, rc) = 2
 +			cdata(CDATA_AI_SUB, rc) = 10
 +			creaturepack = FILTER_NOTHING
-+			cdata(STARTING_CDATA_ACT_MAIN, rc) = ACTION_RANGE, SKILL_SPELL_ILLUSION_ROAR, 842, SKILL_SPELL_MIND_BOLT, SKILL_SPELL_MIND_BOLT
++			cdata(STARTING_CDATA_ACT_MAIN, rc) = ACTION_RANGE, SKILL_SPELL_ILLUSION_ROAR, SKILL_SPACT_EYE_OF_ANE, SKILL_SPELL_MIND_BOLT, SKILL_SPELL_MIND_BOLT
 +			cdata(STARTING_CDATA_ACT_SUB, rc) = SKILL_SPACT_EYE_OF_BRAINWASHING
 +			cdata(CDATA_ACT_INDEX, rc) = 15
 +			cdata(CDATA_TXT, rc) += 1
@@ -41259,7 +41260,7 @@
 +			return
 +		}
 +		if ( dbmode == DBMODE_SET ) {
-+			cdata(CDATA_ID, rc) = 1065
++			cdata(CDATA_ID, rc) = CREATURE_ID_HELRAUNE
 +			if ( initlv != 0 ) {
 +				cdata(CDATA_LEVEL, rc) = initlv
 +			}
@@ -41275,7 +41276,7 @@
 +			cdata(CDATA_AI_DISTANCE, rc) = 3
 +			cdata(CDATA_AI_SUB, rc) = 0
 +			creaturepack = FILTER_NOTHING
-+			cdata(STARTING_CDATA_ACT_MAIN, rc) = MAX_SKILL, SKILL_SPACT_ANAPHYLAXIS, SKILL_SPELL_POISON_BOLT, SKILL_SPELL_POISON_BOLT, SKILL_SPELL_NETHER_WAVE
++			cdata(STARTING_CDATA_ACT_MAIN, rc) = SKILL_SPACT_POLLEN_CANNON, SKILL_SPACT_ANAPHYLAXIS, SKILL_SPELL_POISON_BOLT, SKILL_SPELL_POISON_BOLT, SKILL_SPELL_NETHER_WAVE
 +			cdata(CDATA_ACT_INDEX, rc) = 5
 +			if ( jp ) {
 +				cdatan(CDATAN_NAME, rc) = "ヘルラウネ"
@@ -41333,7 +41334,7 @@
 +			return
 +		}
 +		if ( dbmode == DBMODE_SET ) {
-+			cdata(CDATA_ID, rc) = 1064
++			cdata(CDATA_ID, rc) = CREATURE_ID_KING_HOGWEEDER
 +			if ( initlv != 0 ) {
 +				cdata(CDATA_LEVEL, rc) = initlv
 +			}
@@ -41349,7 +41350,7 @@
 +			cdata(CDATA_AI_DISTANCE, rc) = 1
 +			cdata(CDATA_AI_SUB, rc) = 0
 +			creaturepack = FILTER_NOTHING
-+			cdata(STARTING_CDATA_ACT_MAIN, rc) = ACTION_MELEE, ACTION_MELEE, MAX_SKILL, SKILL_SPACT_TOUCH_OF_POISON, SKILL_SPACT_TOUCH_OF_NERVE
++			cdata(STARTING_CDATA_ACT_MAIN, rc) = ACTION_MELEE, ACTION_MELEE, SKILL_SPACT_POLLEN_CANNON, SKILL_SPACT_TOUCH_OF_POISON, SKILL_SPACT_TOUCH_OF_NERVE
 +			cdata(CDATA_ACT_INDEX, rc) = 5
 +			if ( jp ) {
 +				cdatan(CDATAN_NAME, rc) = "クワモドキング"
@@ -41407,7 +41408,7 @@
 +			return
 +		}
 +		if ( dbmode == DBMODE_SET ) {
-+			cdata(CDATA_ID, rc) = 1063
++			cdata(CDATA_ID, rc) = CREATURE_ID_HOGWEEDER
 +			if ( initlv != 0 ) {
 +				cdata(CDATA_LEVEL, rc) = initlv
 +			}
@@ -41423,7 +41424,7 @@
 +			cdata(CDATA_AI_DISTANCE, rc) = 5
 +			cdata(CDATA_AI_SUB, rc) = 0
 +			creaturepack = FILTER_NOTHING
-+			cdata(STARTING_CDATA_ACT_MAIN, rc) = MAX_SKILL, ACTION_RANGE, SKILL_SPACT_POISON_BREATH, SKILL_SPACT_POISON_BREATH, SKILL_SPACT_PROVOKE
++			cdata(STARTING_CDATA_ACT_MAIN, rc) = SKILL_SPACT_POLLEN_CANNON, ACTION_RANGE, SKILL_SPACT_POISON_BREATH, SKILL_SPACT_POISON_BREATH, SKILL_SPACT_PROVOKE
 +			cdata(CDATA_ACT_INDEX, rc) = 5
 +			if ( jp ) {
 +				cdatan(CDATAN_NAME, rc) = "ブタクサ野郎"
@@ -41481,7 +41482,7 @@
 +			return
 +		}
 +		if ( dbmode == DBMODE_SET ) {
-+			cdata(CDATA_ID, rc) = MAX_CREATURE_ID
++			cdata(CDATA_ID, rc) = CREATURE_ID_ALRAUNE
 +			if ( initlv != 0 ) {
 +				cdata(CDATA_LEVEL, rc) = initlv
 +			}
@@ -41557,7 +41558,7 @@
 +			return
 +		}
 +		if ( dbmode == DBMODE_SET ) {
-+			cdata(CDATA_ID, rc) = 1061
++			cdata(CDATA_ID, rc) = CREATURE_ID_KUSOSUGI
 +			if ( initlv != 0 ) {
 +				cdata(CDATA_LEVEL, rc) = initlv
 +			}
@@ -41572,8 +41573,8 @@
 +			cdata(CDATA_AI_MOVE_FREQ, rc) = 30
 +			cdata(CDATA_AI_DISTANCE, rc) = 3
 +			cdata(CDATA_AI_SUB, rc) = 10
-+			creaturepack = 50
-+			cdata(STARTING_CDATA_ACT_MAIN, rc) = ACTION_RANGE, ACTION_RANGE, ACTION_RANGE, SKILL_SPACT_BLAME_PAIN, MAX_SKILL
++			creaturepack = FILTER_RACE_KUSOSUGI
++			cdata(STARTING_CDATA_ACT_MAIN, rc) = ACTION_RANGE, ACTION_RANGE, ACTION_RANGE, SKILL_SPACT_BLAME_PAIN, SKILL_SPACT_POLLEN_CANNON
 +			cdata(STARTING_CDATA_ACT_SUB, rc) = SKILL_SPACT_EYE_OF_INSANITY
 +			cdata(CDATA_ACT_INDEX, rc) = 15
 +			if ( jp ) {
@@ -41636,7 +41637,7 @@
 +			return
 +		}
 +		if ( dbmode == DBMODE_SET ) {
-+			cdata(CDATA_ID, rc) = 1060
++			cdata(CDATA_ID, rc) = CREATURE_ID_HINOCCHIO
 +			if ( initlv != 0 ) {
 +				cdata(CDATA_LEVEL, rc) = initlv
 +			}
@@ -41652,7 +41653,7 @@
 +			cdata(CDATA_AI_DISTANCE, rc) = 1
 +			cdata(CDATA_AI_SUB, rc) = 0
 +			creaturepack = FILTER_NOTHING
-+			cdata(STARTING_CDATA_ACT_MAIN, rc) = ACTION_MELEE, ACTION_MELEE, ACTION_MELEE, MAX_SKILL, SKILL_SPACT_BLENDED_LIE
++			cdata(STARTING_CDATA_ACT_MAIN, rc) = ACTION_MELEE, ACTION_MELEE, ACTION_MELEE, SKILL_SPACT_POLLEN_CANNON, SKILL_SPACT_BLENDED_LIE
 +			cdata(CDATA_ACT_INDEX, rc) = 5
 +			if ( jp ) {
 +				cdatan(CDATAN_NAME, rc) = "ヒノキオ"
@@ -41687,33 +41688,41 @@
  			if ( dbspec == 3 ) {
  				return 6
  			}
-@@ -133665,1943 +134472,1965 @@
- 		}
- 		return 0
- 	}
+@@ -42639,11 +43446,11 @@
+ 			cdata(CDATA_PORTRAIT, rc) = -1
+ 			cdata(CDATA_AI_CALM, rc) = 1
+ 			cdata(CDATA_AI_MOVE_FREQ, rc) = 10
+ 			cdata(CDATA_AI_DISTANCE, rc) = 1
+ 			cdata(CDATA_AI_SUB, rc) = 5
+-			creaturepack = FILTER_RACE_KOBOLT4
++			creaturepack = (47 /*!!!@[FILTER_RACE_INVADER @@@ FILTER_RACE_KOBOLT4]@!!! */)
+ 			cdata(STARTING_CDATA_ACT_MAIN, rc) = ACTION_RANGE, ACTION_RANGE, SKILL_SPELL_POISON_BOLT, SKILL_SPACT_VORACITY_FANG, SKILL_SPACT_SQUEEZE
+ 			cdata(STARTING_CDATA_ACT_SUB, rc) = SKILL_SPELL_SPEED
+ 			cdata(CDATA_ACT_INDEX, rc) = 15
+ 			if ( jp ) {
+ 				cdatan(CDATAN_NAME, rc) = "宇宙の侵略者"
+@@ -133668,1940 +134475,1962 @@
  	return 0
  
--*db_setFilterCreature
--	maxnpcid = MAX_CREATURE_ID
-+*label_8859
-+	maxnpcid = 1069
+ *db_setFilterCreature
+ 	maxnpcid = MAX_CREATURE_ID
  	dim cbitorg, 30, maxnpcid
 -	filter_creature(2) = "/god/"
 +	filter_creature(2) = "/man/"
-+	HMMBITON cbitorg(CHARA_BIT_SUPERIOR_RIDING / 32, 1066), CHARA_BIT_SUPERIOR_RIDING \ 32
++	HMMBITON cbitorg(CHARA_BIT_SUPERIOR_RIDING / 32, CREATURE_ID_SIST_THE_OLDER_SISTER), CHARA_BIT_SUPERIOR_RIDING \ 32
 +	filter_creature(3) = "/nefia2/"
-+	HMMBITON cbitorg(CHARA_BIT_RES_CONFUSE / 32, 1065), CHARA_BIT_RES_CONFUSE \ 32
-+	HMMBITON cbitorg(CHARA_BIT_RES_PARALYZE / 32, 1065), CHARA_BIT_RES_PARALYZE \ 32
++	HMMBITON cbitorg(CHARA_BIT_RES_CONFUSE / 32, CREATURE_ID_HELRAUNE), CHARA_BIT_RES_CONFUSE \ 32
++	HMMBITON cbitorg(CHARA_BIT_RES_PARALYZE / 32, CREATURE_ID_HELRAUNE), CHARA_BIT_RES_PARALYZE \ 32
 +	filter_creature(4) = "/nefia2/"
-+	HMMBITON cbitorg(CHARA_BIT_RES_FEAR / 32, 1064), CHARA_BIT_RES_FEAR \ 32
-+	HMMBITON cbitorg(CHARA_BIT_RES_SLEEP / 32, 1064), CHARA_BIT_RES_SLEEP \ 32
++	HMMBITON cbitorg(CHARA_BIT_RES_FEAR / 32, CREATURE_ID_KING_HOGWEEDER), CHARA_BIT_RES_FEAR \ 32
++	HMMBITON cbitorg(CHARA_BIT_RES_SLEEP / 32, CREATURE_ID_KING_HOGWEEDER), CHARA_BIT_RES_SLEEP \ 32
 +	filter_creature(5) = "/nefia2/"
 +	filter_creature(6) = "/nefia2/"
 +	filter_creature(7) = "/nefia2/"
-+	HMMBITON cbitorg(CHARA_BIT_RES_FEAR / 32, 1061), CHARA_BIT_RES_FEAR \ 32
-+	HMMBITON cbitorg(CHARA_BIT_RES_BLIND / 32, 1061), CHARA_BIT_RES_BLIND \ 32
++	HMMBITON cbitorg(CHARA_BIT_RES_FEAR / 32, CREATURE_ID_KUSOSUGI), CHARA_BIT_RES_FEAR \ 32
++	HMMBITON cbitorg(CHARA_BIT_RES_BLIND / 32, CREATURE_ID_KUSOSUGI), CHARA_BIT_RES_BLIND \ 32
 +	filter_creature(8) = "/nefia2/"
-+	HMMBITON cbitorg(CHARA_BIT_TEMPER / 32, 1060), CHARA_BIT_TEMPER \ 32
++	HMMBITON cbitorg(CHARA_BIT_TEMPER / 32, CREATURE_ID_HINOCCHIO), CHARA_BIT_TEMPER \ 32
 +	filter_creature(9) = "/god/"
  	HMMBITON cbitorg(CHARA_BIT_FLOAT / 32, CREATURE_ID_GREEN_DARK_GUARDIAN), CHARA_BIT_FLOAT \ 32
  	HMMBITON cbitorg(CHARA_BIT_RES_FEAR / 32, CREATURE_ID_GREEN_DARK_GUARDIAN), CHARA_BIT_RES_FEAR \ 32

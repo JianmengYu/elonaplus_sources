@@ -11952,7 +11952,7 @@
 	if ( _switch_val == 68 | _switch_sw ) {
 		_switch_sw = 0
 		txt lang("どの曲を再生しよう？", "Which music will you play.")
-		gosub *label_5434
+		gosub *com_jukebox
 		goto *act_use_SWEND1
 		_switch_sw++
 	}

@@ -1926,7 +1926,7 @@
 		characreate -1, CREATURE_ID_BYSYMLHA_THE_AMBER_EYES, 4, 6
 		cdata(CDATA_ROLE, rc) = ROLE_SPECIAL
 		cdata(CDATA_AI_CALM, rc) = 3
-		mdata(MDATA_MUSIC) = MUSICLIST_MAX
+		mdata(MDATA_MUSIC) = MUSICLIST_SCENE_MUSIC
 		mdata(MDATA_NO_RENEW) = 0
 		map_placeplayer
 	}
@@ -8483,11 +8483,11 @@
 			mdata(MDATA_FIELD) = MAP_FIELD_INDOOR
 			mdata(MDATA_TYPE) = MAP_TYPE_VILLAGE
 			mdata(MDATA_MODERATE_CROWD) = 0
-			mdata(MDATA_MUSIC) = MUSICLIST_SCENE_MUSIC
+			mdata(MDATA_MUSIC) = MUSICLIST_MCCHURCH
 			mdata(MDATA_NO_RENEW) = 0
 			mdatan(0) = lang("姉の教会", "the Church of Older Sister")
 			flt
-			characreate -1, 1066, 20, 3
+			characreate -1, CREATURE_ID_SIST_THE_OLDER_SISTER, 20, 3
 			cdata(CDATA_ROLE, rc) = ROLE_SPECIAL
 			if ( stat != 0 ) {
 				cdata(CDATA_AI_CALM, rc) = 3

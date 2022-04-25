@@ -1,7 +1,7 @@
 Only in ../2.11-borscht/: a.diff
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/action.hsp ../2.12-borscht/action.hsp
---- ../2.11-borscht/action.hsp	2022-04-25 13:55:18.606933500 -0700
-+++ ../2.12-borscht/action.hsp	2022-04-25 13:55:24.402435700 -0700
+--- ../2.11-borscht/action.hsp	2022-04-25 14:21:54.622293400 -0700
++++ ../2.12-borscht/action.hsp	2022-04-25 14:21:59.625140000 -0700
 @@ -4000,10 +4000,13 @@
  	gdata(GDATA_FLAG_CURTAIN_CALL)++
  	if ( cdata(CDATA_GAUGE_COOLDOWN, cc) == 0 ) {
@@ -161,16 +161,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  				csctrl = 4
  				snd SOUNDLIST_POP2
  				cc = tc
-@@ -11884,20 +11950,20 @@
- 		_switch_sw++
- 	}
- 	if ( _switch_val == 68 | _switch_sw ) {
- 		_switch_sw = 0
- 		txt lang("どの曲を再生しよう？", "Which music will you play.")
--		gosub *com_jukebox
-+		gosub *label_5434
- 		goto *act_use_SWEND1
- 		_switch_sw++
+@@ -11892,12 +11958,12 @@
  	}
  	if ( _switch_val == 6 | _switch_sw ) {
  		_switch_sw = 0
@@ -186,15 +177,15 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  		goto *act_use_SWEND1
  		_switch_sw++
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/ai.hsp ../2.12-borscht/ai.hsp
---- ../2.11-borscht/ai.hsp	2022-04-25 13:55:18.675998200 -0700
-+++ ../2.12-borscht/ai.hsp	2022-04-25 13:55:24.454393200 -0700
+--- ../2.11-borscht/ai.hsp	2022-04-25 14:21:54.674341800 -0700
++++ ../2.12-borscht/ai.hsp	2022-04-25 14:21:59.689199500 -0700
 @@ -2973,10 +2973,19 @@
  					act = SKILL_SPACT_EXTERMINATION_BREATH
  				}
  			}
  		}
  	}
-+	if ( cdata(CDATA_ID, cc) == 1065 ) {
++	if ( cdata(CDATA_ID, cc) == CREATURE_ID_HELRAUNE ) {
 +		if ( cdata(CDATA_POWER_GAUGE, cc) < 80 ) {
 +			if ( cdata(CDATA_POWER_GAUGE, cc) >= 25 ) {
 +				if ( rnd(10) == 0 ) {
@@ -208,16 +199,45 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  			if ( cdata(CDATA_FRIENDSHIP, CHARA_PLAYER) != 2 & cdata(CDATA_FRIENDSHIP, CHARA_PLAYER) >= 0 ) {
  				if ( rnd(3) == 0 ) {
  					act = SKILL_SPACT_WIRE_WORLD
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/blend.hsp ../2.12-borscht/blend.hsp
+--- ../2.11-borscht/blend.hsp	2022-04-25 14:21:54.697363100 -0700
++++ ../2.12-borscht/blend.hsp	2022-04-25 14:21:59.723231200 -0700
+@@ -875,11 +875,11 @@
+ 	rpid = STARTING_RPID + 39
+ 	rplistdef(length(rplistdef)) = 1 * EXT_RECIPES + rpid
+ 	rpdatan(rpid) = lang("魔剣転生", "makenn tensei")
+ 	rpdata(RPDATA_ITEM, rpid) = ITEM_ID_SKULL_SWORD, 20 + 1 * 10000
+ 	rpdata(RPDATA_SKILL + 0 * 2, rpid) = SKILL_NORMAL_ANATOMY, 2, SKILL_NORMAL_ALCHEMY, 6
+-	rpdata(RPDATA_MAT + 0, rpid) = ITEM_ID_BROKEN_SWORD, ITEM_ID_BONE_FRAGMENT
++	rpdata(RPDATA_MAT + 0, rpid) = (50 /*!!!@[FILTER_RACE_KUSOSUGI @@@ ITEM_ID_BROKEN_SWORD]@!!! */), ITEM_ID_BONE_FRAGMENT
+ 	rpid = STARTING_RPID + 40
+ 	rplistdef(length(rplistdef)) = 1 * EXT_RECIPES + rpid
+ 	rpdatan(rpid) = lang("真・魔剣転生", "shin makenn tensei")
+ 	rpdata(RPDATA_ITEM, rpid) = ITEM_ID_VIOLENT_SKULL_SWORD, 30 + 1 * 10000
+ 	rpdata(RPDATA_SKILL + 0 * 2, rpid) = SKILL_NORMAL_ANATOMY, 30, SKILL_NORMAL_ALCHEMY, 45
+@@ -899,11 +899,11 @@
+ 	rpid = STARTING_RPID + 43
+ 	rplistdef(length(rplistdef)) = 1 * EXT_RECIPES + rpid
+ 	rpdatan(rpid) = lang("ファーストエイド", "first aid kit")
+ 	rpdata(RPDATA_ITEM, rpid) = ITEM_ID_FIRST_AID_KIT, 20
+ 	rpdata(RPDATA_SKILL + 0 * 2, rpid) = SKILL_NORMAL_TAILORING, 1
+-	rpdata(RPDATA_MAT + 0, rpid) = RF_LEAF, ITEM_ID_BOTTLE_WHISKY, (47 /*!!!@[FILTER_RACE_KOBOLT4 @@@ ITEM_ID_WASHINGS]@!!! */)
++	rpdata(RPDATA_MAT + 0, rpid) = RF_LEAF, ITEM_ID_BOTTLE_WHISKY, (47 /*!!!@[FILTER_RACE_INVADER @@@ FILTER_RACE_KOBOLT4 @@@ ITEM_ID_WASHINGS]@!!! */)
+ 	rpid = STARTING_RPID + 44
+ 	rplistdef(length(rplistdef)) = 1 * EXT_RECIPES + rpid
+ 	rpdatan(rpid) = lang("特殊矢弾箱", "special ammos box")
+ 	rpdata(RPDATA_ITEM, rpid) = ITEM_ID_SPECIAL_AMMO_BOX, 40 + 2 * 10000
+ 	rpdata(RPDATA_SKILL + 0 * 2, rpid) = SKILL_NORMAL_CARPENTRY, 10, SKILL_NORMAL_JEWELER, 20
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/calculation.hsp ../2.12-borscht/calculation.hsp
---- ../2.11-borscht/calculation.hsp	2022-04-25 13:55:18.747064600 -0700
-+++ ../2.12-borscht/calculation.hsp	2022-04-25 13:55:24.503439300 -0700
+--- ../2.11-borscht/calculation.hsp	2022-04-25 14:21:54.827483900 -0700
++++ ../2.12-borscht/calculation.hsp	2022-04-25 14:21:59.841343200 -0700
 @@ -1347,10 +1347,13 @@
  		skillinit SKILL_NORMAL_ALCHEMY, r1, 3
  	}
  	if ( cdata(CDATA_ID, r1) == CREATURE_ID_HEQET ) {
  		skillinit SKILL_NORMAL_ALCHEMY, r1, 3
  	}
-+	if ( cdata(CDATA_ID, r1) == 1065 ) {
++	if ( cdata(CDATA_ID, r1) == CREATURE_ID_HELRAUNE ) {
 +		skillinit SKILL_NORMAL_GENE_ENGINEER, r1, 4
 +	}
  	if ( necrop2 > 0 ) {
@@ -279,8 +299,8 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  				addbuff r1, BUFF_MELANCHOLY, cdata(CDATA_DRUG_DEPENDENCE, r1) * 5000, 50
  				if ( synccheck(r1, -1) ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/chara.hsp ../2.12-borscht/chara.hsp
---- ../2.11-borscht/chara.hsp	2022-04-25 13:55:18.789104000 -0700
-+++ ../2.12-borscht/chara.hsp	2022-04-25 13:55:24.545281900 -0700
+--- ../2.11-borscht/chara.hsp	2022-04-25 14:21:54.872525800 -0700
++++ ../2.12-borscht/chara.hsp	2022-04-25 14:21:59.885384100 -0700
 @@ -2280,11 +2280,11 @@
  	}
  	if ( cdata(CDATA_ID, rc) == CREATURE_ID_YERLESWOOD_TYPE_M | cdata(CDATA_ID, rc) == CREATURE_ID_MELUGAST_TYPEM ) {
@@ -288,7 +308,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  		cdata(CDATA_WEIGHT, rc) += 19000
  	}
 -	if ( cdata(CDATA_ID, rc) == CREATURE_ID_MISHAGUZI | cdata(CDATA_ID, rc) == CREATURE_ID_EK_CHUAH | cdata(CDATA_ID, rc) == CREATURE_ID_HYPOMYCES | cdata(CDATA_ID, rc) == CREATURE_ID_DEAD_EYES_BLOOD_DRAGON | cdata(CDATA_ID, rc) == CREATURE_ID_SUPER_GRANDMASTER | cdata(CDATA_ID, rc) == CREATURE_ID_UNGOLIANT | cdata(CDATA_ID, rc) == CREATURE_ID_SUGAAR | cdata(CDATA_ID, rc) == CREATURE_ID_GIANT_EATER_FLOWER | cdata(CDATA_ID, rc) == CREATURE_ID_STAG_GOD | cdata(CDATA_ID, rc) == CREATURE_ID_DRAGON_CENTIPEDE | cdata(CDATA_ID, rc) == CREATURE_ID_GRANDMASTER | cdata(CDATA_ID, rc) == CREATURE_ID_ETHER_GENERATOR | cdata(CDATA_ID, rc) == CREATURE_ID_ELEMENT_DRAGON | cdata(CDATA_ID, rc) == CREATURE_ID_FIVE_HEAD_GOD | cdata(CDATA_ID, rc) == CREATURE_ID_HEQET | cdata(CDATA_ID, rc) == CREATURE_ID_DRAGON_ZOMBIE | cdata(CDATA_ID, rc) == CREATURE_ID_GRAND_ENT | cdata(CDATA_ID, rc) == CREATURE_ID_ATLACH_NACHA | cdata(CDATA_ID, rc) == CREATURE_ID_ATLAS | cdata(CDATA_ID, rc) == CREATURE_ID_INDIGO_LOBSTER | cdata(CDATA_ID, rc) == CREATURE_ID_HELL_NEEDLE_HEDGEHOG | cdata(CDATA_ID, rc) == CREATURE_ID_QUEEN_GI_ANT | cdata(CDATA_ID, rc) == CREATURE_ID_ALICE_THE_BIG_ANT | cdata(CDATA_ID, rc) == CREATURE_ID_SAND_WORM | cdata(CDATA_ID, rc) == CREATURE_ID_ROCK_WORM | cdata(CDATA_ID, rc) == CREATURE_ID_JELLYFISH_KRAKEN | cdata(CDATA_ID, rc) == CREATURE_ID_LAZASYE_THE_DESTROY | cdata(CDATA_ID, rc) == CREATURE_ID_INQTUAL_THE_REVENGE | cdata(CDATA_ID, rc) == CREATURE_ID_ROATONIS_THE_INFECTIONS | cdata(CDATA_ID, rc) == CREATURE_ID_EGELVEIL_THE_BIND | cdata(CDATA_ID, rc) == CREATURE_ID_MOAI_CORE | cdata(CDATA_ID, rc) == CREATURE_ID_DHWTY | cdata(CDATA_ID, rc) == CREATURE_ID_BIND_DEVIL_WORM | cdata(CDATA_ID, rc) == CREATURE_ID_SEPA | cdata(CDATA_ID, rc) == CREATURE_ID_TENTACLE_WORM | cdata(CDATA_ID, rc) == CREATURE_ID_SAIMEF_THE_DOGGOD | cdata(CDATA_ID, rc) == CREATURE_ID_ESTORK_THE_DOGGOD | cdata(CDATA_ID, rc) == CREATURE_ID_ORCINUS_ORCA | cdata(CDATA_ID, rc) == CREATURE_ID_SHELL_KING_OF_VINDALE | cdata(CDATA_ID, rc) == CREATURE_ID_KING_WOODLOUSE | cdata(CDATA_ID, rc) == CREATURE_ID_ZOIBO | cdata(CDATA_ID, rc) == CREATURE_ID_BUILDION | cdata(CDATA_ID, rc) == CREATURE_ID_KONIGS_KATZE | cdata(CDATA_ID, rc) == CREATURE_ID_GANESA | cdata(CDATA_ID, rc) == CREATURE_ID_GASYADOKURO | cdata(CDATA_ID, rc) == CREATURE_ID_DRICERADOPS ) {
-+	if ( cdata(CDATA_ID, rc) == CREATURE_ID_MISHAGUZI | cdata(CDATA_ID, rc) == CREATURE_ID_EK_CHUAH | cdata(CDATA_ID, rc) == CREATURE_ID_HYPOMYCES | cdata(CDATA_ID, rc) == CREATURE_ID_DEAD_EYES_BLOOD_DRAGON | cdata(CDATA_ID, rc) == CREATURE_ID_SUPER_GRANDMASTER | cdata(CDATA_ID, rc) == CREATURE_ID_UNGOLIANT | cdata(CDATA_ID, rc) == CREATURE_ID_SUGAAR | cdata(CDATA_ID, rc) == CREATURE_ID_GIANT_EATER_FLOWER | cdata(CDATA_ID, rc) == CREATURE_ID_STAG_GOD | cdata(CDATA_ID, rc) == CREATURE_ID_DRAGON_CENTIPEDE | cdata(CDATA_ID, rc) == CREATURE_ID_GRANDMASTER | cdata(CDATA_ID, rc) == CREATURE_ID_ETHER_GENERATOR | cdata(CDATA_ID, rc) == CREATURE_ID_ELEMENT_DRAGON | cdata(CDATA_ID, rc) == CREATURE_ID_FIVE_HEAD_GOD | cdata(CDATA_ID, rc) == CREATURE_ID_HEQET | cdata(CDATA_ID, rc) == CREATURE_ID_DRAGON_ZOMBIE | cdata(CDATA_ID, rc) == CREATURE_ID_GRAND_ENT | cdata(CDATA_ID, rc) == CREATURE_ID_ATLACH_NACHA | cdata(CDATA_ID, rc) == CREATURE_ID_ATLAS | cdata(CDATA_ID, rc) == CREATURE_ID_INDIGO_LOBSTER | cdata(CDATA_ID, rc) == CREATURE_ID_HELL_NEEDLE_HEDGEHOG | cdata(CDATA_ID, rc) == CREATURE_ID_QUEEN_GI_ANT | cdata(CDATA_ID, rc) == CREATURE_ID_ALICE_THE_BIG_ANT | cdata(CDATA_ID, rc) == CREATURE_ID_SAND_WORM | cdata(CDATA_ID, rc) == CREATURE_ID_ROCK_WORM | cdata(CDATA_ID, rc) == CREATURE_ID_JELLYFISH_KRAKEN | cdata(CDATA_ID, rc) == CREATURE_ID_LAZASYE_THE_DESTROY | cdata(CDATA_ID, rc) == CREATURE_ID_INQTUAL_THE_REVENGE | cdata(CDATA_ID, rc) == CREATURE_ID_ROATONIS_THE_INFECTIONS | cdata(CDATA_ID, rc) == CREATURE_ID_EGELVEIL_THE_BIND | cdata(CDATA_ID, rc) == CREATURE_ID_MOAI_CORE | cdata(CDATA_ID, rc) == CREATURE_ID_DHWTY | cdata(CDATA_ID, rc) == CREATURE_ID_BIND_DEVIL_WORM | cdata(CDATA_ID, rc) == CREATURE_ID_SEPA | cdata(CDATA_ID, rc) == CREATURE_ID_TENTACLE_WORM | cdata(CDATA_ID, rc) == CREATURE_ID_SAIMEF_THE_DOGGOD | cdata(CDATA_ID, rc) == CREATURE_ID_ESTORK_THE_DOGGOD | cdata(CDATA_ID, rc) == CREATURE_ID_ORCINUS_ORCA | cdata(CDATA_ID, rc) == CREATURE_ID_SHELL_KING_OF_VINDALE | cdata(CDATA_ID, rc) == CREATURE_ID_KING_WOODLOUSE | cdata(CDATA_ID, rc) == CREATURE_ID_ZOIBO | cdata(CDATA_ID, rc) == CREATURE_ID_BUILDION | cdata(CDATA_ID, rc) == CREATURE_ID_KONIGS_KATZE | cdata(CDATA_ID, rc) == CREATURE_ID_GANESA | cdata(CDATA_ID, rc) == CREATURE_ID_GASYADOKURO | cdata(CDATA_ID, rc) == CREATURE_ID_DRICERADOPS | cdata(CDATA_ID, rc) == 1060 | cdata(CDATA_ID, rc) == 1061 ) {
++	if ( cdata(CDATA_ID, rc) == CREATURE_ID_MISHAGUZI | cdata(CDATA_ID, rc) == CREATURE_ID_EK_CHUAH | cdata(CDATA_ID, rc) == CREATURE_ID_HYPOMYCES | cdata(CDATA_ID, rc) == CREATURE_ID_DEAD_EYES_BLOOD_DRAGON | cdata(CDATA_ID, rc) == CREATURE_ID_SUPER_GRANDMASTER | cdata(CDATA_ID, rc) == CREATURE_ID_UNGOLIANT | cdata(CDATA_ID, rc) == CREATURE_ID_SUGAAR | cdata(CDATA_ID, rc) == CREATURE_ID_GIANT_EATER_FLOWER | cdata(CDATA_ID, rc) == CREATURE_ID_STAG_GOD | cdata(CDATA_ID, rc) == CREATURE_ID_DRAGON_CENTIPEDE | cdata(CDATA_ID, rc) == CREATURE_ID_GRANDMASTER | cdata(CDATA_ID, rc) == CREATURE_ID_ETHER_GENERATOR | cdata(CDATA_ID, rc) == CREATURE_ID_ELEMENT_DRAGON | cdata(CDATA_ID, rc) == CREATURE_ID_FIVE_HEAD_GOD | cdata(CDATA_ID, rc) == CREATURE_ID_HEQET | cdata(CDATA_ID, rc) == CREATURE_ID_DRAGON_ZOMBIE | cdata(CDATA_ID, rc) == CREATURE_ID_GRAND_ENT | cdata(CDATA_ID, rc) == CREATURE_ID_ATLACH_NACHA | cdata(CDATA_ID, rc) == CREATURE_ID_ATLAS | cdata(CDATA_ID, rc) == CREATURE_ID_INDIGO_LOBSTER | cdata(CDATA_ID, rc) == CREATURE_ID_HELL_NEEDLE_HEDGEHOG | cdata(CDATA_ID, rc) == CREATURE_ID_QUEEN_GI_ANT | cdata(CDATA_ID, rc) == CREATURE_ID_ALICE_THE_BIG_ANT | cdata(CDATA_ID, rc) == CREATURE_ID_SAND_WORM | cdata(CDATA_ID, rc) == CREATURE_ID_ROCK_WORM | cdata(CDATA_ID, rc) == CREATURE_ID_JELLYFISH_KRAKEN | cdata(CDATA_ID, rc) == CREATURE_ID_LAZASYE_THE_DESTROY | cdata(CDATA_ID, rc) == CREATURE_ID_INQTUAL_THE_REVENGE | cdata(CDATA_ID, rc) == CREATURE_ID_ROATONIS_THE_INFECTIONS | cdata(CDATA_ID, rc) == CREATURE_ID_EGELVEIL_THE_BIND | cdata(CDATA_ID, rc) == CREATURE_ID_MOAI_CORE | cdata(CDATA_ID, rc) == CREATURE_ID_DHWTY | cdata(CDATA_ID, rc) == CREATURE_ID_BIND_DEVIL_WORM | cdata(CDATA_ID, rc) == CREATURE_ID_SEPA | cdata(CDATA_ID, rc) == CREATURE_ID_TENTACLE_WORM | cdata(CDATA_ID, rc) == CREATURE_ID_SAIMEF_THE_DOGGOD | cdata(CDATA_ID, rc) == CREATURE_ID_ESTORK_THE_DOGGOD | cdata(CDATA_ID, rc) == CREATURE_ID_ORCINUS_ORCA | cdata(CDATA_ID, rc) == CREATURE_ID_SHELL_KING_OF_VINDALE | cdata(CDATA_ID, rc) == CREATURE_ID_KING_WOODLOUSE | cdata(CDATA_ID, rc) == CREATURE_ID_ZOIBO | cdata(CDATA_ID, rc) == CREATURE_ID_BUILDION | cdata(CDATA_ID, rc) == CREATURE_ID_KONIGS_KATZE | cdata(CDATA_ID, rc) == CREATURE_ID_GANESA | cdata(CDATA_ID, rc) == CREATURE_ID_GASYADOKURO | cdata(CDATA_ID, rc) == CREATURE_ID_DRICERADOPS | cdata(CDATA_ID, rc) == CREATURE_ID_HINOCCHIO | cdata(CDATA_ID, rc) == CREATURE_ID_KUSOSUGI ) {
  		cdata(CDATA_HEIGHT, rc) += rnd(500) + 1000
  		cdata(CDATA_WEIGHT, rc) += rnd(5000) + 15000
  	}
@@ -301,7 +321,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  		cdata(CDATA_WEIGHT, rc) = rnd(5000) + 10000
  	}
 -	if ( cdata(CDATA_ID, rc) == CREATURE_ID_GIRAFFE | cdata(CDATA_ID, rc) == CREATURE_ID_GI_ANT | cdata(CDATA_ID, rc) == CREATURE_ID_SAMURAI_ANT | cdata(CDATA_ID, rc) == CREATURE_ID_STEEL_ARMOR_SPIDER | cdata(CDATA_ID, rc) == CREATURE_ID_GOLD_ARMOR_ANT | cdata(CDATA_ID, rc) == CREATURE_ID_MEIDA | cdata(CDATA_ID, rc) == CREATURE_ID_OYAUKAMUI | cdata(CDATA_ID, rc) == CREATURE_ID_HAM_TAIROU | cdata(CDATA_ID, rc) == CREATURE_ID_DISASTER | cdata(CDATA_ID, rc) == CREATURE_ID_BLACK_WING | cdata(CDATA_ID, rc) == CREATURE_ID_SEA_FALLEN_ANGEL | cdata(CDATA_ID, rc) == CREATURE_ID_ROPER | cdata(CDATA_ID, rc) == CREATURE_ID_BEILGENA_THE_ARTIFICIAL_DRAGON | cdata(CDATA_ID, rc) == CREATURE_ID_UNIVERSE_INVADER | cdata(CDATA_ID, rc) == CREATURE_ID_HUNDRED_EYES ) {
-+	if ( cdata(CDATA_ID, rc) == CREATURE_ID_GIRAFFE | cdata(CDATA_ID, rc) == CREATURE_ID_GI_ANT | cdata(CDATA_ID, rc) == CREATURE_ID_SAMURAI_ANT | cdata(CDATA_ID, rc) == CREATURE_ID_STEEL_ARMOR_SPIDER | cdata(CDATA_ID, rc) == CREATURE_ID_GOLD_ARMOR_ANT | cdata(CDATA_ID, rc) == CREATURE_ID_MEIDA | cdata(CDATA_ID, rc) == CREATURE_ID_OYAUKAMUI | cdata(CDATA_ID, rc) == CREATURE_ID_HAM_TAIROU | cdata(CDATA_ID, rc) == CREATURE_ID_DISASTER | cdata(CDATA_ID, rc) == CREATURE_ID_BLACK_WING | cdata(CDATA_ID, rc) == CREATURE_ID_SEA_FALLEN_ANGEL | cdata(CDATA_ID, rc) == CREATURE_ID_ROPER | cdata(CDATA_ID, rc) == CREATURE_ID_BEILGENA_THE_ARTIFICIAL_DRAGON | cdata(CDATA_ID, rc) == CREATURE_ID_UNIVERSE_INVADER | cdata(CDATA_ID, rc) == CREATURE_ID_HUNDRED_EYES | cdata(CDATA_ID, rc) == 1064 ) {
++	if ( cdata(CDATA_ID, rc) == CREATURE_ID_GIRAFFE | cdata(CDATA_ID, rc) == CREATURE_ID_GI_ANT | cdata(CDATA_ID, rc) == CREATURE_ID_SAMURAI_ANT | cdata(CDATA_ID, rc) == CREATURE_ID_STEEL_ARMOR_SPIDER | cdata(CDATA_ID, rc) == CREATURE_ID_GOLD_ARMOR_ANT | cdata(CDATA_ID, rc) == CREATURE_ID_MEIDA | cdata(CDATA_ID, rc) == CREATURE_ID_OYAUKAMUI | cdata(CDATA_ID, rc) == CREATURE_ID_HAM_TAIROU | cdata(CDATA_ID, rc) == CREATURE_ID_DISASTER | cdata(CDATA_ID, rc) == CREATURE_ID_BLACK_WING | cdata(CDATA_ID, rc) == CREATURE_ID_SEA_FALLEN_ANGEL | cdata(CDATA_ID, rc) == CREATURE_ID_ROPER | cdata(CDATA_ID, rc) == CREATURE_ID_BEILGENA_THE_ARTIFICIAL_DRAGON | cdata(CDATA_ID, rc) == CREATURE_ID_UNIVERSE_INVADER | cdata(CDATA_ID, rc) == CREATURE_ID_HUNDRED_EYES | cdata(CDATA_ID, rc) == CREATURE_ID_KING_HOGWEEDER ) {
  		cdata(CDATA_HEIGHT, rc) = rnd(100) + 400
  		cdata(CDATA_WEIGHT, rc) = rnd(300) + 700
  	}
@@ -314,7 +334,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  		cdata(CDATA_WEIGHT, rc) = 1
  	}
 -	if ( cdata(CDATA_ID, rc) == CREATURE_ID_IMP | cdata(CDATA_ID, rc) == CREATURE_ID_NETHER_IMP | cdata(CDATA_ID, rc) == CREATURE_ID_CHAOS_IMP | cdata(CDATA_ID, rc) == CREATURE_ID_DEMONS_COMMANDER | cdata(CDATA_ID, rc) == CREATURE_ID_CHILD_WEL | cdata(CDATA_ID, rc) == CREATURE_ID_MIZUKI_THE_ABYSS_PRINCESS | cdata(CDATA_ID, rc) == CREATURE_ID_TOWN_CHILD | cdata(CDATA_ID, rc) == CREATURE_ID_NOBLE_CHILD | cdata(CDATA_ID, rc) == CREATURE_ID_LITTLE_SISTER | cdata(CDATA_ID, rc) == CREATURE_ID_CAPYBARA | cdata(CDATA_ID, rc) == CREATURE_ID_THOUSAND_HEDGEHOG | cdata(CDATA_ID, rc) == CREATURE_ID_SHOEBILL | cdata(CDATA_ID, rc) == CREATURE_ID_NERES_THE_AMNESIAC | cdata(CDATA_ID, rc) == CREATURE_ID_RYUTYE_THE_AMNESIAC | cdata(CDATA_ID, rc) == CREATURE_ID_BOYCIANA | cdata(CDATA_ID, rc) == CREATURE_ID_HALLOWEEN_CHILDREN | cdata(CDATA_ID, rc) == CREATURE_ID_HALLOWEEN_CHILDREN2 | cdata(CDATA_ID, rc) == CREATURE_ID_WANDERING_PENGUIN | cdata(CDATA_ID, rc) == CREATURE_ID_ARIBEL_THE_WHITE_ARMS | cdata(CDATA_ID, rc) == CREATURE_ID_PERFORMAID_BITCHIACK | cdata(CDATA_ID, rc) == CREATURE_ID_FOX_BROTHER | cdata(CDATA_ID, rc) == CREATURE_ID_SILVER_FOX_BROTHER | cdata(CDATA_ID, rc) == CREATURE_ID_FOX | cdata(CDATA_ID, rc) == CREATURE_ID_INCONEET | cdata(CDATA_ID, rc) == CREATURE_ID_KOBOLINA | cdata(CDATA_ID, rc) == CREATURE_ID_AIME_THE_STORY_TELLER | cdata(CDATA_ID, rc) == CREATURE_ID_STRAY_SOUL | cdata(CDATA_ID, rc) == CREATURE_ID_IMARITUKA_THE_ZASIKI_WARAI ) {
-+	if ( cdata(CDATA_ID, rc) == CREATURE_ID_IMP | cdata(CDATA_ID, rc) == CREATURE_ID_NETHER_IMP | cdata(CDATA_ID, rc) == CREATURE_ID_CHAOS_IMP | cdata(CDATA_ID, rc) == CREATURE_ID_DEMONS_COMMANDER | cdata(CDATA_ID, rc) == CREATURE_ID_CHILD_WEL | cdata(CDATA_ID, rc) == CREATURE_ID_MIZUKI_THE_ABYSS_PRINCESS | cdata(CDATA_ID, rc) == CREATURE_ID_TOWN_CHILD | cdata(CDATA_ID, rc) == CREATURE_ID_NOBLE_CHILD | cdata(CDATA_ID, rc) == CREATURE_ID_LITTLE_SISTER | cdata(CDATA_ID, rc) == CREATURE_ID_CAPYBARA | cdata(CDATA_ID, rc) == CREATURE_ID_THOUSAND_HEDGEHOG | cdata(CDATA_ID, rc) == CREATURE_ID_SHOEBILL | cdata(CDATA_ID, rc) == CREATURE_ID_NERES_THE_AMNESIAC | cdata(CDATA_ID, rc) == CREATURE_ID_RYUTYE_THE_AMNESIAC | cdata(CDATA_ID, rc) == CREATURE_ID_BOYCIANA | cdata(CDATA_ID, rc) == CREATURE_ID_HALLOWEEN_CHILDREN | cdata(CDATA_ID, rc) == CREATURE_ID_HALLOWEEN_CHILDREN2 | cdata(CDATA_ID, rc) == CREATURE_ID_WANDERING_PENGUIN | cdata(CDATA_ID, rc) == CREATURE_ID_ARIBEL_THE_WHITE_ARMS | cdata(CDATA_ID, rc) == CREATURE_ID_PERFORMAID_BITCHIACK | cdata(CDATA_ID, rc) == CREATURE_ID_FOX_BROTHER | cdata(CDATA_ID, rc) == CREATURE_ID_SILVER_FOX_BROTHER | cdata(CDATA_ID, rc) == CREATURE_ID_FOX | cdata(CDATA_ID, rc) == CREATURE_ID_INCONEET | cdata(CDATA_ID, rc) == CREATURE_ID_KOBOLINA | cdata(CDATA_ID, rc) == CREATURE_ID_AIME_THE_STORY_TELLER | cdata(CDATA_ID, rc) == CREATURE_ID_STRAY_SOUL | cdata(CDATA_ID, rc) == CREATURE_ID_IMARITUKA_THE_ZASIKI_WARAI | cdata(CDATA_ID, rc) == MAX_CREATURE_ID | cdata(CDATA_ID, rc) == 1065 ) {
++	if ( cdata(CDATA_ID, rc) == CREATURE_ID_IMP | cdata(CDATA_ID, rc) == CREATURE_ID_NETHER_IMP | cdata(CDATA_ID, rc) == CREATURE_ID_CHAOS_IMP | cdata(CDATA_ID, rc) == CREATURE_ID_DEMONS_COMMANDER | cdata(CDATA_ID, rc) == CREATURE_ID_CHILD_WEL | cdata(CDATA_ID, rc) == CREATURE_ID_MIZUKI_THE_ABYSS_PRINCESS | cdata(CDATA_ID, rc) == CREATURE_ID_TOWN_CHILD | cdata(CDATA_ID, rc) == CREATURE_ID_NOBLE_CHILD | cdata(CDATA_ID, rc) == CREATURE_ID_LITTLE_SISTER | cdata(CDATA_ID, rc) == CREATURE_ID_CAPYBARA | cdata(CDATA_ID, rc) == CREATURE_ID_THOUSAND_HEDGEHOG | cdata(CDATA_ID, rc) == CREATURE_ID_SHOEBILL | cdata(CDATA_ID, rc) == CREATURE_ID_NERES_THE_AMNESIAC | cdata(CDATA_ID, rc) == CREATURE_ID_RYUTYE_THE_AMNESIAC | cdata(CDATA_ID, rc) == CREATURE_ID_BOYCIANA | cdata(CDATA_ID, rc) == CREATURE_ID_HALLOWEEN_CHILDREN | cdata(CDATA_ID, rc) == CREATURE_ID_HALLOWEEN_CHILDREN2 | cdata(CDATA_ID, rc) == CREATURE_ID_WANDERING_PENGUIN | cdata(CDATA_ID, rc) == CREATURE_ID_ARIBEL_THE_WHITE_ARMS | cdata(CDATA_ID, rc) == CREATURE_ID_PERFORMAID_BITCHIACK | cdata(CDATA_ID, rc) == CREATURE_ID_FOX_BROTHER | cdata(CDATA_ID, rc) == CREATURE_ID_SILVER_FOX_BROTHER | cdata(CDATA_ID, rc) == CREATURE_ID_FOX | cdata(CDATA_ID, rc) == CREATURE_ID_INCONEET | cdata(CDATA_ID, rc) == CREATURE_ID_KOBOLINA | cdata(CDATA_ID, rc) == CREATURE_ID_AIME_THE_STORY_TELLER | cdata(CDATA_ID, rc) == CREATURE_ID_STRAY_SOUL | cdata(CDATA_ID, rc) == CREATURE_ID_IMARITUKA_THE_ZASIKI_WARAI | cdata(CDATA_ID, rc) == CREATURE_ID_ALRAUNE | cdata(CDATA_ID, rc) == CREATURE_ID_HELRAUNE ) {
  		cdata(CDATA_HEIGHT, rc) = rnd(30) + 110
  		cdata(CDATA_WEIGHT, rc) = rnd(10) + 25
  	}
@@ -327,15 +347,15 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  		cdata(CDATA_WEIGHT, rc) = rnd(10) + 110
  	}
 -	if ( cdata(CDATA_ID, rc) == CREATURE_ID_CARLA_OF_THE_FORGOTTEN_WORLD | cdata(CDATA_ID, rc) == CREATURE_ID_SPIPHA_THE_DRAGON_HUNTER | cdata(CDATA_ID, rc) == CREATURE_ID_PERFORMAID_BLOODRESS | cdata(CDATA_ID, rc) == CREATURE_ID_PERFORMAID_DESWEEPER | cdata(CDATA_ID, rc) == CREATURE_ID_PERFORMAID_COCRUEL | cdata(CDATA_ID, rc) == CREATURE_ID_PERFORMAID_PINCHIEF | cdata(CDATA_ID, rc) == CREATURE_ID_LANKATA_THE_LIGHTNING_OF_BLUE | cdata(CDATA_ID, rc) == CREATURE_ID_UNITDEAD_JOKER | cdata(CDATA_ID, rc) == CREATURE_ID_HALION_THE_EXTREMIST | cdata(CDATA_ID, rc) == CREATURE_ID_SKOGSRA | cdata(CDATA_ID, rc) == CREATURE_ID_TREE_INCARNATION | cdata(CDATA_ID, rc) == CREATURE_ID_PART_TIME_WORKER_THE_RED_SWORD | cdata(CDATA_ID, rc) == CREATURE_ID_CRESCE_THE_SEMINAR_LECTURER | cdata(CDATA_ID, rc) == CREATURE_ID_SICKFULL_OLDER_BROTHER | cdata(CDATA_ID, rc) == CREATURE_ID_ENTHUMESIS | cdata(CDATA_ID, rc) == CREATURE_ID_ALSAPIA_THE_MURDERER_MASK | cdata(CDATA_ID, rc) == CREATURE_ID_BYSYMLHA_THE_AMBER_EYES | cdata(CDATA_ID, rc) == CREATURE_ID_JENNA_THE_MYTHICAL_MANIAC | cdata(CDATA_ID, rc) == CREATURE_ID_MATANGODDESS | cdata(CDATA_ID, rc) == CREATURE_ID_MIKRAANESIS | cdata(CDATA_ID, rc) == CREATURE_ID_OOTEGUCHI ) {
-+	if ( cdata(CDATA_ID, rc) == CREATURE_ID_CARLA_OF_THE_FORGOTTEN_WORLD | cdata(CDATA_ID, rc) == CREATURE_ID_SPIPHA_THE_DRAGON_HUNTER | cdata(CDATA_ID, rc) == CREATURE_ID_PERFORMAID_BLOODRESS | cdata(CDATA_ID, rc) == CREATURE_ID_PERFORMAID_DESWEEPER | cdata(CDATA_ID, rc) == CREATURE_ID_PERFORMAID_COCRUEL | cdata(CDATA_ID, rc) == CREATURE_ID_PERFORMAID_PINCHIEF | cdata(CDATA_ID, rc) == CREATURE_ID_LANKATA_THE_LIGHTNING_OF_BLUE | cdata(CDATA_ID, rc) == CREATURE_ID_UNITDEAD_JOKER | cdata(CDATA_ID, rc) == CREATURE_ID_HALION_THE_EXTREMIST | cdata(CDATA_ID, rc) == CREATURE_ID_SKOGSRA | cdata(CDATA_ID, rc) == CREATURE_ID_TREE_INCARNATION | cdata(CDATA_ID, rc) == CREATURE_ID_PART_TIME_WORKER_THE_RED_SWORD | cdata(CDATA_ID, rc) == CREATURE_ID_CRESCE_THE_SEMINAR_LECTURER | cdata(CDATA_ID, rc) == CREATURE_ID_SICKFULL_OLDER_BROTHER | cdata(CDATA_ID, rc) == CREATURE_ID_ENTHUMESIS | cdata(CDATA_ID, rc) == CREATURE_ID_ALSAPIA_THE_MURDERER_MASK | cdata(CDATA_ID, rc) == CREATURE_ID_BYSYMLHA_THE_AMBER_EYES | cdata(CDATA_ID, rc) == CREATURE_ID_JENNA_THE_MYTHICAL_MANIAC | cdata(CDATA_ID, rc) == CREATURE_ID_MATANGODDESS | cdata(CDATA_ID, rc) == CREATURE_ID_MIKRAANESIS | cdata(CDATA_ID, rc) == CREATURE_ID_OOTEGUCHI | cdata(CDATA_ID, rc) == 1063 ) {
++	if ( cdata(CDATA_ID, rc) == CREATURE_ID_CARLA_OF_THE_FORGOTTEN_WORLD | cdata(CDATA_ID, rc) == CREATURE_ID_SPIPHA_THE_DRAGON_HUNTER | cdata(CDATA_ID, rc) == CREATURE_ID_PERFORMAID_BLOODRESS | cdata(CDATA_ID, rc) == CREATURE_ID_PERFORMAID_DESWEEPER | cdata(CDATA_ID, rc) == CREATURE_ID_PERFORMAID_COCRUEL | cdata(CDATA_ID, rc) == CREATURE_ID_PERFORMAID_PINCHIEF | cdata(CDATA_ID, rc) == CREATURE_ID_LANKATA_THE_LIGHTNING_OF_BLUE | cdata(CDATA_ID, rc) == CREATURE_ID_UNITDEAD_JOKER | cdata(CDATA_ID, rc) == CREATURE_ID_HALION_THE_EXTREMIST | cdata(CDATA_ID, rc) == CREATURE_ID_SKOGSRA | cdata(CDATA_ID, rc) == CREATURE_ID_TREE_INCARNATION | cdata(CDATA_ID, rc) == CREATURE_ID_PART_TIME_WORKER_THE_RED_SWORD | cdata(CDATA_ID, rc) == CREATURE_ID_CRESCE_THE_SEMINAR_LECTURER | cdata(CDATA_ID, rc) == CREATURE_ID_SICKFULL_OLDER_BROTHER | cdata(CDATA_ID, rc) == CREATURE_ID_ENTHUMESIS | cdata(CDATA_ID, rc) == CREATURE_ID_ALSAPIA_THE_MURDERER_MASK | cdata(CDATA_ID, rc) == CREATURE_ID_BYSYMLHA_THE_AMBER_EYES | cdata(CDATA_ID, rc) == CREATURE_ID_JENNA_THE_MYTHICAL_MANIAC | cdata(CDATA_ID, rc) == CREATURE_ID_MATANGODDESS | cdata(CDATA_ID, rc) == CREATURE_ID_MIKRAANESIS | cdata(CDATA_ID, rc) == CREATURE_ID_OOTEGUCHI | cdata(CDATA_ID, rc) == CREATURE_ID_HOGWEEDER ) {
  		cdata(CDATA_HEIGHT, rc) = rnd(10) + 160
  		cdata(CDATA_WEIGHT, rc) = rnd(10) + 50
  	}
  	if ( cdata(CDATA_ID, rc) == CREATURE_ID_ZISILION_THE_MINE_KING | cdata(CDATA_ID, rc) == CREATURE_ID_AJETALIO_THE_SEMINAR_LECTURER | cdata(CDATA_ID, rc) == CREATURE_ID_WOLF | cdata(CDATA_ID, rc) == CREATURE_ID_OLD_BUTLER | cdata(CDATA_ID, rc) == CREATURE_ID_MANSON_THE_CAREFUL_ADVENTURER | cdata(CDATA_ID, rc) == CREATURE_ID_WALL_HACK_CHEATAH | cdata(CDATA_ID, rc) == CREATURE_ID_AUTO_AIM_CHEATAH | cdata(CDATA_ID, rc) == CREATURE_ID_SPEED_HACK_CHEATAH | cdata(CDATA_ID, rc) == CREATURE_ID_ANOTHER_WORLD_CHEATAH ) {
  		cdata(CDATA_HEIGHT, rc) = rnd(15) + 165
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/chara_func.hsp ../2.12-borscht/chara_func.hsp
---- ../2.11-borscht/chara_func.hsp	2022-04-25 13:55:18.860170500 -0700
-+++ ../2.12-borscht/chara_func.hsp	2022-04-25 13:55:24.611343800 -0700
+--- ../2.11-borscht/chara_func.hsp	2022-04-25 14:21:54.938587200 -0700
++++ ../2.12-borscht/chara_func.hsp	2022-04-25 14:21:59.959454800 -0700
 @@ -7554,11 +7554,11 @@
  	}
  	if ( locvar_dmgsan_dmg > 0 ) {
@@ -350,8 +370,8 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  	}
  	if ( rnd(10) == 0 | rnd(locvar_dmgsan_dmg + 1) > 5 | rnd(cdata(CDATA_SANITY, dmgsan_charid) + 1) > 50 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/chat.hsp ../2.12-borscht/chat.hsp
---- ../2.11-borscht/chat.hsp	2022-04-25 13:55:19.288571700 -0700
-+++ ../2.12-borscht/chat.hsp	2022-04-25 13:55:25.104455900 -0700
+--- ../2.11-borscht/chat.hsp	2022-04-25 14:21:55.354974100 -0700
++++ ../2.12-borscht/chat.hsp	2022-04-25 14:22:00.423955800 -0700
 @@ -12035,38 +12035,78 @@
  		goto *chat_unique_SWEND1
  		_switch_sw++
@@ -743,7 +763,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
 -			txt lang("クエストを達成した！", "You have completed the quest!")
 -			snd SOUNDLIST_COMPLETE1
 -			txtmore
-+			itemcreate -1, 1251, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), 3
++			itemcreate -1, ITEM_ID_ANERING, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), 3
 +			inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_BLESSED
  			txt lang("何かが足元に転がってきた。", "Something is put on the ground.")
 -			snd SOUNDLIST_WRITE1
@@ -788,11 +808,11 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
 +					goto *chat_end
 +				}
 +			}
-+			if ( spact(842 - STARTING_SKILL_SPACT) == 0 ) {
-+				spact(842 - STARTING_SKILL_SPACT) = 1
++			if ( spact(SKILL_SPACT_EYE_OF_ANE - STARTING_SKILL_SPACT) == 0 ) {
++				spact(SKILL_SPACT_EYE_OF_ANE - STARTING_SKILL_SPACT) = 1
 +				txtmore
 +				txtef COLOR_YELLOW
-+				txt lang("あなたは「" + skillname(842) + "」の能力を得た。", "You have learned new ability, " + skillname(842) + ".")
++				txt lang("あなたは「" + skillname(SKILL_SPACT_EYE_OF_ANE) + "」の能力を得た。", "You have learned new ability, " + skillname(SKILL_SPACT_EYE_OF_ANE) + ".")
 +			}
 +			cdata(CDATA_MATERIAL3_COUNTER, CHARA_PLAYER) = 1
 +			goto *chat_end
@@ -914,8 +934,8 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  			listn(0, listmax) = lang("やめる", "Never mind.")
  			listmax++
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/chips.hsp ../2.12-borscht/chips.hsp
---- ../2.11-borscht/chips.hsp	2022-04-25 13:55:19.337617400 -0700
-+++ ../2.12-borscht/chips.hsp	2022-04-25 13:55:25.137486800 -0700
+--- ../2.11-borscht/chips.hsp	2022-04-25 14:21:55.389005700 -0700
++++ ../2.12-borscht/chips.hsp	2022-04-25 14:22:00.453975500 -0700
 @@ -720,10 +720,11 @@
  		chipm(CHIPM_ROLE, xy2pic(24, 11)) = MAP_CHIP_ROLE_DISPLAY_SPACE
  		chipm(CHIPM_ROLE, xy2pic(19, 12)) = MAP_CHIP_ROLE_DISPLAY_SPACE
@@ -941,31 +961,9 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  		deco(0, 2 + cnt * 16) = 1, 2
  		deco(0, 4 + cnt * 16) = 1, 0
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/command.hsp ../2.12-borscht/command.hsp
---- ../2.11-borscht/command.hsp	2022-04-25 13:55:19.487757900 -0700
-+++ ../2.12-borscht/command.hsp	2022-04-25 13:55:25.246500100 -0700
-@@ -3576,11 +3576,11 @@
- 		}
- 	}
- 
- *com_reserve_loop
- 	if ( 1 == 0 ) {
--		goto *com_jukebox
-+		goto *label_5434
- 	}
- 	redraw 0
- 	s = lang("予約リスト", "Reserve List"), strhint2 + strhint3
- 	display_window (windoww - 540) / 2 + inf_screenx, winposy(448), 540, 448
- 	display_topic lang("アイテムの名前", "Name"), wx + 28, wy + 36
-@@ -3718,25 +3718,25 @@
- 	if ( key == key_cancel ) {
- 		return -1
- 	}
- 	goto *com_reserve_loop
- 
--*com_jukebox
-+*label_5434
- 	snd SOUNDLIST_POP2
- 	listmax = 0
+--- ../2.11-borscht/command.hsp	2022-04-25 14:21:55.486095800 -0700
++++ ../2.12-borscht/command.hsp	2022-04-25 14:22:00.555979200 -0700
+@@ -3726,11 +3726,11 @@
  	page = 0
  	pagesize = 16
  	cs = 0
@@ -978,62 +976,19 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  	loop
  	gosub *sort_list
  
--*com_jukebox_loop_pgchk
-+*label_5437
- 	redraw 0
- 	cs_bk = -1
- 	pagemax = (listmax - 1) / pagesize
- 	if ( page < 0 ) {
- 		page = pagemax
-@@ -4050,30 +4050,30 @@
- 			break
+@@ -4051,11 +4051,11 @@
  		}
  	loop
  	if ( p != (-1) ) {
  		music = p + 1
--		if ( music >= MUSICLIST_MAX ) {
+ 		if ( music >= MUSICLIST_MAX ) {
 -			music = 136 - 1
-+		if ( music >= 137 ) {
 +			music = 137 - 1
  		}
  		mdata(MDATA_MUSIC) = music
  		gosub *music_play
  		snd SOUNDLIST_OK1
--		goto *com_jukebox_loop_pgchk
-+		goto *label_5437
- 	}
- 	if ( key == key_pageup ) {
- 		if ( pagemax != 0 ) {
- 			snd SOUNDLIST_POP1
- 			page++
--			goto *com_jukebox_loop_pgchk
-+			goto *label_5437
- 		}
- 	}
- 	if ( key == key_pagedown ) {
- 		if ( pagemax != 0 ) {
- 			snd SOUNDLIST_POP1
- 			page--
--			goto *com_jukebox_loop_pgchk
-+			goto *label_5437
- 		}
- 	}
- 	if ( key == key_cancel ) {
- 		return -1
- 	}
-@@ -5017,11 +5017,11 @@
- 			txt lang("その行為は、ワールドマップにいる間はできない。", "You can't do that while you're in a global area.")
- 			display_msg
- 			redraw 1
- 			goto *pc_turn
- 		}
--		if ( efid < MAX_SKILL ) {
-+		if ( efid < 843 ) {
- 			if ( spact(efid - STARTING_SKILL_SPACT) == 0 ) {
- 				txt lang("もうその行動はできない。", "You can't use this shortcut any more.")
- 				gosub *screen_draw
- 				goto *pc_turn
- 			}
+ 		goto *com_jukebox_loop_pgchk
 @@ -5116,11 +5116,11 @@
  				list(0, listmax) = cnt, 15
  				listmax++
@@ -1166,8 +1121,8 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  	noteadd fixtxt("種族       : " + racename, 30) + fixtxt("信仰      : " + godname(cdata(CDATA_GOD, CHARA_PLAYER)), 32)
  	noteadd fixtxt("職業       : " + classname, 30) + fixtxt("所属      : " + guildname(), 32)
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/db_card.hsp ../2.12-borscht/db_card.hsp
---- ../2.11-borscht/db_card.hsp	2022-04-25 13:55:19.681939600 -0700
-+++ ../2.12-borscht/db_card.hsp	2022-04-25 13:55:25.444410700 -0700
+--- ../2.11-borscht/db_card.hsp	2022-04-25 14:21:55.682278100 -0700
++++ ../2.12-borscht/db_card.hsp	2022-04-25 14:22:00.741970100 -0700
 @@ -1,6 +1,97 @@
  *db_card
 +	if ( dbid == 1066 ) {
@@ -1267,8 +1222,8 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  		cardrefdomain = 6
  		cardrefrare = 30
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/help.hsp ../2.12-borscht/help.hsp
---- ../2.11-borscht/help.hsp	2022-04-25 13:55:22.774366500 -0700
-+++ ../2.12-borscht/help.hsp	2022-04-25 13:55:27.369484100 -0700
+--- ../2.11-borscht/help.hsp	2022-04-25 14:21:58.403310300 -0700
++++ ../2.12-borscht/help.hsp	2022-04-25 14:22:02.594054700 -0700
 @@ -5351,11 +5351,11 @@
  	}
  	if ( mode == MODELIST_QUICK_START ) {
@@ -1308,35 +1263,9 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  		if ( rnd(5) == 0 ) {
  			inv_getheader 0
  			ci = rnd(invrange) + invhead
-@@ -10114,11 +10114,11 @@
- 		_switch_sw++
- 	}
- 	if ( _switch_val == 87 | _switch_sw ) {
- 		_switch_sw = 0
- 		gdata(GDATA_FLAG_MAIN) = 990
--		music = MUSICLIST_SCENE_MUSIC
-+		music = MUSICLIST_MAX
- 		gosub *music_play
- 		flt
- 		initlv = 1
- 		novoidlv = 1
- 		characreate -1, CREATURE_ID_JALDABAOTH_THE_CHAOS_CHILD, 10, 8
-@@ -12545,11 +12545,11 @@
- 		_switch_sw++
- 	}
- 	if ( _switch_val == 56 | _switch_sw ) {
- 		_switch_sw = 0
- 		if ( gdata(GDATA_FLAG_BOSS_MUSIC) == 0 ) {
--			music = MUSICLIST_SCENE_MUSIC
-+			music = MUSICLIST_MAX
- 			gosub *music_play
- 		}
- 		if ( gdata(GDATA_FLAG_BOSS_MUSIC) == 1 ) {
- 			music = MUSICLIST_MCBOSS
- 			gosub *music_play
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/init.hsp ../2.12-borscht/init.hsp
---- ../2.11-borscht/init.hsp	2022-04-25 13:55:22.983381500 -0700
-+++ ../2.12-borscht/init.hsp	2022-04-25 13:55:27.581502100 -0700
+--- ../2.11-borscht/init.hsp	2022-04-25 14:21:58.543444600 -0700
++++ ../2.12-borscht/init.hsp	2022-04-25 14:22:02.786142000 -0700
 @@ -1466,13 +1466,13 @@
  		return
  	}
@@ -1380,11 +1309,11 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  	if ( 652 < 600 ) {
  		skillencdesc(SKILL_SPACT_EYE_OF_MANA) = lang("", "")
  	}
-+	sdataref(SKILL_DATAREF_USE, 842) = SKILL_ATTR_WIL, SKILL_TYPE_SP, 50, 2000 + 2, 0
-+	skillname(842) = lang("姉の眼差し", "Eye of Ane")
-+	skilldesc(842) = lang("対象の姉になって精神的上位に立つ", "Become the target's sister")
++	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_EYE_OF_ANE) = SKILL_ATTR_WIL, SKILL_TYPE_SP, 50, 2000 + 2, 0
++	skillname(SKILL_SPACT_EYE_OF_ANE) = lang("姉の眼差し", "Eye of Ane")
++	skilldesc(SKILL_SPACT_EYE_OF_ANE) = lang("対象の姉になって精神的上位に立つ", "Become the target's sister")
 +	if ( 842 < 600 ) {
-+		skillencdesc(842) = lang("", "")
++		skillencdesc(SKILL_SPACT_EYE_OF_ANE) = lang("", "")
 +	}
  	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_EYE_OF_STIFFEN) = SKILL_ATTR_MAG, SKILL_TYPE_SP, 8, 2000 + 2, 0
  	skillname(SKILL_SPACT_EYE_OF_STIFFEN) = lang("硬直の眼差し", "Eye of Stiffen")
@@ -1397,30 +1326,17 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  	if ( 821 < 600 ) {
  		skillencdesc(SKILL_SPACT_TUIN_DER_LUSTEN) = lang("", "")
  	}
-+	sdataref(SKILL_DATAREF_USE, MAX_SKILL) = SKILL_ATTR_LER, SKILL_TYPE_SP, 8, 2000 + 6, 500
-+	skillname(MAX_SKILL) = lang("強烈花粉砲", "Pollen cannon")
-+	skilldesc(MAX_SKILL) = lang("対象弱体・マナダメージ・神特効", "Damage MP and weaken")
++	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_POLLEN_CANNON) = SKILL_ATTR_LER, SKILL_TYPE_SP, 8, 2000 + 6, 500
++	skillname(SKILL_SPACT_POLLEN_CANNON) = lang("強烈花粉砲", "Pollen cannon")
++	skilldesc(SKILL_SPACT_POLLEN_CANNON) = lang("対象弱体・マナダメージ・神特効", "Damage MP and weaken")
 +	if ( 841 < 600 ) {
-+		skillencdesc(MAX_SKILL) = lang("", "")
++		skillencdesc(SKILL_SPACT_POLLEN_CANNON) = lang("", "")
 +	}
  	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_MISTELTEIN) = SKILL_ATTR_LER, SKILL_TYPE_SP, 8, 2000 + 6, 500
  	skillname(SKILL_SPACT_MISTELTEIN) = lang("ミストルティン", "Misteltein")
  	skilldesc(SKILL_SPACT_MISTELTEIN) = lang("対象弱体・マナダメージ・神特効", "Damage MP and weaken")
  	if ( 787 < 600 ) {
  		skillencdesc(SKILL_SPACT_MISTELTEIN) = lang("", "")
-@@ -6758,11 +6770,11 @@
- 			if ( gdata(GDATA_LEVEL) == 100 ) {
- 				if ( gdata(GDATA_FLAG_SUB_REGULUS_MAYROON) >= 4 & gdata(GDATA_FLAG_SUB_REGULUS_MAYROON) < 100 ) {
- 					music = MUSICLIST_MCBOSS5
- 				}
- 				else {
--					music = MUSICLIST_SCENE_MUSIC
-+					music = MUSICLIST_MAX
- 				}
- 			}
- 		}
- 		if ( gdata(GDATA_AREA) == AREA_EIREL ) {
- 			music = MUSICLIST_MCTOWN7
 @@ -6802,11 +6814,16 @@
  		}
  		if ( gdata(GDATA_AREA) == AREA_ARCBELC ) {
@@ -1432,36 +1348,13 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
 +				music = MUSICLIST_MCTOWN7
 +			}
 +			if ( gdata(GDATA_LEVEL) == 5 ) {
-+				music = MUSICLIST_SCENE_MUSIC
++				music = MUSICLIST_MCCHURCH
 +			}
  		}
  		if ( gdata(GDATA_AREA) == AREA_SOUTH_RASKILIS ) {
  			if ( gdata(GDATA_LEVEL) == 1 ) {
  				music = MUSICLIST_MCVOYAGE
  			}
-@@ -6896,20 +6913,20 @@
- 		}
- 		if ( gdata(GDATA_AREA) == AREA_AIMWELL ) {
- 			music = MUSICLIST_MCMARCH2
- 		}
- 		if ( gdata(GDATA_AREA) == AREA_DEVIL_CAPE ) {
--			music = MUSICLIST_SCENE_MUSIC
-+			music = MUSICLIST_MAX
- 		}
- 	}
- 	if ( musicloop == 1 ) {
- 		musicloop = 0
- 	}
- 	else {
- 		musicloop = 65535
- 	}
--	if ( musicprev != music | music == MUSICLIST_SCENE_MUSIC ) {
-+	if ( musicprev != music | music == MUSICLIST_MAX ) {
- 		musicprev = music
- 		mmstop
- 		if ( cfg_music == 1 ) {
- 			DMSTOP
- 			DMLOADFNAME exedir + "sound\\gm_on.mid", 0
 @@ -8608,10 +8625,11 @@
  		strmale = "男性"
  		strfemale = "女性"
@@ -1542,19 +1435,6 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  	gsel BUFFER_INF
  	gmode 0
  	redraw 0
-@@ -19732,11 +19751,11 @@
- 	sdim filter_creature
- 	sdim netbuf, 20000
- 	gosub *del_userNpc
- 	gosub *del_userTemp
- 	gosub *db_setFilterRace
--	gosub *db_setFilterCreature
-+	gosub *label_8859
- 	gosub *db_setFilterItem
- 	gosub *chip_init
- 	gosub *building_init
- 	gosub *setArea
- 	gosub *setCellObj
 @@ -19830,11 +19849,11 @@
  		goto *exit_game
  	}
@@ -1569,8 +1449,8 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  		buf += "0"
  		if ( ci >= 0 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/item.hsp ../2.12-borscht/item.hsp
---- ../2.11-borscht/item.hsp	2022-04-25 13:55:23.075384100 -0700
-+++ ../2.12-borscht/item.hsp	2022-04-25 13:55:27.657572800 -0700
+--- ../2.11-borscht/item.hsp	2022-04-25 14:21:58.619514600 -0700
++++ ../2.12-borscht/item.hsp	2022-04-25 14:22:02.867035900 -0700
 @@ -2753,14 +2753,18 @@
  			snd SOUNDLIST_ATK_FIRE
  			txt lang("胸像の炎も使った。「浄化せよ」", cnvtalk("Flame will purify it."))
@@ -1661,8 +1541,8 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  					flt
  					itemcreate -1, ITEM_ID_PLATINUM_COIN, cdata(CDATA_X, cc), cdata(CDATA_Y, cc), 2
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/item_data.hsp ../2.12-borscht/item_data.hsp
---- ../2.11-borscht/item_data.hsp	2022-04-25 13:55:23.126431900 -0700
-+++ ../2.12-borscht/item_data.hsp	2022-04-25 13:55:27.683596700 -0700
+--- ../2.11-borscht/item_data.hsp	2022-04-25 14:21:58.649544600 -0700
++++ ../2.12-borscht/item_data.hsp	2022-04-25 14:22:02.896062800 -0700
 @@ -118,11 +118,11 @@
  	return
  
@@ -1677,8 +1557,8 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  		return fsetrare(rnd(length(fsetrare)))
  	}
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/main.hsp ../2.12-borscht/main.hsp
---- ../2.11-borscht/main.hsp	2022-04-25 13:55:23.190392500 -0700
-+++ ../2.12-borscht/main.hsp	2022-04-25 13:55:27.723634100 -0700
+--- ../2.11-borscht/main.hsp	2022-04-25 14:21:58.692584500 -0700
++++ ../2.12-borscht/main.hsp	2022-04-25 14:22:02.938010500 -0700
 @@ -181,11 +181,11 @@
  	if ( dbg_randseed != 0 ) {
  		randseed = dbg_randseed
@@ -1693,21 +1573,8 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  #deffunc netload str netload_filename
  	netrequest netload_filename
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/map.hsp ../2.12-borscht/map.hsp
---- ../2.11-borscht/map.hsp	2022-04-25 13:55:23.317420100 -0700
-+++ ../2.12-borscht/map.hsp	2022-04-25 13:55:27.846476300 -0700
-@@ -1924,11 +1924,11 @@
- 		mdata(MDATA_MODERATE_CROWD) = 0
- 		flt
- 		characreate -1, CREATURE_ID_BYSYMLHA_THE_AMBER_EYES, 4, 6
- 		cdata(CDATA_ROLE, rc) = ROLE_SPECIAL
- 		cdata(CDATA_AI_CALM, rc) = 3
--		mdata(MDATA_MUSIC) = MUSICLIST_SCENE_MUSIC
-+		mdata(MDATA_MUSIC) = MUSICLIST_MAX
- 		mdata(MDATA_NO_RENEW) = 0
- 		map_placeplayer
- 	}
- 	if ( gdata(GDATA_AREA) == AREA_SISTER_MANSION ) {
- 		map_initcustom "sister"
+--- ../2.11-borscht/map.hsp	2022-04-25 14:21:58.786673600 -0700
++++ ../2.12-borscht/map.hsp	2022-04-25 14:22:03.039104400 -0700
 @@ -8475,10 +8475,61 @@
  			mdata(MDATA_NO_RENEW) = 1
  			mdatan(0) = lang("地下室", "basement")
@@ -1720,11 +1587,11 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
 +			mdata(MDATA_FIELD) = MAP_FIELD_INDOOR
 +			mdata(MDATA_TYPE) = MAP_TYPE_VILLAGE
 +			mdata(MDATA_MODERATE_CROWD) = 0
-+			mdata(MDATA_MUSIC) = MUSICLIST_SCENE_MUSIC
++			mdata(MDATA_MUSIC) = MUSICLIST_MCCHURCH
 +			mdata(MDATA_NO_RENEW) = 0
 +			mdatan(0) = lang("姉の教会", "the Church of Older Sister")
 +			flt
-+			characreate -1, 1066, 20, 3
++			characreate -1, CREATURE_ID_SIST_THE_OLDER_SISTER, 20, 3
 +			cdata(CDATA_ROLE, rc) = ROLE_SPECIAL
 +			if ( stat != 0 ) {
 +				cdata(CDATA_AI_CALM, rc) = 3
@@ -1799,8 +1666,8 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  					if ( gdata(GDATA_AREA) == AREA_MELKAWN ) {
  						if ( gdata(GDATA_LEVEL) == 3 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/module.hsp ../2.12-borscht/module.hsp
---- ../2.11-borscht/module.hsp	2022-04-25 13:55:23.570297800 -0700
-+++ ../2.12-borscht/module.hsp	2022-04-25 13:55:28.062496900 -0700
+--- ../2.11-borscht/module.hsp	2022-04-25 14:21:58.979856100 -0700
++++ ../2.12-borscht/module.hsp	2022-04-25 14:22:03.236015400 -0700
 @@ -401,21 +401,22 @@
  	}
  	sdata(skillmod_skillid + STARTING_SKILL_SPACT, skillmod_charid) = limit(locvar_skillmod_lv, 0, 2000) * 1000000 + locvar_skillmod_exp * 1000 + locvar_skillmod_growth
@@ -1827,8 +1694,8 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  	}
  	if ( skillexp_amount > 0 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/proc.hsp ../2.12-borscht/proc.hsp
---- ../2.11-borscht/proc.hsp	2022-04-25 13:55:23.862477300 -0700
-+++ ../2.12-borscht/proc.hsp	2022-04-25 13:55:28.251492000 -0700
+--- ../2.11-borscht/proc.hsp	2022-04-25 14:21:59.181728100 -0700
++++ ../2.12-borscht/proc.hsp	2022-04-25 14:22:03.399927300 -0700
 @@ -5558,35 +5558,39 @@
  			}
  			snd SOUNDLIST_BREATH1
@@ -1917,32 +1784,6 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  	if ( efid == SKILL_SPELL_NERVE_ARROW | efid == SKILL_SPELL_POISON_MUCUS | efid == SKILL_SPELL_NERVE_BOLT | efid == SKILL_SPELL_POISON_BOLT | efid == SKILL_SPELL_ANGUISH_JAIL | efid == SKILL_SPELL_POISON_STORM ) {
  		fusipn = encfindpower(cc, ENCHANT_POISON_AND_NERVE)
  	}
-@@ -6648,11 +6660,11 @@
- 	}
- 	return 1
- 
- *effect_selectTg
- 	noeffect = 0
--	if ( efid > MAX_SKILL ) {
-+	if ( efid > 843 ) {
- 		tc = cc
- 		return 1
- 	}
- 	tg = sdataref(SKILL_DATAREF_TG, efid) / 1000 * 1000
- 	if ( efsource == 1 ) {
-@@ -6901,11 +6913,11 @@
- 
- 
- 
- 
- 	if ( efid >= SKILL_ACTIVE_PICKPOCKET ) {
--		if ( efid < MAX_SKILL ) {
-+		if ( efid < 843 ) {
- 			f = 0
- 			if ( sdataref(SKILL_DATAREF_TYPE, efid) / 1000 == 1 ) {
- 				f = 1
- 				p = sdataref(SKILL_DATAREF_TYPE, efid) \ 1000
- 				if ( bdataref(BDATAREF_BUFF_TYPE, p) == BUFF_TYPE_HEX ) {
 @@ -8338,10 +8350,24 @@
  								characreate -1, CREATURE_ID_YOMAGNTHO, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
  								cbitmod CHARA_BIT_SUMMONED, rc, TRUE
@@ -1950,19 +1791,19 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  						}
  						if ( 0 ) {
 +							flt
-+							characreate -1, 1065, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
++							characreate -1, CREATURE_ID_HELRAUNE, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
 +							flt
-+							characreate -1, 1064, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
++							characreate -1, CREATURE_ID_KING_HOGWEEDER, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
 +							flt
-+							characreate -1, 1063, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
++							characreate -1, CREATURE_ID_HOGWEEDER, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
 +							flt
-+							characreate -1, MAX_CREATURE_ID, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
++							characreate -1, CREATURE_ID_ALRAUNE, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
 +							flt
-+							characreate -1, 1061, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
++							characreate -1, CREATURE_ID_KUSOSUGI, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
 +							flt
-+							characreate -1, 1060, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
++							characreate -1, CREATURE_ID_HINOCCHIO, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
 +							flt
-+							characreate -1, 1066, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
++							characreate -1, CREATURE_ID_SIST_THE_OLDER_SISTER, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
  						}
  					}
  					if ( efid != SKILL_SPACT_SUMMON_SISTER ) {
@@ -1993,7 +1834,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
 +		_switch_sw = 0
 +		txtef COLOR_GREEN
 +		txt lang(name(cc) + "は強烈花粉を噴出した！", name(cc) + " gushed out intense pollen!")
-+		animeid = 61
++		animeid = ANIMATION_POLLEN_CANNON
 +		gosub *anime
 +		animeload 8, tc
 +		if ( tc == CHARA_PLAYER ) {
@@ -2048,7 +1889,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  	}
 +	if ( _switch_val == 842 | _switch_sw ) {
 +		_switch_sw = 0
-+		if ( cdata(CDATA_ID, tc) == 1066 | cdata(CDATA_ID, tc) == CREATURE_ID_MIKRAANESIS | cdata(CDATA_ID, tc) == CREATURE_ID_URCAGUARY | cdata(CDATA_ID, tc) == CREATURE_ID_LAZY_OLDER_SISTER | cdata(CDATA_ID, tc) == CREATURE_ID_OLDER_SISTER2 | cdata(CDATA_ID, tc) == CREATURE_ID_OLDER_DOG_SISTER | cdata(CDATA_ID, tc) == CREATURE_ID_OLDER_SISTER ) {
++		if ( cdata(CDATA_ID, tc) == CREATURE_ID_SIST_THE_OLDER_SISTER | cdata(CDATA_ID, tc) == CREATURE_ID_MIKRAANESIS | cdata(CDATA_ID, tc) == CREATURE_ID_URCAGUARY | cdata(CDATA_ID, tc) == CREATURE_ID_LAZY_OLDER_SISTER | cdata(CDATA_ID, tc) == CREATURE_ID_OLDER_SISTER2 | cdata(CDATA_ID, tc) == CREATURE_ID_OLDER_DOG_SISTER | cdata(CDATA_ID, tc) == CREATURE_ID_OLDER_SISTER ) {
 +			txtef COLOR_PURPLE
 +			txt lang(name(cc) + "の眼差しは" + name(tc) + "の姉波動に防がれた！", name(tc) + " defended with ane power!")
 +			goto *effect_end
@@ -2153,27 +1994,9 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  		if ( tc != CHARA_PLAYER ) {
  			goto *effect_end
  		}
-diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/scene.hsp ../2.12-borscht/scene.hsp
---- ../2.11-borscht/scene.hsp	2022-04-25 13:55:24.053381700 -0700
-+++ ../2.12-borscht/scene.hsp	2022-04-25 13:55:28.405544900 -0700
-@@ -355,12 +355,12 @@
- 		}
- 		if ( s(1) == "mcHome0" ) {
- 			music = MUSICLIST_MCHOME0
- 		}
- 		if ( music == MUSICLIST_NONE2 ) {
--			musicfile(MUSICLIST_SCENE_MUSIC) = s(1)
--			music = MUSICLIST_SCENE_MUSIC
-+			musicfile(MUSICLIST_MAX) = s(1)
-+			music = MUSICLIST_MAX
- 			gosub *music_play
- 		}
- 		else {
- 			gosub *music_play
- 		}
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/screen.hsp ../2.12-borscht/screen.hsp
---- ../2.11-borscht/screen.hsp	2022-04-25 13:55:24.118442400 -0700
-+++ ../2.12-borscht/screen.hsp	2022-04-25 13:55:28.483527000 -0700
+--- ../2.11-borscht/screen.hsp	2022-04-25 14:21:59.371904700 -0700
++++ ../2.12-borscht/screen.hsp	2022-04-25 14:22:03.639116900 -0700
 @@ -3361,10 +3361,14 @@
  		_switch_sw = 0
  		_switch_sw++
@@ -2248,7 +2071,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  				}
  			}
  		}
-+		if ( animeid == 61 ) {
++		if ( animeid == ANIMATION_POLLEN_CANNON ) {
 +			gsel BUFFER_ITEM
 +			color 0
 +			boxf 0, 960, chipi(CHIPI_WIDTH, xy2pic(12, 36)), chipi(CHIPI_HEIGHT, xy2pic(12, 36)) + 960
@@ -2335,8 +2158,8 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borsch
  	if ( cbit(CHARA_BIT_AWAKE_NEAR_DEATH_EVASION, tc) ) {
  		if ( cdata(CDATA_HP, tc) >= 0 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.11-borscht/system.hsp ../2.12-borscht/system.hsp
---- ../2.11-borscht/system.hsp	2022-04-25 13:55:24.177407100 -0700
-+++ ../2.12-borscht/system.hsp	2022-04-25 13:55:28.514555800 -0700
+--- ../2.11-borscht/system.hsp	2022-04-25 14:21:59.393925400 -0700
++++ ../2.12-borscht/system.hsp	2022-04-25 14:22:03.671146700 -0700
 @@ -38,11 +38,11 @@
  	}
  	gdata(GDATA_TEMPORARY_FLAGS2) = 0
