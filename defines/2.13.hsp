@@ -162,6 +162,7 @@
 #define global	ANIMATION_LINEAR_LAUNCHER	58
 #define global	ANIMATION_SAND_CANNON	59
 #define global	ANIMATION_SHINING_THROW	60
+#define global	ANIMATION_POLLEN_CANNON	61
 
 // Group: area_id
 #define global	MAX_AREA_COUNT	500
@@ -1847,7 +1848,7 @@
 #define global	CREATURE_ID_BLACK_PORC	987
 #define global	CREATURE_ID_URUK_HAI	988
 #define global	CREATURE_ID_URUK_HIGHNESS	989
-#define global	MAX_CREATURE_ID	CREATURE_ID_TALKA_THE_LONG_TWINTAIL + 3
+#define global	MAX_CREATURE_ID	CREATURE_ID_SIST_THE_OLDER_SISTER + 3
 #define global	CREATURE_ID_MANSON_THE_CAREFUL_ADVENTURER	990
 #define global	CREATURE_ID_CRAY_THE_CURIOUS_ADVENTURER	991
 #define global	CREATURE_ID_MARY_THE_FLOWER_PICKER	992
@@ -1915,6 +1916,16 @@
 #define global	CREATURE_ID_SURTR	1054
 #define global	CREATURE_ID_DARK_ARTIFICIAL_GIANT	1055
 #define global	CREATURE_ID_TALKA_THE_LONG_TWINTAIL	1056
+#define global	CREATURE_ID_CRIMSON_DARK_GUARDIAN	1057
+#define global	CREATURE_ID_BLUE_DARK_GUARDIAN	1058
+#define global	CREATURE_ID_GREEN_DARK_GUARDIAN	1059
+#define global	CREATURE_ID_HINOCCHIO	1060
+#define global	CREATURE_ID_KUSOSUGI	1061
+#define global	CREATURE_ID_ALRAUNE	1062
+#define global	CREATURE_ID_HOGWEEDER	1063
+#define global	CREATURE_ID_KING_HOGWEEDER	1064
+#define global	CREATURE_ID_HELRAUNE	1065
+#define global	CREATURE_ID_SIST_THE_OLDER_SISTER	1066
 
 // Group: chara_state
 #define global	CHAR_STATE_DEAD	0
@@ -2164,6 +2175,7 @@
 #define global	DBMODE_FLAVOR_MIZU_ASOBI_END	145
 #define global	DBMODE_FLAVOR_TAG	146
 #define global	DBMODE_FLAVOR_TAG_EVO	147
+#define global	DBMODE_FLAVOR_LEADING	148
 
 // Group: dbmode_normal
 #define global	DBMODE_NONE	0
@@ -2708,6 +2720,8 @@
 #define global	FILTER_RACE_KOBOLT4	47
 #define global	FILTER_RACE_DESKTOP	48
 #define global	FILTER_RACE_SPLASHROOM	49
+#define global	FILTER_RACE_INVADER	47
+#define global	FILTER_RACE_KUSOSUGI	50
 
 // Group: fishdata
 #define global	FISHDATA_PIC	0
@@ -3525,6 +3539,9 @@
 #define global	EFFECT_REMIDO_FRAGMENT	123
 #define global	EFFECT_CHAOS_FRAGMENT	124
 #define global	EFFECT_MEMORY_CONVERTER	125
+#define global	EFFECT_COMMAND_WHISTLE	126
+#define global	EFFECT_ANERING	127
+#define global	EFFECT_DRUG	128
 
 // Group: item_file
 #define global	ITEM_ROLE_FILE_NONE2	-1
@@ -4725,7 +4742,7 @@
 #define global	ITEM_ID_GOUTEN	1166
 #define global	ITEM_ID_EPECLAIR	1167
 #define global	ITEM_ID_GO_RENGE	1168
-#define global	MAX_ITEM_ID	ITEM_ID_AURTEHOM + 3
+#define global	MAX_ITEM_ID	ITEM_ID_ANERING + 3
 #define global	MAX_ITEM_DBID	1499
 #define global	ITEM_ID_NYOI_MIMIKAKI	1113
 #define global	ITEM_ID_KANI_KAMA	1169
@@ -4809,6 +4826,8 @@
 #define global	ITEM_ID_SPELLBOOK_OF_THUNDER_VORTEX	1247
 #define global	ITEM_ID_SOCKS2	1248
 #define global	ITEM_ID_AURTEHOM	1249
+#define global	ITEM_ID_COMMAND_WHISTLE	1250
+#define global	ITEM_ID_ANERING	1251
 
 // Group: item_known
 #define global	ITEM_KNOWN_NONE	0
@@ -5283,7 +5302,7 @@
 #define global	MUSICLIST_MCLASTBOSS4	125
 #define global	MUSICLIST_MCLASTBOSS5	126
 #define global	MUSICLIST_MCHOME0	132
-#define global	MUSICLIST_SCENE_MUSIC	135
+#define global	MUSICLIST_SCENE_MUSIC	136
 #define global	MUSICLIST_MAX	MUSICLIST_SCENE_MUSIC + 1
 #define global	MUSICLIST_MCEVENT1	127
 #define global	MUSICLIST_MCDUNGEON12	128
@@ -5292,6 +5311,7 @@
 #define global	MUSICLIST_MCDUNGEON15	131
 #define global	MUSICLIST_MCZANGYOU	133
 #define global	MUSICLIST_MCMELAN	134
+#define global	MUSICLIST_MCCHURCH	135
 
 // Group: pcc
 #define global	PCC_HAIR	1
@@ -6112,7 +6132,7 @@
 #define global	SKILL_SPACT_INTIMIDATION	819
 #define global	SKILL_SPACT_MYSTERIOUS_SONG	820
 #define global	SKILL_SPACT_TUIN_DER_LUSTEN	821
-#define global	MAX_SKILL	SKILL_SPACT_MOGRANIC_AURA + 1
+#define global	MAX_SKILL	SKILL_SPACT_EYE_OF_ANE + 1
 #define global	SKILL_SPACT_HARMONIC_ASSAULT	721
 #define global	SKILL_SPACT_RESONANT_VOICE	722
 #define global	SKILL_SPACT_KIJIN_SHIBARI	723
@@ -6138,6 +6158,9 @@
 #define global	SKILL_SPACT_SAND_CANNON	837
 #define global	SKILL_SPACT_ROCRUSHER	838
 #define global	SKILL_SPACT_MOGRANIC_AURA	839
+#define global	SKILL_SPACT_INDIVIDUAL_LEADING	840
+#define global	SKILL_SPACT_POLLEN_CANNON	841
+#define global	SKILL_SPACT_EYE_OF_ANE	842
 
 // Group: skill_spell
 #define global	STARTING_SKILL_SPELL	400
@@ -6447,7 +6470,7 @@
 #define global	SOUNDLIST_SWING39	176
 #define global	SOUNDLIST_MECHA20	177
 #define global	SOUNDLIST_WATERM	178
-#define global	SOUNDLIST_MAX	SOUNDLIST_CRASH14 + 1
+#define global	SOUNDLIST_MAX	SOUNDLIST_WHISTLE00 + 1
 #define global	SOUNDLIST_DRAG01	179
 #define global	SOUNDLIST_INANAKI	180
 #define global	SOUNDLIST_CAR_HORN1	181
@@ -6569,6 +6592,7 @@
 #define global	SOUNDLIST_SEMI4	297
 #define global	SOUNDLIST_SEMI5	298
 #define global	SOUNDLIST_CRASH14	299
+#define global	SOUNDLIST_WHISTLE00	300
 
 // Group: sprite_sheet
 #define global	SPRITE_SHEET_COLS_MAP	33

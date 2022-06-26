@@ -1,128 +1,122 @@
---- 2.10.hsp	2022-04-04 17:05:05.573374200 -0700
-+++ 2.11.hsp	2022-04-04 17:05:05.993309000 -0700
-@@ -1845,11 +1845,11 @@
+--- 2.11.hsp	2022-04-25 14:21:53.977694400 -0700
++++ 2.12.hsp	2022-04-25 14:21:54.432116700 -0700
+@@ -160,10 +160,11 @@
+ #define global	ANIMATION_POTION_PLUG_5	56
+ #define global	ANIMATION_BURN_SCROLLS	57
+ #define global	ANIMATION_LINEAR_LAUNCHER	58
+ #define global	ANIMATION_SAND_CANNON	59
+ #define global	ANIMATION_SHINING_THROW	60
++#define global	ANIMATION_POLLEN_CANNON	61
+ 
+ // Group: area_id
+ #define global	MAX_AREA_COUNT	500
+ #define global	MAX_AREA_OLD	200
+ #define global	MAX_AREA_DATA	40
+@@ -1845,11 +1846,11 @@
  #define global	CREATURE_ID_BLACK_ORC	985
  #define global	CREATURE_ID_URUK	986
  #define global	CREATURE_ID_BLACK_PORC	987
  #define global	CREATURE_ID_URUK_HAI	988
  #define global	CREATURE_ID_URUK_HIGHNESS	989
--#define global	MAX_CREATURE_ID	CREATURE_ID_TALKA_THE_LONG_TWINTAIL + 3
-+#define global	MAX_CREATURE_ID	CREATURE_ID_GREEN_DARK_GUARDIAN + 3
+-#define global	MAX_CREATURE_ID	CREATURE_ID_GREEN_DARK_GUARDIAN + 3
++#define global	MAX_CREATURE_ID	CREATURE_ID_SIST_THE_OLDER_SISTER + 3
  #define global	CREATURE_ID_MANSON_THE_CAREFUL_ADVENTURER	990
  #define global	CREATURE_ID_CRAY_THE_CURIOUS_ADVENTURER	991
  #define global	CREATURE_ID_MARY_THE_FLOWER_PICKER	992
  #define global	CREATURE_ID_JENNA_THE_MYTHICAL_MANIAC	993
  #define global	CREATURE_ID_OBLIVION_RUDE_BEAST	994
-@@ -1913,10 +1913,13 @@
- #define global	CREATURE_ID_EIGHTY_SHAKU	1052
- #define global	CREATURE_ID_GIGANTES	1053
- #define global	CREATURE_ID_SURTR	1054
+@@ -1916,10 +1917,17 @@
  #define global	CREATURE_ID_DARK_ARTIFICIAL_GIANT	1055
  #define global	CREATURE_ID_TALKA_THE_LONG_TWINTAIL	1056
-+#define global	CREATURE_ID_CRIMSON_DARK_GUARDIAN	1057
-+#define global	CREATURE_ID_BLUE_DARK_GUARDIAN	1058
-+#define global	CREATURE_ID_GREEN_DARK_GUARDIAN	1059
+ #define global	CREATURE_ID_CRIMSON_DARK_GUARDIAN	1057
+ #define global	CREATURE_ID_BLUE_DARK_GUARDIAN	1058
+ #define global	CREATURE_ID_GREEN_DARK_GUARDIAN	1059
++#define global	CREATURE_ID_HINOCCHIO	1060
++#define global	CREATURE_ID_KUSOSUGI	1061
++#define global	CREATURE_ID_ALRAUNE	1062
++#define global	CREATURE_ID_HOGWEEDER	1063
++#define global	CREATURE_ID_KING_HOGWEEDER	1064
++#define global	CREATURE_ID_HELRAUNE	1065
++#define global	CREATURE_ID_SIST_THE_OLDER_SISTER	1066
  
  // Group: chara_state
  #define global	CHAR_STATE_DEAD	0
  #define global	CHAR_STATE_ALIVE	1
  #define global	CHAR_STATE_SPIRIT	2
-@@ -2162,10 +2165,11 @@
- #define global	DBMODE_FLAVOR_BTALK	143
- #define global	DBMODE_FLAVOR_MIZU_ASOBI	144
- #define global	DBMODE_FLAVOR_MIZU_ASOBI_END	145
- #define global	DBMODE_FLAVOR_TAG	146
- #define global	DBMODE_FLAVOR_TAG_EVO	147
-+#define global	DBMODE_FLAVOR_LEADING	148
+@@ -2710,10 +2718,12 @@
+ #define global	FILTER_RACE_BEETLE	45
+ #define global	FILTER_RACE_BEETLE2	46
+ #define global	FILTER_RACE_KOBOLT4	47
+ #define global	FILTER_RACE_DESKTOP	48
+ #define global	FILTER_RACE_SPLASHROOM	49
++#define global	FILTER_RACE_INVADER	47
++#define global	FILTER_RACE_KUSOSUGI	50
  
- // Group: dbmode_normal
- #define global	DBMODE_NONE	0
- #define global	DBMODE_FIND	1
- #define global	DBMODE_REF	2
-@@ -3523,10 +3527,11 @@
- #define global	EFFECT_FILTRATION_BOTTLE	121
+ // Group: fishdata
+ #define global	FISHDATA_PIC	0
+ #define global	FISHDATA_LEVEL	1
+ #define global	FISHDATA_RARE	2
+@@ -3528,10 +3538,12 @@
  #define global	EFFECT_LESIMAS_FRAGMENT	122
  #define global	EFFECT_REMIDO_FRAGMENT	123
  #define global	EFFECT_CHAOS_FRAGMENT	124
  #define global	EFFECT_MEMORY_CONVERTER	125
-+#define global	EFFECT_COMMAND_WHISTLE	126
+ #define global	EFFECT_COMMAND_WHISTLE	126
++#define global	EFFECT_ANERING	127
++#define global	EFFECT_DRUG	128
  
  // Group: item_file
  #define global	ITEM_ROLE_FILE_NONE2	-1
  #define global	ITEM_ROLE_FILE_NONE	0
  #define global	ITEM_ROLE_FILE_WANDER	1
-@@ -4723,11 +4728,11 @@
+@@ -4728,11 +4740,11 @@
  #define global	ITEM_ID_NUMENIUS	1164
  #define global	ITEM_ID_DGT_101	1165
  #define global	ITEM_ID_GOUTEN	1166
  #define global	ITEM_ID_EPECLAIR	1167
  #define global	ITEM_ID_GO_RENGE	1168
--#define global	MAX_ITEM_ID	ITEM_ID_AURTEHOM + 3
-+#define global	MAX_ITEM_ID	ITEM_ID_COMMAND_WHISTLE + 3
+-#define global	MAX_ITEM_ID	ITEM_ID_COMMAND_WHISTLE + 3
++#define global	MAX_ITEM_ID	ITEM_ID_ANERING + 3
  #define global	MAX_ITEM_DBID	1499
  #define global	ITEM_ID_NYOI_MIMIKAKI	1113
  #define global	ITEM_ID_KANI_KAMA	1169
  #define global	ITEM_ID_ANNINDOFU_LIKE_A_LIGHTSABRE	1170
  #define global	ITEM_ID_FRIGHT_PRAWN	1171
-@@ -4807,10 +4812,11 @@
- #define global	ITEM_ID_SPELLBOOK_OF_NETHER_ROAR	1245
+@@ -4813,10 +4825,11 @@
  #define global	ITEM_ID_SPELLBOOK_OF_ECLIPSE_JAIL	1246
  #define global	ITEM_ID_SPELLBOOK_OF_THUNDER_VORTEX	1247
  #define global	ITEM_ID_SOCKS2	1248
  #define global	ITEM_ID_AURTEHOM	1249
-+#define global	ITEM_ID_COMMAND_WHISTLE	1250
+ #define global	ITEM_ID_COMMAND_WHISTLE	1250
++#define global	ITEM_ID_ANERING	1251
  
  // Group: item_known
  #define global	ITEM_KNOWN_NONE	0
  #define global	ITEM_KNOWN_NAME	1
  #define global	ITEM_KNOWN_QUALITY	2
-@@ -6110,11 +6116,11 @@
+@@ -6117,11 +6130,11 @@
  #define global	SKILL_SPACT_PECULIAR_JOKE	817
  #define global	SKILL_SPACT_BLENDED_LIE	818
  #define global	SKILL_SPACT_INTIMIDATION	819
  #define global	SKILL_SPACT_MYSTERIOUS_SONG	820
  #define global	SKILL_SPACT_TUIN_DER_LUSTEN	821
--#define global	MAX_SKILL	SKILL_SPACT_MOGRANIC_AURA + 1
-+#define global	MAX_SKILL	SKILL_SPACT_INDIVIDUAL_LEADING + 1
+-#define global	MAX_SKILL	SKILL_SPACT_INDIVIDUAL_LEADING + 1
++#define global	MAX_SKILL	SKILL_SPACT_EYE_OF_ANE + 1
  #define global	SKILL_SPACT_HARMONIC_ASSAULT	721
  #define global	SKILL_SPACT_RESONANT_VOICE	722
  #define global	SKILL_SPACT_KIJIN_SHIBARI	723
  #define global	SKILL_SPACT_BURN_SCROLLS	724
  #define global	SKILL_SPACT_JYUSOU_GOUSHIN	725
-@@ -6136,10 +6142,11 @@
- #define global	SKILL_SPACT_WIRE_WORLD	836
+@@ -6144,10 +6157,12 @@
  #define global	SKILL_SPACT_SHINING_THROW	755
  #define global	SKILL_SPACT_SAND_CANNON	837
  #define global	SKILL_SPACT_ROCRUSHER	838
  #define global	SKILL_SPACT_MOGRANIC_AURA	839
-+#define global	SKILL_SPACT_INDIVIDUAL_LEADING	840
+ #define global	SKILL_SPACT_INDIVIDUAL_LEADING	840
++#define global	SKILL_SPACT_POLLEN_CANNON	841
++#define global	SKILL_SPACT_EYE_OF_ANE	842
  
  // Group: skill_spell
  #define global	STARTING_SKILL_SPELL	400
  #define global	SKILL_SPELL_HEAL_LIGHT	400
  #define global	SKILL_SPELL_HEAL_CRITICAL	401
-@@ -6445,11 +6452,11 @@
- #define global	SOUNDLIST_BOM06	174
- #define global	SOUNDLIST_BOM15	175
- #define global	SOUNDLIST_SWING39	176
- #define global	SOUNDLIST_MECHA20	177
- #define global	SOUNDLIST_WATERM	178
--#define global	SOUNDLIST_MAX	SOUNDLIST_CRASH14 + 1
-+#define global	SOUNDLIST_MAX	SOUNDLIST_WHISTLE00 + 1
- #define global	SOUNDLIST_DRAG01	179
- #define global	SOUNDLIST_INANAKI	180
- #define global	SOUNDLIST_CAR_HORN1	181
- #define global	SOUNDLIST_LOCOMO	182
- #define global	SOUNDLIST_SIREN	183
-@@ -6567,10 +6574,11 @@
- #define global	SOUNDLIST_SEMI2	295
- #define global	SOUNDLIST_SEMI3	296
- #define global	SOUNDLIST_SEMI4	297
- #define global	SOUNDLIST_SEMI5	298
- #define global	SOUNDLIST_CRASH14	299
-+#define global	SOUNDLIST_WHISTLE00	300
- 
- // Group: sprite_sheet
- #define global	SPRITE_SHEET_COLS_MAP	33
- #define global	SPRITE_SHEET_ROWS_MAP	25
- #define global	SPRITE_SHEET_COLS_ITEM	33

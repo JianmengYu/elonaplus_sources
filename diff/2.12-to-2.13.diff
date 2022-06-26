@@ -1,0 +1,1761 @@
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/action.hsp ../2.13-borscht/action.hsp
+--- ../2.12-borscht/action.hsp	2022-04-25 14:21:59.625140000 -0700
++++ ../2.13-borscht/action.hsp	2022-06-25 22:26:48.490308800 -0700
+@@ -1273,11 +1273,11 @@
+ 	}
+ 	goto *turn_end
+ 
+ *act_zap
+ 	if ( cc != CHARA_PLAYER ) {
+-		if ( rnd(2) == 0 | cdata(CDATA_TARGET, cc) == 0 | cdata(CDATA_TARGET, cc) == 0 | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE ) {
++		if ( rnd(2) == 0 | cdata(CDATA_TARGET, cc) == 0 | cdata(CDATA_TARGET, cc) == 0 | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_TALKING ) {
+ 			goto *ai_action
+ 		}
+ 	}
+ 	dbmode = DBMODE_ON_ZAP
+ 	dbid = inv(INV_ITEM_ID, ci)
+@@ -3292,10 +3292,14 @@
+ 	}
+ 	if ( f ) {
+ 		flt
+ 		itemcreate -1, 422 + rnd(6), cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), 1
+ 	}
++	if ( f == 0 ) {
++		flt
++		itemcreate -1, ITEM_ID_SPIRITIUM, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), 0
++	}
+ 	f = 0
+ 	if ( inv(INV_ITEM_ID, ri) == ITEM_ID_CHEST ) {
+ 		if ( rnd(2) == 0 ) {
+ 			f = 1
+ 		}
+@@ -4003,14 +4007,12 @@
+ 			cdata(CDATA_SP, cc)--
+ 		}
+ 		if ( cdata(CDATA_DRAIN_HP, cc) < 99 ) {
+ 			cdata(CDATA_DRAIN_HP, cc)++
+ 		}
+-	}
+-	if ( cbit(CHARA_BIT_SANDBAG, tc) != TRUE ) {
+-		if ( cdata(CDATA_GAUGE_COOLDOWN, cc) == 0 ) {
+-			cdata(CDATA_GAUGE_COOLDOWN, cc) = 1
++		cdata(CDATA_GAUGE_COOLDOWN, cc) = 1
++		if ( cbit(CHARA_BIT_SANDBAG, tc) != TRUE ) {
+ 			cdata(CDATA_POWER_GAUGE, cc) += 2
+ 			if ( cdata(CDATA_ID, cc) == CREATURE_ID_TALON_SOLDIER ) {
+ 				cdata(CDATA_POWER_GAUGE, cc) += 2
+ 			}
+ 		}
+@@ -6239,10 +6241,16 @@
+ 	}
+ 	txt lang("何もおきない… ", "Nothing happens...")
+ 	goto *turn_end
+ 
+ *act_use
++	if ( cc != CHARA_PLAYER ) {
++		if ( rnd(2) == 0 | cdata(CDATA_TARGET, cc) == 0 | cdata(CDATA_TARGET, cc) == 0 | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_TALKING ) {
++			cdata(CDATA_AI_ITEM, cc) = ci
++			goto *ai_action
++		}
++	}
+ 	procid = (procid + 1) \ 4
+ 	proclist(procid) = "act_use" + " ct:" + ct
+ 	screenupdate = -1
+ 	gosub *screen_draw
+ 	tc = cc
+@@ -6276,14 +6284,16 @@
+ 		if ( inv(INV_ITEM_PARAM3, ci) >= 24 ) {
+ 			inv(INV_ITEM_NEED_SLEEP, ci) = gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12
+ 		}
+ 	}
+ 	if ( ibit(ITEM_BIT_CHARGE_ITEM, ci) == TRUE ) {
+-		if ( inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) <= 0 ) {
+-			txt lang("それはもう使えない。", "It's out of charge.")
+-			gosub *screen_draw
+-			goto *pc_turn
++		if ( cc == CHARA_PLAYER ) {
++			if ( inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) <= 0 ) {
++				txt lang("それはもう使えない。", "It's out of charge.")
++				gosub *screen_draw
++				goto *pc_turn
++			}
+ 		}
+ 		item_separate ci
+ 		inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci)--
+ 	}
+ 	if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE_MINOR) == FILTER_ITEM_SEED ) {
+@@ -8356,10 +8366,104 @@
+ 		gosub *charaRefresh
+ 		gosub *calcBurdenPc
+ 		goto *act_use_SWEND1
+ 		_switch_sw++
+ 	}
++	if ( _switch_val == 135 | _switch_sw ) {
++		_switch_sw = 0
++		snd SOUNDLIST_TM2_SWITCH001
++		gdata(GDATA_FLAG_TOTAL_POTION_PLUGS) += 100
++		txtef COLOR_GREEN
++		txt lang("ポーションの栓を100個手に入れた。[残り" + gdata(GDATA_FLAG_TOTAL_POTION_PLUGS) + "個]", name(0) + " get 100 potion plugs.[Remaining plug " + gdata(GDATA_FLAG_TOTAL_POTION_PLUGS) + "]")
++		inv(INV_ITEM_NUM, ci)--
++		cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
++		r1 = tc
++		gosub *charaRefresh
++		gosub *calcBurdenPc
++		goto *act_use_SWEND1
++		_switch_sw++
++	}
++	if ( _switch_val == 131 | _switch_sw ) {
++		_switch_sw = 0
++		_switch_sw++
++	}
++	if ( _switch_val == 132 | _switch_sw ) {
++		_switch_sw = 0
++		txt lang("開発中。", "Under development.")
++		goto *act_use_SWEND1
++		_switch_sw++
++	}
++	if ( _switch_val == 130 | _switch_sw ) {
++		_switch_sw = 0
++		if ( mdata(MDATA_TYPE) == MAP_TYPE_WORLD ) {
++			goto *act_use_SWEND1
++		}
++		txt lang("誰に使用する？", "Who is target?")
++		gosub *screen_draw
++		val = 0
++		gosub *prompt_direction
++		if ( stat == 0 ) {
++			txt lang("それは無理だ。", "It's impossible.")
++			gosub *screen_draw
++			goto *pc_turn
++		}
++		if ( map(x, y, MAP_CHARA_INDEX_PLUS_ONE) > 0 ) {
++			tc = map(x, y, MAP_CHARA_INDEX_PLUS_ONE) - 1
++		}
++		else {
++			txt lang("それは無理だ。", "It's impossible.")
++			gosub *screen_draw
++			goto *pc_turn
++		}
++		if ( cdata(CDATA_IN_TAGTEAM, tc) != 0 ) {
++			txtselecttc 2
++			repeat 2
++				promptl(0, promptmax) = s(cnt), key_select(cnt), "" + promptmax
++				promptmax++
++			loop
++			val = promptx, prompty, 200, 1
++			gosub *prompt_key
++			if ( stat == 0 ) {
++				gosub *screen_draw
++				goto *pc_turn
++			}
++			if ( rtval == 1 ) {
++				tc = cdata(CDATA_TAGTEAM_PARTNER, tc)
++			}
++		}
++		if ( tc >= MAX_CHARA_FOLLOWER ) {
++			txt lang(name(tc) + "は抵抗した。", name(tc) + " resist" + _s(tc) + ".")
++			gosub *screen_draw
++			goto *pc_turn
++		}
++		snd SOUNDLIST_ATK_ELEC
++		if ( cdata(CDATA_ROLE_SHOP_LEVEL, tc) == 0 ) {
++			cdata(CDATA_ROLE_SHOP_LEVEL, tc) = inv(INV_ITEM_PARAM1, ci)
++			txt lang(name(tc) + "は自分の" + _seikaku(inv(INV_ITEM_PARAM1, ci)) + "なところを自覚した！", name(tc) + " realized " + name(tc) + " was " + _seikaku(inv(INV_ITEM_PARAM1, ci)) + "!")
++			goto *act_use_SWEND1
++		}
++		if ( cdata(CDATA_ROLE_RESTOCK, tc) == 0 ) {
++			if ( cdata(CDATA_ROLE_SHOP_LEVEL, tc) == inv(INV_ITEM_PARAM1, ci) ) {
++				txt lang(name(tc) + "は既にその性格だ。", name(tc) + " already has that personality.")
++				gosub *screen_draw
++				goto *pc_turn
++			}
++			cdata(CDATA_ROLE_RESTOCK, tc) = inv(INV_ITEM_PARAM1, ci)
++			txt lang(name(tc) + "は自分の" + _seikaku(inv(INV_ITEM_PARAM1, ci)) + "なところを自覚した！", name(tc) + " realized " + name(tc) + " was " + _seikaku(inv(INV_ITEM_PARAM1, ci)) + "!")
++			goto *act_use_SWEND1
++		}
++		if ( cdata(CDATA_ROLE_SHOP_LEVEL, tc) == inv(INV_ITEM_PARAM1, ci) ) {
++			txt lang(name(tc) + "は既にその性格だ。", name(tc) + " already has that personality.")
++			gosub *screen_draw
++			goto *pc_turn
++		}
++		cdata(CDATA_ROLE_RESTOCK, tc) = cdata(CDATA_ROLE_SHOP_LEVEL, tc)
++		cdata(CDATA_ROLE_SHOP_LEVEL, tc) = inv(INV_ITEM_PARAM1, ci)
++		txt lang(name(tc) + "は自分の" + _seikaku(inv(INV_ITEM_PARAM1, ci)) + "なところを自覚した！", name(tc) + " realized " + name(tc) + " was " + _seikaku(inv(INV_ITEM_PARAM1, ci)) + "!")
++		goto *act_use_SWEND1
++		_switch_sw++
++	}
+ 	if ( _switch_val == 127 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		if ( mdata(MDATA_TYPE) == MAP_TYPE_WORLD ) {
+ 			goto *act_use_SWEND1
+ 		}
+@@ -9046,12 +9150,18 @@
+ 		goto *act_use_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 115 | _switch_sw ) {
+ 		_switch_sw = 0
++		if ( cc != CHARA_PLAYER ) {
++			cdata(CDATA_AI_ITEM, cc) = ci
++		}
+ 		if ( inv(INV_ITEM_PARAM2, ci) == 0 ) {
+ 			if ( gdata(GDATA_FLAG_TOTAL_POTION_PLUGS) < 4 ) {
++				if ( cc != CHARA_PLAYER ) {
++					cdata(CDATA_AI_ITEM, cc) = 0
++				}
+ 				txt lang("ポーションの栓が足りない…。", "Not enough potion plugs...")
+ 				snd SOUNDLIST_FAIL1
+ 				goto *act_use_SWEND1
+ 			}
+ 			snd SOUNDLIST_TM2_SWITCH001
+@@ -9188,10 +9298,15 @@
+ 				if ( tc != CHARA_PLAYER ) {
+ 					dmgspt tc, limit(rnd(sdata(SKILL_ATTR_DEX, cc) / 50 + 1) + 5, 5, 30)
+ 				}
+ 			}
+ 		}
++		if ( cdata(CDATA_EXIST, cc) == CHAR_STATE_ALIVE ) {
++			skillexp SKILL_ATTR_STR, cc, 50
++			skillexp SKILL_ATTR_MAG, cc, 50
++			skillexp SKILL_NORMAL_MARKSMAN, cc, 50
++		}
+ 		goto *act_use_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 84 | _switch_sw ) {
+ 		_switch_sw = 0
+@@ -9255,22 +9370,119 @@
+ 								tc = cdata(CDATA_TAGTEAM_PARTNER, tc)
+ 							}
+ 							txt lang(name(tc) + "は" + name(cdata(CDATA_TAGTEAM_PARTNER, tc)) + "をかばった！", name(tc) + " guarded " + name(cdata(CDATA_TAGTEAM_PARTNER, tc)) + ".")
+ 						}
+ 					}
+-					dmg = 1000 + (sdata(SKILL_NORMAL_CARPENTRY, CHARA_PLAYER) + 50) / 5 * limit(sdata(SKILL_NORMAL_DISARM_TRAP, CHARA_PLAYER) + 50, 50, 1000) + sdata(SKILL_NORMAL_MARKSMAN, CHARA_PLAYER) / 40 * sdata(SKILL_NORMAL_MARKSMAN, CHARA_PLAYER)
++					dmg = 1000 + (sdata(SKILL_NORMAL_CARPENTRY, cc) + 50) / 5 * limit(sdata(SKILL_NORMAL_DISARM_TRAP, cc) + 50, 50, 1000) + sdata(SKILL_NORMAL_MARKSMAN, cc) / 40 * sdata(SKILL_NORMAL_MARKSMAN, cc)
+ 					dmghp tc, dmg, cc
+ 				}
+ 				mapitem_fire dx, dy
+ 			loop
+ 		loop
++		if ( cdata(CDATA_EXIST, cc) == CHAR_STATE_ALIVE ) {
++			skillexp SKILL_NORMAL_CARPENTRY, cc, 80
++			skillexp SKILL_NORMAL_DISARM_TRAP, cc, 80
++			skillexp SKILL_NORMAL_MARKSMAN, cc, 80
++		}
++		goto *act_use_SWEND1
++		_switch_sw++
++	}
++	if ( _switch_val == 133 | _switch_sw ) {
++		_switch_sw = 0
++		if ( cc != CHARA_PLAYER ) {
++			cdata(CDATA_AI_ITEM, cc) = ci
++		}
++		inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci)++
++		if ( cc != CHARA_PLAYER ) {
++			if ( inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) <= 0 ) {
++				if ( gdata(GDATA_ABSORB_CHARGE) < 10 ) {
++					cdata(CDATA_AI_ITEM, cc) = 0
++					txt lang("魔力の貯蓄が足りない…。", "Not enough recharge powers...")
++					snd SOUNDLIST_FAIL1
++					goto *act_use_SWEND1
++				}
++				snd SOUNDLIST_TM2_SWITCH001
++				gdata(GDATA_ABSORB_CHARGE) -= 10
++				txt lang(name(cc) + "は魔力の貯蓄を10消費した(残り" + gdata(GDATA_ABSORB_CHARGE) + ")", name(cc) + " spend 10 recharge powers. (Total:" + gdata(GDATA_ABSORB_CHARGE) + ")")
++				inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) = 1
++				goto *act_use_SWEND1
++			}
++		}
++		if ( mdata(MDATA_TYPE) == MAP_TYPE_WORLD ) {
++			goto *act_use_SWEND1
++		}
++		if ( cdata(CDATA_TARGET, cc) == 0 ) {
++			gosub *findTarget
++			if ( stat == 0 ) {
++				goto *act_use_SWEND1
++			}
++		}
++		tc = cdata(CDATA_TARGET, cc)
++		if ( dist(cdata(CDATA_X, tc), cdata(CDATA_Y, tc), cdata(CDATA_X, cc), cdata(CDATA_Y, cc)) > 6 | fov_los(cdata(CDATA_X, tc), cdata(CDATA_Y, tc), cdata(CDATA_X, cc), cdata(CDATA_Y, cc)) == 0 ) {
++			if ( cc == CHARA_PLAYER ) {
++				msgdup++
++				txt lang("範囲外だ。", "It's out of range.")
++			}
++			goto *act_use_SWEND1
++		}
++		if ( cdata(CDATA_RELATION, tc) >= RELATION_NEUTRAL ) {
++			if ( cc != CHARA_PLAYER ) {
++				goto *act_use_SWEND1
++			}
++			gosub *com_confirmAttack
++			if ( stat == 0 ) {
++				goto *act_use_SWEND1
++			}
++		}
++		tlocx = cdata(CDATA_X, tc)
++		tlocy = cdata(CDATA_Y, tc)
++		inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci)--
++		if ( inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) < 0 ) {
++			inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) = 0
++		}
++		item_stack cc, ci, 1
++		animeid = ANIMATION_LASER_BAZOOKA
++		gosub *anime
++		if ( cdata(CDATA_DRAIN_HP, tc) < 100 ) {
++			cdata(CDATA_DRAIN_HP, tc) += 30
++			if ( cdata(CDATA_DRAIN_HP, tc) >= 100 ) {
++				cdata(CDATA_DRAIN_HP, tc) = 99
++			}
++		}
++		dmg = rnd(50) + sdata(SKILL_ATTR_DEX, cc) * 2 + sdata(SKILL_NORMAL_MARKSMAN, cc) / 40 * sdata(SKILL_NORMAL_MARKSMAN, cc)
++		if ( dmg < 0 ) {
++			dmg = 5
++		}
++		dmghp tc, dmg, cc
++		if ( cdata(CDATA_EXIST, cc) == CHAR_STATE_ALIVE ) {
++			skillexp SKILL_ATTR_DEX, cc, 80
++			skillexp SKILL_NORMAL_MARKSMAN, cc, 80
++		}
+ 		goto *act_use_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 82 | _switch_sw ) {
+ 		_switch_sw = 0
++		if ( cc != CHARA_PLAYER ) {
++			cdata(CDATA_AI_ITEM, cc) = ci
++		}
+ 		inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci)++
++		if ( cc != CHARA_PLAYER ) {
++			if ( inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) <= 0 ) {
++				if ( gdata(GDATA_ABSORB_CHARGE) < 10 ) {
++					cdata(CDATA_AI_ITEM, cc) = 0
++					txt lang("魔力の貯蓄が足りない…。", "Not enough recharge powers...")
++					snd SOUNDLIST_FAIL1
++					goto *act_use_SWEND1
++				}
++				snd SOUNDLIST_TM2_SWITCH001
++				gdata(GDATA_ABSORB_CHARGE) -= 10
++				txt lang(name(cc) + "は魔力の貯蓄を10消費した(残り" + gdata(GDATA_ABSORB_CHARGE) + ")", name(cc) + " spend 10 recharge powers. (Total:" + gdata(GDATA_ABSORB_CHARGE) + ")")
++				inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) = 1
++				goto *act_use_SWEND1
++			}
++		}
+ 		if ( mdata(MDATA_TYPE) == MAP_TYPE_WORLD ) {
+ 			goto *act_use_SWEND1
+ 		}
+ 		if ( cdata(CDATA_TARGET, cc) == 0 ) {
+ 			gosub *findTarget
+@@ -9285,10 +9497,13 @@
+ 				txt lang("範囲外だ。", "It's out of range.")
+ 			}
+ 			goto *act_use_SWEND1
+ 		}
+ 		if ( cdata(CDATA_RELATION, tc) >= RELATION_NEUTRAL ) {
++			if ( cc != CHARA_PLAYER ) {
++				goto *act_use_SWEND1
++			}
+ 			gosub *com_confirmAttack
+ 			if ( stat == 0 ) {
+ 				goto *act_use_SWEND1
+ 			}
+ 		}
+@@ -9296,45 +9511,90 @@
+ 		tlocy = cdata(CDATA_Y, tc)
+ 		inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci)--
+ 		if ( inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) < 0 ) {
+ 			inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) = 0
+ 		}
+-		item_stack CHARA_PLAYER, ci, 1
++		item_stack cc, ci, 1
+ 		animeid = ANIMATION_NUCLEAR
+ 		gosub *anime
+ 		aniref = 0
+ 		animeid = ANIMATION_BALL
+ 		anix = cdata(CDATA_X, tc)
+ 		aniy = cdata(CDATA_Y, tc)
+ 		gosub *anime
+ 		cdata(CDATA_PROT_PENALTY, tc) = 3
+-		dmg = rnd(50) + sdata(SKILL_ATTR_PER, CHARA_PLAYER) * 2 + sdata(SKILL_NORMAL_MARKSMAN, CHARA_PLAYER) / 40 * sdata(SKILL_NORMAL_MARKSMAN, CHARA_PLAYER)
++		dmg = rnd(50) + sdata(SKILL_ATTR_PER, cc) * 2 + sdata(SKILL_NORMAL_MARKSMAN, cc) / 40 * sdata(SKILL_NORMAL_MARKSMAN, cc)
+ 		if ( dmg < 0 ) {
+ 			dmg = 5
+ 		}
+ 		dmghp tc, dmg, cc
++		if ( cdata(CDATA_EXIST, cc) == CHAR_STATE_ALIVE ) {
++			skillexp SKILL_ATTR_PER, cc, 80
++			skillexp SKILL_NORMAL_MARKSMAN, cc, 80
++		}
+ 		goto *act_use_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 83 | _switch_sw ) {
+ 		_switch_sw = 0
++		if ( cc != CHARA_PLAYER ) {
++			cdata(CDATA_AI_ITEM, cc) = ci
++		}
+ 		inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci)++
++		if ( cc != CHARA_PLAYER ) {
++			if ( inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) <= 0 ) {
++				if ( gdata(GDATA_ABSORB_CHARGE) < 10 ) {
++					cdata(CDATA_AI_ITEM, cc) = 0
++					txt lang("魔力の貯蓄が足りない…。", "Not enough recharge powers...")
++					snd SOUNDLIST_FAIL1
++					goto *act_use_SWEND1
++				}
++				snd SOUNDLIST_TM2_SWITCH001
++				gdata(GDATA_ABSORB_CHARGE) -= 10
++				txt lang(name(cc) + "は魔力の貯蓄を10消費した(残り" + gdata(GDATA_ABSORB_CHARGE) + ")", name(cc) + " spend 10 recharge powers. (Total:" + gdata(GDATA_ABSORB_CHARGE) + ")")
++				inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) = 1
++				goto *act_use_SWEND1
++			}
++		}
+ 		if ( mdata(MDATA_TYPE) == MAP_TYPE_WORLD ) {
+ 			goto *act_use_SWEND1
+ 		}
+-		gosub *findLocation
+-		if ( stat != 1 ) {
+-			if ( stat == 0 ) {
+-				txt lang("その場所は見えない。", "You can't see the location.")
++		if ( cc == CHARA_PLAYER ) {
++			gosub *findLocation
++			if ( stat != 1 ) {
++				if ( stat == 0 ) {
++					txt lang("その場所は見えない。", "You can't see the location.")
++					gosub *screen_draw
++				}
++				goto *act_use_SWEND1
++			}
++			if ( chipm(CHIPM_ATTRIB, map(tlocx, tlocy, MAP_TILE_ID)) & CHIPM_ATTRIB_CANT_PASS ) {
++				txt lang("そこには撃てない。", "The location is blocked.")
+ 				gosub *screen_draw
++				goto *act_use_SWEND1
+ 			}
+-			goto *pc_turn
+ 		}
+-		if ( chipm(CHIPM_ATTRIB, map(tlocx, tlocy, MAP_TILE_ID)) & CHIPM_ATTRIB_CANT_PASS ) {
+-			txt lang("そこには撃てない。", "The location is blocked.")
+-			gosub *screen_draw
+-			goto *pc_turn
++		if ( cc != CHARA_PLAYER ) {
++			if ( cdata(CDATA_TARGET, cc) == 0 ) {
++				gosub *findTarget
++				if ( stat == 0 ) {
++					goto *act_use_SWEND1
++				}
++			}
++			tc = cdata(CDATA_TARGET, cc)
++			if ( cdata(CDATA_RELATION, tc) >= RELATION_NEUTRAL ) {
++				goto *act_use_SWEND1
++			}
++			if ( dist(cdata(CDATA_X, tc), cdata(CDATA_Y, tc), cdata(CDATA_X, cc), cdata(CDATA_Y, cc)) > 6 | fov_los(cdata(CDATA_X, tc), cdata(CDATA_Y, tc), cdata(CDATA_X, cc), cdata(CDATA_Y, cc)) == 0 ) {
++				if ( cc == CHARA_PLAYER ) {
++					msgdup++
++					txt lang("範囲外だ。", "It's out of range.")
++				}
++				goto *act_use_SWEND1
++			}
++			tlocx = cdata(CDATA_X, tc)
++			tlocy = cdata(CDATA_Y, tc)
+ 		}
+ 		animeid = ANIMATION_NUCLEAR
+ 		gosub *anime
+ 		aniref = 1
+ 		animeid = ANIMATION_BALL_NUKE
+@@ -9345,11 +9605,11 @@
+ 		inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci)--
+ 		if ( inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) < 0 ) {
+ 			inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) = 0
+ 		}
+ 		item_stack CHARA_PLAYER, ci, 1
+-		efp = limit(sdata(SKILL_RES_FIRE, CHARA_PLAYER) * 2, 1, 5000) + sqrt(sdata(SKILL_NORMAL_MARKSMAN, CHARA_PLAYER) + 1) * sdata(SKILL_NORMAL_MARKSMAN, CHARA_PLAYER) * 2 + sdata(SKILL_ATTR_CON, CHARA_PLAYER) * 10
++		efp = limit(sdata(SKILL_RES_FIRE, cc) * 2, 1, 5000) + sqrt(sdata(SKILL_NORMAL_MARKSMAN, cc) + 1) * sdata(SKILL_NORMAL_MARKSMAN, cc) * 2 + sdata(SKILL_ATTR_CON, cc) * 10
+ 		p = 4, 2 + efp / 50
+ 		snd SOUNDLIST_ATK_FIRE
+ 		repeat 800
+ 			x = rnd(p) + tlocx - rnd(p)
+ 			y = rnd(p) + tlocy - rnd(p)
+@@ -9404,10 +9664,14 @@
+ 				dmghp cnt, rnd(efp / 10 + 1) + efp / 2 + 1, DAMAGE_FROM_FIRE, SKILL_RES_FIRE, efp
+ 				addbuff cnt, BUFF_ELEMENT_SCAR, 500, 5
+ 			}
+ 			cdata(CDATA_ENVIRONMENT_EFFECT, cnt) = ENVIRONMENT_EFFECT_NONE
+ 		loop
++		if ( cdata(CDATA_EXIST, cc) == CHAR_STATE_ALIVE ) {
++			skillexp SKILL_ATTR_CON, cc, 80
++			skillexp SKILL_NORMAL_MARKSMAN, cc, 80
++		}
+ 		goto *act_use_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 105 | _switch_sw ) {
+ 		_switch_sw = 0
+@@ -11754,10 +12018,44 @@
+ 		gosub *music_play
+ 		chop = 0
+ 		goto *act_use_SWEND1
+ 		_switch_sw++
+ 	}
++	if ( _switch_val == 129 | _switch_sw ) {
++		_switch_sw = 0
++		if ( cc != CHARA_PLAYER ) {
++			txt lang("何もおきない… ", "Nothing happens...")
++			goto *act_use_SWEND1
++		}
++		cibk = ci
++		invsubroutine = 1
++		invctrl = INVCTRL_MATERIAL_ENCHANT, 26
++		snd SOUNDLIST_INV
++		gosub *com_inventory
++		if ( stat == 1 ) {
++			snd SOUNDLIST_DING2
++			txt lang(itemname(ci) + "は強化星維を取り込んで少し成長した！", itemname(ci) + " took in the starfiber and grew a little!")
++			inv(INV_ITEM_PARAM2, ci) += 75
++			if ( inv(INV_ITEM_PARAM2, ci) >= calcexpalive(inv(INV_ITEM_PARAM1, ci)) ) {
++				txtef COLOR_GREEN
++				snd SOUNDLIST_DING3
++				txt lang(itemname(ci) + "はレベルアップできる！", itemname(cw) + " can level up!")
++			}
++			ci = cibk
++			inv(INV_ITEM_NUM, ci)--
++			if ( ci >= 5080 ) {
++				cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
++			}
++			r1 = cc
++			gosub *charaRefresh
++		}
++		else {
++			obvious = 0
++		}
++		goto *act_use_SWEND1
++		_switch_sw++
++	}
+ 	if ( _switch_val == 96 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		if ( cc != CHARA_PLAYER ) {
+ 			txt lang("何もおきない… ", "Nothing happens...")
+ 			goto *act_use_SWEND1
+@@ -13065,10 +13363,17 @@
+ 			}
+ 		loop
+ 		goto *act_use_SWEND1
+ 		_switch_sw++
+ 	}
++	if ( _switch_val == 134 | _switch_sw ) {
++		_switch_sw = 0
++		snd SOUNDLIST_POWER07
++		txt lang("開発中。", "Under development.")
++		goto *act_use_SWEND1
++		_switch_sw++
++	}
+ 	if ( _switch_val == 111 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 112 | _switch_sw ) {
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/ai.hsp ../2.13-borscht/ai.hsp
+--- ../2.12-borscht/ai.hsp	2022-04-25 14:21:59.689199500 -0700
++++ ../2.13-borscht/ai.hsp	2022-06-25 22:26:48.552366700 -0700
+@@ -756,10 +756,16 @@
+ 		goto *act_read
+ 	}
+ 	if ( a == 56000 ) {
+ 		goto *act_zap
+ 	}
++	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_LASER_BAZOOKA | inv(INV_ITEM_ID, ci) == ITEM_ID_M202_SPECIAL | inv(INV_ITEM_ID, ci) == ITEM_ID_PANZERFAUST_X ) {
++		goto *act_use
++	}
++	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_CF_POTIOMAN | inv(INV_ITEM_ID, ci) == ITEM_ID_CRUSH_POTIOMAN | inv(INV_ITEM_ID, ci) == ITEM_ID_BATTLE_POTIOMAN | inv(INV_ITEM_ID, ci) == ITEM_ID_SUPER_POTIOMAN ) {
++		goto *act_use
++	}
+ 	cdata(CDATA_AI_ITEM, cc) = 0
+ 
+ *ai_action
+ 	retreat = 0
+ 	if ( cdata(CDATA_AI_AGGRO, cc) > 0 | cdata(CDATA_RELATION, cc) == RELATION_ALLY ) {
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/blend.hsp ../2.13-borscht/blend.hsp
+--- ../2.12-borscht/blend.hsp	2022-04-25 14:21:59.723231200 -0700
++++ ../2.13-borscht/blend.hsp	2022-06-25 22:26:48.585964900 -0700
+@@ -629,11 +629,11 @@
+ 	loop
+ 	return
+ 
+ *recipe_init
+ 	dim rpdata, 100, 1899
+-	sdim rfnameorg, 20, 2, 9028 - 9000
++	sdim rfnameorg, 20, 2, 9029 - 9000
+ 	sdim rpdatan, 40, 1899
+ 	dim rpref, 100
+ 	rpid = 200
+ 	rpid = 200
+ 	rplistdef(length(rplistdef)) = 1 * EXT_RECIPES + rpid
+@@ -1032,10 +1032,16 @@
+ 	rplistdef(length(rplistdef)) = 1 * EXT_RECIPES + rpid
+ 	rpdatan(rpid) = lang("鋭武具の作成", "Sharp equip making")
+ 	rpdata(RPDATA_ITEM, rpid) = ITEM_ID_SHARP_HIGH_MATERIUM, 80 + 3 * 10000
+ 	rpdata(RPDATA_SKILL + 0 * 2, rpid) = SKILL_NORMAL_ALCHEMY, 55, SKILL_NORMAL_CARPENTRY, 60
+ 	rpdata(RPDATA_MAT + 0, rpid) = RF_SHARP, ITEM_ID_SHARP_MATERIUM, ITEM_ID_SHARP_HIGH_MATERIUM, RF_STAR
++	rpid = STARTING_RPID + 66
++	rplistdef(length(rplistdef)) = 1 * EXT_RECIPES + rpid
++	rpdatan(rpid) = lang("強化星維", "Starfiber")
++	rpdata(RPDATA_ITEM, rpid) = ITEM_ID_STARFIBER, 15 + 1 * 10000
++	rpdata(RPDATA_SKILL + 0 * 2, rpid) = SKILL_NORMAL_TAILORING, 15, SKILL_NORMAL_ALCHEMY, 32
++	rpdata(RPDATA_MAT + 0, rpid) = (35 /*!!!@[FILTER_RACE_BAT @@@ ITEM_ID_EARTH_CRYSTAL]@!!! */), MAX_RF, ITEM_ID_BOTTLE_MILK
+ 	rpid = ITEM_ID_POTION_DISASTER + EXT_RP
+ 	rplistshop(length(rplistshop)) = 30 * EXT_RECIPES + rpid
+ 	rpdata(RPDATA_ITEM, rpid) = ITEM_ID_POTION_DISASTER, 60 + 3 * 10000
+ 	rpdata(RPDATA_SKILL + 0 * 2, rpid) = SKILL_NORMAL_ALCHEMY, 20, SKILL_NORMAL_MAGIC_DEVICE, 50
+ 	rpdata(RPDATA_EQ + 0, rpid) = 0
+@@ -1095,10 +1101,11 @@
+ 	rfnameorg(RFNAMEORG_ID, RF_COFFIN - EXT_RF) = "coffin", lang("適当な棺", "any coffin")
+ 	rfnameorg(RFNAMEORG_ID, RF_ANY - EXT_RF) = "", lang("何か物体", "any item")
+ 	rfnameorg(RFNAMEORG_ID, RF_BAIT - EXT_RF) = "bait", lang("適当な釣り餌", "any bait")
+ 	rfnameorg(RFNAMEORG_ID, RF_BARREL - EXT_RF) = "taru", lang("適当なタル", "any bait")
+ 	rfnameorg(RFNAMEORG_ID, RF_LEAF - EXT_RF) = "kusuri", lang("薬草類", "any healthy leaf")
++	rfnameorg(RFNAMEORG_ID, MAX_RF - EXT_RF) = "blanket", lang("ブランケット類", "any blanket")
+ 	return
+ 
+ *com_blend
+ 	procid = (procid + 1) \ 4
+ 	proclist(procid) = "com_blend" + " ct:" + ct
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/chara_func.hsp ../2.13-borscht/chara_func.hsp
+--- ../2.12-borscht/chara_func.hsp	2022-04-25 14:21:59.959454800 -0700
++++ ../2.13-borscht/chara_func.hsp	2022-06-25 22:26:48.723092000 -0700
+@@ -5208,13 +5208,15 @@
+ 			}
+ 		}
+ 	}
+ 	if ( dmghp_source != DAMAGE_FROM_UNSEEN & dmghp_source != DAMAGE_FROM_BLEED & dmghp_source != DAMAGE_FROM_POISON ) {
+ 		if ( locvar_dmghp_ele ) {
+-			if ( locvar_dmghp_ele != 60 & locvar_dmghp_ele != 707 & locvar_dmghp_ele != 702 & locvar_dmghp_ele != 64 ) {
++			if ( locvar_dmghp_ele != 707 & locvar_dmghp_ele != 702 & locvar_dmghp_ele != 64 ) {
+ 				if ( cbit(CHARA_BIT_RES_ELEMENTAL, dmghp_charid) ) {
+-					locvar_dmghp_dmg = 0
++					if ( locvar_dmghp_dmg > 0 ) {
++						locvar_dmghp_dmg = locvar_dmghp_dmg / 50
++					}
+ 				}
+ 			}
+ 		}
+ 		if ( cdata(CDATA_ID, dmghp_charid) == CREATURE_ID_GARZIEM ) {
+ 			if ( locvar_dmghp_ele != 702 ) {
+@@ -5234,10 +5236,19 @@
+ 	if ( dmghp_source >= (0 /*!!!@[CHARA_PLAYER @@@ DAMAGE_FROM_CHARA]@!!! */) ) {
+ 		if ( locvar_dmghp_dmg > 0 ) {
+ 			if ( cdata(CDATA_QUALITY, dmghp_charid) >= FIX_QUALITY_MIRACLE ) {
+ 				locvar_dmghp_dmg = locvar_dmghp_dmg * 10 / limit(sdata(SKILL_ATTR_SPD, dmghp_source) * 10 / sdata(SKILL_ATTR_SPD, dmghp_charid), 10, 50)
+ 			}
++			if ( locvar_dmghp_ele ) {
++				if ( locvar_dmghp_ele != 707 & locvar_dmghp_ele != 702 & locvar_dmghp_ele != 64 ) {
++					if ( cbit(CHARA_BIT_RES_ELEMENTAL, dmghp_source) ) {
++						if ( locvar_dmghp_dmg > 0 ) {
++							locvar_dmghp_dmg = locvar_dmghp_dmg / 50
++						}
++					}
++				}
++			}
+ 		}
+ 	}
+ 	if ( cdata(CDATA_CHAIN_ATTACK_COUNT, dmghp_charid) >= 50 ) {
+ 		locvar_dmghp_dmg = locvar_dmghp_dmg / 10 * (10 - cdata(CDATA_CHAIN_ATTACK_COUNT, dmghp_charid) / 20)
+ 		if ( cdata(CDATA_CHAIN_ATTACK_COUNT, dmghp_charid) >= 200 ) {
+@@ -5810,26 +5821,20 @@
+ 					animeload 87, dmghp_charid
+ 					snd SOUNDLIST_CRASH14
+ 					locvar_dmghp_cfg_animewait = locvar_dmghp_waitbk
+ 				}
+ 			}
+-		}
+-	}
+-	if ( locvar_dmghp_dmg <= 0 ) {
+-		locvar_dmghp_dmglevel = -1
+-	}
+-	else {
+-		locvar_dmghp_dmglevel = locvar_dmghp_dmg * 6 / cdata(CDATA_MAX_HP, dmghp_charid)
+-	}
+-	if ( dmghp_source >= (0 /*!!!@[CHARA_PLAYER @@@ DAMAGE_FROM_CHARA]@!!! */) & cbit(CHARA_BIT_SANDBAG, dmghp_charid) != TRUE ) {
+-		if ( cdata(CDATA_GAUGE_COOLDOWN, dmghp_source) == 0 ) {
+ 			cdata(CDATA_GAUGE_COOLDOWN, dmghp_source) = 1
+-			cdata(CDATA_POWER_GAUGE, dmghp_source) += 2
+-			if ( cdata(CDATA_ID, dmghp_source) == CREATURE_ID_TALON_SOLDIER ) {
++			if ( cbit(CHARA_BIT_SANDBAG, dmghp_charid) != TRUE ) {
+ 				cdata(CDATA_POWER_GAUGE, dmghp_source) += 2
++				if ( cdata(CDATA_ID, dmghp_source) == CREATURE_ID_TALON_SOLDIER ) {
++					cdata(CDATA_POWER_GAUGE, dmghp_source) += 2
++				}
+ 			}
+ 		}
++	}
++	if ( dmghp_source >= (0 /*!!!@[CHARA_PLAYER @@@ DAMAGE_FROM_CHARA]@!!! */) ) {
+ 		if ( cdata(CDATA_POWER_GAUGE, dmghp_source) > 100 ) {
+ 			if ( cdata(CDATA_POWER_GAUGE, dmghp_source) > 100 ) {
+ 				if ( cdata(CDATA_SHIFT_FORM, dmghp_source) <= SHIFT_FORM_NONE & (cdata(CDATA_EVOLUTION_STAGE, dmghp_source) <= 0 | dmghp_source == (0 /*!!!@[CHARA_PLAYER @@@ DAMAGE_FROM_CHARA]@!!! */)) & (cdata(CDATA_QUALITY, dmghp_source) < FIX_QUALITY_MIRACLE | dmghp_source <= MAX_CHARA_FOLLOWER) ) {
+ 					cdata(CDATA_POWER_GAUGE, dmghp_source) = 100
+ 				}
+@@ -5837,20 +5842,31 @@
+ 		}
+ 		if ( cdata(CDATA_POWER_GAUGE, dmghp_source) > 200 ) {
+ 			cdata(CDATA_POWER_GAUGE, dmghp_source) = 200
+ 		}
+ 	}
++	if ( locvar_dmghp_dmg <= 0 ) {
++		locvar_dmghp_dmglevel = -1
++	}
++	else {
++		locvar_dmghp_dmglevel = locvar_dmghp_dmg * 6 / cdata(CDATA_MAX_HP, dmghp_charid)
++	}
+ 	if ( cdata(CDATA_POWER_GAUGE, dmghp_charid) < 96 ) {
+ 		if ( locvar_dmghp_dmg > 0 ) {
+ 			if ( cdata(CDATA_GAUGE_COOLDOWN2, dmghp_charid) == 0 ) {
+ 				cdata(CDATA_GAUGE_COOLDOWN2, dmghp_charid) = 1
+ 				cdata(CDATA_POWER_GAUGE, dmghp_charid) += locvar_dmghp_dmg * 150 / cdata(CDATA_MAX_HP, dmghp_charid) + 2
+ 				if ( cdata(CDATA_ID, dmghp_charid) == CREATURE_ID_TALON_SOLDIER ) {
+ 					if ( cdata(CDATA_EVOLUTION_STAGE, dmghp_charid) != 0 ) {
+ 						locvar_dmghp_pgauge(dmghp_charid) += 2
+ 					}
+ 				}
++				if ( cdata(CDATA_ALLIED, dmghp_charid) == 100 | dmghp_charid == CHARA_PLAYER ) {
++					if ( cdata(CDATA_ROLE_RESTOCK, dmghp_charid) > 0 ) {
++						cdata(CDATA_POWER_GAUGE, dmghp_charid) += 1
++					}
++				}
+ 				if ( cdata(CDATA_POWER_GAUGE, dmghp_charid) >= 96 ) {
+ 					cdata(CDATA_POWER_GAUGE, dmghp_charid) = 96
+ 				}
+ 			}
+ 		}
+@@ -5863,10 +5879,15 @@
+ 				if ( cdata(CDATA_ID, dmghp_charid) == CREATURE_ID_TALON_SOLDIER ) {
+ 					if ( cdata(CDATA_EVOLUTION_STAGE, dmghp_charid) != 0 ) {
+ 						locvar_dmghp_pgauge(dmghp_charid) += 2
+ 					}
+ 				}
++				if ( cdata(CDATA_ALLIED, dmghp_charid) == 100 | dmghp_charid == CHARA_PLAYER ) {
++					if ( cdata(CDATA_ROLE_RESTOCK, dmghp_charid) > 0 ) {
++						cdata(CDATA_POWER_GAUGE, dmghp_charid) += 1
++					}
++				}
+ 				if ( cdata(CDATA_POWER_GAUGE, dmghp_charid) >= 196 ) {
+ 					cdata(CDATA_POWER_GAUGE, dmghp_charid) = 196
+ 				}
+ 			}
+ 		}
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/chat.hsp ../2.13-borscht/chat.hsp
+--- ../2.12-borscht/chat.hsp	2022-04-25 14:22:00.423955800 -0700
++++ ../2.13-borscht/chat.hsp	2022-06-25 22:26:49.150487500 -0700
+@@ -163,10 +163,13 @@
+ 	if ( cdata(CDATA_ROLE, tc) >= (1000 /*!!!@[ROLE_SHOP_MIN @@@ ROLE_SHOP_WEAPON]@!!! */) & cdata(CDATA_ROLE, tc) < (2000 /*!!!@[ROLE_GUEST_BEGGAR @@@ ROLE_GUEST_MIN]@!!! */) | cdata(CDATA_ROLE, tc) == ROLE_GUEST_MERCHANT ) {
+ 		bkrestock = cdata(CDATA_ROLE_RESTOCK, tc)
+ 		invfile = cdata(CDATA_ROLE_FILE_ID, tc)
+ 		gosub *shop_init
+ 		if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= bkrestock ) {
++			cbitmod CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, tc, TRUE
++		}
++		if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= bkrestock ) {
+ 			if ( cdata(CDATA_ROLE, tc) != ROLE_SHOP_BOOK_RESERVE ) {
+ 				if ( dbg_noautosave == 0 & gdata(GDATA_WIZARD) == 0 ) {
+ 					if ( gdata(GDATA_AREA) != AREA_PET_ARENA & gdata(GDATA_AREA) != AREA_SHOW_HOUSE ) {
+ 						if ( cbit(CHARA_BIT_EVENT_TALK, tc) != TRUE ) {
+ 							gosub *game_save
+@@ -10992,10 +10995,40 @@
+ 						if ( cnt == 931 ) {
+ 							if ( gdata(GDATA_FLAG_LEOLD_LOCATION_STATE) >= 6 ) {
+ 								f = 1
+ 							}
+ 						}
++						if ( cnt == 1259 ) {
++							if ( gdata(GDATA_FLAG_CASINO) >= 2 ) {
++								f = 1
++							}
++						}
++						if ( cnt == 1258 ) {
++							if ( gdata(GDATA_FLAG_CASINO) >= 2 ) {
++								f = 1
++							}
++						}
++						if ( cnt == 1257 ) {
++							if ( gdata(GDATA_FLAG_CASINO) >= 2 ) {
++								f = 1
++							}
++						}
++						if ( cnt == 1256 ) {
++							if ( gdata(GDATA_FLAG_CASINO) >= 2 ) {
++								f = 1
++							}
++						}
++						if ( cnt == 890 ) {
++							if ( gdata(GDATA_FLAG_CASINO) >= 3 ) {
++								f = 1
++							}
++						}
++						if ( cnt == 637 ) {
++							if ( gdata(GDATA_FLAG_CASINO) >= 4 ) {
++								f = 1
++							}
++						}
+ 						if ( cnt == 662 ) {
+ 							if ( gdata(GDATA_FLAG_SUB_KAMIKAZE) >= 1000 ) {
+ 								f = 1
+ 							}
+ 						}
+@@ -44679,10 +44712,15 @@
+ 			list(0, listmax) = 55
+ 			listn(0, listmax) = lang("魔法書の予約(要：解読経験)", "I want to reserve book that I have deciphered.")
+ 			listmax++
+ 		}
+ 	}
++	if ( cdata(CDATA_ROLE, tc) == ROLE_SHOP_MAGIC ) {
++		list(0, listmax) = 113
++		listn(0, listmax) = lang("ポーションの栓を分けて欲しい", "I want potion plugs.")
++		listmax++
++	}
+ 	if ( cdata(CDATA_CONDITION_DRUNK, tc) != 0 | 0 ) {
+ 		if ( gdata(GDATA_AREA) != AREA_SHOW_HOUSE ) {
+ 			if ( tc >= MAX_CHARA_FOLLOWER ) {
+ 				if ( evid() == (-1) ) {
+ 					list(0, listmax) = 56
+@@ -49050,10 +49088,24 @@
+ 		else {
+ 			buff = lang("冷やかし" + _ka(1), "You kidding? ")
+ 		}
+ 		goto *chat_default
+ 	}
++	if ( chatval == 113 ) {
++		if ( cbit(CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, tc) == FALSE ) {
++			buff = lang("今は余ってない" + _na(2), "It's not left over now.")
++			goto *chat_default
++		}
++		buff = lang("何に使うのか知らない" + _ga(3) + "…廃棄品なら持って行っていい" + _yo(2), "I don't know what you're going to use it for...Bring what I was supposed to dispose of.")
++		snd SOUNDLIST_TM2_SWITCH001
++		plug = 5 + limit(cdata(CDATA_ROLE_SHOP_LEVEL, tc), 1, 200) / 10
++		gdata(GDATA_FLAG_TOTAL_POTION_PLUGS) += plug
++		txtef COLOR_GREEN
++		txt lang("ポーションの栓を" + plug + "個手に入れた。[残り" + gdata(GDATA_FLAG_TOTAL_POTION_PLUGS) + "個]", name(0) + " get " + plug + " potion plugs.[Remaining plug " + gdata(GDATA_FLAG_TOTAL_POTION_PLUGS) + "]")
++		cbitmod CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, tc, FALSE
++		goto *chat_default
++	}
+ 	if ( chatval == 64 ) {
+ 		invsubroutine = 1
+ 		invctrl = INVCTRL_MATERIAL_ENCHANT, 18
+ 		snd SOUNDLIST_INV
+ 		gosub *com_inventory
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/command.hsp ../2.13-borscht/command.hsp
+--- ../2.12-borscht/command.hsp	2022-04-25 14:22:00.555979200 -0700
++++ ../2.13-borscht/command.hsp	2022-06-25 22:26:49.286613400 -0700
+@@ -2212,11 +2212,11 @@
+ 		listn(0, listmax) = lang("[bit]", "[bit]") + lang("あなたは乗馬に適さない", "You are too weak to carry you.")
+ 		listmax++
+ 	}
+ 	if ( cbit(CHARA_BIT_RES_ELEMENTAL, tc) == TRUE ) {
+ 		list(0, listmax) = 1, 99999
+-		listn(0, listmax) = lang("[bit]", "[bit]") + lang("あなたは属性攻撃で傷つかない", "You are not hurt by attribute attacks.")
++		listn(0, listmax) = lang("[bit]", "[bit]") + lang("あなたはお互いの属性攻撃を中和する", "You neutralize each other's attribute attacks.")
+ 		listmax++
+ 	}
+ 	if ( cbit(CHARA_BIT_SPLIT_NO_EFFECT, tc) == TRUE ) {
+ 		list(0, listmax) = 1, 99999
+ 		listn(0, listmax) = lang("[bit]", "[bit]") + lang("あなたは元気な場合分裂する", "You can split when attacked.")
+@@ -2412,10 +2412,20 @@
+ 	if ( cbit(CHARA_BIT_SHOP_BUSINESS_SMILE, tc) == TRUE ) {
+ 		list(0, listmax) = 1, 99998
+ 		listn(0, listmax) = lang("[営業]", "[SHOP]") + lang("あなたの営業スマイルは完璧だ[悩殺攻撃を会得]", "You got business smile.")
+ 		listmax++
+ 	}
++	if ( cdata(CDATA_ROLE_SHOP_LEVEL, tc) > 0 ) {
++		list(0, listmax) = 1, 99998
++		listn(0, listmax) = lang("[性格]", "[CHARA]") + lang("あなたは" + _seikaku(cdata(CDATA_ROLE_SHOP_LEVEL, tc)) + "だ[マップ開始時の初期パワーゲージ+3]", "You are " + _seikaku(cdata(CDATA_ROLE_SHOP_LEVEL, tc)) + ". [Power gauge +3 at the start of the map]")
++		listmax++
++	}
++	if ( cdata(CDATA_ROLE_RESTOCK, tc) > 0 ) {
++		list(0, listmax) = 1, 99998
++		listn(0, listmax) = lang("[性格]", "[CHARA]") + lang("あなたには" + _seikaku(cdata(CDATA_ROLE_RESTOCK, tc)) + "な一面もある[被ダメージ時にパワーゲージ+1]", "You have a " + _seikaku(cdata(CDATA_ROLE_SHOP_LEVEL, tc)) + " aspect. [Power gauge +1 when damaged]")
++		listmax++
++	}
+ 	if ( dump_return == 1 ) {
+ 		dump_return = 0
+ 		return
+ 	}
+ 	xnotesel buff
+@@ -5795,11 +5805,11 @@
+ 		if ( cdatan(CDATAN_RACE, tc) == "catsister" ) {
+ 			cdata(CDATA_DV_FIX, tc) = 200
+ 		}
+ 	}
+ 	if ( 0 ) {
+-		txt lang(name(tc) + "のDV補正は" + cdata(CDATA_DV_FIX, tc) + "でPC補正は" + cdata(CDATA_PV_FIX, tc) + "。", name(cc) + " fainted after failing to suffer from severe pain.")
++		txt lang(name(tc) + "のDV補正は" + cdata(CDATA_DV_FIX, tc) + "でPV補正は" + cdata(CDATA_PV_FIX, tc) + "。そして使用中のアイテムは" + itemname(cdata(CDATA_AI_ITEM, tc)) + "。", name(cc) + " fainted after failing to suffer from severe pain.")
+ 	}
+ 	if ( cdata(CDATA_ID, tc) == CREATURE_ID_POPPY_THE_LITTLE_DOG ) {
+ 		if ( gdata(GDATA_FLAG_SUB_DOG) >= 1000 ) {
+ 			if ( cbit(CHARA_BIT_GUARD_TEMP, tc) ) {
+ 				cbitmod CHARA_BIT_GUARD_TEMP, tc, FALSE
+@@ -11657,10 +11667,21 @@
+ 					}
+ 					if ( ibit(ITEM_BIT_PRECIOUS, cnt) ) {
+ 						continue
+ 					}
+ 				}
++				if ( invctrl(1) == 26 ) {
++					if ( ibit(ITEM_BIT_ALIVE, cnt) != TRUE ) {
++						continue
++					}
++					if ( inv(INV_ITEM_PARAM1, cnt) >= 15 ) {
++						continue
++					}
++					if ( inv(INV_ITEM_PARAM2, cnt) >= calcexpalive(inv(INV_ITEM_PARAM1, cnt)) ) {
++						continue
++					}
++				}
+ 			}
+ 			if ( invctrl == INVCTRL_PUT ) {
+ 				if ( invctrl(1) == 0 ) {
+ 					if ( gdata(GDATA_AREA) == AREA_LUMIEST | gdata(GDATA_AREA) == AREA_ARCBELC ) {
+ 						if ( inv(INV_ITEM_ID, cnt) != ITEM_ID_ANCIENT_BOOK | inv(INV_ITEM_PARAM2, cnt) == 0 ) {
+@@ -13042,10 +13063,16 @@
+ 				rc = tc
+ 				gosub *chara_item
+ 				if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ITEM_ROD ) {
+ 					cdata(CDATA_AI_ITEM, tc) = ci
+ 				}
++				if ( inv(INV_ITEM_ID, ci) == ITEM_ID_LASER_BAZOOKA | inv(INV_ITEM_ID, ci) == ITEM_ID_M202_SPECIAL | inv(INV_ITEM_ID, ci) == ITEM_ID_PANZERFAUST_X ) {
++					cdata(CDATA_AI_ITEM, tc) = ci
++				}
++				if ( inv(INV_ITEM_ID, ci) == ITEM_ID_CF_POTIOMAN | inv(INV_ITEM_ID, ci) == ITEM_ID_CRUSH_POTIOMAN | inv(INV_ITEM_ID, ci) == ITEM_ID_BATTLE_POTIOMAN | inv(INV_ITEM_ID, ci) == ITEM_ID_SUPER_POTIOMAN ) {
++					cdata(CDATA_AI_ITEM, tc) = ci
++				}
+ 				if ( inv(INV_ITEM_KNOWN, ci) == ITEM_KNOWN_FULL ) {
+ 					inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
+ 				}
+ 				locationweap = 0
+ 				if ( iequiploc(ci) == 10 | iequiploc(ci) == 5 ) {
+@@ -15127,11 +15154,11 @@
+ 	gosub *db_class
+ 	buff = ""
+ 	notesel buff
+ 	procid = (procid + 1) \ 4
+ 	proclist(procid) = "Dump:1" + " ct:" + ct
+-	noteadd "Elona Version " + "6.12" + " キャラクター情報 " + gdata(GDATA_YEAR) + "年" + gdata(GDATA_MONTH) + "月" + gdata(GDATA_DAY) + "日 " + gdata(GDATA_HOUR) + "時" + gdata(GDATA_MIN) + "分  " + mdatan(0)
++	noteadd "Elona Version " + "6.13" + " キャラクター情報 " + gdata(GDATA_YEAR) + "年" + gdata(GDATA_MONTH) + "月" + gdata(GDATA_DAY) + "日 " + gdata(GDATA_HOUR) + "時" + gdata(GDATA_MIN) + "分  " + mdatan(0)
+ 	noteadd ""
+ 	noteadd "  " + fixtxt("" + cdatan(CDATAN_AKA, CHARA_PLAYER) + cdatan(CDATAN_NAME, CHARA_PLAYER), 34) + _sex(cdata(CDATA_SEX, CHARA_PLAYER)) + " " + calcage(0) + "歳" + "  " + cdata(CDATA_HEIGHT, CHARA_PLAYER) + "cm" + " " + cdata(CDATA_WEIGHT, CHARA_PLAYER) + "kg"
+ 	noteadd ""
+ 	noteadd fixtxt("種族       : " + racename, 30) + fixtxt("信仰      : " + godname(cdata(CDATA_GOD, CHARA_PLAYER)), 32)
+ 	noteadd fixtxt("職業       : " + classname, 30) + fixtxt("所属      : " + guildname(), 32)
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/event.hsp ../2.13-borscht/event.hsp
+--- ../2.12-borscht/event.hsp	2022-04-25 14:22:02.510067500 -0700
++++ ../2.13-borscht/event.hsp	2022-06-25 22:26:51.300692900 -0700
+@@ -1924,11 +1924,11 @@
+ 	}
+ 	if ( _switch_val == 2 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		s = lang("魔法使いの夢", "Wizard's Dream")
+ 		file = "bg_re6"
+-		buff = lang("夢の中であなたは赤い髪の魔術師に出会った。「誰じゃ、お主は？ふむ、間違った者の夢に現れてしまったようじゃ。すまぬな。お詫びといってはなんじゃが…」魔法使いは指をくるりと回した。あなたは軽い頭痛を覚えた。", "In your dream, you meet a wizard with a red mustache. \"Who are you? Hmm, I guess I picked up the wrong man's dream. My apology for disturbing your sleep. To make up for this...\" The wizard draws a circle in the air and vanishs. You feel the effects of a faint headache.")
++		buff = lang("夢の中であなたは赤い髪の魔法使いに出会った。「誰じゃ、お主は？ふむ、間違った者の夢に現れてしまったようじゃ。すまぬな。お詫びといってはなんじゃが…」魔法使いは指をくるりと回した。あなたは軽い頭痛を覚えた。", "In your dream, you meet a wizard with a red mustache. \"Who are you? Hmm, I guess I picked up the wrong man's dream. My apology for disturbing your sleep. To make up for this...\" The wizard draws a circle in the air and vanishs. You feel the effects of a faint headache.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("おかしな夢だ", "A weird dream.")
+ 		listmax++
+ 		gosub *re_select
+ 		efid = SKILL_EFFECT_GAIN_SPELL
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/god.hsp ../2.13-borscht/god.hsp
+--- ../2.12-borscht/god.hsp	2022-04-25 14:22:02.521077700 -0700
++++ ../2.13-borscht/god.hsp	2022-06-25 22:26:51.311702900 -0700
+@@ -282,11 +282,11 @@
+ 		buff += lang("ボーナス: 筋力 / 耐久 / 盾 / 重量挙げ / 採掘 / 魔道具<p>", "Bonus   : STR/END/Shield/Weight Lifting/Mining/Magic Device<p>")
+ 		buff += lang("特殊能力: オパートスの甲殻(自動:あらゆる被ダメージを-10%)<p>", "Ability : Opatos' shell (Passive: Reduce any damage you<br>receive.)<p>")
+ 	}
+ 	if ( inv(INV_ITEM_PARAM1, ci) == 6 ) {
+ 		buff = lang("ジュアは癒しの女神です。ジュアを信仰した者は、傷ついた身体を癒すことができます。<p><p>", "Jure is a god of healing. Those faithful to Jure can heal wounds.<p><p>")
+-		buff += lang("　捧げ物: 死体 / 鉱石<p>", "Offering: Corpses/Ores<p>")
++		buff += lang("　捧げ物: 死体 / 花類<p>", "Offering: Corpses/Flowers<p>")
+ 		buff += lang("ボーナス: 意志 / 治癒 / 瞑想 / 解剖学 / 料理 / 魔道具 / 魔力の限界<p>", "Bonus   : WIL/Healing/Anatomy/Cooking/Magic Device/Magic Capacity<p>")
+ 		buff += lang("特殊能力: ジュアの祈り(スキル:失った体力を回復)<p>", "Ability : Prayer of Jure (Heal yourself.)<p>")
+ 	}
+ 	if ( inv(INV_ITEM_PARAM1, ci) == 7 ) {
+ 		buff = lang("クミロミは収穫の神です。クミロミを信仰した者は、大地の恵みを収穫し、それを加工する術を知ります。<p><p>", "Kumiromi is a god of harvest. Those faithful to Kumiromi receive<br>the blessings of nature.<p><p>")
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/help.hsp ../2.13-borscht/help.hsp
+--- ../2.12-borscht/help.hsp	2022-04-25 14:22:02.594054700 -0700
++++ ../2.13-borscht/help.hsp	2022-06-25 22:26:51.396781500 -0700
+@@ -5351,11 +5351,11 @@
+ 	}
+ 	if ( mode == MODELIST_QUICK_START ) {
+ 		repeat 9
+ 			gdata(STARTING_GDATA_RANK + cnt) = 5000
+ 		loop
+-		gdata(GDATA_VERSION) = int(double("6.12") * 1000)
++		gdata(GDATA_VERSION) = int(double("6.13") * 1000)
+ 		gdata(STARTING_GDATA_SHORTCUT + 1) = 424
+ 		gdata(STARTING_GDATA_SHORTCUT + 2) = 300
+ 		gdata(STARTING_GDATA_SHORTCUT + 3) = 631
+ 		gdata(GDATA_COUNT_SHOP) = 1000
+ 		gdata(GDATA_COUNT_SHELTER) = 100
+@@ -5958,11 +5958,11 @@
+ 		gdata(GDATA_AREA) = AREA_HOME
+ 		gdata(GDATA_HOME_LEVEL) = 0
+ 		gosub *setArea
+ 		gdata(GDATA_LEVEL) = 1
+ 		gdata(GDATA_LEVEL_START_ON) = 4
+-		gdata(GDATA_VERSION) = int(double("6.12") * 1000)
++		gdata(GDATA_VERSION) = int(double("6.13") * 1000)
+ 		gdata(GDATA_WEATHER) = WEATHER_RAIN, 6
+ 		repeat 20
+ 			gdata(STARTING_GDATA_RANK + cnt) = 10000
+ 		loop
+ 		gosub *adv_init
+@@ -7767,11 +7767,11 @@
+ 		goto *pc_turn_init_WHILE1
+ 	}
+ 
+ *pc_turn_init_WEND1
+ 	if ( dbg_titleinfo ) {
+-		title "ElonaPlus 2.12" + " ver " + "6.12" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
++		title "ElonaPlus 2.13" + " ver " + "6.13" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
+ 	}
+ 	if ( trait(TRAIT_ETHER_ADDICTED_POTION) != 0 ) {
+ 		if ( rnd(5) == 0 ) {
+ 			inv_getheader 0
+ 			ci = rnd(invrange) + invhead
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/init.hsp ../2.13-borscht/init.hsp
+--- ../2.12-borscht/init.hsp	2022-04-25 14:22:02.786142000 -0700
++++ ../2.13-borscht/init.hsp	2022-06-25 22:26:51.559932700 -0700
+@@ -3290,17 +3290,17 @@
+ 	if ( 628 < 600 ) {
+ 		skillencdesc(SKILL_SPACT_CHANGE) = lang("", "")
+ 	}
+ 	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_DRAW_CHARGE) = SKILL_ATTR_MAG, SKILL_TYPE_SP, 1, TARGET_TYPE_SELF_ONLY, 0
+ 	skillname(SKILL_SPACT_DRAW_CHARGE) = lang("魔力の抽出", "Draw Charge")
+-	skilldesc(SKILL_SPACT_DRAW_CHARGE) = lang("杖から魔力抽出", "Draw charges")
++	skilldesc(SKILL_SPACT_DRAW_CHARGE) = lang("杖の使用回数を充填用魔力に変換", "Destroy a rod and gain recharge powers")
+ 	if ( 629 < 600 ) {
+ 		skillencdesc(SKILL_SPACT_DRAW_CHARGE) = lang("", "")
+ 	}
+ 	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_FILL_CHARGE) = SKILL_ATTR_MAG, SKILL_TYPE_SP, 10, TARGET_TYPE_SELF_ONLY, 0
+ 	skillname(SKILL_SPACT_FILL_CHARGE) = lang("魔力の充填", "Fill Charge")
+-	skilldesc(SKILL_SPACT_FILL_CHARGE) = lang("充填", "Restore charges")
++	skilldesc(SKILL_SPACT_FILL_CHARGE) = lang("充填用魔力をアイテムの使用回数に変換", "Item charge by recharge powers")
+ 	if ( 630 < 600 ) {
+ 		skillencdesc(SKILL_SPACT_FILL_CHARGE) = lang("", "")
+ 	}
+ 	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_SWARM) = SKILL_ATTR_STR, SKILL_TYPE_SP, 27, TARGET_TYPE_SELF_ONLY, 220
+ 	skillname(SKILL_SPACT_SWARM) = lang("スウォーム", "Swarm")
+@@ -6305,10 +6305,11 @@
+ 	sndload folder + "semi3.wav", SOUNDLIST_SEMI3
+ 	sndload folder + "semi4.wav", SOUNDLIST_SEMI4
+ 	sndload folder + "semi5.wav", SOUNDLIST_SEMI5
+ 	sndload folder + "crash14.wav", SOUNDLIST_CRASH14
+ 	sndload folder + "whistle00.wav", SOUNDLIST_WHISTLE00
++	sndload folder + "gun10.wav", SOUNDLIST_GUN10
+ 	folder = exedir + "user\\sound\\"
+ 	sndload folder + "se0.wav", SOUNDLIST_USER_SE00
+ 	sndload folder + "se1.wav", SOUNDLIST_USER_SE01
+ 	sndload folder + "se2.wav", SOUNDLIST_USER_SE02
+ 	sndload folder + "se3.wav", SOUNDLIST_USER_SE03
+@@ -8301,10 +8302,16 @@
+ 	}
+ 	if ( en ) {
+ 		_dengon = "none", "Cooperation", "Invitation", "Confession", "Cheering", "Contempt"
+ 	}
+ 	if ( jp ) {
++		_seikaku = "未設定", "陽気", "慎重", "献身的", "豪快", "自信家", "謙虚", "寡黙", "勤勉", "純真", "繊細", "温厚", "情熱的", "意地悪", "スケベ", "皮肉屋", "冷徹", "好戦的", "腹黒", "偏執的", "頑固", "守銭奴", "怠惰", "アホ", "能天気", "気分屋", "卑怯", "高慢", "臆病", "陰鬱", "猟奇的", "お茶目", "内気", "神経質", "下品", "天邪鬼", "気丈"
++	}
++	if ( en ) {
++		_seikaku = "none", "Cheerful", "Carefully", "Devoted", "Lively", "Confident", "Humility", "Quiet", "Diligence", "Innocent", "Delicate", "Gentle", "Passionate", "Evil", "Lewd", "Cynic", "Ruthless", "Warlike", "Corrupt", "Paranodic", "Stubborn", "Miser", "Lazy", "Stupid", "Carefree", "Whimsical", "Despicable", "Arrogance", "Cowardly", "Gloomy", "Bizarre", "Playful", "Shy", "Nervous", "Vulgar", "Perversity", "Courageous"
++	}
++	if ( jp ) {
+ 		_homename = "洞窟", "森のほったて小屋", "住み心地のいい家", "セレブ邸", "サイバーハウス", "小城", "宮殿"
+ 		_bookself = "紙屑同然の", "素人丸出しの", "ありきたりな", "光るものがある", "いい感じの", "納得いく", "至高の"
+ 		_bookselfs = "紙屑同然の本", "素人丸出しの本", "ありきたりな本", "光るものがある本", "いい感じの本", "納得いく本", "至高の本"
+ 		_furniture = "", "みすぼらしい", "気になる", "いい感じの", "マダム殺しの", "思わず見入りそうな", "マニア向けの", "凄く華麗な", "王家御用達の", "芸術的な", "神々しい", "世界最高の"
+ 		_weight = "超ミニに", "小振りに", "手ごろに", "やや大きく", "どでかく", "かなり巨大に", "化け物サイズに", "人より大きく", "伝説的サイズに", "象より重く"
+@@ -19700,11 +19707,11 @@
+ 	dim floorstack, 400
+ 	sdim key_list, 2, 20
+ 	sdim playerheader, 100
+ 	sdim artifactlocation
+ 	sdim newsbuff
+-	sdim soundfile, 30, 301
++	sdim soundfile, 30, 302
+ 	sdim musicfile, 30, 137 + 5
+ 	dim slight, inf_screenw + 4, inf_screenh + 4
+ 	dim slightbk, inf_screenw + 4, inf_screenh + 4
+ 	gsel BUFFER_INF
+ 	gmode 0
+@@ -19849,11 +19856,11 @@
+ 		goto *exit_game
+ 	}
+ 	else {
+ 		errorhack++
+ 	}
+-	buf = "HspError " + wparam + " WinError " + GetLastError() + " Ver " + int(double("6.12") * 1000) + " Mode " + mode + "\n"
++	buf = "HspError " + wparam + " WinError " + GetLastError() + " Ver " + int(double("6.13") * 1000) + " Mode " + mode + "\n"
+ 	buf += "efId " + efid + " efP " + efp + " Area " + gdata(GDATA_AREA) + "/" + gdata(GDATA_LEVEL) + "\n"
+ 	buf += "ci "
+ 	if ( ci < 200 ) {
+ 		buf += "0"
+ 		if ( ci >= 0 ) {
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/item.hsp ../2.13-borscht/item.hsp
+--- ../2.12-borscht/item.hsp	2022-04-25 14:22:02.867035900 -0700
++++ ../2.13-borscht/item.hsp	2022-06-25 22:26:51.648013800 -0700
+@@ -2147,10 +2147,13 @@
+ 			if ( inv(INV_ITEM_COL, ci) == 29 ) {
+ 				inv(INV_ITEM_COL, ci) = 28
+ 			}
+ 		}
+ 	}
++	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_SPIRITIUM ) {
++		inv(INV_ITEM_PARAM1, ci) = rnd(36) + 1
++	}
+ 	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_BOTTLE_DYE ) {
+ 		inv(INV_ITEM_COL, ci) = rnd(31)
+ 	}
+ 	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_RED_BOOK ) {
+ 		if ( inv(INV_ITEM_PARAM1, ci) == 0 ) {
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/item_func.hsp ../2.13-borscht/item_func.hsp
+--- ../2.12-borscht/item_func.hsp	2022-04-25 14:22:02.931004000 -0700
++++ ../2.13-borscht/item_func.hsp	2022-06-25 22:26:51.704065600 -0700
+@@ -880,10 +880,13 @@
+ 		}
+ 	}
+ 	if ( inv(INV_ITEM_ID, itemowner_itemid) == ITEM_ID_MEMORY_FRAGMENT | inv(INV_ITEM_ID, itemowner_itemid) == ITEM_ID_MEMORY_CONVERTER ) {
+ 		locvar_itemowner_s += lang("《" + skillname(inv(INV_ITEM_PARAM1, itemowner_itemid)) + "》の", " <Art of " + skillname(inv(INV_ITEM_PARAM1, itemowner_itemid)) + ">")
+ 	}
++	if ( inv(INV_ITEM_ID, itemowner_itemid) == ITEM_ID_SPIRITIUM ) {
++		locvar_itemowner_s += lang("《" + _seikaku(inv(INV_ITEM_PARAM1, itemowner_itemid)) + "》の", "<" + _seikaku(inv(INV_ITEM_PARAM1, itemowner_itemid)) + "> ")
++	}
+ 	if ( locvar_itemowner_a == 60002 ) {
+ 		if ( inv(INV_ITEM_PARAM1, itemowner_itemid) != 0 ) {
+ 			locvar_itemowner_s += lang(godname(inv(INV_ITEM_PARAM1, itemowner_itemid)) + "の", " <" + godname(inv(INV_ITEM_PARAM1, itemowner_itemid)) + ">")
+ 		}
+ 	}
+@@ -1917,12 +1920,12 @@
+ #deffunc remain_make int remain_make_itemid, int remain_make_arg2
+ 	inv(INV_ITEM_SUB_NAME, remain_make_itemid) = cdata(CDATA_ID, remain_make_arg2)
+ 	inv(INV_ITEM_COL, remain_make_itemid) = (cdata(CDATA_PIC, remain_make_arg2) - cdata(CDATA_CHARA_PIC, remain_make_arg2) * 1000) / 1000
+ 	inv(INV_ITEM_WEIGHT, remain_make_itemid) = cdata(CDATA_WEIGHT, remain_make_arg2) + 1
+ 	if ( inv(INV_ITEM_ID, remain_make_itemid) == ITEM_ID_CORPSE ) {
+-		inv(INV_ITEM_WEIGHT, remain_make_itemid) = limit(inv(INV_ITEM_WEIGHT, remain_make_itemid) / 10 * 200, 100, 50000)
+-		inv(INV_ITEM_VALUE, remain_make_itemid) = limit((inv(INV_ITEM_WEIGHT, remain_make_itemid) + 12000) / 4, 3000, 15000)
++		inv(INV_ITEM_WEIGHT, remain_make_itemid) = limit(inv(INV_ITEM_WEIGHT, remain_make_itemid) / 10 * 500, 500, 50000)
++		inv(INV_ITEM_VALUE, remain_make_itemid) = limit((inv(INV_ITEM_WEIGHT, remain_make_itemid) + 20000) / 7, 2700, 10000)
+ 	}
+ 	else {
+ 		if ( inv(INV_ITEM_ID, remain_make_itemid) == ITEM_ID_GOLDEN_DOLL ) {
+ 			inv(INV_ITEM_WEIGHT, remain_make_itemid) = limit(inv(INV_ITEM_WEIGHT, remain_make_itemid) / 10 * 500, 5000, 100000)
+ 			inv(INV_ITEM_VALUE, remain_make_itemid) = limit((cdata(CDATA_LEVEL, remain_make_arg2) + 30) * 300, 3000, 90000)
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/main.hsp ../2.13-borscht/main.hsp
+--- ../2.12-borscht/main.hsp	2022-04-25 14:22:02.938010500 -0700
++++ ../2.13-borscht/main.hsp	2022-06-25 22:26:51.712073000 -0700
+@@ -181,11 +181,11 @@
+ 	if ( dbg_randseed != 0 ) {
+ 		randseed = dbg_randseed
+ 	}
+ 	randomize randseed
+ 	exrand_randomize randseed
+-	title "ElonaPlus 2.12"
++	title "ElonaPlus 2.13"
+ 	goto *system_init
+ 	goto *label_0003
+ 
+ #deffunc netload str netload_filename
+ 	netrequest netload_filename
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/map.hsp ../2.13-borscht/map.hsp
+--- ../2.12-borscht/map.hsp	2022-04-25 14:22:03.039104400 -0700
++++ ../2.13-borscht/map.hsp	2022-06-25 22:26:51.782137800 -0700
+@@ -521,17 +521,22 @@
+ 		cbitmod CHARA_BIT_MAGNETISM_N_POLE, cnt, FALSE
+ 		if ( gdata(GDATA_AREA) == AREA_WILDERNESS ) {
+ 			gdata(GDATA_FLAG_COLLECTED_WISHES) = 0
+ 		}
+ 		cdata(CDATA_POWER_GAUGE, cnt) = 0
++		if ( cnt < 16 ) {
++			if ( cdata(CDATA_ROLE_SHOP_LEVEL, cnt) > 0 ) {
++				cdata(CDATA_POWER_GAUGE, cnt) = 3
++			}
++		}
+ 		cdata(CDATA_DRAIN_HP, cnt) = 0
+ 		gdata(GDATA_FLAG_MINEFIELD_QUEST_LEVEL) = 0
+ 		if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
+ 			continue
+ 		}
+ 		cdata(CDATA_CONDITION_GRAVITY, cnt) = 0
+-		if ( cnt >= 16 ) {
++		if ( cdata(CDATA_ALLIED, cnt) == 100 ) {
+ 			cdata(CDATA_THIRST, cnt) = 10000 + 1000
+ 		}
+ 		if ( cdata(CDATA_ID, cnt) == CREATURE_ID_LAST_DANCER ) {
+ 			if ( cbit(CHARA_BIT_SANDBAG, cnt) == FALSE ) {
+ 				if ( cdata(CDATA_ALLIED, cnt) == 0 ) {
+@@ -1161,10 +1166,13 @@
+ 			continue
+ 		}
+ 		if ( inv(INV_ITEM_ID, cdata(CDATA_AI_ITEM, cnt)) == ITEM_ID_ROD_LIGHTNING_BALL | inv(INV_ITEM_ID, cdata(CDATA_AI_ITEM, cnt)) == ITEM_ID_ROD_ECLIPSE | inv(INV_ITEM_ID, cdata(CDATA_AI_ITEM, cnt)) == ITEM_ID_ROD_FIRE_WALL | inv(INV_ITEM_ID, cdata(CDATA_AI_ITEM, cnt)) == ITEM_ID_ROD_ACID_GROUND | inv(INV_ITEM_ID, cdata(CDATA_AI_ITEM, cnt)) == ITEM_ID_ROD_LIGHTNING_BOLT | inv(INV_ITEM_ID, cdata(CDATA_AI_ITEM, cnt)) == ITEM_ID_ROD_FIRE_BOLT | inv(INV_ITEM_ID, cdata(CDATA_AI_ITEM, cnt)) == ITEM_ID_ROD_ICE_BOLT | inv(INV_ITEM_ID, cdata(CDATA_AI_ITEM, cnt)) == ITEM_ID_ROD_MAGIC_MISSILE | inv(INV_ITEM_ID, cdata(CDATA_AI_ITEM, cnt)) == ITEM_ID_ROD_POISON_BALL | inv(INV_ITEM_ID, cdata(CDATA_AI_ITEM, cnt)) == ITEM_ID_ROD_MAGIC_LASER | inv(INV_ITEM_ID, cdata(CDATA_AI_ITEM, cnt)) == ITEM_ID_ROD_BUBBLE_BALL ) {
+ 			continue
+ 		}
++		if ( inv(INV_ITEM_ID, cdata(CDATA_AI_ITEM, cnt)) == ITEM_ID_LASER_BAZOOKA | inv(INV_ITEM_ID, cdata(CDATA_AI_ITEM, cnt)) == ITEM_ID_M202_SPECIAL | inv(INV_ITEM_ID, cdata(CDATA_AI_ITEM, cnt)) == ITEM_ID_PANZERFAUST_X | inv(INV_ITEM_ID, cdata(CDATA_AI_ITEM, cnt)) == ITEM_ID_CF_POTIOMAN | inv(INV_ITEM_ID, cdata(CDATA_AI_ITEM, cnt)) == ITEM_ID_CRUSH_POTIOMAN | inv(INV_ITEM_ID, cdata(CDATA_AI_ITEM, cnt)) == ITEM_ID_BATTLE_POTIOMAN | inv(INV_ITEM_ID, cdata(CDATA_AI_ITEM, cnt)) == ITEM_ID_SUPER_POTIOMAN ) {
++			continue
++		}
+ 		cdata(CDATA_AI_ITEM, cnt) = 0
+ 	loop
+ 	repeat 40 - 1, 16
+ 		if ( cdata(CDATA_EXIST, cnt) == CHAR_STATE_ALIVE ) {
+ 			map(cdata(CDATA_X, cnt), cdata(CDATA_Y, cnt), MAP_CHARA_INDEX_PLUS_ONE) = 0
+@@ -9033,11 +9041,10 @@
+ 			}
+ 		}
+ 		if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= mdata(MDATA_RENEW) ) {
+ 			if ( mdata(MDATA_NO_RENEW) == 0 ) {
+ 				if ( mdata(MDATA_RENEW) != 0 ) {
+-					snd SOUNDLIST_AMMO
+ 					if ( gdata(GDATA_AREA) == AREA_DERPHY ) {
+ 						if ( gdata(GDATA_LEVEL) == 3 ) {
+ 							map_reload "thiefguild"
+ 						}
+ 					}
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/proc.hsp ../2.13-borscht/proc.hsp
+--- ../2.12-borscht/proc.hsp	2022-04-25 14:22:03.399927300 -0700
++++ ../2.13-borscht/proc.hsp	2022-06-25 22:26:52.131460900 -0700
+@@ -15487,11 +15487,13 @@
+ 						else {
+ 							txt lang(name(tc) + "に命中した。", "The sand hits " + name(tc) + ".")
+ 						}
+ 					}
+ 					dmghp tc, dmg, cc, ele, elep
+-					cdata(CDATA_CONDITION_SUFFOCATION, tc) += 3
++					if ( cdata(CDATA_CONDITION_SUFFOCATION, tc) == 0 ) {
++						cdata(CDATA_CONDITION_SUFFOCATION, tc)++
++					}
+ 					dmgcon tc, CONDITION_BLIND, 100 + sdata(SKILL_ATTR_CON, cc)
+ 				}
+ 			}
+ 		loop
+ 		goto *effect_end
+@@ -21213,10 +21215,12 @@
+ 				}
+ 				gdata(GDATA_FLAG_WORK_A_REMAINING) = 0
+ 				gdata(GDATA_FLAG_WORK_B_REMAINING) = 0
+ 				gdata(GDATA_FLAG_WORK_C_REMAINING) = 0
+ 				seiton = 4
++				flt
++				itemcreate -1, ITEM_ID_CF_POTIOMAN, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), 0
+ 				gdata(GDATA_FLAG_SUB_SLIME) = 1000
+ 				gdata(GDATA_FLAG_SUB_ROGUE) = 1000
+ 				gdata(GDATA_FLAG_SUB_NIGHTMARE) = 1000
+ 				gdata(GDATA_FLAG_SUB_MOTHER) = 1000
+ 				gdata(GDATA_FLAG_SUB_WIFE) = 1000
+@@ -21269,17 +21273,20 @@
+ 					card(0, cnt)++
+ 				loop
+ 				cdata(CDATA_PIETY, CHARA_PLAYER) = sdata(SKILL_NORMAL_FAITH, CHARA_PLAYER) * 100
+ 				gdata(GDATA_RANK_HOME) = 100
+ 				gdata(GDATA_WORLD_RENEW) = TRUE
+-				gdata(GDATA_YEAR)++
++				gdata(GDATA_YEAR) += 20
+ 				gosub *advance_hour
+ 				gdata(GDATA_GUEST) = 2
+-				gdata(GDATA_WORLD) = AREA_LOST_YLVA
+ 				gdata(GDATA_FLAG_SCROLL_OF_WITCHCRAFT_TOTAL_SPELL_BONUS) += 95
+ 				cdata(CDATA_SKILLPOINT, CHARA_PLAYER) += 95
+ 				gdata(GDATA_FLAG_DESTINY_LETTERS) = 7
++				repeat 16
++					cdata(CDATA_ROLE_SHOP_LEVEL, cnt) = rnd(30) + 1
++					cdata(CDATA_ROLE_RESTOCK, cnt) = rnd(30) + 1
++				loop
+ 				repeat 245
+ 					cdata(CDATA_POWER_GAUGE, cnt) += 52
+ 					cdata(CDATA_DRAIN_HP, cnt) += 52
+ 					cdata(CDATA_WEIGHT, cnt) = 15000
+ 					if ( cnt != 0 ) {
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/screen.hsp ../2.13-borscht/screen.hsp
+--- ../2.12-borscht/screen.hsp	2022-04-25 14:22:03.639116900 -0700
++++ ../2.13-borscht/screen.hsp	2022-06-25 22:26:52.876149900 -0700
+@@ -1002,19 +1002,21 @@
+ 	if ( gdata(GDATA_WIZARD) == 1 ) {
+ 		pos inf_clockw + 6, inf_clocky + 65
+ 		color 0, 0, 0
+ 		bmes "*debug*", 235, 235, 235
+ 	}
+-	if ( gdata(GDATA_FLAG_DESTINY_LETTERS) < 7 ) {
+-		pos inf_clockw + 80, inf_clocky + 17
+-		color 0, 0, 0
+-		bmes _biyori(gdata(GDATA_FLAG_STUDY_BONUS_KIND)) + " / " + _destiny(gdata(GDATA_FLAG_DESTINY_LETTERS)), 255, 255, 255
+-	}
+-	else {
+-		pos inf_clockw + 80, inf_clocky + 17
+-		color 0, 80, 180
+-		bmes _biyori(gdata(GDATA_FLAG_STUDY_BONUS_KIND)) + " / " + _destiny(gdata(GDATA_FLAG_DESTINY_LETTERS)), 255, 255, 255
++	if ( casino == 0 ) {
++		if ( gdata(GDATA_FLAG_DESTINY_LETTERS) < 7 ) {
++			pos inf_clockw + 80, inf_clocky + 17
++			color 0, 0, 0
++			bmes _biyori(gdata(GDATA_FLAG_STUDY_BONUS_KIND)) + " / " + _destiny(gdata(GDATA_FLAG_DESTINY_LETTERS)), 255, 255, 255
++		}
++		else {
++			pos inf_clockw + 80, inf_clocky + 17
++			color 0, 80, 180
++			bmes _biyori(gdata(GDATA_FLAG_STUDY_BONUS_KIND)) + " / " + _destiny(gdata(GDATA_FLAG_DESTINY_LETTERS)), 255, 255, 255
++		}
+ 	}
+ 	if ( cdata(CDATA_FRIENDSHIP, CHARA_PLAYER) == (-2) ) {
+ 		pos inf_clockw + 6, inf_clocky + 50
+ 		color 0, 0, 0
+ 		if ( jp ) {
+@@ -3365,10 +3367,14 @@
+ 		_switch_sw = 0
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 61 | _switch_sw ) {
+ 		_switch_sw = 0
++		_switch_sw++
++	}
++	if ( _switch_val == 62 | _switch_sw ) {
++		_switch_sw = 0
+ 		if ( synccheck(cc, -1) == 0 ) {
+ 			goto *anime_SWEND1
+ 		}
+ 		gsel BUFFER_ITEM
+ 		color 0
+@@ -4146,10 +4152,62 @@
+ 						}
+ 					}
+ 				}
+ 			}
+ 		}
++		if ( animeid == ANIMATION_LASER_BAZOOKA ) {
++			gsel BUFFER_ITEM
++			color 0
++			boxf 0, 960, chipi(CHIPI_WIDTH, xy2pic(1, 36)), chipi(CHIPI_HEIGHT, xy2pic(1, 36)) + 960
++			if ( 1189 == 528 ) {
++				gmode 2
++				pos 0, 960
++				gcopy BUFFER_ITEM, 0, 768, inf_tiles, inf_tiles
++				pos 0, 1008
++				gzoom 22, 20, 5, chipc(CHIPC_X, xy2pic(0, 0)) + 8, chipc(CHIPC_Y, xy2pic(0, 0)) + 4 + (chipc(CHIPC_HEIGHT, xy2pic(0, 0)) > inf_tiles) * 8, chipc(CHIPC_WIDTH, xy2pic(0, 0)) - 16, chipc(CHIPC_HEIGHT, xy2pic(0, 0)) - 8 - (chipc(CHIPC_HEIGHT, xy2pic(0, 0)) > inf_tiles) * 10, 1
++				pos 6, 974
++				gcopy BUFFER_ITEM, 0, 1008, 22, 20
++				gsel selcur
++			}
++			else {
++				if ( 1189 == 1119 ) {
++					pos 0, 1055 - chipc(CHIPC_HEIGHT, xy2pic(0, 0))
++					gcopy BUFFER_CHR, chipc(CHIPC_X, xy2pic(0, 0)), chipc(CHIPC_Y, xy2pic(0, 0)), chipc(CHIPC_WIDTH, xy2pic(0, 0)), chipc(CHIPC_HEIGHT, xy2pic(0, 0))
++					gmode 2
++					gsel selcur
++				}
++				else {
++					if ( 1189 == 1206 ) {
++						pos 0, 1055 - chipc(CHIPC_HEIGHT, xy2pic(0, 0))
++						gcopy BUFFER_CHR, chipc(CHIPC_X, xy2pic(0, 0)), chipc(CHIPC_Y, xy2pic(0, 0)), chipc(CHIPC_WIDTH, xy2pic(0, 0)), chipc(CHIPC_HEIGHT, xy2pic(0, 0))
++						gfini chipi(CHIPI_WIDTH, xy2pic(1, 36)), chipi(CHIPI_HEIGHT, xy2pic(1, 36))
++						gfdec2 0, 0, 255
++						gsel selcur
++					}
++					else {
++						if ( 1189 == 531 ) {
++							pos 8, 1058 - chipc(CHIPC_HEIGHT, xy2pic(0, 0))
++							gcopy BUFFER_CHR, chipc(CHIPC_X, xy2pic(0, 0)) + 8, chipc(CHIPC_Y, xy2pic(0, 0)) + 2, chipc(CHIPC_WIDTH, xy2pic(0, 0)) - 16, chipc(CHIPC_HEIGHT, xy2pic(0, 0)) - 8
++							gmode 4, , , 150
++							color 0, 0, 0
++							pos 0, 960 + (chipc(CHIPC_HEIGHT, xy2pic(0, 0)) == inf_tiles) * 48
++							gcopy BUFFER_ITEM, 144, 768 + (chipc(CHIPC_HEIGHT, xy2pic(0, 0)) > inf_tiles) * 48, inf_tiles, chipc(CHIPC_HEIGHT, xy2pic(0, 0)) + (chipc(CHIPC_HEIGHT, xy2pic(0, 0)) > inf_tiles) * 48 * 0
++							gmode 2
++							gsel selcur
++						}
++						else {
++							pos 0, 960
++							gcopy BUFFER_ITEM, chipi(CHIPI_X, xy2pic(1, 36)), chipi(CHIPI_Y, xy2pic(1, 36)), chipi(CHIPI_WIDTH, xy2pic(1, 36)), chipi(CHIPI_HEIGHT, xy2pic(1, 36))
++							gfini chipi(CHIPI_WIDTH, xy2pic(1, 36)), chipi(CHIPI_HEIGHT, xy2pic(1, 36))
++							gfdec2 c_col(0, COLOR_DEFAULT), c_col(1, COLOR_DEFAULT), c_col(2, COLOR_DEFAULT)
++							gsel selcur
++							snd SOUNDLIST_GUN10
++						}
++					}
++				}
++			}
++		}
+ 		if ( animeid == ANIMATION_UNUSED1 ) {
+ 			gsel BUFFER_ITEM
+ 			color 0
+ 			boxf 0, 960, chipi(CHIPI_WIDTH, xy2pic(1, 0)), chipi(CHIPI_HEIGHT, xy2pic(1, 0)) + 960
+ 			if ( 1 == 528 ) {
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/system.hsp ../2.13-borscht/system.hsp
+--- ../2.12-borscht/system.hsp	2022-04-25 14:22:03.671146700 -0700
++++ ../2.13-borscht/system.hsp	2022-06-25 22:26:52.907178600 -0700
+@@ -38,11 +38,11 @@
+ 	}
+ 	gdata(GDATA_TEMPORARY_FLAGS2) = 0
+ 	return
+ 
+ *fixSave
+-	if ( gdata(GDATA_VERSION) != int(double("6.12") * 1000) ) {
++	if ( gdata(GDATA_VERSION) != int(double("6.13") * 1000) ) {
+ 		dialog lang("Ver." + gdata(GDATA_VERSION) + "のセーブデータをアップデートします。", "Updating your save data from Ver." + gdata(GDATA_VERSION) + " now.")
+ 	}
+ 	if ( gdata(GDATA_HEIR_DEED) < 0 ) {
+ 		gdata(GDATA_HEIR_DEED) = 1
+ 	}
+@@ -813,15 +813,15 @@
+ 		gdata(GDATA_FLAG_ABYSS_POWER) = gdata(GDATA_FLAG_ABYSS_POWER) * 20
+ 		if ( gdata(GDATA_FLAG_ABYSS_POWER) > 100000 ) {
+ 			gdata(GDATA_FLAG_ABYSS_POWER) = 100000
+ 		}
+ 	}
+-	if ( gdata(GDATA_VERSION) != int(double("6.12") * 1000) ) {
++	if ( gdata(GDATA_VERSION) != int(double("6.13") * 1000) ) {
+ 		gdata(GDATA_WORLD_RENEW) = TRUE
+ 	}
+ 	del_chara 56
+-	if ( gdata(GDATA_VERSION) > int(double("6.12") * 1000) ) {
++	if ( gdata(GDATA_VERSION) > int(double("6.13") * 1000) ) {
+ 		dialog "invalid version"
+ 		goto *exit_game
+ 	}
+ 	if ( gdata(GDATA_PLAY_TIME) < 0 ) {
+ 		gdata(GDATA_PLAY_TIME) = 0
+@@ -871,11 +871,11 @@
+ 		if ( gdata(GDATA_GAMEMODE_PENALTY) == 1 ) {
+ 			gdata(GDATA_GAMEMODE_PENALTY) = 0
+ 			snd SOUNDLIST_ENC
+ 		}
+ 	}
+-	gdata(GDATA_VERSION) = int(double("6.12") * 1000)
++	gdata(GDATA_VERSION) = int(double("6.13") * 1000)
+ 	cbitmod CHARA_BIT_PCC, CHARA_PLAYER, TRUE
+ 	gdata(GDATA_SPEEDSUM_RESET) = 1
+ 	gosub *initial_recipe
+ 	return
+ 
+@@ -3338,11 +3338,11 @@
+ 		pos x, y
+ 		mesbox inputlog, 600, 0, 5, val(2) * (1 + en)
+ 		pos x + 4, y + 4
+ 		gfini dx - 1, 35
+ 		gfdec 60, 60, 60
+-		aplsel "ElonaPlus 2.12"
++		aplsel "ElonaPlus 2.13"
+ 		if ( stat == 1 ) {
+ 			dialog "Failed to get WINDOW ID", 1
+ 			clrobj 1
+ 			cfg_msg_box = 0
+ 			goto *prompt_word
+@@ -3701,11 +3701,11 @@
+ 
+ *game_debug
+ 	notesel dbm
+ 	buff = ""
+ 	if ( dbm == "" ) {
+-		noteadd "ElonaPlus 2.12" + " v" + "6.12" + " Debug Console    Type \"?\" for help. Hit ESC to exit."
++		noteadd "ElonaPlus 2.13" + " v" + "6.13" + " Debug Console    Type \"?\" for help. Hit ESC to exit."
+ 		noteadd ""
+ 	}
+ 	font lang(cfg_font1, cfg_font2), 14 - en * 2, 0
+ 	objmode 2
+ 	pos 0, 24
+@@ -4112,11 +4112,11 @@
+ 	objprm 1, dbm
+ 	objprm 2, ""
+ 	return
+ 
+ *mutexobj
+-	CreateMutexA 0, 0, "ElonaPlus 2.12"
++	CreateMutexA 0, 0, "ElonaPlus 2.13"
+ 	mutex_handle = stat
+ 	func_3
+ 	if ( stat == 183 ) {
+ 		dialog lang("二重起動のため終了します。", "The program is already running."), 1
+ 		end
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/txtadv.hsp ../2.13-borscht/txtadv.hsp
+--- ../2.12-borscht/txtadv.hsp	2022-04-25 14:22:03.727198700 -0700
++++ ../2.13-borscht/txtadv.hsp	2022-06-25 22:26:52.968235200 -0700
+@@ -340,10 +340,11 @@
+ 	atxid = 0
+ 	exittempinv
+ 	await 100
+ 	snd SOUNDLIST_POP3
+ 	gosub *music_play
++	casino = 0
+ 	return
+ 
+ *atx_RE
+ 	atxap = 10
+ 	atxspot = ATX_GENERAL1
+@@ -672,10 +673,11 @@
+ 	txtadvscreenupdate = 1
+ 	gosub *com_txtadv_loop
+ 	goto *com_txtAdvQuit
+ 
+ *adv_casinoCard
++	casino = 1
+ 	atxbg = "bg14"
+ 	mattile = -1
+ 	atxinfon(0) = lang("カジノ《フォーチュンクッキー》", "Casino <<Fortune Cookie>>")
+ 	atxinit
+ 	noteadd lang("カジノ《フォーチュンクッキー》へようこそ。", "Welcome to the casino, Fortune cookie!")
+@@ -709,17 +711,21 @@
+ 		goto *adv_casinoBlackJack
+ 	}
+ 	goto *adv_casinoCard
+ 
+ *adv_casinoBlackJack
++	ikasama = 0
++	keihin = 0
++	ikasamalv = 0
+ 	atxinit
+ 	noteadd lang("ブラックジャックは、カードの合計を21に近づけるゲームです。", "In Blackjack, the hand with the highest total wins as long as it")
+ 	noteadd lang("J,Q,Kは10に、Aは1または11に数えられます。21を越えると負けです。", "doesn't exceed 21. J,Q,K are counted as 10 and A is counted as 1 or 11.")
+ 	noteadd lang("では、賭けるチップを宣言してください。", "More bets means better rewards.")
+ 	noteadd lang("チップが多いほど、景品の質があがります。", "How many tips would you like to bet?")
+ 	atxinfon(1) = lang("カジノチップ残り " + mat(1) + "枚\n", "Casino chips left: " + mat(1) + "\n")
+ 	atxinfon(2) = ""
++	atxinfon(3) = ""
+ 	if ( mat(1) <= 0 ) {
+ 		noteadd ""
+ 		noteadd lang("お客様はチップをもっていません。", "Sorry sir, you don't seem to have casino chips.")
+ 	}
+ 	list(0, listmax) = 0
+@@ -820,12 +826,15 @@
+ 			}
+ 			if ( winner == 1 ) {
+ 				noteadd lang("おめでとうございます。あなたの勝ちです。", "Congratulations, you win.")
+ 			}
+ 		}
++		ikasama = rnd(40) + ikasamalv * ikasamalv * 5
++		keihin = stake + winrow * 2
+ 		atxinfon(1) = lang("カジノチップ残り " + mat(1) + "枚\n", "Casino chips left: " + mat(1) + "\n")
+ 		atxinfon(2) = lang("賭けチップ " + stake + "枚 現在" + winrow + "連勝中", "Bets: " + stake + " Wins: " + winrow + "")
++		atxinfon(3) = lang("イカサマ警戒Lv" + ikasama + " 景品Lv" + keihin + "　", "Alert-Lv: " + ikasama + " Rewards-Lv: " + keihin + "")
+ 		if ( cardround == (-1) ) {
+ 			if ( winner == 1 ) {
+ 				winrow++
+ 			}
+ 			if ( winner != 0 ) {
+@@ -894,25 +903,18 @@
+ 		}
+ 		if ( rtval == 2 ) {
+ 			trashcard lastcard(1)
+ 			servecard 1
+ 			opencard2 stat
+-			p = 20
+-			if ( stake >= 5 ) {
+-				p = 40
+-			}
+-			if ( stake >= 10 ) {
+-				p = 50
+-			}
+-			if ( stake >= 20 ) {
+-				p = 60
+-			}
++			p = ikasama
++			ikasamalv++
+ 			if ( rnd(sdata(SKILL_ATTR_DEX, CHARA_PLAYER)) < rnd(p) ) {
+ 				atxinit
+ 				noteadd lang("イカサマだ！", "Cheater!")
+ 				atxinfon(1) = lang("カジノチップ残り " + mat(1) + "枚\n", "Casino chips left: " + mat(1) + "\n")
+ 				atxinfon(2) = lang("賭けチップ " + stake + "枚 現在" + winrow + "連勝中", "Bets: " + stake + " Wins: " + winrow + "")
++				atxinfon(3) = lang("イカサマ警戒Lv" + ikasama + " 景品Lv" + keihin + "　", "Alert-Lv: " + ikasama + " Rewards-Lv: " + keihin + "")
+ 				winrow = 0
+ 				txt lang("イカサマが見つかってしまった…", "You are caught in cheating...")
+ 				modkarma 0, -5
+ 				list(0, listmax) = 0
+ 				listn(0, listmax) = lang("濡れ衣だ！", "I didn't do it!")
+@@ -931,70 +933,162 @@
+ 		}
+ 		cardround++
+ 	loop
+ 	if ( winrow > 0 ) {
+ 		atxinit
+-		noteadd lang("おめでとうございます。あなたは" + winrow + "連勝しました。", "Congratulations! You've won " + winrow + " times in a row.")
++		noteadd lang("おめでとうございます。景品Lvは" + keihin + "でした。", "Congratulations! Your Rewards-Lv was " + keihin + "!")
+ 		repeat 1
+ 			i = 2
+-			if ( winrow > 2 ) {
++			if ( keihin >= 7 ) {
+ 				i = 3
+ 			}
+-			if ( winrow > 7 ) {
+-				if ( stake >= 5 ) {
+-					i = 4
+-				}
+-			}
+-			if ( winrow > 5 ) {
+-				if ( stake >= 10 ) {
+-					i = 4
+-				}
++			if ( keihin >= 14 ) {
++				i = 4
+ 			}
+-			if ( winrow > 15 ) {
+-				if ( stake >= 15 ) {
+-					i = 5
+-				}
++			if ( keihin >= 21 ) {
++				i = 4
+ 			}
+-			if ( winrow > 10 ) {
+-				if ( stake >= 20 ) {
+-					i = 5
+-				}
++			if ( keihin >= 28 ) {
++				i = 5
+ 			}
+-			flt calcobjlv(rnd(stake + winrow * 2) + winrow * 3 / 2 + stake / 2), i
++			flt calcobjlv(rnd(keihin + 1) + keihin), i
+ 			flttypemajor = fsetwear(rnd(length(fsetwear)))
+ 			itemcreate -1, ITEM_ID_DUMMY, -1, -1, 0
+ 			if ( inv(INV_ITEM_NUM, ci) == 0 ) {
+ 				continue cnt
+ 			}
+ 		loop
+ 		snd SOUNDLIST_GET3
+ 		noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
+-		if ( stake + winrow * 3 >= 25 ) {
+-			flt
+-			itemcreate -1, ITEM_ID_SCROLL_FAITH, -1, -1, 0
+-			snd SOUNDLIST_GET3
+-			noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
+-		}
+-		if ( stake + winrow * 3 >= 35 ) {
+-			flt
+-			itemcreate -1, ITEM_ID_BLANK_BUSINESS_CARD, -1, -1, 0
+-			snd SOUNDLIST_GET3
+-			noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
+-		}
+-		if ( stake + winrow * 3 >= 40 ) {
+-			flt
+-			itemcreate -1, ITEM_ID_POTION_POTENTIAL, -1, -1, 0
+-			snd SOUNDLIST_GET3
+-			noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
+-		}
+-		if ( winrow > 3 ) {
+-			if ( rnd(50) < winrow * 5 + 20 ) {
++		if ( gdata(GDATA_FLAG_RARE_DROP) == 100 ) {
++			if ( keihin >= 5 ) {
++				flt
++				itemcreate -1, ITEM_ID_GIFT, -1, -1, 0
++				snd SOUNDLIST_GET3
++				noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++			}
++			if ( keihin >= 9 ) {
+ 				flt
+ 				itemcreate -1, ITEM_ID_POTION_CURE_CORRUPTION, -1, -1, 0
+ 				snd SOUNDLIST_GET3
+ 				noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
+ 			}
++			if ( keihin >= 11 ) {
++				flt
++				itemcreate -1, ITEM_ID_UNICORN_HORN, -1, -1, 0
++				snd SOUNDLIST_GET3
++				noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++			}
++			if ( keihin >= 13 ) {
++				flt
++				itemcreate -1, ITEM_ID_BLANK_BUSINESS_CARD, -1, -1, 0
++				snd SOUNDLIST_GET3
++				noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++			}
++			if ( keihin >= 15 ) {
++				flt
++				itemcreate -1, ITEM_ID_SCROLL_FAITH, -1, -1, 0
++				snd SOUNDLIST_GET3
++				noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++			}
++			if ( keihin >= 17 ) {
++				flt
++				itemcreate -1, ITEM_ID_POTION_WISDOM, -1, -1, 0
++				snd SOUNDLIST_GET3
++				noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++			}
++			if ( keihin >= 19 ) {
++				flt
++				itemcreate -1, ITEM_ID_GOLDEN_MEAD, -1, -1, 0
++				snd SOUNDLIST_GET3
++				noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++			}
++			if ( keihin >= 23 ) {
++				flt
++				itemcreate -1, ITEM_ID_POTION_POTENTIAL, -1, -1, 0
++				snd SOUNDLIST_GET3
++				noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++			}
++			if ( keihin >= 25 ) {
++				flt
++				itemcreate -1, ITEM_ID_SURVIVABILITY_EXTENDER_X, -1, -1, 0
++				snd SOUNDLIST_GET3
++				noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++				flt
++				itemcreate -1, ITEM_ID_SURVIVABILITY_EXTENDER_Y, -1, -1, 0
++				snd SOUNDLIST_GET3
++				noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++			}
++			if ( keihin >= 27 ) {
++				if ( gdata(GDATA_FLAG_CASINO) == 1 ) {
++					gdata(GDATA_FLAG_CASINO) = 2
++					flt
++					itemcreate -1, ITEM_ID_MASTER_OF_DIAMOND, -1, -1, 0
++					snd SOUNDLIST_GET3
++					noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++					flt
++					itemcreate -1, ITEM_ID_MASTER_OF_HEART, -1, -1, 0
++					snd SOUNDLIST_GET3
++					noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++					flt
++					itemcreate -1, ITEM_ID_MASTER_OF_CLUB, -1, -1, 0
++					snd SOUNDLIST_GET3
++					noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++					flt
++					itemcreate -1, ITEM_ID_MASTER_OF_SPADE, -1, -1, 0
++					snd SOUNDLIST_GET3
++					noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++				}
++				else {
++					flt
++					itemcreate -1, ITEM_ID_SLASH_JOKER, -1, -1, 0
++					snd SOUNDLIST_GET3
++					noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++				}
++			}
++			if ( keihin >= 29 ) {
++				flt
++				itemcreate -1, ITEM_ID_STARFIBER, -1, -1, 0
++				snd SOUNDLIST_GET3
++				noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++			}
++			if ( keihin >= 31 ) {
++				flt
++				itemcreate -1, ITEM_ID_CRAFT_REPAIR_KIT, -1, -1, 0
++				snd SOUNDLIST_GET3
++				noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++			}
++			if ( keihin >= 33 ) {
++				if ( gdata(GDATA_FLAG_CASINO) == 2 ) {
++					gdata(GDATA_FLAG_CASINO) = 3
++					flt
++					itemcreate -1, ITEM_ID_SUPER_LURE, -1, -1, 0
++					snd SOUNDLIST_GET3
++					noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++				}
++				else {
++					flt
++					itemcreate -1, ITEM_ID_POTION_SOMA, -1, -1, 0
++					snd SOUNDLIST_GET3
++					noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++				}
++			}
++			if ( keihin >= 35 ) {
++				if ( gdata(GDATA_FLAG_CASINO) == 3 ) {
++					gdata(GDATA_FLAG_CASINO) = 4
++					flt
++					itemcreate -1, ITEM_ID_SKELETON_KEY, -1, -1, 0
++					snd SOUNDLIST_GET3
++					noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++				}
++				else {
++					flt
++					itemcreate -1, ITEM_ID_POTION_NEKTAR, -1, -1, 0
++					snd SOUNDLIST_GET3
++					noteadd lang("@GRアイテム：" + itemname(ci, inv(INV_ITEM_NUM, ci)) + "を戦利品に加えた！", "@GR" + itemname(ci, inv(INV_ITEM_NUM, ci)) + " has been added to your loot list!")
++				}
++			}
+ 		}
+ 		list(0, listmax) = 0
+ 		listn(0, listmax) = lang("戻る", "Great.")
+ 		listmax++
+ 		chatesc = 0
