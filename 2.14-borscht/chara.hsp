@@ -536,27 +536,27 @@
 		}
 	}
 	if ( sorg(SKILL_NORMAL_GENE_ENGINEER, CHARA_PLAYER) > 9 & sorg(SKILL_ATTR_DEX, CHARA_PLAYER) > 29 ) {
-		if ( spact(MAX_SKILL - STARTING_SKILL_SPACT) == 0 ) {
-			spact(MAX_SKILL - STARTING_SKILL_SPACT) = 1
+		if ( spact(SKILL_SPACT_DIRECT_TRANSFUSION - STARTING_SKILL_SPACT) == 0 ) {
+			spact(SKILL_SPACT_DIRECT_TRANSFUSION - STARTING_SKILL_SPACT) = 1
 			txtmore
 			txtef COLOR_YELLOW
-			txt lang("あなたは「" + skillname(MAX_SKILL) + "」の能力を得た。", "You have learned new ability, " + skillname(MAX_SKILL) + ".")
+			txt lang("あなたは「" + skillname(SKILL_SPACT_DIRECT_TRANSFUSION) + "」の能力を得た。", "You have learned new ability, " + skillname(SKILL_SPACT_DIRECT_TRANSFUSION) + ".")
 		}
 	}
 	if ( sorg(SKILL_NORMAL_GENE_ENGINEER, CHARA_PLAYER) > 24 & sorg(SKILL_ATTR_MAG, CHARA_PLAYER) > 49 ) {
-		if ( spact(844 - STARTING_SKILL_SPACT) == 0 ) {
-			spact(844 - STARTING_SKILL_SPACT) = 1
+		if ( spact(SKILL_SPACT_ELECTRIC_SHOCK - STARTING_SKILL_SPACT) == 0 ) {
+			spact(SKILL_SPACT_ELECTRIC_SHOCK - STARTING_SKILL_SPACT) = 1
 			txtmore
 			txtef COLOR_YELLOW
-			txt lang("あなたは「" + skillname(844) + "」の能力を得た。", "You have learned new ability, " + skillname(844) + ".")
+			txt lang("あなたは「" + skillname(SKILL_SPACT_ELECTRIC_SHOCK) + "」の能力を得た。", "You have learned new ability, " + skillname(SKILL_SPACT_ELECTRIC_SHOCK) + ".")
 		}
 	}
 	if ( sorg(SKILL_NORMAL_GENE_ENGINEER, CHARA_PLAYER) > 44 & sorg(SKILL_NORMAL_TAILORING, CHARA_PLAYER) > 44 ) {
-		if ( spact(845 - STARTING_SKILL_SPACT) == 0 ) {
-			spact(845 - STARTING_SKILL_SPACT) = 1
+		if ( spact(SKILL_SPACT_INSTANT_SUTURE - STARTING_SKILL_SPACT) == 0 ) {
+			spact(SKILL_SPACT_INSTANT_SUTURE - STARTING_SKILL_SPACT) = 1
 			txtmore
 			txtef COLOR_YELLOW
-			txt lang("あなたは「" + skillname(845) + "」の能力を得た。", "You have learned new ability, " + skillname(845) + ".")
+			txt lang("あなたは「" + skillname(SKILL_SPACT_INSTANT_SUTURE) + "」の能力を得た。", "You have learned new ability, " + skillname(SKILL_SPACT_INSTANT_SUTURE) + ".")
 		}
 	}
 	if ( sorg(SKILL_NORMAL_GENE_ENGINEER, CHARA_PLAYER) > 19 & trait(TRAIT_NORMAL_SPACT_TOUCH_OF_POISON) != 0 ) {
@@ -829,7 +829,7 @@
 		return 10008
 	}
 	return 10005
-	goto *label_4114
+	goto *chara_initEquip
 
 #deffunc eqrandweaponmage int eqrandweaponmage_arg1
 	locvar_eqrandweaponmage_p = rnd(2)
@@ -841,7 +841,7 @@
 	}
 	return
 
-*label_4114
+*chara_initEquip
 	if ( cdata(CDATA_ID, rc) == CREATURE_ID_HYPER_YACATECT | cdata(CDATA_ID, rc) == CREATURE_ID_YACATECT ) {
 		p = cdata(CDATA_LEVEL, rc) * 25 + rnd(cdata(CDATA_LEVEL, rc) * 25 + 1)
 		if ( cdata(CDATA_GOLD, rc) < p / 2 ) {
@@ -1266,7 +1266,7 @@
 				}
 				r1 = rc
 				body = cnt
-				gosub *label_6352
+				gosub *act_equip
 				eqamulet1 = 0
 				continue
 			}
@@ -1288,7 +1288,7 @@
 				}
 				r1 = rc
 				body = cnt
-				gosub *label_6352
+				gosub *act_equip
 				eqamulet2 = 0
 				continue
 			}
@@ -1312,7 +1312,7 @@
 				}
 				r1 = rc
 				body = cnt
-				gosub *label_6352
+				gosub *act_equip
 				eqring1 = 0
 				continue
 			}
@@ -1334,7 +1334,7 @@
 				}
 				r1 = rc
 				body = cnt
-				gosub *label_6352
+				gosub *act_equip
 				eqring2 = 0
 				continue
 			}
@@ -1358,7 +1358,7 @@
 				}
 				r1 = rc
 				body = cnt
-				gosub *label_6352
+				gosub *act_equip
 				eqcloack = 0
 				continue
 			}
@@ -1383,7 +1383,7 @@
 				}
 				r1 = rc
 				body = cnt
-				gosub *label_6352
+				gosub *act_equip
 				eqgirdle = 0
 				continue
 			}
@@ -1408,7 +1408,7 @@
 				}
 				r1 = rc
 				body = cnt
-				gosub *label_6352
+				gosub *act_equip
 				eqhelm = 0
 				continue
 			}
@@ -1433,7 +1433,7 @@
 				}
 				r1 = rc
 				body = cnt
-				gosub *label_6352
+				gosub *act_equip
 				eqarmor = 0
 				continue
 			}
@@ -1458,7 +1458,7 @@
 				}
 				r1 = rc
 				body = cnt
-				gosub *label_6352
+				gosub *act_equip
 				eqglove = 0
 				continue
 			}
@@ -1483,7 +1483,7 @@
 				}
 				r1 = rc
 				body = cnt
-				gosub *label_6352
+				gosub *act_equip
 				eqboots = 0
 				continue
 			}
@@ -1511,7 +1511,7 @@
 				loop
 				r1 = rc
 				body = cnt
-				gosub *label_6352
+				gosub *act_equip
 				eqweapon1 = 0
 				continue
 			}
@@ -1562,7 +1562,7 @@
 				}
 				r1 = rc
 				body = cnt
-				gosub *label_6352
+				gosub *act_equip
 				eqweapon1 = 0
 				continue
 			}
@@ -1606,7 +1606,7 @@
 				eqweapon2 = 0
 				r1 = rc
 				body = cnt
-				gosub *label_6352
+				gosub *act_equip
 				continue
 			}
 			if ( eqshield ) {
@@ -1627,7 +1627,7 @@
 				}
 				r1 = rc
 				body = cnt
-				gosub *label_6352
+				gosub *act_equip
 				eqshield = 0
 				continue
 			}
@@ -1652,7 +1652,7 @@
 				}
 				r1 = rc
 				body = cnt
-				gosub *label_6352
+				gosub *act_equip
 				eqrange = 0
 				continue
 			}
@@ -1672,7 +1672,7 @@
 				itemcreate rc, dbid, -1, -1, 0
 				r1 = rc
 				body = cnt
-				gosub *label_6352
+				gosub *act_equip
 				eqammo = 0
 				continue
 			}
@@ -1768,7 +1768,7 @@
 	p++
 	return
 
-*label_4125
+*place_chara
 	if ( rc == (-1) ) {
 		return
 	}
@@ -2210,7 +2210,7 @@
 		}
 	}
 	if ( dbid == 343 ) {
-		gosub *label_5841
+		gosub *set_userNpc
 	}
 	else {
 		dbmode = DBMODE_SET
@@ -2226,11 +2226,11 @@
 		}
 	}
 	cdata(CDATA_QUALITY, rc) = fixlv
-	gosub *label_4132
+	gosub *cm_finish
 	rtval = rc
 	return 1
 
-*label_4131
+*chara_fix
 	if ( fixlv == FIX_QUALITY_MIRACLE ) {
 		cdatan(CDATAN_NAME, rc) = strbracketleft + cdatan(CDATAN_NAME, rc) + strbracketright
 		cdata(CDATA_LEVEL, rc) = cdata(CDATA_LEVEL, rc) * 10 / 8
@@ -2241,12 +2241,12 @@
 	}
 	return
 
-*label_4132
+*cm_finish
 	if ( gdata(GDATA_AREA) != AREA_CHAOS_CRADLE | gdata(GDATA_LEVEL) != 179 ) {
 		cdata(CDATA_LEVEL, rc) = limit(cdata(CDATA_LEVEL, rc), 1, 6666)
 	}
 	if ( mode != MODELIST_CHARA_CREATION ) {
-		gosub *label_4131
+		gosub *chara_fix
 	}
 	cdata(CDATA_EXIST, rc) = CHAR_STATE_ALIVE
 	cdata(CDATA_INTEREST, rc) = 100
@@ -2497,7 +2497,7 @@
 		cdata(CDATA_DRUG_DEPENDENCE, rc) = 300
 	}
 	r1 = rc
-	gosub *label_3991
+	gosub *calcExpToNextLevel
 	r1 = rc
 	gosub *calcInitialSkill
 	if ( cdata(CDATA_PORTRAIT, rc) == 0 ) {
@@ -2512,7 +2512,7 @@
 		cdata(CDATA_TONE_SEX, rc) = 2
 	}
 	if ( dorei2 == 0 & babymake == 0 ) {
-		gosub *label_4114
+		gosub *chara_initEquip
 	}
 	r1 = rc
 	gosub *charaRefresh
@@ -2736,7 +2736,7 @@
 	cm = 0
 	return
 
-*label_4136
+*cm_finishPC
 	cdata(CDATA_QUALITY, rc) = FIX_QUALITY_GOOD
 	cdata(CDATA_RELATION, rc) = RELATION_ALLY
 	cdata(CDATA_RELATION_ORG, rc) = RELATION_ALLY
@@ -2777,7 +2777,7 @@
 		flt
 		itemcreate CHARA_PLAYER, ITEM_ID_SPELLBOOK_HERO, -1, -1, 0
 	}
-	gosub *label_0046
+	gosub *cm_putTrait
 	cdata(CDATA_SKILLPOINT, r1) = 5 + trait(TRAIT_RACE_BONUS_SKILLPOINT), 5 + trait(TRAIT_RACE_BONUS_SKILLPOINT)
 	gdata(GDATA_FLAG_SCROLL_OF_WITCHCRAFT_TOTAL_SPELL_BONUS) = 5
 	inv_getheader 0
@@ -2791,11 +2791,11 @@
 	gosub *charaRefresh
 	return
 
-*label_4138
+*resurrect_ally
 	gosub *resurrect
 	cxinit = cdata(CDATA_X, CHARA_PLAYER)
 	cyinit = cdata(CDATA_Y, CHARA_PLAYER)
-	gosub *label_4125
+	gosub *place_chara
 	cdata(CDATA_AREA, rc) = 0
 	snd SOUNDLIST_PRAY1
 	txtef COLOR_YELLOW
@@ -2879,7 +2879,7 @@
 		repeat p
 			r1 = rc
 			r2 = 1
-			gosub *label_3967
+			gosub *calcLevelUp
 		loop
 	}
 	if ( cdata(CDATA_ID, rc) == CREATURE_ID_BARD ) {
@@ -2894,7 +2894,7 @@
 		gdata(GDATA_WIZARD) = 1
 	}
 	if ( geneuse != "" ) {
-		gosub *label_5820
+		gosub *load_gene
 	}
 	if ( dbg_skipcm == 1 ) {
 		cmrace = "elea"
@@ -3840,7 +3840,7 @@
 	gdata(GDATA_TRAIT_POINT) = 3
 	dim trait, 500
 	dim spact, 500
-	gosub *label_0046
+	gosub *cm_putTrait
 	redraw 0
 	gmode 0
 	pos 0, 0
@@ -3883,7 +3883,7 @@
 		mes "Gene from " + geneuse
 	}
 	cbitmod CHARA_BIT_PCC, CHARA_PLAYER, TRUE
-	gosub *label_5658
+	gosub *com_portrait
 	if ( stat == 0 ) {
 		gosub *cm_bg
 		goto *cm_feat
@@ -4113,7 +4113,7 @@
 *label_4203
 	snd SOUNDLIST_CHARA
 
-*label_4204
+*cm_birth_loop
 	redraw 0
 	gmode 0
 	pos 0, 0
@@ -4157,8 +4157,8 @@
 	repeat 8, 10
 		sdata(cnt + STARTING_SKILL_SPACT, rc) = cmstats(cnt - 10)
 	loop
-	gosub *label_4132
-	gosub *label_4136
+	gosub *cm_finish
+	gosub *cm_finishPC
 	cdata(CDATA_PORTRAIT, rc) = cmportrait
 	create_pcpic 0, 1
 	if ( dbg_skipcm == 1 ) {
@@ -4171,7 +4171,7 @@
 	if ( stat == 0 ) {
 		nowindowanime = 1
 		gosub *cm_bg
-		goto *label_4204
+		goto *cm_birth_loop
 	}
 	redraw 0
 	gsel BUFFER_MAP

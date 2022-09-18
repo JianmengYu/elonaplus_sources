@@ -269,7 +269,7 @@
 				}
 			}
 			if ( feat(FEAT_CELL_PIC) != tile_trap & cc == CHARA_PLAYER ) {
-				gosub *label_4091
+				gosub *calcSearch
 				if ( stat == 1 ) {
 					refx = movx
 					refy = movy
@@ -291,7 +291,7 @@
 					}
 				}
 			}
-			gosub *label_4092
+			gosub *calcTrap
 			if ( stat == 1 ) {
 				if ( synccheck(cc, -1) ) {
 					txt lang(name(cc) + "は罠を避けた。", name(cc) + " evade" + _s(cc) + " a trap.")
@@ -449,7 +449,7 @@
 	}
 	return
 
-*label_5986
+*perform
 	if ( cdata(CDATA_ROW_ACT, cc) == ACTION_NONE ) {
 		cdata(CDATA_ROW_ACT, cc) = ACTION_PERFORM
 		cdata(CDATA_ACTION_PERIOD, cc) = 61
@@ -905,7 +905,7 @@
 	rowactend cc
 	return
 
-*label_5991
+*perform_dance
 	if ( cdata(CDATA_ROW_ACT, cc) == ACTION_NONE ) {
 		if ( synccheck(cc, -1) ) {
 			txt lang(name(cc) + "は踊り始めた。", name(cc) + " start" + _s(cc) + " dance.")
@@ -1337,7 +1337,7 @@
 	rowactend cc
 	return
 
-*label_5996
+*perform_preach
 	if ( cdata(CDATA_ROW_ACT, cc) == ACTION_NONE ) {
 		if ( synccheck(cc, -1) ) {
 			txt lang(name(cc) + "は説法を始めた。", name(cc) + " start" + _s(cc) + " preaching.")
@@ -1651,7 +1651,7 @@
 	}
 	return
 
-*label_5999
+*skill_charge
 	if ( cdata(CDATA_ROW_ACT, cc) == ACTION_NONE ) {
 		cdata(CDATA_ROW_ACT, cc) = ACTION_CHARGE
 		cdata(CDATA_ACTION_PERIOD, cc) = 10
@@ -1659,7 +1659,7 @@
 			txt lang(name(cc) + "は力をためはじめた。", name(cc) + " began power charge.")
 		}
 		customtalk cc, DBMODE_FLAVOR_CHARGE_S
-		gosub *label_0416
+		gosub *convert_word
 		if ( cc < MAX_CHARA_FOLLOWER ) {
 			charp = 0
 			repeat 16 - 1, 1
@@ -1681,7 +1681,7 @@
 				charp++
 				tc = cnt
 				customtalk tc, DBMODE_FLAVOR_CHARGE
-				gosub *label_0416
+				gosub *convert_word
 				if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 					if ( jp ) {
 						txt "「ここは任せて！」", "「時間は稼ぐよ！」", "「チャージの邪魔などさせるものか」", "「急いでね？」"
@@ -1723,7 +1723,7 @@
 	rowactend cc
 	return
 
-*label_6001
+*skill_persuasion
 	if ( cdata(CDATA_ROW_ACT, cc) == ACTION_NONE ) {
 		powsel = 0
 		if ( gdata(GDATA_FLAG_MAIN) < 350 ) {
@@ -1763,7 +1763,7 @@
 				powsel = 0
 			}
 		}
-		gosub *label_5740
+		gosub *findTarget
 		if ( stat == 0 ) {
 			powsel = 0
 		}
@@ -1825,7 +1825,7 @@
 			}
 		loop
 		customtalk cc, DBMODE_FLAVOR_BTALK
-		gosub *label_0416
+		gosub *convert_word
 		if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 			txt lang(name(cc) + "は説得を始めた。", name(cc) + " start persuasion.")
 		}
@@ -1936,7 +1936,7 @@
 	rowactend cc
 	return
 
-*label_6004
+*skill_peculiar_joke
 	if ( cdata(CDATA_ROW_ACT, cc) == ACTION_NONE ) {
 		powsel = 0
 		if ( gdata(GDATA_FLAG_MAIN) < 350 ) {
@@ -1976,7 +1976,7 @@
 				powsel = 0
 			}
 		}
-		gosub *label_5740
+		gosub *findTarget
 		if ( stat == 0 ) {
 			powsel = 0
 		}
@@ -2038,7 +2038,7 @@
 			}
 		loop
 		customtalk cc, DBMODE_FLAVOR_BTALK
-		gosub *label_0416
+		gosub *convert_word
 		if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 			txt lang(name(cc) + "は全力で笑わせにかかった。", name(cc) + " start peculiar joke.")
 		}
@@ -2140,7 +2140,7 @@
 	rowactend cc
 	return
 
-*label_6007
+*skill_blended_lie
 	if ( cdata(CDATA_ROW_ACT, cc) == ACTION_NONE ) {
 		powsel = 0
 		if ( gdata(GDATA_FLAG_MAIN) < 350 ) {
@@ -2180,7 +2180,7 @@
 				powsel = 0
 			}
 		}
-		gosub *label_5740
+		gosub *findTarget
 		if ( stat == 0 ) {
 			powsel = 0
 		}
@@ -2242,7 +2242,7 @@
 			}
 		loop
 		customtalk cc, DBMODE_FLAVOR_BTALK
-		gosub *label_0416
+		gosub *convert_word
 		if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 			txt lang(name(cc) + "は嘘を交えて話し始めた。", name(cc) + " start to talk with lie.")
 		}
@@ -2368,7 +2368,7 @@
 	rowactend cc
 	return
 
-*label_6010
+*skill_intimidation
 	if ( cdata(CDATA_ROW_ACT, cc) == ACTION_NONE ) {
 		powsel = 0
 		if ( gdata(GDATA_FLAG_MAIN) < 350 ) {
@@ -2408,7 +2408,7 @@
 				powsel = 0
 			}
 		}
-		gosub *label_5740
+		gosub *findTarget
 		if ( stat == 0 ) {
 			powsel = 0
 		}
@@ -2470,7 +2470,7 @@
 			}
 		loop
 		customtalk cc, DBMODE_FLAVOR_BTALK
-		gosub *label_0416
+		gosub *convert_word
 		if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 			txt lang(name(cc) + "は脅迫を始めた。", name(cc) + " began start intimidation.")
 		}
@@ -2596,7 +2596,7 @@
 	rowactend cc
 	return
 
-*label_6013
+*skill_mysterious_song
 	if ( cdata(CDATA_ROW_ACT, cc) == ACTION_NONE ) {
 		powsel = 0
 		if ( gdata(GDATA_FLAG_MAIN) < 350 ) {
@@ -2636,7 +2636,7 @@
 				powsel = 0
 			}
 		}
-		gosub *label_5740
+		gosub *findTarget
 		if ( stat == 0 ) {
 			powsel = 0
 		}
@@ -2698,7 +2698,7 @@
 			}
 		loop
 		customtalk cc, DBMODE_FLAVOR_BTALK
-		gosub *label_0416
+		gosub *convert_word
 		if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 			txt lang(name(cc) + "は魔力を込めて歌い始めた。", name(cc) + " start the song mixed spell.")
 		}
@@ -2805,7 +2805,7 @@
 	rowactend cc
 	return
 
-*label_6016
+*eat_meal
 	if ( cdata(CDATA_ROW_ACT, cc) == ACTION_NONE ) {
 		cdata(CDATA_ROW_ACT, cc) = ACTION_MEAL
 		cdata(CDATA_ACTION_PERIOD, cc) = 20
@@ -2917,7 +2917,7 @@
 	rowactend cc
 	return
 
-*label_6018
+*eat_meal_xmas_cake
 	if ( cdata(CDATA_ROW_ACT, cc) == ACTION_NONE ) {
 		cdata(CDATA_ROW_ACT, cc) = ACTION_XMAS_CAKE
 		cdata(CDATA_ACTION_PERIOD, cc) = 20
@@ -2949,7 +2949,7 @@
 	rowactend cc
 	return
 
-*label_6019
+*sexsex
 	if ( cdata(CDATA_ROW_ACT, cc) == ACTION_NONE ) {
 		cdata(CDATA_ROW_ACT, cc) = ACTION_SEX
 		cdata(CDATA_ACTION_PERIOD, cc) = 25 + rnd(10)
@@ -3091,7 +3091,7 @@
 	rowactend tc
 	return
 
-*label_6021
+*skill_tuin_der_lusten
 	if ( cdata(CDATA_ROW_ACT, cc) == ACTION_NONE ) {
 		cdata(CDATA_ROW_ACT, cc) = ACTION_TUIN_DER_LUSTEN
 		cdata(CDATA_ACTION_PERIOD, cc) = limit(sdata(SKILL_ATTR_SPD, cc) / 10, 10, 50)
@@ -3208,7 +3208,7 @@
 	rowactend tc
 	return
 
-*label_6023
+*generalAct
 	if ( cc != CHARA_PLAYER ) {
 		rowactend cc
 		return
@@ -3628,7 +3628,7 @@
 			item_stack CHARA_PLAYER, ti, 1
 			snd 14 + rnd(2)
 		}
-		gosub *label_4102
+		gosub *calcBurdenPc
 		skillexp SKILL_ACTIVE_PICKPOCKET, CHARA_PLAYER, limit(inv(INV_ITEM_WEIGHT, ti) / 25, 0, 450) + 50
 		gdata(GDATA_FLAG_STOLEN_GOODS)++
 		if ( cdata(CDATA_KARMA, CHARA_PLAYER) >= (-30) ) {
@@ -3692,7 +3692,7 @@
 	rowactend cc
 	return
 
-*label_6026
+*sleep_draw
 	redraw 0
 	pos 0, 0
 	gcopy BUFFER_BUF, 0, 0, windoww, windowh - inf_verh
@@ -3732,7 +3732,7 @@
 	msg_halt
 	repeat 20
 		gmode 4, , , cnt * 10
-		gosub *label_6026
+		gosub *sleep_draw
 		await 200
 	loop
 	gmode 2
@@ -3784,7 +3784,7 @@
 	}
 	repeat timeslept
 		gdata(GDATA_HOUR)++
-		gosub *label_9228
+		gosub *advance_hour
 		if ( mode != MODELIST_TXT_ADV ) {
 			gosub *sleep_draw_init
 			mode = MODELIST_TXT_ADV
@@ -3792,7 +3792,7 @@
 		gdata(GDATA_SLEEP) = 0
 		gdata(GDATA_MIN) = 0
 		cc = CHARA_PLAYER
-		gosub *label_6026
+		gosub *sleep_draw
 		await 500
 	loop
 	if ( cdata(CDATA_GOLD, CHARA_PLAYER) < 500 ) {
@@ -3824,11 +3824,11 @@
 			cbitmod CHARA_BIT_MAKE_GENE, tc, FALSE
 			gosub *re_select
 			gosub *generate_gene
-			gain_iden tc, 0, 20
-			gain_iden 0, tc, 20
+			gain_iden tc, CREATURE_ID_BUG, 20
+			gain_iden CREATURE_ID_BUG, tc, 20
 		}
 	}
-	gosub *label_6026
+	gosub *sleep_draw
 	gdata(GDATA_SLEEP_GENE) = 0
 	mode = MODELIST_MAIN
 	wake_up
@@ -4426,7 +4426,7 @@
 	rowactend cc
 	return
 
-*label_6049
+*choose_fish
 	if ( rowactre != 0 ) {
 		return
 	}
@@ -4525,7 +4525,7 @@
 		if ( gdata(GDATA_USING_SUPER_LURE) == 1 ) {
 			snd SOUNDLIST_WATER2
 			snd SOUNDLIST_FISH_GET
-			gosub *label_6049
+			gosub *choose_fish
 			gosub *get_fish
 			rowactend cc
 			cdata(CDATA_SP, cc) -= 15
@@ -4547,7 +4547,7 @@
 		}
 		if ( rnd(3) == 0 ) {
 			fishstat = 1
-			gosub *label_6049
+			gosub *choose_fish
 		}
 		if ( fishstat == 1 ) {
 			if ( rnd(2) == 0 ) {
@@ -4981,7 +4981,7 @@
 			if ( map(refx, refy, MAP_FEATS_ON_TILE) != 0 ) {
 				cell_featread refx, refy
 				if ( feat(FEAT_CELL_FEATURE_ID) == CELL_FEATURE_HIDDEN_PATH ) {
-					gosub *label_6413
+					gosub *revealHiddenPath
 				}
 			}
 			map(refx, refy, MAP_TILE_ID) = tile_tunnel
@@ -5120,7 +5120,7 @@
 	}
 	else {
 		if ( cc == CHARA_PLAYER ) {
-			gosub *label_4102
+			gosub *calcBurdenPc
 		}
 	}
 	if ( cc == CHARA_PLAYER ) {
@@ -5265,7 +5265,7 @@
 					cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
 				}
 				else {
-					gosub *label_4102
+					gosub *calcBurdenPc
 				}
 				if ( synccheck(cc, -1) ) {
 					txt lang(itemname(ci, 1) + "は塵となって崩れ落ちた。", itemname(ci, 1) + " falls apart.")
@@ -5375,7 +5375,7 @@
 		return 1
 	}
 	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_SKILLBOOK ) {
-		gosub *label_5761
+		gosub *com_train
 		if ( stat == 1 ) {
 			return 1
 		}
@@ -5671,7 +5671,7 @@
 				gosub *resurrect
 				cxinit = cdata(CDATA_X, cc)
 				cyinit = cdata(CDATA_Y, cc)
-				gosub *label_4125
+				gosub *place_chara
 				cdata(CDATA_AREA, rc) = 0
 				txtef COLOR_YELLOW
 				txt cnven(cdatan(CDATAN_NAME, rc)) + lang("は復活した！", " " + have(rc) + " been resurrected!")
@@ -6174,7 +6174,7 @@
 		}
 		else {
 			if ( tc == CHARA_PLAYER ) {
-				gosub *label_4102
+				gosub *calcBurdenPc
 			}
 		}
 		cdata(CDATA_THIRST, tc) += 2000
@@ -6438,7 +6438,7 @@
 			cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
 		}
 		else {
-			gosub *label_4102
+			gosub *calcBurdenPc
 		}
 		skillexp SKILL_NORMAL_LITERACY, cc, 25, 2
 	}
@@ -6666,7 +6666,7 @@
 
 *effect_selectTg
 	noeffect = 0
-	if ( efid > 846 ) {
+	if ( efid > MAX_SKILL ) {
 		tc = cc
 		return 1
 	}
@@ -6815,7 +6815,7 @@
 				tlocy = tglocy
 			}
 			else {
-				gosub *label_5349
+				gosub *findLocation
 				if ( stat != 1 ) {
 					if ( stat == 0 ) {
 						txt lang("その場所は見えない。", "You can't see the location.")
@@ -6853,7 +6853,7 @@
 	}
 	if ( tg == 2000 | tg == 6000 | tg == 9000 ) {
 		if ( cc == CHARA_PLAYER ) {
-			gosub *label_5740
+			gosub *findTarget
 			if ( stat == 0 ) {
 				obvious = 0
 				return 0
@@ -6919,7 +6919,7 @@
 
 
 	if ( efid >= SKILL_ACTIVE_PICKPOCKET ) {
-		if ( efid < 846 ) {
+		if ( efid < MAX_SKILL ) {
 			f = 0
 			if ( sdataref(SKILL_DATAREF_TYPE, efid) / 1000 == 1 ) {
 				f = 1
@@ -7028,7 +7028,7 @@
 				_switch_sw = 0
 				if ( cbit(CHARA_BIT_AWAKE_MAGIC_ATTACK, cc) ) {
 					tc = cdata(CDATA_TARGET, cc)
-					gosub *label_6394
+					gosub *act_melee
 					goto *effect_SWEND1
 				}
 				if ( efid == SKILL_SPACT_DISTANT_ATTACK ) {
@@ -7041,7 +7041,7 @@
 					gosub *anime
 				}
 				gdata(GDATA_TEMPORARY_FLAGS) = 0
-				gosub *label_6394
+				gosub *act_melee
 				goto *effect_SWEND1
 				_switch_sw++
 			}
@@ -7060,7 +7060,7 @@
 					if ( findbuff(cc, BUFF_CHARGE) != (-1) ) {
 						if ( cc != CHARA_PLAYER | cdata(CDATA_RELATION, tc) == RELATION_ENEMY ) {
 							customtalk cc, DBMODE_FLAVOR_CHARGE_A
-							gosub *label_0416
+							gosub *convert_word
 							if ( synccheck(cc, -1) ) {
 								txtef COLOR_RED
 								txt lang(name(cc) + "の完全詠唱魔法が炸裂した。", name(cc) + " blast magic by full power.")
@@ -7285,7 +7285,7 @@
 							if ( findbuff(cc, BUFF_CHARGE) != (-1) ) {
 								if ( cc != CHARA_PLAYER | cdata(CDATA_RELATION, tc) == RELATION_ENEMY ) {
 									customtalk cc, DBMODE_FLAVOR_CHARGE_A
-									gosub *label_0416
+									gosub *convert_word
 									if ( synccheck(cc, -1) ) {
 										txtef COLOR_RED
 										txt lang(name(cc) + "の完全詠唱魔法が炸裂した。", name(cc) + " blast magic by full power.")
@@ -7705,7 +7705,7 @@
 						gosub *charaRefresh
 						snd SOUNDLIST_BOLT1
 						customtalk cc, DBMODE_FLAVOR_CHARGE_A
-						gosub *label_0416
+						gosub *convert_word
 						if ( synccheck(cc, -1) ) {
 							txtef COLOR_RED
 							txt lang(name(cc) + "の完全詠唱魔法が炸裂した。", name(cc) + " blast magic by full power.")
@@ -7844,7 +7844,7 @@
 				_switch_sw = 0
 				if ( efid == SKILL_SPACT_VORACITY_FANG ) {
 					if ( cdata(CDATA_HUNGER, cc) >= 10000 ) {
-						gosub *label_6394
+						gosub *act_melee
 						goto *effect_SWEND1
 					}
 				}
@@ -7983,7 +7983,7 @@
 					refreshspeed tc
 					if ( cc == CHARA_PLAYER & tc < MAX_CHARA_FOLLOWER & (cdata(CDATA_IMPRESSION, tc) >= 150 | cdata(CDATA_MASTER_SERVANT, tc) >= 150) ) {
 						customtalk tc, DBMODE_FLAVOR_DRAIN
-						gosub *label_0416
+						gosub *convert_word
 						if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 							if ( jp ) {
 								txt name(tc) + "は大人しく血を吸われている。", "「どうぞ…」", "「美味しい？」"
@@ -8416,7 +8416,7 @@
 					if ( cdata(CDATA_RELATION, cc) != RELATION_ALLY | tc != CHARA_PLAYER ) {
 						if ( cbit(CHARA_BIT_AWAKE_MAGIC_ATTACK, cc) ) {
 							tc = cdata(CDATA_TARGET, cc)
-							gosub *label_6394
+							gosub *act_melee
 							goto *effect_SWEND1
 						}
 					}
@@ -8544,7 +8544,7 @@
 						goto *effect_SWEND1
 					}
 					if ( cbit(CHARA_BIT_SUMMONED, cc) == TRUE ) {
-						gosub *label_6394
+						gosub *act_melee
 						goto *effect_SWEND1
 					}
 					if ( cbit(CHARA_BIT_SANDBAG, tc) == TRUE ) {
@@ -8657,7 +8657,7 @@
 								animeid = ANIMATION_ATTACK
 								gosub *anime
 								shadow = 100
-								gosub *label_6394
+								gosub *act_melee
 							}
 							shadow = 0
 							break
@@ -8799,7 +8799,7 @@
 				}
 				if ( findbuff(cc, BUFF_CHARGE) != (-1) & (cc != CHARA_PLAYER | cdata(CDATA_RELATION, tc) == RELATION_ENEMY) ) {
 					customtalk cc, DBMODE_FLAVOR_CHARGE_A
-					gosub *label_0416
+					gosub *convert_word
 					if ( synccheck(cc, -1) ) {
 						txtef COLOR_RED
 						txt lang(name(cc) + "は最大出力の" + valn + "を繰り出した。", name(cc) + " blast" + _s(cc) + " " + valn + " by full power.")
@@ -9311,7 +9311,7 @@
 					txtef COLOR_SKY_BLUE
 					txt lang("「うまー」", cnvtalk("Yummy!"))
 				}
-				if ( cdata(CDATA_SPRITE_SIZE_MILK, tc) <= (-1) & cdata(CDATA_HUNGER, tc) < 8000 & cbit(1034, tc) != TRUE ) {
+				if ( cdata(CDATA_SPRITE_SIZE_MILK, tc) <= (-1) & cdata(CDATA_HUNGER, tc) < 8000 & cbit(CHARA_BIT_BIRTHED_CHILD, tc) != TRUE ) {
 					txtef COLOR_SKY_BLUE
 					txt lang(name(tc) + "はすくすくと成長した。", name(tc) + " grew quickly.")
 					if ( efstatus >= 0 ) {
@@ -9387,7 +9387,7 @@
 			txtef COLOR_SKY_BLUE
 			txt lang("「うまいっ！！」", cnvtalk("Very yummy!"))
 		}
-		gosub *label_6338
+		gosub *effect_elixer
 		r1 = tc
 		gosub *charaRefresh
 		if ( synccheck(tc, -1) ) {
@@ -9484,7 +9484,7 @@
 			homemapmode = 1
 			cxbk = cdata(CDATA_X, CHARA_PLAYER)
 			cybk = cdata(CDATA_Y, CHARA_PLAYER)
-			gosub *label_4610
+			gosub *home_setWallTile
 			n = 0
 			txtnew
 			txt lang("移動キーで幽体を移動、キャンセルキーで幽体離脱終了。", "Movement keys to move current position, hit the cancel key to exit.")
@@ -9494,7 +9494,7 @@
 			repeat
 				await
 				homemakewall = 1
-				gosub *label_5349
+				gosub *findLocation
 				if ( stat == (-1) ) {
 					break
 				}
@@ -9632,7 +9632,7 @@
 			txt lang("「げふぅ」", "*Ughu*")
 		}
 		flt
-		itemcreate -1, 1263, cdata(CDATA_X, tc), cdata(CDATA_Y, tc), 0
+		itemcreate -1, ITEM_ID_BOTTLE_CAP, cdata(CDATA_X, tc), cdata(CDATA_Y, tc), 0
 		inv(INV_ITEM_COL, ci) = 3
 		healsp tc, 15
 		sickifcursed efstatus, tc, 1
@@ -9657,7 +9657,7 @@
 			}
 		}
 		flt
-		itemcreate -1, 1263, cdata(CDATA_X, tc), cdata(CDATA_Y, tc), 0
+		itemcreate -1, ITEM_ID_BOTTLE_CAP, cdata(CDATA_X, tc), cdata(CDATA_Y, tc), 0
 		inv(INV_ITEM_COL, ci) = 19
 		skillexp SKILL_NORMAL_HEALING, tc, 200
 		sickifcursed efstatus, tc, 1
@@ -9672,7 +9672,7 @@
 			txt lang(name(tc) + "のスタミナが少し回復した。", name(tc) + " restore" + _s(tc) + " some stamina.")
 		}
 		flt
-		itemcreate -1, 1262, cdata(CDATA_X, tc), cdata(CDATA_Y, tc), 0
+		itemcreate -1, ITEM_ID_B_DAMA, cdata(CDATA_X, tc), cdata(CDATA_Y, tc), 0
 		inv(INV_ITEM_PIC, ci) += rnd(3)
 		healsp tc, 25
 		sickifcursed efstatus, tc, 1
@@ -9790,7 +9790,7 @@
 				}
 				if ( cdata(CDATA_RIDING, gdata(GDATA_RIDER)) == 0 ) {
 					customtalk gdata(GDATA_RIDER), DBMODE_FLAVOR_RIDE_OFF
-					gosub *label_0416
+					gosub *convert_word
 					if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 						txtef COLOR_SKY_BLUE
 						if ( jp ) {
@@ -9803,7 +9803,7 @@
 				}
 				if ( cdata(CDATA_RIDING, gdata(GDATA_RIDER)) == 1 ) {
 					customtalk gdata(GDATA_RIDER), DBMODE_FLAVOR_RIDE_OFF_PC
-					gosub *label_0416
+					gosub *convert_word
 					if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 						txtef COLOR_SKY_BLUE
 						if ( jp ) {
@@ -9873,7 +9873,7 @@
 			}
 			if ( cdata(CDATA_RIDING, tc) == 0 ) {
 				customtalk tc, DBMODE_FLAVOR_RIDE_ON
-				gosub *label_0416
+				gosub *convert_word
 				if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 					txtef COLOR_SKY_BLUE
 					if ( jp ) {
@@ -9886,7 +9886,7 @@
 			}
 			if ( cdata(CDATA_RIDING, tc) == 1 ) {
 				customtalk tc, DBMODE_FLAVOR_RIDE_ON_PC
-				gosub *label_0416
+				gosub *convert_word
 				if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 					txtef COLOR_SKY_BLUE
 					if ( jp ) {
@@ -9943,7 +9943,7 @@
 			}
 			dmgsp CHARA_PLAYER, rnd(sdataref(SKILL_DATAREF_COST, efid) / 2 + 1) + sdataref(SKILL_DATAREF_COST, efid) / 2 + 1
 		}
-		gosub *label_5986
+		gosub *perform
 		goto *effect_end
 		_switch_sw++
 	}
@@ -10170,7 +10170,7 @@
 		_switch_sw = 0
 		txtef COLOR_YELLOW
 		txt lang(name(tc) + "は黄金の輝きに包まれた！", "A golden aura wraps " + name(tc) + "!")
-		gosub *label_6338
+		gosub *effect_elixer
 		animeid = ANIMATION_HEAL
 		gosub *anime
 		goto *effect_end
@@ -10465,7 +10465,7 @@
 			goto *effect_end
 		}
 		allyctrl = 2
-		gosub *label_5444
+		gosub *com_listNpc
 		if ( stat == (-1) ) {
 			txt lang("何もおきない… ", "Nothing happens...")
 			obvious = 0
@@ -10485,7 +10485,7 @@
 		gosub *resurrect
 		cxinit = cdata(CDATA_X, cc)
 		cyinit = cdata(CDATA_Y, cc)
-		gosub *label_4125
+		gosub *place_chara
 		cdata(CDATA_AREA, rc) = 0
 		txtef COLOR_YELLOW
 		txt cnven(cdatan(CDATAN_NAME, rc)) + lang("は復活した！", " " + have(rc) + " been resurrected!")
@@ -10685,7 +10685,7 @@
 			cdata(CDATA_LEVEL, tc)--
 			cdata(CDATA_EXP, tc) = 0
 			r1 = tc
-			gosub *label_3991
+			gosub *calcExpToNextLevel
 			txtef COLOR_PURPLE
 			txt lang(name(tc) + "のレベルが下がった…", name(tc) + " lose" + _s(tc) + " a level...")
 		}
@@ -10693,7 +10693,7 @@
 			cdata(CDATA_EXP, tc) = cdata(CDATA_EXP_TO_NEXT_LVL, tc)
 			r1 = tc
 			r2 = 0
-			gosub *label_3967
+			gosub *calcLevelUp
 			if ( cbit(CHARA_BIT_LIVESTOCK, r1) != TRUE ) {
 				if ( synccheck(tc, -1) ) {
 					snd SOUNDLIST_DING1
@@ -11013,7 +11013,7 @@
 		}
 		animeload 10, tc
 		redraw 0
-		gosub *label_3797
+		gosub *screen_raderRefresh
 		if ( efid == SKILL_SPELL_SENSE_OBJECT ) {
 			if ( efstatus > (-1) ) {
 				repeat 13
@@ -11038,7 +11038,7 @@
 									}
 								}
 								if ( feat(FEAT_CELL_FEATURE_ID) == CELL_FEATURE_HIDDEN_PATH ) {
-									gosub *label_6413
+									gosub *revealHiddenPath
 									txt lang("隠れた通路を感知した。", "You discover a hidden path.")
 								}
 							}
@@ -11347,7 +11347,7 @@
 				goto *effect_end
 			}
 			inv(INV_ITEM_NUM, ci) -= 10
-			gosub *label_4102
+			gosub *calcBurdenPc
 		}
 		repeat 10
 			snd SOUNDLIST_BOOK1
@@ -11416,7 +11416,7 @@
 				goto *effect_end
 			}
 			inv(INV_ITEM_NUM, ci) -= 20
-			gosub *label_4102
+			gosub *calcBurdenPc
 		}
 		snd SOUNDLIST_BOOK1
 		waitbk = cfg_animewait
@@ -11460,7 +11460,7 @@
 		if ( cdata(CDATA_POWER_GAUGE, cc) < 25 ) {
 			if ( cbit(CHARA_BIT_AWAKE_MAGIC_ATTACK, cc) ) {
 				tc = cdata(CDATA_TARGET, cc)
-				gosub *label_6394
+				gosub *act_melee
 				goto *effect_end
 			}
 			gosub *FindRangeWeapon
@@ -11496,7 +11496,7 @@
 		if ( cdata(CDATA_POWER_GAUGE, cc) < 25 ) {
 			if ( cbit(CHARA_BIT_AWAKE_MAGIC_ATTACK, cc) ) {
 				tc = cdata(CDATA_TARGET, cc)
-				gosub *label_6394
+				gosub *act_melee
 				goto *effect_end
 			}
 			gosub *FindRangeWeapon
@@ -11570,7 +11570,7 @@
 		_switch_sw = 0
 		if ( cbit(CHARA_BIT_AWAKE_MAGIC_ATTACK, cc) ) {
 			tc = cdata(CDATA_TARGET, cc)
-			gosub *label_6394
+			gosub *act_melee
 			goto *effect_end
 		}
 		if ( cdata(CDATA_POWER_GAUGE, cc) < 100 ) {
@@ -11671,7 +11671,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		snd SOUNDLIST_BOLT1
 		animeload 29, cc
 		txtef COLOR_GREEN
@@ -11775,7 +11775,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		txtef COLOR_GREEN
 		txt lang(name(cc) + "は鎌で大きく薙ぎ払った！", name(cc) + " swept away with the sickle!")
 		if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 7 ) {
@@ -11849,7 +11849,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		txtef COLOR_GREEN
 		txt lang(name(cc) + "は目にもとまらぬ速さで" + name(tc) + "を斬りつけた！", name(cc) + " slashed at an unbelievable speed!")
 		snd SOUNDLIST_THROW1
@@ -11936,7 +11936,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		txtef COLOR_GREEN
 		txt lang(name(cc) + "は武器を逆手で振り上げると" + name(tc) + "に勢いよく突き刺した！", name(cc) + " swung the weapon upside down and stabbed it vigorously!")
 		snd SOUNDLIST_THROW1
@@ -12013,7 +12013,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		txtef COLOR_GREEN
 		txt lang(name(cc) + "は重さを乗せた斬撃を" + name(tc) + "に叩き込んだ！", name(cc) + " slammed a heavy slash!")
 		if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 3 | cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 103 ) {
@@ -12095,7 +12095,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		txtef COLOR_GREEN
 		txt lang(name(cc) + "は矢を束ねて上空へ放った！", name(cc) + " bundled arrows and fired them into the sky!")
 		repeat 8
@@ -12212,7 +12212,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		txtef COLOR_GREEN
 		txt lang(name(cc) + "は矢を束ねて" + name(tc) + "の頭部へ放った！", name(cc) + " bundled the arrows and fired them at the enemy's head!")
 		snd SOUNDLIST_BOLT1
@@ -12294,7 +12294,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		txtef COLOR_GREEN
 		txt lang(name(cc) + "は反動に備えながら" + name(tc) + "へ発砲した！", name(cc) + " fired in preparation for recoil!")
 		snd SOUNDLIST_GUNSHOT3
@@ -12366,7 +12366,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		txtef COLOR_GREEN
 		txt lang(name(cc) + "は正確無比に" + name(tc) + "へ弾丸を放った！", name(cc) + " fired bullets very accurately!")
 		snd SOUNDLIST_GUNSHOT1
@@ -12434,7 +12434,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		ele = SKILL_RES_FIRE
 		repeat 61 - 50, 50
 			if ( sdata(cnt, cc) >= sdata(ele, cc) ) {
@@ -12848,7 +12848,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		txtef COLOR_GREEN
 		txt lang(name(cc) + "は力任せの豪快な一撃を" + name(tc) + "に叩き込んだ！", name(cc) + " hit a brilliant blow with brute force!")
 		snd SOUNDLIST_THROW1
@@ -12923,7 +12923,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		txtef COLOR_GREEN
 		txt lang(name(cc) + "は一点に狙いを定め" + name(tc) + "を突き刺した！", name(cc) + " aimed at one point and stabbed the enemy!")
 		if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 5 | cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 105 ) {
@@ -13005,7 +13005,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		txtef COLOR_GREEN
 		txt lang(name(cc) + "は" + name(tc) + "に怒涛の連続攻撃を仕掛けた！", name(cc) + " made a tremendous continuous attack!")
 		if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 6 ) {
@@ -13090,7 +13090,7 @@
 			snd SOUNDLIST_ENC
 			animeload 40, cc
 			customtalk cc, DBMODE_FLAVOR_SPECIAL
-			gosub *label_0416
+			gosub *convert_word
 			if ( synccheck(cc, -1) ) {
 				txt lang(name(cc) + "は盾で" + name(tc) + "を殴りつけた。", name(cc) + " bash" + _s(cc) + " " + name(tc) + " with " + his(cc) + " shield.")
 			}
@@ -13154,7 +13154,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		txtef COLOR_GREEN
 		txt lang(name(cc) + "は闘志を極限にまで高め" + name(tc) + "に打ち込んだ！", name(cc) + " attacked with the ultimate fighting spirit!")
 		if ( exgauge != 100 ) {
@@ -13326,7 +13326,7 @@
 			gdata(GDATA_RETURN) = 0
 		}
 		else {
-			gosub *label_5756
+			gosub *check_return
 			if ( stat == 1 ) {
 				txt lang("依頼請負中の脱出は法律で禁止されている。それでも脱出する？", "Returning while taking a quest if forbidden. Are you sure you want to return?")
 				promptl(0, 0) = stryes, "y", "0"
@@ -14314,8 +14314,8 @@
 		snd SOUNDLIST_DING1
 		gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND) = inv(INV_ITEM_PARAM1, ci)
 		gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_PIC) = gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND) + inv(INV_ITEM_COL, ci) * 1000
-		if ( gdata(250 + 442) < gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND) ) {
-			gdata(250 + 442) = gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND)
+		if ( gdata(GDATA_FLAG_MOST_EXPENSIVE_WORLD_MAP_VEHICLE_THIS_MONTH) < gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND) ) {
+			gdata(GDATA_FLAG_MOST_EXPENSIVE_WORLD_MAP_VEHICLE_THIS_MONTH) = gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND)
 		}
 		txtef COLOR_YELLOW
 		txt lang("あなたは乗り物をさっそく郊外に呼んだ。", "You called the world-vehicle out to the suburbs.")
@@ -14331,7 +14331,7 @@
 		if ( gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND) == 4 ) {
 			gdata(GDATA_CARGO_LIMIT) += 100 * 1000
 		}
-		gosub *label_4102
+		gosub *calcBurdenPc
 		goto *effect_end
 		_switch_sw++
 	}
@@ -14448,7 +14448,7 @@
 				if ( rnd(limit(sdata(SKILL_NORMAL_MAGIC_CAPACITY, CHARA_PLAYER), 0, 198) + 2) == 0 ) {
 					txt lang(itemname(ci) + "は破裂した。", itemname(ci) + " explode" + _s2(inv(INV_ITEM_NUM, ci)) + ".")
 					inv(INV_ITEM_NUM, ci)--
-					gosub *label_4102
+					gosub *calcBurdenPc
 					goto *effect_end
 				}
 				txt lang(itemname(ci) + "への充填は失敗した。", "You fail to recharge " + itemname(ci) + ".")
@@ -14511,7 +14511,7 @@
 			}
 			txt lang(itemname(ci) + "を破壊して" + p + "の魔力を抽出した(計" + gdata(GDATA_ABSORB_CHARGE) + ")", "You destroy " + itemname(ci) + " and extract " + p + " recharge powers. (Total:" + gdata(GDATA_ABSORB_CHARGE) + ")")
 			inv(INV_ITEM_NUM, ci) = 0
-			gosub *label_4102
+			gosub *calcBurdenPc
 			skillexp SKILL_NORMAL_MAGIC_CAPACITY, CHARA_PLAYER, 100
 		}
 		goto *effect_end
@@ -14578,7 +14578,7 @@
 				inv(INV_ITEM_WEIGHT, ci) = inv(INV_ITEM_WEIGHT, ci) * 150 / 100 + 1000
 				txt lang("" + itemname(ci, 1) + "はずしりと重くなった。", itemname(ci, 1) + " becomes heavy.")
 			}
-			gosub *label_4102
+			gosub *calcBurdenPc
 		}
 		else {
 			txt lang("何もおきない… ", "Nothing happens...")
@@ -14642,7 +14642,7 @@
 				}
 			loop
 			txt lang("それは" + itemname(ci, 1) + "に変容した。", "It is metamorphosed into " + itemname(ci, 1) + ".")
-			gosub *label_4102
+			gosub *calcBurdenPc
 		}
 		else {
 			txt lang("何もおきない… ", "Nothing happens...")
@@ -14762,7 +14762,7 @@
 			goto *effect_end
 		}
 		repeat 10
-			gosub *label_5748
+			gosub *com_findTarget
 			if ( listmax == 0 ) {
 				break
 			}
@@ -14855,7 +14855,7 @@
 		_switch_sw = 0
 		if ( cbit(CHARA_BIT_AWAKE_MAGIC_ATTACK, cc) ) {
 			tc = cdata(CDATA_TARGET, cc)
-			gosub *label_6394
+			gosub *act_melee
 			goto *effect_end
 		}
 		txtef COLOR_BLUE
@@ -14895,7 +14895,7 @@
 			}
 			animeid = ANIMATION_ATTACK
 			gosub *anime
-			gosub *label_6394
+			gosub *act_melee
 		loop
 		goto *effect_end
 		_switch_sw++
@@ -14904,7 +14904,7 @@
 		_switch_sw = 0
 		if ( cbit(CHARA_BIT_AWAKE_MAGIC_ATTACK, cc) ) {
 			tc = cdata(CDATA_TARGET, cc)
-			gosub *label_6394
+			gosub *act_melee
 			goto *effect_end
 		}
 		txtef COLOR_BLUE
@@ -15717,7 +15717,7 @@
 						txt lang("錠の破壊に成功した！", "You fail to unlock it.")
 						ri = ci
 						cc = CHARA_PLAYER
-						gosub *label_6382
+						gosub *open_chest
 						breakstr = 0
 						skillexp SKILL_ATTR_STR, CHARA_PLAYER, 50
 						skillexp SKILL_NORMAL_LOCK_PICKING, CHARA_PLAYER, 40 + inv(INV_ITEM_PARAM2, ci) / 3
@@ -15812,7 +15812,7 @@
 			}
 			inv(INV_ITEM_NUM, ci)--
 			if ( cc == CHARA_PLAYER ) {
-				gosub *label_4102
+				gosub *calcBurdenPc
 			}
 			waitbk = cfg_animewait
 			if ( cfg_animewait > 0 ) {
@@ -15891,7 +15891,7 @@
 			txt lang(itemname(ci) + "が高速で射出された。", itemname(ci) + " was launched at high speed.")
 			inv(INV_ITEM_NUM, ci)--
 			if ( cc == CHARA_PLAYER ) {
-				gosub *label_4102
+				gosub *calcBurdenPc
 			}
 			waitbk = cfg_animewait
 			if ( cfg_animewait > 0 ) {
@@ -15955,7 +15955,7 @@
 			}
 			inv(INV_ITEM_NUM, ci)--
 			if ( cc == CHARA_PLAYER ) {
-				gosub *label_4102
+				gosub *calcBurdenPc
 			}
 			waitbk = cfg_animewait
 			if ( cfg_animewait > 0 ) {
@@ -16050,7 +16050,7 @@
 		_switch_sw = 0
 		if ( cbit(CHARA_BIT_AWAKE_MAGIC_ATTACK, cc) ) {
 			tc = cdata(CDATA_TARGET, cc)
-			gosub *label_6394
+			gosub *act_melee
 			goto *effect_end
 		}
 		gosub *FindRangeWeapon
@@ -16181,7 +16181,7 @@
 				tc = tcbk
 				if ( cbit(CHARA_BIT_AWAKE_MAGIC_ATTACK, cc) ) {
 					extraattack = 0
-					gosub *label_6394
+					gosub *act_melee
 					if ( cc != CHARA_PLAYER ) {
 						snd SOUNDLIST_ATK_FIRE
 					}
@@ -16270,7 +16270,7 @@
 				continue
 			}
 			customtalk tc, DBMODE_FLAVOR_MULTIPLE
-			gosub *label_0416
+			gosub *convert_word
 			if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 				if ( jp ) {
 					txt cdatan(CDATAN_NAME, tc) + "は" + cdatan(CDATAN_NAME, cc) + "に重ねて詠唱した。"
@@ -16318,7 +16318,7 @@
 		_switch_sw = 0
 		if ( cbit(CHARA_BIT_AWAKE_MAGIC_ATTACK, cc) ) {
 			tc = cdata(CDATA_TARGET, cc)
-			gosub *label_6394
+			gosub *act_melee
 			goto *effect_end
 		}
 		waitbk = cfg_animewait
@@ -16338,7 +16338,7 @@
 			animeid = ANIMATION_NORMAL_ATTACK
 			gosub *anime
 			snd SOUNDLIST_ATK2
-			gosub *label_6394
+			gosub *act_melee
 		loop
 		if ( cdata(CDATA_EXIST, tc) != CHAR_STATE_ALIVE ) {
 			snd SOUNDLIST_BOLT1
@@ -16347,7 +16347,7 @@
 			animeid = ANIMATION_NORMAL_ATTACK
 			gosub *anime
 			snd SOUNDLIST_BOLT1
-			gosub *label_6394
+			gosub *act_melee
 		}
 		cfg_animewait = waitbk
 		cfg_attackanime = attackbk
@@ -16434,7 +16434,7 @@
 			}
 			snd SOUNDLIST_OFFER2
 			customtalk tc, DBMODE_FLAVOR_KIZUNA
-			gosub *label_0416
+			gosub *convert_word
 			if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 				if ( jp ) {
 					txt "「まだ戦える！」", "「勝負はこれから！」", "「心を一つに…！」", "「絆パワー！」"
@@ -17118,7 +17118,7 @@
 		snd SOUNDLIST_OFFER2
 		animeload 32, tc
 		cc = tc
-		gosub *label_5999
+		gosub *skill_charge
 		goto *effect_end
 		_switch_sw++
 	}
@@ -17441,7 +17441,7 @@
 			cdata(CDATA_RELATION, rc) = cdata(CDATA_RELATION_ORG, rc)
 			cxinit = cdata(CDATA_X, CHARA_PLAYER)
 			cyinit = cdata(CDATA_Y, CHARA_PLAYER)
-			gosub *label_4125
+			gosub *place_chara
 			cdata(CDATA_AREA, rc) = 0
 		}
 		gosub *screen_draw
@@ -17458,7 +17458,7 @@
 			rcbk = rc
 			rc = -1
 			allyctrl = 5
-			gosub *label_5444
+			gosub *com_listNpc
 			if ( stat == (-1) ) {
 				rc = rcbk
 				goto *effect_end
@@ -17468,7 +17468,7 @@
 			txt lang("輸血先を選ぶ必要がある。", "Choose a blood transfusion destination.")
 			txtmore
 			allyctrl = 5
-			gosub *label_5444
+			gosub *com_listNpc
 			if ( stat == (-1) ) {
 				goto *effect_end
 			}
@@ -17489,13 +17489,13 @@
 	}
 	if ( _switch_val == 767 | _switch_sw ) {
 		_switch_sw = 0
-		gosub *label_5991
+		gosub *perform_dance
 		goto *effect_end
 		_switch_sw++
 	}
 	if ( _switch_val == 713 | _switch_sw ) {
 		_switch_sw = 0
-		gosub *label_5996
+		gosub *perform_preach
 		goto *effect_end
 		_switch_sw++
 	}
@@ -17555,11 +17555,11 @@
 		_switch_sw = 0
 		if ( cbit(CHARA_BIT_AWAKE_MAGIC_ATTACK, cc) ) {
 			tc = cdata(CDATA_TARGET, cc)
-			gosub *label_6394
+			gosub *act_melee
 			goto *effect_end
 		}
 		bakuretu = 100
-		gosub *label_6394
+		gosub *act_melee
 		goto *effect_end
 		_switch_sw++
 	}
@@ -17567,7 +17567,7 @@
 		_switch_sw = 0
 		if ( cbit(CHARA_BIT_AWAKE_MAGIC_ATTACK, cc) ) {
 			tc = cdata(CDATA_TARGET, cc)
-			gosub *label_6394
+			gosub *act_melee
 			goto *effect_end
 		}
 		if ( cdata(CDATA_POWER_GAUGE, cc) >= 25 ) {
@@ -17588,7 +17588,7 @@
 		_switch_sw = 0
 		if ( cbit(CHARA_BIT_AWAKE_MAGIC_ATTACK, cc) ) {
 			tc = cdata(CDATA_TARGET, cc)
-			gosub *label_6394
+			gosub *act_melee
 			goto *effect_end
 		}
 		bakuretu = 200
@@ -17601,11 +17601,11 @@
 		_switch_sw = 0
 		if ( cbit(CHARA_BIT_AWAKE_MAGIC_ATTACK, cc) ) {
 			tc = cdata(CDATA_TARGET, cc)
-			gosub *label_6394
+			gosub *act_melee
 			goto *effect_end
 		}
 		bakuretu = 300
-		gosub *label_6394
+		gosub *act_melee
 		goto *effect_end
 		_switch_sw++
 	}
@@ -17613,7 +17613,7 @@
 		_switch_sw = 0
 		if ( cbit(CHARA_BIT_AWAKE_MAGIC_ATTACK, cc) ) {
 			tc = cdata(CDATA_TARGET, cc)
-			gosub *label_6394
+			gosub *act_melee
 			goto *effect_end
 		}
 		if ( tc == cc ) {
@@ -17625,7 +17625,7 @@
 			return
 		}
 		gdata(GDATA_TEMPORARY_FLAGS2) = 888
-		gosub *label_6394
+		gosub *act_melee
 		gdata(GDATA_TEMPORARY_FLAGS2) = 0
 		goto *effect_end
 		_switch_sw++
@@ -18027,7 +18027,7 @@
 		txtmore
 		txtef COLOR_SKY_BLUE
 		customtalk cc, DBMODE_FLAVOR_INSULT
-		gosub *label_0416
+		gosub *convert_word
 		if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 			if ( jp ) {
 				if ( cdata(CDATA_SEX, cc) == 0 ) {
@@ -18130,9 +18130,9 @@
 			}
 			if ( rtval == 4 ) {
 				if ( cdata(CDATA_TARGET, CHARA_PLAYER) == 0 ) {
-					gosub *label_5740
+					gosub *findTarget
 				}
-				gosub *label_5748
+				gosub *com_findTarget
 				if ( listmax == 0 ) {
 					txt lang("視界内にターゲットは存在しない。", "You look around and find nothing.")
 					return 0
@@ -18548,7 +18548,7 @@
 			}
 			cdata(CDATA_POWER_GAUGE, ovtc) = 0
 			customtalk ovtc, DBMODE_FLAVOR_SPECIAL
-			gosub *label_0416
+			gosub *convert_word
 		loop
 		cfg_animewait = waitbk
 		if ( over == 0 ) {
@@ -18575,7 +18575,7 @@
 		animeload 68, cc
 		snd SOUNDLIST_BREATH1
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		animeid = ANIMATION_UNISON_IMPACT1
 		anic = tc
 		gosub *anime
@@ -18843,7 +18843,7 @@
 			goto *effect_end
 		}
 		gdata(GDATA_ROW_ACT) = ACTION_CUT_TREE
-		gosub *label_6023
+		gosub *generalAct
 		goto *effect_end
 		_switch_sw++
 	}
@@ -18907,27 +18907,27 @@
 		if ( efid == SKILL_SPACT_PERSUASION ) {
 			snd SOUNDLIST_CHAT
 			animeload 73, cc
-			gosub *label_6001
+			gosub *skill_persuasion
 		}
 		if ( efid == SKILL_SPACT_PECULIAR_JOKE ) {
 			snd SOUNDLIST_CHAT
 			animeload 73, cc
-			gosub *label_6004
+			gosub *skill_peculiar_joke
 		}
 		if ( efid == SKILL_SPACT_BLENDED_LIE ) {
 			snd SOUNDLIST_CHAT
 			animeload 73, cc
-			gosub *label_6007
+			gosub *skill_blended_lie
 		}
 		if ( efid == SKILL_SPACT_INTIMIDATION ) {
 			snd SOUNDLIST_CHAT
 			animeload 73, cc
-			gosub *label_6010
+			gosub *skill_intimidation
 		}
 		if ( efid == SKILL_SPACT_MYSTERIOUS_SONG ) {
 			snd SOUNDLIST_OFFER2
 			animeload 24, cc
-			gosub *label_6013
+			gosub *skill_mysterious_song
 		}
 		goto *effect_end
 		_switch_sw++
@@ -19072,7 +19072,7 @@
 			if ( cdata(CDATA_IMPRESSION, tc) >= 200 ) {
 				cdata(CDATA_EMO_ICON, tc) = 17 + 100 * 3
 				customtalk tc, DBMODE_FLAVOR_NADE
-				gosub *label_0416
+				gosub *convert_word
 				if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 					if ( jp ) {
 						if ( cdata(CDATA_ID, tc) == CREATURE_ID_SPACE_HORNED_OWL ) {
@@ -19129,7 +19129,7 @@
 		if ( rnd(sdata(SKILL_ATTR_CHA, cc) + cdata(CDATA_IMPRESSION, tc)) >= rnd(sdata(SKILL_ATTR_WIL, tc)) ) {
 			dmgcon tc, CONDITION_BLEED, 75
 			customtalk tc, DBMODE_FLAVOR_FAWN_ON
-			gosub *label_0416
+			gosub *convert_word
 			if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 				if ( jp ) {
 					txtef COLOR_YELLOW
@@ -19737,7 +19737,7 @@
 						modkarma 0, -20
 						if ( jp ) {
 							customtalk tc, DBMODE_FLAVOR_INSULT
-							gosub *label_0416
+							gosub *convert_word
 							if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 								txt name(tc) + "はあきらめが悪く、まだジタバタしている…。", "「こんなのってない" + _yo(3) + "！」", "「どうしてこうなった…」", "「こんなことするなんて、見損なった" + _yo(3) + "！」", "「この犯罪者！」"
 							}
@@ -19751,7 +19751,7 @@
 						cdata(CDATA_EMO_ICON, tc) = 17 + 100 * 3
 						if ( jp ) {
 							customtalk tc, DBMODE_FLAVOR_HUG
-							gosub *label_0416
+							gosub *convert_word
 							if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 								txt name(tc) + "はふっと力を抜くと、身体をあなたに預けた。", "「あーれー」", "「まったく、甘えん坊さん" + _dana(3) + "」"
 							}
@@ -19763,7 +19763,7 @@
 						txt lang(name(tc) + "は抱擁を振りほどくと、あなたをベッドへ押さえつけた。", name(cc) + " squeesed " + _s(cc) + " " + name(tc) + ".")
 						if ( jp ) {
 							customtalk cc, DBMODE_FLAVOR_INSULT2
-							gosub *label_0416
+							gosub *convert_word
 							if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 								txt name(tc) + "はあなたを見下ろして冷笑を浮かべた。", "「おっと、こんなところに抱き枕が」", "「覚悟はできている" + _kana(3) + "？」"
 							}
@@ -19829,7 +19829,7 @@
 					cdata(CDATA_CONDITION_BRAINWASH, tc) = 1
 				}
 				customtalk tc, DBMODE_FLAVOR_HUG
-				gosub *label_0416
+				gosub *convert_word
 				if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 					if ( jp ) {
 						txt name(tc) + "は無言で抱きしめ返してきた。", "「あたたかい…」", "「幸せな気分" + _dana(3) + "」"
@@ -19893,7 +19893,7 @@
 					cdata(CDATA_CONDITION_BRAINWASH, tc) = 1
 				}
 				customtalk tc, DBMODE_FLAVOR_KISS
-				gosub *label_0416
+				gosub *convert_word
 				if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 					if ( jp ) {
 						txt "「大好き♪1」", "「んっ…♪」", "「もっと…して」", "「キスだけじゃいや…」"
@@ -20012,7 +20012,7 @@
 		if ( cdata(CDATA_EXIST, cdata(CDATA_TARGET, tc)) == CHAR_STATE_ALIVE ) {
 			if ( cbit(CHARA_BIT_AWAKE_MAGIC_ATTACK, cc) ) {
 				tc = cdata(CDATA_TARGET, cc)
-				gosub *label_6394
+				gosub *act_melee
 				goto *effect_end
 			}
 		}
@@ -20979,7 +20979,7 @@
 			}
 			cc = tc
 			tc = ccbk
-			gosub *label_6021
+			gosub *skill_tuin_der_lusten
 			cc = ccbk
 		loop
 		goto *effect_end
@@ -20993,7 +20993,7 @@
 				inv(INV_ITEM_NUM, stat)--
 			}
 			if ( cc == CHARA_PLAYER ) {
-				gosub *label_4102
+				gosub *calcBurdenPc
 			}
 			if ( synccheck(cc, -1) ) {
 				animeid = ANIMATION_AROMAGEDDON
@@ -21316,7 +21316,7 @@
 				gdata(GDATA_RANK_HOME) = 100
 				gdata(GDATA_WORLD_RENEW) = TRUE
 				gdata(GDATA_MONTH) = 11
-				gosub *label_9228
+				gosub *advance_hour
 				gdata(GDATA_GUEST) = 2
 				gdata(GDATA_FLAG_SCROLL_OF_WITCHCRAFT_TOTAL_SPELL_BONUS) += 95
 				cdata(CDATA_SKILLPOINT, CHARA_PLAYER) += 95
@@ -22187,7 +22187,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		inv_getheader cc
 		eqlv = 1
 		eqbui = 0
@@ -22655,7 +22655,7 @@
 				txtmore
 				txtef COLOR_SKY_BLUE
 				customtalk cc, DBMODE_FLAVOR_INSULT
-				gosub *label_0416
+				gosub *convert_word
 				if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 					if ( jp ) {
 						if ( cdata(CDATA_SEX, cc) == 0 ) {
@@ -23013,7 +23013,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		txtef COLOR_GREEN
 		txt lang(name(cc) + "の眼から眩い光が放たれた！", name(cc) + " shot a dazzling light from the eye.")
 		snd SOUNDLIST_CRUSH2
@@ -23079,7 +23079,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		if ( cdata(CDATA_ID, cc) == CREATURE_ID_MAILE_THE_MARIONETTE_SHAMAN ) {
 			txtef COLOR_YELLOW
 			txt lang("「くっ…やはり合意がないと充分な力が出ませんね」", "Maile seems not to have enough power.")
@@ -23129,7 +23129,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		snd SOUNDLIST_WAVE
 		animeload 23, tc
 		txtef COLOR_GREEN
@@ -23218,7 +23218,7 @@
 		snd SOUNDLIST_ENC
 		animeload 40, cc
 		customtalk cc, DBMODE_FLAVOR_SPECIAL
-		gosub *label_0416
+		gosub *convert_word
 		snd SOUNDLIST_BOLT1
 		animeload 59, tc
 		txtef COLOR_GREEN
@@ -23289,7 +23289,7 @@
 			juice = 15
 		}
 		flt
-		itemcreate -1, 1263, cdata(CDATA_X, tc), cdata(CDATA_Y, tc), 0
+		itemcreate -1, ITEM_ID_BOTTLE_CAP, cdata(CDATA_X, tc), cdata(CDATA_Y, tc), 0
 		if ( inv(INV_ITEM_PARAM1, ci) / 1000 == 2 ) {
 			if ( ibit(ITEM_BIT_HERBED_IN, ci) != TRUE ) {
 				skillexp SKILL_ATTR_WIL, tc, 50 * juice
@@ -23444,7 +23444,7 @@
 		else {
 			gosub *insta_eat
 		}
-		gosub *label_4102
+		gosub *calcBurdenPc
 		goto *effect_end
 		_switch_sw++
 	}
@@ -23570,7 +23570,7 @@
 
 *label_6333
 	allyctrl = 4
-	gosub *label_5444
+	gosub *com_listNpc
 	txt lang("誰を指導しようか。", "Who will you lead?")
 	if ( p != (-1) ) {
 		tc = p
@@ -23597,7 +23597,7 @@
 			goto *label_6333
 		}
 		customtalk tc, DBMODE_FLAVOR_LEADING
-		gosub *label_0416
+		gosub *convert_word
 		if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 			txtef COLOR_SKY_BLUE
 			if ( jp ) {
@@ -23664,7 +23664,7 @@
 				return
 			}
 		}
-		if ( cbit(1034, tc) == TRUE ) {
+		if ( cbit(CHARA_BIT_BIRTHED_CHILD, tc) == TRUE ) {
 			if ( cdata(CDATA_SPRITE_SIZE_MILK, tc) == (-1) ) {
 				if ( rnd(2) == 0 ) {
 					snd SOUNDLIST_FAIL1
@@ -23792,7 +23792,7 @@
 	}
 	return
 
-*label_6338
+*effect_elixer
 	cdata(CDATA_CONDITION_MPOISON, tc) = 0
 	cdata(CDATA_CONDITION_POISON, tc) = 0
 	cdata(CDATA_CONDITION_SLEEP, tc) = 0

@@ -614,7 +614,7 @@
 	cxinit = locvar_map_placecharaonentrance_x
 	cyinit = locvar_map_placecharaonentrance_y
 	rc = map_placecharaonentrance_arg1
-	gosub *label_4125
+	gosub *place_chara
 	return
 
 *label_4314
@@ -630,7 +630,7 @@
 		cxinit = x
 		cyinit = y
 		rc = map_placearena_arg1
-		gosub *label_4125
+		gosub *place_chara
 		if ( map_placearena_arg2 == 0 ) {
 			if ( cdata(CDATA_X, map_placearena_arg1) >= 13 & cdata(CDATA_Y, map_placearena_arg1) >= 6 & cdata(CDATA_X, map_placearena_arg1) < 20 & cdata(CDATA_Y, map_placearena_arg1) < 12 ) {
 				break
@@ -681,7 +681,7 @@
 				cxinit = cdata(CDATA_X_ORG, cnt)
 				cyinit = cdata(CDATA_Y_ORG, cnt)
 				rc = cnt
-				gosub *label_4125
+				gosub *place_chara
 				continue
 			}
 		}
@@ -2040,7 +2040,7 @@
 	gosub *mapEditor_main_WEND1
 	gosub *cmap_init2
 	gosub *cmap_init3
-	gosub *label_4912
+	gosub *map_prepareTile
 
 *mapEditor_main
 	map_tileset dbg_tileset

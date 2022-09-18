@@ -5380,7 +5380,7 @@
 		rc = CHARA_PLAYER
 		flt 100
 		characreate CHARA_PLAYER, CREATURE_ID_HELLABYRINTH_RULER, -3, 0
-		gosub *label_4136
+		gosub *cm_finishPC
 		repeat 3
 		loop
 		gdata(GDATA_YEAR) = 517, 12, 30, 1, 10
@@ -5938,7 +5938,7 @@
 		loop
 		cbitmod CHARA_BIT_RAPID_MAGIC, CHARA_PLAYER, TRUE
 		mode = MODELIST_MAIN
-		gosub *label_4102
+		gosub *calcBurdenPc
 		repeat 59
 			mat(cnt) = 200
 		loop
@@ -5957,7 +5957,7 @@
 		ghelp = 1
 		gdata(GDATA_AREA) = AREA_HOME
 		gdata(GDATA_HOME_LEVEL) = 0
-		gosub *label_4932
+		gosub *setArea
 		gdata(GDATA_LEVEL) = 1
 		gdata(GDATA_LEVEL_START_ON) = 4
 		gdata(GDATA_VERSION) = int(double("6.14") * 1000)
@@ -5980,7 +5980,7 @@
 		gosub *initial_recipe
 	}
 	if ( mode == MODELIST_CONTINUE ) {
-		gosub *label_5888
+		gosub *game_load
 	}
 	gosub *define_los
 	goto *map_init
@@ -6126,7 +6126,7 @@
 		gdata(GDATA_TURN)++
 		cc = CHARA_PLAYER
 		if ( gdata(GDATA_TURN) \ 10 == 0 ) {
-			gosub *label_4647
+			gosub *chara_spawn
 		}
 		if ( gdata(GDATA_TURN) \ 10 == 1 ) {
 			gosub *item_senseQuality
@@ -6149,14 +6149,14 @@
 		if ( gdata(GDATA_MIN) >= 60 ) {
 			gdata(GDATA_HOUR) += gdata(GDATA_MIN) / 60
 			gdata(GDATA_MIN) = gdata(GDATA_MIN) \ 60
-			gosub *label_9228
+			gosub *advance_hour
 		}
 	}
 	procid = (procid + 1) \ 4
 	proclist(procid) = "main_init:End" + " ct:" + ct
-	goto *label_9234
+	goto *game_main
 
-*label_9227
+*weather_change
 	if ( gdata(GDATA_WEATHER) == WEATHER_SNOW ) {
 		if ( gdata(GDATA_AREA) == AREA_NORTH_TYRIS & gdata(GDATA_WORLD_X) < 65 & gdata(GDATA_WORLD_Y) > 10 ) {
 			gdata(GDATA_WEATHER) = WEATHER_RAIN
@@ -6192,7 +6192,7 @@
 	}
 	return
 
-*label_9228
+*advance_hour
 	procid = (procid + 1) \ 4
 	proclist(procid) = "Advance_hour:Begin" + " ct:" + ct
 	if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_MUSEUM ) {
@@ -6245,7 +6245,7 @@
 		}
 	}
 	gdata(GDATA_NEXT_WEATHER)--
-	gosub *label_9227
+	gosub *weather_change
 	if ( gdata(GDATA_NEXT_WEATHER) < 0 ) {
 		gdata(GDATA_NEXT_WEATHER) = rnd(22) + 2
 		p = gdata(GDATA_WEATHER)
@@ -6388,7 +6388,7 @@
 			gosub *music_play
 		}
 	}
-	gosub *label_4912
+	gosub *map_prepareTile
 	gosub *adv_action
 	gosub *item_rot
 	gosub *calcThirst
@@ -6591,7 +6591,7 @@
 				gosub *random_event
 			}
 		}
-		gosub *label_4612
+		gosub *shop_turn
 		repeat 9
 			p = 120 + cnt
 			if ( gdata(p) >= 10000 ) {
@@ -6613,7 +6613,7 @@
 		gdata(GDATA_DAY) += gdata(GDATA_HOUR) / 24
 		gdata(GDATA_HOUR) = gdata(GDATA_HOUR) \ 24
 		if ( gdata(GDATA_DAY) >= 31 ) {
-			gdata(250 + 442) = 0
+			gdata(GDATA_FLAG_MOST_EXPENSIVE_WORLD_MAP_VEHICLE_THIS_MONTH) = 0
 			gdata(GDATA_MONTH)++
 			gdata(GDATA_DAY) = gdata(GDATA_DAY) - 30
 			gdata(GDATA_YACTECT_GEMSTONE_MSG) = 0
@@ -6754,7 +6754,7 @@
 	proclist(procid) = "Advance_hour:End" + " ct:" + ct
 	return
 
-*label_9234
+*game_main
 	if ( ct >= 245 ) {
 		goto *main_init
 	}
@@ -6763,14 +6763,14 @@
 	}
 	else {
 		ct++
-		goto *label_9234
+		goto *game_main
 	}
 
-*label_9235
+*game_main_redo
 	cc = ct
 	cdata(CDATA_TIME_SCALE, cc) = cdata(CDATA_SPEED_FIX, cc)
 	cdata(CDATA_TURN, cc)++
-	gosub *label_9246
+	gosub *turn_init
 
 
 	if ( ct == 0 ) {
@@ -6834,7 +6834,7 @@
 			}
 		loop
 		if ( gdata(GDATA_RETURN) != 0 ) {
-*label_9240
+*game_main_redo_WHILE1
 			if ( 1 == 0 ) {
 				goto *game_main_redo_WEND1
 			}
@@ -6870,7 +6870,7 @@
 						goto *game_main_redo_WEND1
 					}
 				}
-				gosub *label_5756
+				gosub *check_return
 				if ( stat == 1 ) {
 					txtmore
 					txt lang("あなたは法を犯した。", "You commit a crime.")
@@ -6896,10 +6896,10 @@
 				goto *map_exit
 			}
 			goto *game_main_redo_WEND1
-			goto *label_9240
+			goto *game_main_redo_WHILE1
 		}
 *game_main_redo_WEND1
-		gosub *label_4937
+		gosub *mapEvent
 		if ( cdata(CDATA_EXIST, CHARA_PLAYER) != CHAR_STATE_ALIVE ) {
 			goto *pc_dead
 		}
@@ -7032,7 +7032,7 @@
 						chara_vanquish findallyguard(CREATURE_ID_STRAY_SOUL)
 					}
 					evadd EVENT_AMURDEAD_SUB_CREATE_STAIRS, 0
-					goto *label_9247
+					goto *turn_end
 				}
 			}
 		}
@@ -7044,7 +7044,7 @@
 			}
 		}
 	}
-	if ( cbit(1034, cc) == TRUE ) {
+	if ( cbit(CHARA_BIT_BIRTHED_CHILD, cc) == TRUE ) {
 		if ( cdata(CDATA_CONDITION_SLEEP, cc) == 0 ) {
 			if ( cdata(CDATA_SPRITE_SIZE_MILK, cc) == (-5) ) {
 				if ( rnd(100) < 5 ) {
@@ -7086,7 +7086,7 @@
 			syfix = 0
 			gosub *screen_draw
 		}
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( map(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), MAP_ITEM_CHIPS_MEMORY) != 0 ) {
 		if ( mapitemfind(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), ITEM_ID_LULWYS_PHOTO_COLLECTION) != (-1) ) {
@@ -7106,7 +7106,7 @@
 					txtef COLOR_PURPLE
 					txt lang(name(cc) + "はページをめくっている…。", name(cc) + "  weakened.")
 					snd SOUNDLIST_BOOK1
-					goto *label_9247
+					goto *turn_end
 				}
 				if ( rnd(10) == 0 ) {
 					kaiwa = rnd(3)
@@ -7172,13 +7172,13 @@
 	if ( cdata(CDATA_CONDITION_DRUNK, cc) >= 45 | cdata(CDATA_HUNGER, cc) > 35000 ) {
 		if ( rnd(60 + cdata(CDATA_ALCOHOL_CONSUMED, cc) * 5) == 0 ) {
 			chara_vomit cc
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( cdata(CDATA_THIRST, cc) > 35000 ) {
 		if ( rnd(60) == 0 ) {
 			chara_morasi cc
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( cdata(CDATA_ROW_ACT_WARNING, cc) == 1 ) {
@@ -7265,43 +7265,43 @@
 		}
 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_SEX ) {
 			at 50
-			gosub *label_6019
+			gosub *sexsex
 		}
 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_TUIN_DER_LUSTEN ) {
 			at 50
-			gosub *label_6021
+			gosub *skill_tuin_der_lusten
 		}
 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_CHARGE ) {
 			at 5
-			gosub *label_5999
+			gosub *skill_charge
 		}
 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_MEAL ) {
 			at 5
-			gosub *label_6016
+			gosub *eat_meal
 		}
 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_XMAS_CAKE ) {
 			at 5
-			gosub *label_6018
+			gosub *eat_meal_xmas_cake
 		}
 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_PERSUASION ) {
 			at 5
-			gosub *label_6001
+			gosub *skill_persuasion
 		}
 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_PECULIAR_JOKE ) {
 			at 5
-			gosub *label_6004
+			gosub *skill_peculiar_joke
 		}
 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_BLENDED_LIE ) {
 			at 5
-			gosub *label_6007
+			gosub *skill_blended_lie
 		}
 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_INTIMIDATION ) {
 			at 5
-			gosub *label_6010
+			gosub *skill_intimidation
 		}
 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_MYSTERIOUS_SONG ) {
 			at 5
-			gosub *label_6013
+			gosub *skill_mysterious_song
 		}
 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_WORK_A ) {
 			at 5
@@ -7332,7 +7332,7 @@
 					}
 				}
 			}
-			gosub *label_6023
+			gosub *generalAct
 		}
 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_BLEND ) {
 			at 20
@@ -7340,11 +7340,11 @@
 		}
 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_PERFORM ) {
 			at 40
-			gosub *label_5986
+			gosub *perform
 		}
 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_PERFORM_PREACH ) {
 			at 40
-			gosub *label_5996
+			gosub *perform_preach
 		}
 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_BEGGING ) {
 			at 40
@@ -7352,7 +7352,7 @@
 		}
 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_PERFORM_DANCE ) {
 			at 40
-			gosub *label_5991
+			gosub *perform_dance
 		}
 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_WRITING ) {
 			at 40
@@ -7363,7 +7363,7 @@
 			goto *act_move
 		}
 		if ( cdata(CDATA_ACTION_PERIOD, cc) > 0 ) {
-			goto *label_9247
+			goto *turn_end
 		}
 		rowactend cc
 		if ( cc == CHARA_PLAYER ) {
@@ -7398,9 +7398,9 @@
 			goto *ai_turn
 		}
 	}
-	goto *label_9234
+	goto *game_main
 
-*label_9246
+*turn_init
 	cdata(CDATA_EMO_ICON, cc) -= 100
 	if ( cdata(CDATA_EMO_ICON, cc) < 0 ) {
 		cdata(CDATA_EMO_ICON, cc) = 0
@@ -7417,16 +7417,16 @@
 		}
 		r1 = cc
 		r2 = 0
-		gosub *label_3967
-		goto *label_9246
+		gosub *calcLevelUp
+		goto *turn_init
 	}
 	return
 
-*label_9247
+*turn_end
 	buffact = 0
 	cc = ct
 	if ( cdata(CDATA_EXIST, cc) != CHAR_STATE_ALIVE ) {
-		goto *label_9234
+		goto *game_main
 	}
 	hear = 0
 	r1 = cc
@@ -7437,7 +7437,7 @@
 			if ( gdata(GDATA_SLEEP_GENE) < 10000 ) {
 				gdata(GDATA_SLEEP_GENE) += 10000
 				gdata(GDATA_ROW_ACT) = ACTION_SLEEP
-				gosub *label_6023
+				gosub *generalAct
 			}
 		}
 		if ( cdata(CDATA_BURDEN, CHARA_PLAYER) >= 3 ) {
@@ -7499,7 +7499,7 @@
 					gdata(GDATA_FLAG_STOP_TIME_OTHER) = gdata(GDATA_TIME_STOP_TIME) + 1
 				}
 			}
-			goto *label_9235
+			goto *game_main_redo
 		}
 	}
 	if ( gdata(GDATA_FLAG_STOP_TIME_OTHER) > 0 ) {
@@ -7518,7 +7518,7 @@
 				}
 				txtef COLOR_SKY_BLUE
 				txt " *tick* "
-				goto *label_9235
+				goto *game_main_redo
 			}
 		}
 	}
@@ -7536,7 +7536,7 @@
 			gdata(GDATA_FLAG_CURTAIN_CALL) = -9999
 		}
 	}
-	goto *label_9234
+	goto *game_main
 
 *pc_turn_init
 	procid = (procid + 1) \ 4
@@ -7775,7 +7775,7 @@
 			gdata(GDATA_FLAG_CURTAIN_CALL) = 0
 			await 1000
 			petarenawin = 2
-			goto *label_9247
+			goto *turn_end
 			goto *pc_turn_init_WHILE1_CONTINUE
 		}
 		if ( key == key_goup | key_escape == 1 ) {
@@ -7787,13 +7787,13 @@
 			gosub *prompt_key
 			if ( rtval == 0 ) {
 				petarenawin = 2
-				goto *label_9247
+				goto *turn_end
 			}
 			goto *pc_turn_init_WHILE1_CONTINUE
 		}
 		if ( key != key_cancel ) {
 			if ( key != "" ) {
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 *pc_turn_init_WHILE1_CONTINUE
@@ -7848,7 +7848,7 @@
 		if ( cdata(CDATA_CONDITION_BRAINWASH, CHARA_PLAYER) == 0 ) {
 			txt lang("装備を変更した。", "You change your equipment.")
 		}
-		goto *label_9247
+		goto *turn_end
 	}
 	t++
 	if ( cdata(CDATA_CHAIN_ATTACK_COUNT, CHARA_PLAYER) != 0 ) {
@@ -7904,7 +7904,7 @@
 			msg_newline
 			msgtemp = "  "
 			firstturn = 1
-			gosub *label_5888
+			gosub *game_load
 			mode = MODELIST_CONTINUE
 			goto *map_init
 		}
@@ -7915,7 +7915,7 @@
 			msg_newline
 			msgtemp = "  "
 			firstturn = 1
-			gosub *label_5888
+			gosub *game_load
 			mode = MODELIST_CONTINUE
 			goto *map_init
 		}
@@ -7932,7 +7932,7 @@
 				txt skillname(cnt) + ":" + cdata(STARTING_CDATA_FOOD_EXP + cnt - 10, CHARA_PLAYER) + "%"
 			loop
 			chara_vomit CHARA_PLAYER
-			goto *label_9247
+			goto *turn_end
 			repeat 100
 				flt 100
 				fltn "cnpc"
@@ -7943,16 +7943,16 @@
 		getkey a, 116
 		if ( a ) {
 			gosub *com_wish
-			goto *label_9247
+			goto *turn_end
 		}
 		getkey a, 117
 		if ( a ) {
 			dbg_skipevent = 1
 			gdata(GDATA_HOUR)++
-			gosub *label_9228
+			gosub *advance_hour
 			dbg_skipevent = 0
 			mode = MODELIST_MAIN
-			goto *label_9247
+			goto *turn_end
 		}
 		getkey a, 118
 		if ( a ) {
@@ -7971,7 +7971,7 @@
 	else {
 		getkey a, 114
 		if ( a ) {
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	getkey a, 112
@@ -7994,8 +7994,8 @@
 		gmode 2
 		sxfix = 0
 		syfix = 0
-		gosub *label_3908
-		gosub *label_3912
+		gosub *screen_setPos
+		gosub *los
 		gosub *los_draw
 		p = windoww / 192
 		repeat p + 1
@@ -8126,7 +8126,7 @@
 		await 100
 	}
 	if ( key != "" ) {
-		gosub *label_9266
+		gosub *pcQuitY
 	}
 	if ( gdata(GDATA_FLAG_MAIN) < 875 | gdata(GDATA_FLAG_MAIN) >= 900 ) {
 		if ( key == key_quick ) {
@@ -8344,7 +8344,7 @@
 		}
 		if ( key == key_target ) {
 			findlocmode = 1
-			gosub *label_5349
+			gosub *findLocation
 			findlocmode = 0
 			goto *pc_turn
 		}
@@ -8380,7 +8380,7 @@
 				goto *com_target
 			}
 			else {
-				gosub *label_5349
+				gosub *findLocation
 				goto *pc_turn
 			}
 		}
@@ -8508,7 +8508,7 @@
 		goto *act_moveLevel
 	}
 	if ( key == key_wait ) {
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( key == key_enter ) {
 		gosub *screen_draw
@@ -8527,7 +8527,7 @@
 	}
 	goto *pc_turn
 
-*label_9266
+*pcQuitY
 	if ( gdata(GDATA_QUIT_Y) != (-1) ) {
 		if ( mdata(MDATA_TYPE) != MAP_TYPE_WORLD ) {
 			if ( gdata(GDATA_QUIT_Y) == 0 ) {
@@ -8557,7 +8557,7 @@
 							loop
 							gdata(GDATA_QUIT_Y) = -1
 							gosub *screen_draw
-							goto *label_9247
+							goto *turn_end
 						}
 					}
 					gdata(GDATA_QUIT_Y) = 0
@@ -9055,7 +9055,7 @@
 	}
 	if ( _switch_val == 8 | _switch_sw ) {
 		_switch_sw = 0
-		gosub *label_8954
+		gosub *quest_eliminate
 		goto *event_SWEND1
 		_switch_sw++
 	}
@@ -9363,7 +9363,7 @@
 	if ( _switch_val == 24 | _switch_sw ) {
 		_switch_sw = 0
 		initeco = 1
-		gosub *label_6708
+		gosub *renew_economy
 		goto *event_SWEND1
 		_switch_sw++
 	}
@@ -11009,7 +11009,7 @@
 				cdata(CDATA_SPRITE_SIZE_MILK, rc) = -5
 				cdata(CDATA_AGE, rc) = gdata(GDATA_YEAR)
 				cdata(CDATA_QUALITY, rc) = FIX_QUALITY_UNIQUE
-				cbitmod 1034, rc, TRUE
+				cbitmod CHARA_BIT_BIRTHED_CHILD, rc, TRUE
 				cdata(CDATA_SEX, rc) = 0
 				cdata(CDATA_PORTRAIT, rc) = -1
 				cdatan(CDATAN_NAME, rc) = lang(cdatan(CDATAN_NAME, ccbk) + "の息子", "son of " + cdatan(CDATAN_NAME, ccbk))
@@ -11045,7 +11045,7 @@
 				cdata(CDATA_SPRITE_SIZE_MILK, rc) = -5
 				cdata(CDATA_AGE, rc) = gdata(GDATA_YEAR)
 				cdata(CDATA_QUALITY, rc) = FIX_QUALITY_UNIQUE
-				cbitmod 1034, rc, TRUE
+				cbitmod CHARA_BIT_BIRTHED_CHILD, rc, TRUE
 				cdata(CDATA_SEX, rc) = 1
 				cdata(CDATA_PORTRAIT, rc) = -1
 				cdatan(CDATAN_NAME, rc) = lang(cdatan(CDATAN_NAME, ccbk) + "の娘", "daughter of " + cdatan(CDATAN_NAME, ccbk))
@@ -12746,7 +12746,7 @@
 	}
 	if ( _switch_val == 10 | _switch_sw ) {
 		_switch_sw = 0
-		gosub *label_8945
+		gosub *quest_check
 		goto *event_SWEND1
 		_switch_sw++
 	}
@@ -12828,7 +12828,7 @@
 			rc = tc
 			cxinit = cdata(CDATA_X, CHARA_PLAYER)
 			cyinit = cdata(CDATA_Y, CHARA_PLAYER)
-			gosub *label_4125
+			gosub *place_chara
 		}
 		else {
 			flt 0, FIX_QUALITY_GOOD
@@ -13043,7 +13043,7 @@
 			cdata(CDATA_EMO_ICON, cnt) = 6 + 100 * 20
 			tc = cnt
 			customtalk tc, DBMODE_FLAVOR_WELCOME
-			gosub *label_0416
+			gosub *convert_word
 			if ( stat == 0 ) {
 				if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 					i++
@@ -13087,7 +13087,7 @@
 						cdata(CDATA_EMO_ICON, cnt) = 6 + 100 * 20
 						tc = cnt
 						customtalk tc, DBMODE_FLAVOR_WELCOME
-						gosub *label_0416
+						gosub *convert_word
 						if ( stat == 0 ) {
 							if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 								i++

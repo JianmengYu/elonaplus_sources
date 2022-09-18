@@ -24,7 +24,7 @@
 	cdata(CDATA_PIETY, CHARA_PLAYER) += modpiety_arg1 / (1 + (gdata(GDATA_AREA) == AREA_SHOW_HOUSE) * 9)
 	return 1
 
-*label_5207
+*set_npcGod
 	if ( cdata(CDATA_GOD, tc) != GOD_EYTH | cbit(CHARA_BIT_NO_GOD, tc) | tc == CHARA_PLAYER ) {
 		return
 	}
@@ -75,7 +75,7 @@
 	godname(8) = lang("富のヤカテクト", "Yacatect of Wealth")
 	return
 
-*label_5210
+*god_effect
 	if ( cdata(CDATA_GOD, r1) == GOD_MANI ) {
 		if ( sdata(SKILL_ATTR_DEX, r1) > 0 ) {
 			sdata(SKILL_ATTR_DEX, r1) += limit(cdata(CDATA_PIETY, r1) / 400, 1, 12 + sdata(SKILL_NORMAL_FAITH, CHARA_PLAYER) / 10)
@@ -306,7 +306,7 @@
 	if ( gdata(GDATA_AREA) == AREA_CHAOS_CRADLE & gdata(GDATA_LEVEL) == 179 ) {
 		txtef COLOR_PURPLE
 		txt lang("ここからでは神に届かないようだ…。", "It seems that it will not reach God from here...")
-		goto *label_9247
+		goto *turn_end
 	}
 	cs = 0
 	page = 0
@@ -493,7 +493,7 @@
 *god_pray
 	if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_EYTH ) {
 		txt lang(name(0) + "は神を信仰していないが、試しに祈ってみた。", "You don't believe in God.")
-		goto *label_9247
+		goto *turn_end
 	}
 	txtnew
 	txt lang("あなたの神に祈りを乞う？", "Really pray to your God?")
@@ -511,7 +511,7 @@
 		if ( cdata(CDATA_PIETY, CHARA_PLAYER) < 200 | cdata(CDATA_PRAY, CHARA_PLAYER) < 1000 ) {
 			txtmore
 			txt lang(godname(cdata(CDATA_GOD, CHARA_PLAYER)) + "はあなたに無関心だ。", godname(cdata(CDATA_GOD, CHARA_PLAYER)) + " is indifferent to you.")
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( gdata(GDATA_AREA) == AREA_CHAOS_CRADLE & gdata(GDATA_LEVEL) == 179 ) {
@@ -525,7 +525,7 @@
 			txtmore
 			txt lang(godname(cdata(CDATA_GOD, CHARA_PLAYER)) + "も、今は余裕がないようだ…。", "It seems that " + godname(cdata(CDATA_GOD, CHARA_PLAYER)) + " cannot afford now...")
 		}
-		goto *label_9247
+		goto *turn_end
 	}
 	animeid = ANIMATION_HOLY
 	animode = 100
@@ -578,7 +578,7 @@
 				if ( rtval == 0 ) {
 					gdata(GDATA_GOD_RANK)++
 				}
-				goto *label_9247
+				goto *turn_end
 			}
 			flt
 			dbid = 0
@@ -780,17 +780,17 @@
 			}
 		}
 	}
-	goto *label_9247
+	goto *turn_end
 
 *god_offer
 	if ( gdata(GDATA_AREA) == AREA_CHAOS_CRADLE & gdata(GDATA_LEVEL) == 179 ) {
 		txtef COLOR_PURPLE
 		txt lang("ここからでは神に届かないようだ…。", "It seems that it will not reach God from here...")
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_EYTH ) {
 		txt lang("あなたは神を信仰していないが、試しに捧げてみた。", "You don't believe in God.")
-		goto *label_9247
+		goto *turn_end
 	}
 	rowact_item ci
 	item_separate ci
@@ -804,7 +804,7 @@
 		ti = stat
 	}
 	else {
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_CORPSE ) {
 		i = limit(inv(INV_ITEM_WEIGHT, ci) / 200, 1, 50)
@@ -818,7 +818,7 @@
 	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_COCONUT_CRAB ) {
 		i = 60
 	}
-	if ( inv(INV_ITEM_ID, ci) == 1264 ) {
+	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_DERNEFIA ) {
 		i = 60
 	}
 	if ( inv(INV_ITEM_PARAM1, ti) != cdata(CDATA_GOD, CHARA_PLAYER) ) {
@@ -896,7 +896,7 @@
 		cdata(CDATA_PRAY, CHARA_PLAYER) += i * 7
 	}
 	removeitem ci, inv(INV_ITEM_NUM, ci)
-	goto *label_9247
+	goto *turn_end
 
 *god_punish
 	efid = SKILL_EFFECT_CURSE

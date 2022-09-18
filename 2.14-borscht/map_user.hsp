@@ -1,69 +1,69 @@
 *home_setup
-	if ( gHomeLevel == 0 ) {
-		mMaxInv = 100
-		gHomeBase = 1000
+	if ( gdata(GDATA_HOME_LEVEL) == 0 ) {
+		mdata(MDATA_MAX_INV) = 100
+		gdata(GDATA_HOME_BASE) = 1000
 	}
-	if ( gHomeLevel == 1 ) {
-		mMaxInv = 150
-		gHomeBase = 3000
+	if ( gdata(GDATA_HOME_LEVEL) == 1 ) {
+		mdata(MDATA_MAX_INV) = 150
+		gdata(GDATA_HOME_BASE) = 3000
 	}
-	if ( gHomeLevel == 2 ) {
-		mMaxInv = 200
-		gHomeBase = 5000
+	if ( gdata(GDATA_HOME_LEVEL) == 2 ) {
+		mdata(MDATA_MAX_INV) = 200
+		gdata(GDATA_HOME_BASE) = 5000
 	}
-	if ( gHomeLevel == 3 ) {
-		mMaxInv = 300
-		gHomeBase = 7000
+	if ( gdata(GDATA_HOME_LEVEL) == 3 ) {
+		mdata(MDATA_MAX_INV) = 300
+		gdata(GDATA_HOME_BASE) = 7000
 	}
-	if ( gHomeLevel == 4 ) {
-		mMaxInv = 350
-		gHomeBase = 8000
-		mTileSet = MAP_TILESET_SF
+	if ( gdata(GDATA_HOME_LEVEL) == 4 ) {
+		mdata(MDATA_MAX_INV) = 350
+		gdata(GDATA_HOME_BASE) = 8000
+		mdata(MDATA_TILESET) = MAP_TILESET_SF
 	}
-	if ( gHomeLevel == 5 ) {
-		mMaxInv = 400
-		gHomeBase = 10000
+	if ( gdata(GDATA_HOME_LEVEL) == 5 ) {
+		mdata(MDATA_MAX_INV) = 400
+		gdata(GDATA_HOME_BASE) = 10000
 	}
-	if ( gHomeLevel == 6 ) {
-		mMaxInv = 400
-		gHomeBase = 15000
+	if ( gdata(GDATA_HOME_LEVEL) == 6 ) {
+		mdata(MDATA_MAX_INV) = 400
+		gdata(GDATA_HOME_BASE) = 15000
 	}
 	return
 
 *building_new
-	if ( iID(ci) == ITEM_ID_DEED_PROPERTY_TRANSFER ) {
-		if ( mType != MAP_TYPE_WORLD ) {
-			if ( areaId(gArea) == AREA_CROP | areaId(gArea) == AREA_MUSEUM | areaId(gArea) == AREA_SHOP | areaId(gArea) == AREA_STORAGE_HOUSE | areaId(gArea) == AREA_RANCH | areaId(gArea) == AREA_DISCARDED_RANCH | areaId(gArea) == AREA_DUNGEON ) {
+	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_DEED_PROPERTY_TRANSFER ) {
+		if ( mdata(MDATA_TYPE) != MAP_TYPE_WORLD ) {
+			if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_CROP | adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_MUSEUM | adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_SHOP | adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_STORAGE_HOUSE | adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_RANCH | adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_DISCARDED_RANCH | adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_DUNGEON ) {
 				item_separate ci
-				iParam2(ci) = gArea
-				txt lang("物件No" + iParam2(ci) + "を登録" + areaArenaWin(gArea) + "した。", "You can only use it in the world map.")
-				areaArenaWin(gArea) = -1
+				inv(INV_ITEM_PARAM2, ci) = gdata(GDATA_AREA)
+				txt lang("物件No" + inv(INV_ITEM_PARAM2, ci) + "を登録" + adata(ADATA_ARENA_WIN, gdata(GDATA_AREA)) + "した。", "You can only use it in the world map.")
+				adata(ADATA_ARENA_WIN, gdata(GDATA_AREA)) = -1
 				snd SOUNDLIST_ENC
 				gosub *screen_draw
 				goto *pc_turn
 			}
 		}
-		if ( iParam2(ci) == 0 ) {
+		if ( inv(INV_ITEM_PARAM2, ci) == 0 ) {
 			snd SOUNDLIST_FAIL1
 			txt lang("移設したい物件内で読むとNoを登録できる。", "You can only use it in the world map.")
 			gosub *screen_draw
 			goto *pc_turn
 		}
 	}
-	if ( mType != MAP_TYPE_WORLD ) {
+	if ( mdata(MDATA_TYPE) != MAP_TYPE_WORLD ) {
 		txt lang("それはワールドマップでしか使えない。", "You can only use it in the world map.")
 		gosub *screen_draw
 		goto *pc_turn
 	}
-	cell_featread cX(CHARA_PLAYER), cY(CHARA_PLAYER)
-	if ( featPic != 0 ) {
+	cell_featread cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER)
+	if ( feat(FEAT_CELL_PIC) != 0 ) {
 		txt lang("その場所には建てられない。", "You can't build it here.")
 		gosub *screen_draw
 		goto *pc_turn
 	}
 	area = -1
 	repeat 450 - 300, 300
-		if ( areaId(cnt) == AREA_NONE ) {
+		if ( adata(ADATA_ID, cnt) == AREA_NONE ) {
 			area = cnt
 			break
 		}
@@ -73,10 +73,10 @@
 		gosub *screen_draw
 		goto *pc_turn
 	}
-	if ( iID(ci) != ITEM_ID_DEED_PROPERTY_TRANSFER ) {
+	if ( inv(INV_ITEM_ID, ci) != ITEM_ID_DEED_PROPERTY_TRANSFER ) {
 		txt lang("本当にこの場所に建設する？ ", "Really build it here? ")
 	}
-	if ( iID(ci) == ITEM_ID_DEED_PROPERTY_TRANSFER ) {
+	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_DEED_PROPERTY_TRANSFER ) {
 		txt lang("本当にこの場所に移設する？ ", "Really move it here? ")
 	}
 	promptl(0, 0) = stryes, "y", "0"
@@ -94,10 +94,10 @@
 		txtef COLOR_YELLOW
 		txt lang("あなたは「" + skillname(SKILL_SPACT_MARKING) + "」の能力を得た。", "You have learned new ability, " + skillname(SKILL_SPACT_MARKING) + ".")
 	}
-	if ( iID(ci) == ITEM_ID_DEED ) {
-		gHomeLevel = iParam1(ci)
-		iNum(ci)--
-		cell_refresh iX(ci), iY(ci)
+	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_DEED ) {
+		gdata(GDATA_HOME_LEVEL) = inv(INV_ITEM_PARAM1, ci)
+		inv(INV_ITEM_NUM, ci)--
+		cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
 		gosub *setHome
 		midbk = mid
 		mid = "" + 7 + "_" + (100 + 1)
@@ -106,10 +106,10 @@
 		mid = midbk
 		gosub *world_refresh
 		levelexitby = MAP_EXIT_TELEPORT
-		gTeleportArea = AREA_HOME
-		gTeleportLevel = 1
-		gWorldX = areaX(7)
-		gWorldY = areaY(7)
+		gdata(GDATA_TELEPORT_AREA) = AREA_HOME
+		gdata(GDATA_TELEPORT_LEVEL) = 1
+		gdata(GDATA_WORLD_X) = adata(ADATA_X, 7)
+		gdata(GDATA_WORLD_Y) = adata(ADATA_Y, 7)
 		snd SOUNDLIST_BUILD1
 		txtef COLOR_GREEN
 		txt lang("新しい家を建てた！ ", "You've built a new house!")
@@ -118,169 +118,169 @@
 		exgauge = 10
 		goto *map_exit
 	}
-	if ( iID(ci) == ITEM_ID_DEED_HOME_RELOCATION ) {
-		iNum(ci)--
-		cell_refresh iX(ci), iY(ci)
+	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_DEED_HOME_RELOCATION ) {
+		inv(INV_ITEM_NUM, ci)--
+		cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
 		doukutu = 100
 		gosub *setHome
 		gosub *world_refresh
 		levelexitby = MAP_EXIT_TELEPORT
-		gTeleportArea = AREA_HOME
-		gTeleportLevel = 1
-		gWorldX = areaX(7)
-		gWorldY = areaY(7)
+		gdata(GDATA_TELEPORT_AREA) = AREA_HOME
+		gdata(GDATA_TELEPORT_LEVEL) = 1
+		gdata(GDATA_WORLD_X) = adata(ADATA_X, 7)
+		gdata(GDATA_WORLD_Y) = adata(ADATA_Y, 7)
 		snd SOUNDLIST_BUILD1
 		txtef COLOR_GREEN
 		txt lang("引っ越しが完了した！ ", "You've move house!")
 		msg_halt
 		snd SOUNDLIST_EXITMAP1
-		if ( gHomeLevel == 0 ) {
+		if ( gdata(GDATA_HOME_LEVEL) == 0 ) {
 			gdata(GDATA_FLAG_HOME_MOVED) = 1
 		}
 		goto *map_exit
 	}
-	if ( iID(ci) == ITEM_ID_DEED_PROPERTY_TRANSFER ) {
-		bukken = iParam2(ci)
-		iNum(ci)--
-		cell_refresh iX(ci), iY(ci)
-		areaX(bukken) = cX(CHARA_PLAYER)
-		areaY(bukken) = cY(CHARA_PLAYER)
-		areaParent(bukken) = gWorld
+	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_DEED_PROPERTY_TRANSFER ) {
+		bukken = inv(INV_ITEM_PARAM2, ci)
+		inv(INV_ITEM_NUM, ci)--
+		cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
+		adata(ADATA_X, bukken) = cdata(CDATA_X, CHARA_PLAYER)
+		adata(ADATA_Y, bukken) = cdata(CDATA_Y, CHARA_PLAYER)
+		adata(ADATA_PARENT, bukken) = gdata(GDATA_WORLD)
 		gosub *world_refresh
 		levelexitby = MAP_EXIT_TELEPORT
-		gTeleportArea = bukken
-		gTeleportLevel = 1
-		gWorldX = areaX(bukken)
-		gWorldY = areaY(bukken)
+		gdata(GDATA_TELEPORT_AREA) = bukken
+		gdata(GDATA_TELEPORT_LEVEL) = 1
+		gdata(GDATA_WORLD_X) = adata(ADATA_X, bukken)
+		gdata(GDATA_WORLD_Y) = adata(ADATA_Y, bukken)
 		snd SOUNDLIST_BUILD1
 		txtef COLOR_GREEN
 		txt lang("移設が完了した！ ", "You've move property!")
 		msg_halt
-		areaArenaWin(bukken) = 0
+		adata(ADATA_ARENA_WIN, bukken) = 0
 		snd SOUNDLIST_EXITMAP1
 		goto *map_exit
 	}
 	fmode = 13
 	gosub *game_ctrlFile
 	p = area
-	areaX(p) = cX(CHARA_PLAYER)
-	areaY(p) = cY(CHARA_PLAYER)
-	areaType(p) = MAP_TYPE_HOME
-	areaRestorePos(p) = 1
-	areaIcon(p) = 0
-	areaTileSet(p) = 3
-	areaMaxLevel(p) = 10000
-	areaMinLevel(p) = 1
-	areaCanSave(p) = 1
-	areaTileFile(p) = 1
-	areaStartOn(p) = 8
-	areaParent(p) = gWorld
-	if ( iID(ci) == ITEM_ID_DEED_MUSEUM ) {
-		areaId(p) = AREA_MUSEUM
-		areaIcon(p) = xy2pic(19, 4)
-		areaField(p) = 1
+	adata(ADATA_X, p) = cdata(CDATA_X, CHARA_PLAYER)
+	adata(ADATA_Y, p) = cdata(CDATA_Y, CHARA_PLAYER)
+	adata(ADATA_TYPE, p) = MAP_TYPE_HOME
+	adata(ADATA_CAN_SAVE, p) = 1
+	adata(ADATA_RESTORE_POS, p) = 0
+	adata(ADATA_TILESET, p) = 3
+	adata(ADATA_TIME_SCALE, p) = 10000
+	adata(ADATA_MIN_LEVEL, p) = 1
+	adata(ADATA_MAX_LEVEL, p) = 1
+	adata(ADATA_TILE_FILE, p) = 1
+	adata(ADATA_START_ON, p) = 8
+	adata(ADATA_PARENT, p) = gdata(GDATA_WORLD)
+	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_DEED_MUSEUM ) {
+		adata(ADATA_ID, p) = AREA_MUSEUM
+		adata(ADATA_ICON, p) = xy2pic(19, 4)
+		adata(ADATA_FIELD, p) = 1
 		s = lang("博物館", "museum")
 	}
-	if ( iID(ci) == ITEM_ID_DEED_SHOP ) {
-		areaId(p) = AREA_SHOP
-		areaIcon(p) = xy2pic(18, 4)
-		areaField(p) = 1
+	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_DEED_SHOP ) {
+		adata(ADATA_ID, p) = AREA_SHOP
+		adata(ADATA_ICON, p) = xy2pic(18, 4)
+		adata(ADATA_FIELD, p) = 1
 		s = lang("店", "shop")
 	}
-	if ( iID(ci) == ITEM_ID_DEED_FARM ) {
-		areaId(p) = AREA_CROP
-		areaIcon(p) = xy2pic(20, 4)
-		areaField(p) = 2
+	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_DEED_FARM ) {
+		adata(ADATA_ID, p) = AREA_CROP
+		adata(ADATA_ICON, p) = xy2pic(20, 4)
+		adata(ADATA_FIELD, p) = 2
 		s = lang("畑", "crop")
 	}
-	if ( iID(ci) == ITEM_ID_DEED_STORAGE_HOUSE ) {
-		areaId(p) = AREA_STORAGE_HOUSE
-		areaIcon(p) = xy2pic(21, 4)
-		areaField(p) = 1
+	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_DEED_STORAGE_HOUSE ) {
+		adata(ADATA_ID, p) = AREA_STORAGE_HOUSE
+		adata(ADATA_ICON, p) = xy2pic(21, 4)
+		adata(ADATA_FIELD, p) = 1
 		s = lang("倉庫", "storage")
 	}
-	if ( iID(ci) == ITEM_ID_DEED_RANCH ) {
-		areaId(p) = AREA_RANCH
-		areaIcon(p) = xy2pic(22, 4)
-		areaField(p) = 2
-		areaIcon(p) = 1
+	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_DEED_RANCH ) {
+		adata(ADATA_ID, p) = AREA_RANCH
+		adata(ADATA_ICON, p) = xy2pic(22, 4)
+		adata(ADATA_FIELD, p) = 2
+		adata(ADATA_RESTORE_POS, p) = 1
 		s = lang("牧場", "ranch")
 	}
-	if ( iID(ci) == ITEM_ID_DEED_DUNGEON ) {
-		areaId(p) = AREA_DUNGEON
-		areaIcon(p) = xy2pic(6, 4)
-		areaField(p) = 1
-		areaIcon(p) = 1
+	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_DEED_DUNGEON ) {
+		adata(ADATA_ID, p) = AREA_DUNGEON
+		adata(ADATA_ICON, p) = xy2pic(6, 4)
+		adata(ADATA_FIELD, p) = 1
+		adata(ADATA_RESTORE_POS, p) = 1
 		s = lang("ダンジョン", "dungeon")
 	}
-	if ( iID(ci) == ITEM_ID_DEED_DISCARDED_RANCH ) {
-		areaId(p) = AREA_DISCARDED_RANCH
-		areaIcon(p) = xy2pic(10, 4)
-		areaField(p) = 2
-		areaIcon(p) = 1
+	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_DEED_DISCARDED_RANCH ) {
+		adata(ADATA_ID, p) = AREA_DISCARDED_RANCH
+		adata(ADATA_ICON, p) = xy2pic(10, 4)
+		adata(ADATA_FIELD, p) = 2
+		adata(ADATA_RESTORE_POS, p) = 1
 		s = lang("廃モンスター牧場", "discarded ranch")
 	}
 	snd SOUNDLIST_BUILD1
 	txtef COLOR_YELLOW
 	txt lang("あなたは" + s + "を建設した！ ", "You've built a " + s + "!")
 	gosub *world_refresh
-	iNum(ci)--
-	cell_refresh iX(ci), iY(ci)
+	inv(INV_ITEM_NUM, ci)--
+	cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
 	goto *turn_end
 	area = -1
 	repeat 450 - 300, 300
-		if ( areaId(cnt) == AREA_NONE ) {
+		if ( adata(ADATA_ID, cnt) == AREA_NONE ) {
 			area = cnt
 			break
 		}
 	loop
 	p = area
-	areaType(p) = MAP_TYPE_HOME
-	areaRestorePos(p) = 1
-	areaIcon(p) = 0
-	areaTileSet(p) = 3
-	areaMaxLevel(p) = 10000
-	areaMinLevel(p) = 1
-	areaCanSave(p) = 1
-	areaTileFile(p) = 1
-	areaStartOn(p) = 8
-	areaId(p) = AREA_DUNGEON
-	areaIcon(p) = xy2pic(6, 4)
-	areaField(p) = 1
-	areaIcon(p) = 1
+	adata(ADATA_TYPE, p) = MAP_TYPE_HOME
+	adata(ADATA_CAN_SAVE, p) = 1
+	adata(ADATA_RESTORE_POS, p) = 0
+	adata(ADATA_TILESET, p) = 3
+	adata(ADATA_TIME_SCALE, p) = 10000
+	adata(ADATA_MIN_LEVEL, p) = 1
+	adata(ADATA_MAX_LEVEL, p) = 1
+	adata(ADATA_TILE_FILE, p) = 1
+	adata(ADATA_START_ON, p) = 8
+	adata(ADATA_ID, p) = AREA_DUNGEON
+	adata(ADATA_ICON, p) = xy2pic(6, 4)
+	adata(ADATA_FIELD, p) = 1
+	adata(ADATA_RESTORE_POS, p) = 1
 	s = lang("ダンジョン", "dungeon")
-	gArea = area
-	gLevel = 1
-	gLevelStartOn = 8
+	gdata(GDATA_AREA) = area
+	gdata(GDATA_LEVEL) = 1
+	gdata(GDATA_LEVEL_START_ON) = 8
 	return
 
 *setHome
 	p = 7
-	areaIcon(p) = xy2pic(11, 4)
-	if ( gHomeLevel == 0 ) {
-		areaIcon(p) = xy2pic(6, 4)
+	adata(ADATA_ICON, p) = xy2pic(11, 4)
+	if ( gdata(GDATA_HOME_LEVEL) == 0 ) {
+		adata(ADATA_ICON, p) = xy2pic(6, 4)
 	}
-	if ( gHomeLevel == 4 ) {
-		areaIcon(p) = xy2pic(16, 4)
+	if ( gdata(GDATA_HOME_LEVEL) == 4 ) {
+		adata(ADATA_ICON, p) = xy2pic(16, 4)
 	}
-	if ( gHomeLevel == 5 ) {
-		areaIcon(p) = xy2pic(12, 4)
+	if ( gdata(GDATA_HOME_LEVEL) == 5 ) {
+		adata(ADATA_ICON, p) = xy2pic(12, 4)
 	}
-	if ( gHomeLevel == 6 ) {
-		areaIcon(p) = xy2pic(4, 4)
+	if ( gdata(GDATA_HOME_LEVEL) == 6 ) {
+		adata(ADATA_ICON, p) = xy2pic(4, 4)
 	}
-	if ( doukutu == 100 | gHomeLevel != 0 ) {
-		areaX(p) = cX(CHARA_PLAYER)
-		areaY(p) = cY(CHARA_PLAYER)
+	if ( doukutu == 100 | gdata(GDATA_HOME_LEVEL) != 0 ) {
+		adata(ADATA_X, p) = cdata(CDATA_X, CHARA_PLAYER)
+		adata(ADATA_Y, p) = cdata(CDATA_Y, CHARA_PLAYER)
 		doukutu = 0
 	}
-	areaParent(p) = gWorld
+	adata(ADATA_PARENT, p) = gdata(GDATA_WORLD)
 	return
 
 *com_home
 	txtnew
 	if ( 0 == 0 ) {
-		if ( mType != MAP_TYPE_HOME ) {
+		if ( mdata(MDATA_TYPE) != MAP_TYPE_HOME ) {
 			msgdup++
 			txt lang("ここはあなたの家ではない。", "You can only use it in your home.")
 			gosub *screen_draw
@@ -291,8 +291,8 @@
 	p = 0, 0, 0
 	repeat invrange, invhead
 		p(2)++
-		if ( iNum(cnt) != 0 ) {
-			if ( refitem(iID(cnt), DBSPEC_TYPE) != FILTER_FURNITURE ) {
+		if ( inv(INV_ITEM_NUM, cnt) != 0 ) {
+			if ( refitem(inv(INV_ITEM_ID, cnt), DBSPEC_TYPE) != FILTER_FURNITURE ) {
 				p++
 			}
 			else {
@@ -300,51 +300,51 @@
 			}
 		}
 	loop
-	if ( mMaxInv != 0 ) {
-		p(2) = mMaxInv
+	if ( mdata(MDATA_MAX_INV) != 0 ) {
+		p(2) = mdata(MDATA_MAX_INV)
 	}
-	txt lang(mapname(gArea) + "には" + p + "個のアイテムと" + p(1) + "個の家具がある(アイテム最大" + p(2) + "個) ", "There are " + p + " items and " + p(1) + " furniture in " + mapname(gArea) + ".(Max: " + p(2) + ") ")
+	txt lang(mapname(gdata(GDATA_AREA)) + "には" + p + "個のアイテムと" + p(1) + "個の家具がある(アイテム最大" + p(2) + "個) ", "There are " + p + " items and " + p(1) + " furniture in " + mapname(gdata(GDATA_AREA)) + ".(Max: " + p(2) + ") ")
 	txtmore
-	if ( areaId(gArea) == AREA_SHOP ) {
-		if ( areaShopType(gArea) == SHOP_TYPE_GOODS ) {
+	if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_SHOP ) {
+		if ( adata(ADATA_SHOP_TYPE, gdata(GDATA_AREA)) == SHOP_TYPE_GOODS ) {
 			shops = lang("何でも屋", "Goods shop")
 		}
-		if ( areaShopType(gArea) == SHOP_TYPE_FOOD ) {
+		if ( adata(ADATA_SHOP_TYPE, gdata(GDATA_AREA)) == SHOP_TYPE_FOOD ) {
 			shops = lang("食品店", "Food shop")
 		}
-		if ( areaShopType(gArea) == SHOP_TYPE_MAGIC ) {
+		if ( adata(ADATA_SHOP_TYPE, gdata(GDATA_AREA)) == SHOP_TYPE_MAGIC ) {
 			shops = lang("魔法店", "Magic shop")
 		}
-		if ( areaShopType(gArea) == SHOP_TYPE_BLACKSMITH ) {
+		if ( adata(ADATA_SHOP_TYPE, gdata(GDATA_AREA)) == SHOP_TYPE_BLACKSMITH ) {
 			shops = lang("武具店", "Blacksmith")
 		}
-		if ( areaShopType(gArea) == SHOP_TYPE_INN ) {
+		if ( adata(ADATA_SHOP_TYPE, gdata(GDATA_AREA)) == SHOP_TYPE_INN ) {
 			shops = lang("宿屋", "Inn shop")
 		}
-		if ( areaShopType(gArea) == SHOP_TYPE_DECORATIVE_ARTS ) {
+		if ( adata(ADATA_SHOP_TYPE, gdata(GDATA_AREA)) == SHOP_TYPE_DECORATIVE_ARTS ) {
 			shops = lang("装飾家具店", "Decorative arts shop")
 		}
-		if ( areaShopType(gArea) == SHOP_TYPE_JUNK ) {
+		if ( adata(ADATA_SHOP_TYPE, gdata(GDATA_AREA)) == SHOP_TYPE_JUNK ) {
 			shops = lang("ジャンク屋", "Junk shop")
 		}
 		txt lang("店タイプ：" + shops + "。", "Shop type : " + shops + ".")
-		if ( adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), gArea) == 0 ) {
+		if ( adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), gdata(GDATA_AREA)) == 0 ) {
 			txt lang("販売制限なし。", "Shop type : " + shops + ".")
 		}
-		if ( adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), gArea) == 1 ) {
+		if ( adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), gdata(GDATA_AREA)) == 1 ) {
 			txt lang("1日15品限定販売。", "15 items limited sale.")
 		}
-		if ( adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), gArea) == 2 ) {
+		if ( adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), gdata(GDATA_AREA)) == 2 ) {
 			txt lang("1日5品限定販売。", "5 items limited sale")
 		}
-		if ( getworker(gArea) != (-1) ) {
-			txt lang("現在の店主：" + cnName(getworker(gArea)) + " ", "Current shopkeeper is " + cnName(getworker(gArea)) + ".")
+		if ( getworker(gdata(GDATA_AREA)) != (-1) ) {
+			txt lang("現在の店主：" + cdatan(CDATAN_NAME, getworker(gdata(GDATA_AREA))) + " ", "Current shopkeeper is " + cdatan(CDATAN_NAME, getworker(gdata(GDATA_AREA))) + ".")
 		}
 		else {
 			txt lang("現在店主はいない。", "You haven't assigned a shopkeeper yet.")
 		}
-		if ( getworker(gArea) != (-1) ) {
-			sc = getworker(gArea)
+		if ( getworker(gdata(GDATA_AREA)) != (-1) ) {
+			sc = getworker(gdata(GDATA_AREA))
 			p = sdata(156 + STARTING_SKILL_SPACT, sc) \ 1000
 			if ( p >= 400 ) {
 				txt lang("[交渉潜在：Supreme]", "[Trade potential : Supreme]")
@@ -392,53 +392,53 @@
 			txt lang("[営業実績：" + cdata(CDATA_SALES_EXP, sc) + "]", "[Sales exp: " + cdata(CDATA_SALES_EXP, sc) + "]")
 		}
 	}
-	if ( areaId(gArea) == AREA_RANCH ) {
-		if ( getworker(gArea) != (-1) ) {
-			txt lang("現在のブリーダーは" + cnName(getworker(gArea)) + "だ。", "Current breeder is " + cnName(getworker(gArea)) + ".")
+	if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_RANCH ) {
+		if ( getworker(gdata(GDATA_AREA)) != (-1) ) {
+			txt lang("現在のブリーダーは" + cdatan(CDATAN_NAME, getworker(gdata(GDATA_AREA))) + "だ。", "Current breeder is " + cdatan(CDATAN_NAME, getworker(gdata(GDATA_AREA))) + ".")
 		}
 		else {
 			txt lang("現在ブリーダーはいない。", "You haven't assigned a breeder yet.")
 		}
 	}
-	if ( gArea == AREA_HOME ) {
+	if ( gdata(GDATA_AREA) == AREA_HOME ) {
 		p = 0
 		repeat 245 - 57, 57
-			if ( cExist(cnt) == CHAR_STATE_ALIVE | cExist(cnt) == CHAR_STATE_SPIRIT ) {
-				if ( cRole(cnt) != ROLE_NONE ) {
+			if ( cdata(CDATA_EXIST, cnt) == CHAR_STATE_ALIVE | cdata(CDATA_EXIST, cnt) == CHAR_STATE_SPIRIT ) {
+				if ( cdata(CDATA_ROLE, cnt) != ROLE_NONE ) {
 					p++
 				}
 			}
 		loop
 		txtmore
-		txt lang("現在" + p + "人の滞在者がいる(最大" + (gHomeLevel + 2) + "人) ", "" + p + " members are staying at your home. (Max: " + (gHomeLevel + 2) + ").")
+		txt lang("現在" + p + "人の滞在者がいる(最大" + (gdata(GDATA_HOME_LEVEL) + 2) + "人) ", "" + p + " members are staying at your home. (Max: " + (gdata(GDATA_HOME_LEVEL) + 2) + ").")
 	}
 	txtnew
 	txt lang("何をする？", "What do you want to do?")
 	p = 0
-	if ( areaId(gArea) == AREA_SHOP ) {
-		if ( getworker(gArea) != (-1) ) {
+	if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_SHOP ) {
+		if ( getworker(gdata(GDATA_AREA)) != (-1) ) {
 			kunren = 0
-			sc = getworker(gArea)
-			kunren = limit((sTrade(sc) + sCHR(sc)) / 100 + 1, 1, 20)
+			sc = getworker(gdata(GDATA_AREA))
+			kunren = limit((sdata(SKILL_NORMAL_NEGOTIATION, sc) + sdata(SKILL_ATTR_CHA, sc)) / 100 + 1, 1, 20)
 			if ( sorg(SKILL_NORMAL_NEGOTIATION, sc) == 0 ) {
 				kunren = 1000000
 			}
 		}
 		promptl(0, promptmax) = lang("仲間に店主を頼む", "Assign a shopkeeper"), "null", "" + 4
 		promptmax++
-		if ( mMaxInv < 400 ) {
+		if ( mdata(MDATA_MAX_INV) < 400 ) {
 			promptl(0, promptmax) = lang("店を拡張", "Extend") + "(" + calcshopreform() + " GP)", "null", "" + 5
 			promptmax++
 		}
 		promptl(0, promptmax) = lang("店の種類変更", "Change shop type"), "null", "" + 11
 		promptmax++
-		if ( getworker(gArea) != (-1) ) {
+		if ( getworker(gdata(GDATA_AREA)) != (-1) ) {
 			if ( kunren != 1000000 ) {
 				promptl(0, promptmax) = lang("店主訓練 (ブロンズ硬貨" + kunren + "枚)", "Training of shopkeeper by " + kunren + " bronze coin"), "null", "" + 12
 				promptmax++
 			}
 		}
-		if ( getworker(gArea) != (-1) ) {
+		if ( getworker(gdata(GDATA_AREA)) != (-1) ) {
 			promptl(0, promptmax) = lang("営業フィート獲得", "Get shopkeeper feat"), "null", "" + 13
 			promptmax++
 		}
@@ -447,7 +447,7 @@
 		promptl(0, promptmax) = lang("バイトを雇う（未実装）", "Hire part time worker (Unimplemented) "), "null", "" + 15
 		promptmax++
 	}
-	if ( areaId(gArea) == AREA_RANCH ) {
+	if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_RANCH ) {
 		promptl(0, promptmax) = lang("ブリーダーを任命する", "Assign a breeder"), "null", "" + 4
 		promptmax++
 		promptl(0, promptmax) = lang("家畜・ブリーダー移動", "Move a livestock"), "null", "" + 3
@@ -456,24 +456,24 @@
 		promptmax++
 		promptl(0, promptmax) = lang("場内消毒（浄化消毒薬消費）", "Consume disinfectant"), "null", "" + 18
 		promptmax++
-		if ( adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), gArea) == 0 ) {
+		if ( adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), gdata(GDATA_AREA)) == 0 ) {
 			promptl(0, promptmax) = lang("繁殖防止コード発動", "Activate breeding-prevent code"), "null", "" + 19
 			promptmax++
 		}
-		if ( adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), gArea) == 0 ) {
+		if ( adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), gdata(GDATA_AREA)) == 0 ) {
 			promptl(0, promptmax) = lang("生産防止コード発動", "Activate production-prevent code"), "null", "" + 20
 			promptmax++
 		}
-		if ( adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), gArea) != 0 ) {
+		if ( adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), gdata(GDATA_AREA)) != 0 ) {
 			promptl(0, promptmax) = lang("繁殖防止コード解除", "Cancel breeding-prevent code"), "null", "" + 21
 			promptmax++
 		}
-		if ( adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), gArea) != 0 ) {
+		if ( adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), gdata(GDATA_AREA)) != 0 ) {
 			promptl(0, promptmax) = lang("生産防止コード解除", "Cancel production-prevent code"), "null", "" + 22
 			promptmax++
 		}
 	}
-	if ( areaId(gArea) == AREA_DISCARDED_RANCH ) {
+	if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_DISCARDED_RANCH ) {
 		promptl(0, promptmax) = lang("ペットを放す", "release ally"), "null", "" + 8
 		promptmax++
 		promptl(0, promptmax) = lang("滞在者の移動", "Move a stayer"), "null", "" + 3
@@ -485,19 +485,19 @@
 	}
 	promptl(0, promptmax) = lang("家の模様替え", "Design"), "null", "" + 0
 	promptmax++
-	if ( gArea == AREA_HOME ) {
+	if ( gdata(GDATA_AREA) == AREA_HOME ) {
 		promptl(0, promptmax) = lang("家の情報", "Home rank"), "null", "" + 2
 		promptmax++
 		promptl(0, promptmax) = lang("仲間の滞在", "Allies in your home"), "null", "" + 4
 		promptmax++
-		if ( gLevel == 1 ) {
+		if ( gdata(GDATA_LEVEL) == 1 ) {
 			promptl(0, promptmax) = lang("使用人を募集する", "Recruit a servant"), "null", "" + 6
 			promptmax++
 		}
 		promptl(0, promptmax) = lang("滞在者の移動", "Move a stayer"), "null", "" + 3
 		promptmax++
 	}
-	if ( gArea == AREA_MAID_MANSION ) {
+	if ( gdata(GDATA_AREA) == AREA_MAID_MANSION ) {
 		promptl(0, promptmax) = lang("滞在者の移動", "Move a stayer"), "null", "" + 3
 		promptmax++
 	}
@@ -507,8 +507,8 @@
 	promptmax++
 	promptl(0, promptmax) = lang("外装変更", "Change Map Icon"), "null", "" + 9
 	promptmax++
-	if ( gArea != AREA_HOME ) {
-		if ( gArea != AREA_MAID_MANSION ) {
+	if ( gdata(GDATA_AREA) != AREA_HOME ) {
+		if ( gdata(GDATA_AREA) != AREA_MAID_MANSION ) {
 			promptl(0, promptmax) = lang("施設名称変更", "Change Map Name"), "null", "" + 10
 			promptmax++
 		}
@@ -529,14 +529,14 @@
 	if ( _switch_val == 0 | _switch_sw ) {
 		_switch_sw = 0
 		homemapmode = 1
-		cxbk = cX(CHARA_PLAYER)
-		cybk = cY(CHARA_PLAYER)
+		cxbk = cdata(CDATA_X, CHARA_PLAYER)
+		cybk = cdata(CDATA_Y, CHARA_PLAYER)
 		gosub *home_setWallTile
 		n = 0
 		txtnew
 		txt lang("マウスの左クリックでタイルの敷設、右クリックでタイルの取得、移動キーでスクリーン移動、決定キーでタイル一覧、キャンセルキーで終了。", "Left click to place the tile, right click to pick the tile under your mouse cursor, movement keys to move current position, hit the enter key to show the list of tiles, hit the cancel key to exit.")
-		tlocinitx = cX(CHARA_PLAYER)
-		tlocinity = cY(CHARA_PLAYER)
+		tlocinitx = cdata(CDATA_X, CHARA_PLAYER)
+		tlocinity = cdata(CDATA_Y, CHARA_PLAYER)
 		tile = 0
 		repeat
 			await
@@ -546,8 +546,8 @@
 				break
 			}
 			if ( (chipm(CHIPM_ATTRIB, tile) & CHIPM_ATTRIB_CANT_PASS) == 0 ) {
-				mapId(tlocx, tlocy) = tile
-				mapIdMemory(tlocx, tlocy) = tile
+				map(tlocx, tlocy, MAP_TILE_ID) = tile
+				map(tlocx, tlocy, MAP_TILE_ID_MEMORY) = tile
 			}
 			else {
 				efid = SKILL_SPELL_WALL_CREATION
@@ -557,18 +557,18 @@
 			tlocinity = tlocy
 		loop
 		homemapmode = 0
-		cX(CHARA_PLAYER) = cxbk
-		cY(CHARA_PLAYER) = cybk
+		cdata(CDATA_X, CHARA_PLAYER) = cxbk
+		cdata(CDATA_Y, CHARA_PLAYER) = cybk
 		dblistmax = 0
 		inv_getheader -1
 		repeat invrange, invhead
-			if ( areaId(gArea) != AREA_SHOP ) {
+			if ( adata(ADATA_ID, gdata(GDATA_AREA)) != AREA_SHOP ) {
 				break
 			}
-			if ( iNum(cnt) <= 0 ) {
+			if ( inv(INV_ITEM_NUM, cnt) <= 0 ) {
 				continue
 			}
-			if ( chipm(CHIPM_ROLE, mapId(iX(cnt), iY(cnt))) == MAP_CHIP_ROLE_DISPLAY_SPACE ) {
+			if ( chipm(CHIPM_ROLE, map(inv(INV_ITEM_X, cnt), inv(INV_ITEM_Y, cnt), MAP_TILE_ID)) == MAP_CHIP_ROLE_DISPLAY_SPACE ) {
 				inv(INV_ITEM_SHOP_SAMPLE, cnt) = 100
 			}
 			else {
@@ -588,12 +588,12 @@
 		gosub *prompt_word
 		if ( inputlog == "" ) {
 			txt lang("名前をつけるのはやめた。", "You changed your mind.")
-			areaFestival(gArea) = 0
+			adata(ADATA_FESTIVAL, gdata(GDATA_AREA)) = 0
 		}
 		else {
 			mdatan(0) = "" + inputlog
-			areaFestival(gArea) = 9999
-			txt lang("" + mdatan(0) + "という名前で呼ぶことにした。", "You named " + him(tc) + " " + cnName(tc) + ".")
+			adata(ADATA_FESTIVAL, gdata(GDATA_AREA)) = 9999
+			txt lang("" + mdatan(0) + "という名前で呼ぶことにした。", "You named " + him(tc) + " " + cdatan(CDATAN_NAME, tc) + ".")
 			gosub *screen_refreshFull
 		}
 		gosub *screen_refresh
@@ -630,7 +630,7 @@
 		gmode 2
 		gosub *house_update
 		s = lang("基本.", "Base"), lang("家具.", "Deco"), lang("家宝.", "Heir"), lang("総合.", "Total")
-		p = gHomeBase, gHomeFurniture, gHomeValue
+		p = gdata(GDATA_HOME_BASE), gdata(GDATA_HOME_FURNITURE), gdata(GDATA_HOME_VALUE)
 		p(3) = (p + p(1) + p(2)) / 3
 		repeat 4
 			x = wx + 45 + cnt / 2 * 190
@@ -655,11 +655,11 @@
 			if ( p == 0 ) {
 				continue
 			}
-			if ( iPic(p) / 1000 < 1 ) {
-				p(1) = iPic(p) \ 1000
+			if ( inv(INV_ITEM_PIC, p) / 1000 < 1 ) {
+				p(1) = inv(INV_ITEM_PIC, p) \ 1000
 			}
-			if ( iPic(p) / 1000 >= 1 ) {
-				p(1) = iPic(p)
+			if ( inv(INV_ITEM_PIC, p) / 1000 >= 1 ) {
+				p(1) = inv(INV_ITEM_PIC, p)
 			}
 			gsel BUFFER_ITEM
 			color 0
@@ -669,34 +669,34 @@
 				pos 0, 960
 				gcopy BUFFER_ITEM, 0, 768, inf_tiles, inf_tiles
 				pos 0, 1008
-				gzoom 22, 20, 5, chipc(CHIPC_X, iCol(p)) + 8, chipc(CHIPC_Y, iCol(p)) + 4 + (chipc(CHIPC_HEIGHT, iCol(p)) > inf_tiles) * 8, chipc(CHIPC_WIDTH, iCol(p)) - 16, chipc(CHIPC_HEIGHT, iCol(p)) - 8 - (chipc(CHIPC_HEIGHT, iCol(p)) > inf_tiles) * 10, 1
+				gzoom 22, 20, 5, chipc(CHIPC_X, inv(INV_ITEM_COL, p)) + 8, chipc(CHIPC_Y, inv(INV_ITEM_COL, p)) + 4 + (chipc(CHIPC_HEIGHT, inv(INV_ITEM_COL, p)) > inf_tiles) * 8, chipc(CHIPC_WIDTH, inv(INV_ITEM_COL, p)) - 16, chipc(CHIPC_HEIGHT, inv(INV_ITEM_COL, p)) - 8 - (chipc(CHIPC_HEIGHT, inv(INV_ITEM_COL, p)) > inf_tiles) * 10, 1
 				pos 6, 974
 				gcopy BUFFER_ITEM, 0, 1008, 22, 20
 				gsel selcur
 			}
 			else {
 				if ( p(1) == 1119 ) {
-					pos 0, 1055 - chipc(CHIPC_HEIGHT, iCol(p))
-					gcopy BUFFER_CHR, chipc(CHIPC_X, iCol(p)), chipc(CHIPC_Y, iCol(p)), chipc(CHIPC_WIDTH, iCol(p)), chipc(CHIPC_HEIGHT, iCol(p))
+					pos 0, 1055 - chipc(CHIPC_HEIGHT, inv(INV_ITEM_COL, p))
+					gcopy BUFFER_CHR, chipc(CHIPC_X, inv(INV_ITEM_COL, p)), chipc(CHIPC_Y, inv(INV_ITEM_COL, p)), chipc(CHIPC_WIDTH, inv(INV_ITEM_COL, p)), chipc(CHIPC_HEIGHT, inv(INV_ITEM_COL, p))
 					gmode 2
 					gsel selcur
 				}
 				else {
 					if ( p(1) == 1206 ) {
-						pos 0, 1055 - chipc(CHIPC_HEIGHT, iCol(p))
-						gcopy BUFFER_CHR, chipc(CHIPC_X, iCol(p)), chipc(CHIPC_Y, iCol(p)), chipc(CHIPC_WIDTH, iCol(p)), chipc(CHIPC_HEIGHT, iCol(p))
+						pos 0, 1055 - chipc(CHIPC_HEIGHT, inv(INV_ITEM_COL, p))
+						gcopy BUFFER_CHR, chipc(CHIPC_X, inv(INV_ITEM_COL, p)), chipc(CHIPC_Y, inv(INV_ITEM_COL, p)), chipc(CHIPC_WIDTH, inv(INV_ITEM_COL, p)), chipc(CHIPC_HEIGHT, inv(INV_ITEM_COL, p))
 						gfini chipi(CHIPI_WIDTH, p(1)), chipi(CHIPI_HEIGHT, p(1))
 						gfdec2 0, 0, 255
 						gsel selcur
 					}
 					else {
 						if ( p(1) == 531 ) {
-							pos 8, 1058 - chipc(CHIPC_HEIGHT, iCol(p))
-							gcopy BUFFER_CHR, chipc(CHIPC_X, iCol(p)) + 8, chipc(CHIPC_Y, iCol(p)) + 2, chipc(CHIPC_WIDTH, iCol(p)) - 16, chipc(CHIPC_HEIGHT, iCol(p)) - 8
+							pos 8, 1058 - chipc(CHIPC_HEIGHT, inv(INV_ITEM_COL, p))
+							gcopy BUFFER_CHR, chipc(CHIPC_X, inv(INV_ITEM_COL, p)) + 8, chipc(CHIPC_Y, inv(INV_ITEM_COL, p)) + 2, chipc(CHIPC_WIDTH, inv(INV_ITEM_COL, p)) - 16, chipc(CHIPC_HEIGHT, inv(INV_ITEM_COL, p)) - 8
 							gmode 4, , , 150
 							color 0, 0, 0
-							pos 0, 960 + (chipc(CHIPC_HEIGHT, iCol(p)) == inf_tiles) * 48
-							gcopy BUFFER_ITEM, 144, 768 + (chipc(CHIPC_HEIGHT, iCol(p)) > inf_tiles) * 48, inf_tiles, chipc(CHIPC_HEIGHT, iCol(p)) + (chipc(CHIPC_HEIGHT, iCol(p)) > inf_tiles) * 48 * 0
+							pos 0, 960 + (chipc(CHIPC_HEIGHT, inv(INV_ITEM_COL, p)) == inf_tiles) * 48
+							gcopy BUFFER_ITEM, 144, 768 + (chipc(CHIPC_HEIGHT, inv(INV_ITEM_COL, p)) > inf_tiles) * 48, inf_tiles, chipc(CHIPC_HEIGHT, inv(INV_ITEM_COL, p)) + (chipc(CHIPC_HEIGHT, inv(INV_ITEM_COL, p)) > inf_tiles) * 48 * 0
 							gmode 2
 							gsel selcur
 						}
@@ -704,7 +704,7 @@
 							pos 0, 960
 							gcopy BUFFER_ITEM, chipi(CHIPI_X, p(1)), chipi(CHIPI_Y, p(1)), chipi(CHIPI_WIDTH, p(1)), chipi(CHIPI_HEIGHT, p(1))
 							gfini chipi(CHIPI_WIDTH, p(1)), chipi(CHIPI_HEIGHT, p(1))
-							gfdec2 c_col(0, iCol(p)), c_col(1, iCol(p)), c_col(2, iCol(p))
+							gfdec2 c_col(0, inv(INV_ITEM_COL, p)), c_col(1, inv(INV_ITEM_COL, p)), c_col(2, inv(INV_ITEM_COL, p))
 							gsel selcur
 						}
 					}
@@ -752,10 +752,10 @@
 		if ( stat == (-1) ) {
 			goto *com_home_WEND3
 		}
-		if ( cRelation(stat) <= RELATION_ENEMY ) {
+		if ( cdata(CDATA_RELATION, stat) <= RELATION_ENEMY ) {
 			txtnew
 			txtef COLOR_SKY_BLUE
-			txt cnName(stat) + lang("「触るな！」", " " + cnvtalk("Don't touch me!"))
+			txt cdatan(CDATAN_NAME, stat) + lang("「触るな！」", " " + cnvtalk("Don't touch me!"))
 			goto *com_home_WEND3
 		}
 		tchome = stat
@@ -766,12 +766,12 @@
 			goto *com_home_WEND2
 		}
 		txtnew
-		txt lang(cnName(tc) + "をどこに移動させる？", "Where do you want to move " + cnName(tc) + "?")
+		txt lang(cdatan(CDATAN_NAME, tc) + "をどこに移動させる？", "Where do you want to move " + cdatan(CDATAN_NAME, tc) + "?")
 		gosub *findLocation
 		if ( stat == (-1) ) {
 			goto *com_home_WEND2
 		}
-		if ( chipm(CHIPM_ATTRIB, mapId(tlocx, tlocy)) & CHIPM_ATTRIB_CANT_PASS | mapChara(tlocx, tlocy) != 0 ) {
+		if ( chipm(CHIPM_ATTRIB, map(tlocx, tlocy, MAP_TILE_ID)) & CHIPM_ATTRIB_CANT_PASS | map(tlocx, tlocy, MAP_CHARA_INDEX_PLUS_ONE) != 0 ) {
 			txt lang("その場所には移動させることができない。", "The location is invalid.")
 			tc = tchome
 			tlochomex = tlocx
@@ -779,15 +779,15 @@
 			goto *com_home_SWEND1
 		}
 		tc = tchome
-		mapChara(cX(tc), cY(tc)) = 0
-		mapChara(tlocx, tlocy) = tc + 1
-		cX(tc) = tlocx
-		cXorg(tc) = tlocx
-		cY(tc) = tlocy
-		cYorg(tc) = tlocy
+		map(cdata(CDATA_X, tc), cdata(CDATA_Y, tc), MAP_CHARA_INDEX_PLUS_ONE) = 0
+		map(tlocx, tlocy, MAP_CHARA_INDEX_PLUS_ONE) = tc + 1
+		cdata(CDATA_X, tc) = tlocx
+		cdata(CDATA_X_ORG, tc) = tlocx
+		cdata(CDATA_Y, tc) = tlocy
+		cdata(CDATA_Y_ORG, tc) = tlocy
 		rowactend tc
 		txtnew
-		txt lang(cnName(tc) + "を移動させた。", cnName(tc) + " " + is(tc) + " moved to the location.")
+		txt lang(cdatan(CDATAN_NAME, tc) + "を移動させた。", cdatan(CDATAN_NAME, tc) + " " + is(tc) + " moved to the location.")
 		snd SOUNDLIST_FOOT
 		goto *com_home_WEND2
 *com_home_SWEND1
@@ -813,35 +813,35 @@
 				txt lang("タッグを解散する必要がある。", "It is need to dissolve the tag.")
 				goto *label_4609
 			}
-			if ( getworker(gArea, c) == c ) {
+			if ( getworker(gdata(GDATA_AREA), c) == c ) {
 				f = get_freeallyne()
 				if ( f == 0 ) {
 					snd SOUNDLIST_FAIL1
 					txt lang("仲間の最大数に達しているため、連れていけない。", "Your party is already full. You can't invite someone anymore.")
 					goto *label_4609
 				}
-				if ( gArea == AREA_HOME ) {
-					cType(c) = 0
-					txt lang(cnName(c) + "の滞在を取り消した。", cnName(c) + " " + is(c) + " no longer staying at your home.")
+				if ( gdata(GDATA_AREA) == AREA_HOME ) {
+					cdata(CDATA_AREA, c) = 0
+					txt lang(cdatan(CDATAN_NAME, c) + "の滞在を取り消した。", cdatan(CDATAN_NAME, c) + " " + is(c) + " no longer staying at your home.")
 					cdata(CDATA_HOME, c) = 0
 				}
 				else {
-					removeworker gArea
-					txt lang(cnName(c) + "を役目から外した。", "You remove " + cnName(c) + " from " + his(c) + " job.")
+					removeworker gdata(GDATA_AREA)
+					txt lang(cdatan(CDATAN_NAME, c) + "を役目から外した。", "You remove " + cdatan(CDATAN_NAME, c) + " from " + his(c) + " job.")
 				}
 			}
 			else {
-				if ( gArea == AREA_HOME ) {
-					cXorg(c) = cX(c)
-					cYorg(c) = cY(c)
-					cdata(CDATA_HOME, c) = gLevel
-					txt lang(cnName(c) + "を滞在させた。", cnName(c) + " stay" + _s(c) + " at your home now.")
+				if ( gdata(GDATA_AREA) == AREA_HOME ) {
+					cdata(CDATA_X_ORG, c) = cdata(CDATA_X, c)
+					cdata(CDATA_Y_ORG, c) = cdata(CDATA_Y, c)
+					cdata(CDATA_HOME, c) = gdata(GDATA_LEVEL)
+					txt lang(cdatan(CDATAN_NAME, c) + "を滞在させた。", cdatan(CDATAN_NAME, c) + " stay" + _s(c) + " at your home now.")
 				}
 				else {
-					removeworker gArea
-					txt lang(cnName(c) + "を任命した。", cnName(c) + " take" + _s(c) + " charge of the job now.")
+					removeworker gdata(GDATA_AREA)
+					txt lang(cdatan(CDATAN_NAME, c) + "を任命した。", cdatan(CDATAN_NAME, c) + " take" + _s(c) + " charge of the job now.")
 				}
-				cType(c) = gArea
+				cdata(CDATA_AREA, c) = gdata(GDATA_AREA)
 			}
 		}
 		goto *label_4609
@@ -866,33 +866,33 @@
 			c = stat
 			snd SOUNDLIST_OK1
 			txtnew
-			cXorg(c) = cX(c)
-			cYorg(c) = cY(c)
+			cdata(CDATA_X_ORG, c) = cdata(CDATA_X, c)
+			cdata(CDATA_Y_ORG, c) = cdata(CDATA_Y, c)
 			if ( cbit(CHARA_BIT_BODYGUARD, c) != FALSE | cbit(CHARA_BIT_GUARD_TEMP, c) != FALSE ) {
 				snd SOUNDLIST_FAIL1
 				txt lang("護衛対象は放せない。", "You can not let go escort target in this ranch.")
 				goto *label_4609
 			}
 			cbitmod CHARA_BIT_LIVESTOCK, c, TRUE
-			txt lang(cnName(c) + "を放してやった。", cnName(c) + " stay" + _s(c) + " at this ranch.")
+			txt lang(cdatan(CDATAN_NAME, c) + "を放してやった。", cdatan(CDATAN_NAME, c) + " stay" + _s(c) + " at this ranch.")
 			if ( cbit(CHARA_BIT_PCC, c) == TRUE ) {
 				txtef COLOR_YELLOW
 				txtmore
-				txt lang(cnName(c) + "は元々の姿に着替えた。", cnName(c) + " changed original cloth.")
+				txt lang(cdatan(CDATAN_NAME, c) + "は元々の姿に着替えた。", cdatan(CDATAN_NAME, c) + " changed original cloth.")
 				cbitmod CHARA_BIT_PCC, c, FALSE
 			}
-			if ( cExist(c) != CHAR_STATE_DEAD ) {
-				if ( cnRace(c) == "servant" ) {
+			if ( cdata(CDATA_EXIST, c) != CHAR_STATE_DEAD ) {
+				if ( cdatan(CDATAN_RACE, c) == "servant" ) {
 					gdata(GDATA_ACTIVE_GOD_PETS)++
 				}
 			}
-			cType(c) = gArea
+			cdata(CDATA_AREA, c) = gdata(GDATA_AREA)
 			relocate_chara c, -1
-			cRelation(c) = RELATION_DISLIKE
-			cOrgRelation(c) = RELATION_DISLIKE
-			cRole(c) = ROLE_SPECIAL
-			if ( mMaxInv <= 80 ) {
-				mMaxInv = 400
+			cdata(CDATA_RELATION, c) = RELATION_DISLIKE
+			cdata(CDATA_RELATION_ORG, c) = RELATION_DISLIKE
+			cdata(CDATA_ROLE, c) = ROLE_SPECIAL
+			if ( mdata(MDATA_MAX_INV) <= 80 ) {
+				mdata(MDATA_MAX_INV) = 400
 			}
 		}
 		goto *label_4609
@@ -921,32 +921,32 @@
 				goto *pc_turn
 			}
 			txt lang("辺りに餌を撒いた。", name(0) + " sprinkled " + itemname(ci, 1) + ".")
-			iNum(ci) -= 1
+			inv(INV_ITEM_NUM, ci) -= 1
 			gosub *calcBurdenPc
 			snd SOUNDLIST_BUSH1
 			ccbk = cc
 			repeat 245
-				if ( cExist(cnt) != CHAR_STATE_ALIVE ) {
+				if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
 					continue
 				}
 				if ( cbit(CHARA_BIT_LIVESTOCK, cnt) == FALSE ) {
 					continue
 				}
-				if ( cDim(cnt) > 60 ) {
-					cDim(cnt) = 59
+				if ( cdata(CDATA_CONDITION_DIM, cnt) > 60 ) {
+					cdata(CDATA_CONDITION_DIM, cnt) = 59
 				}
-				cSleep(cnt) = 0
-				cMochi(cnt) = 0
-				cParalyze(cnt) = 0
+				cdata(CDATA_CONDITION_SLEEP, cnt) = 0
+				cdata(CDATA_CONDITION_SUFFOCATION, cnt) = 0
+				cdata(CDATA_CONDITION_PARALYZE, cnt) = 0
 				cc = cnt
 				if ( cnt != 0 ) {
 					tc = CHARA_PLAYER
 					efid = SKILL_SPACT_SHADOW_STEP
 					gosub *effect
 				}
-				modweight cc, limit(10000 - cHunger(cnt), 1, 5000) / 1000, cHunger(cc) > 0
-				cHunger(cnt) = 10000
-				cEmoIcon(cc) = 16 + 100 * 1
+				modweight cc, limit(10000 - cdata(CDATA_HUNGER, cnt), 1, 5000) / 1000, cdata(CDATA_HUNGER, cc) > 0
+				cdata(CDATA_HUNGER, cnt) = 10000
+				cdata(CDATA_EMO_ICON, cc) = 16 + 100 * 1
 				modimp2 cc, 15
 			loop
 		}
@@ -978,26 +978,26 @@
 			}
 			txt lang("場内を消毒した。", name(0) + " sprinkled " + itemname(ci, 1) + ".")
 			disip = 40
-			if ( iStatus(ci) == ITEM_STATUS_NORMAL ) {
+			if ( inv(INV_ITEM_STATUS, ci) == ITEM_STATUS_NORMAL ) {
 				disip = 20
 			}
-			if ( iStatus(ci) == ITEM_STATUS_CURSED ) {
+			if ( inv(INV_ITEM_STATUS, ci) == ITEM_STATUS_CURSED ) {
 				disip = 10
 			}
-			if ( iStatus(ci) == ITEM_STATUS_DOOMED ) {
+			if ( inv(INV_ITEM_STATUS, ci) == ITEM_STATUS_DOOMED ) {
 				disip = 5
 			}
-			iNum(ci) -= 1
+			inv(INV_ITEM_NUM, ci) -= 1
 			gosub *calcBurdenPc
 			snd SOUNDLIST_MIZU
 			repeat 245
-				if ( cExist(cnt) != CHAR_STATE_ALIVE ) {
+				if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
 					continue
 				}
 				if ( cbit(CHARA_BIT_LIVESTOCK, cnt) == FALSE ) {
 					continue
 				}
-				cEmoIcon(cnt) = 6 + 100 * 1
+				cdata(CDATA_EMO_ICON, cnt) = 6 + 100 * 1
 				healcon cnt, CONDITION_POISON, disip
 				healcon cnt, CONDITION_SICK, disip
 				if ( findbuff(cnt, BUFF_DISINFECTION) == (-1) ) {
@@ -1015,7 +1015,7 @@
 		snd SOUNDLIST_AMMO
 		txtef COLOR_RED
 		txt lang("この牧場では繁殖が行われない。", "This area will prevent breeding.")
-		adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), gArea) = 10
+		adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), gdata(GDATA_AREA)) = 10
 		goto *label_4609
 		_switch_sw++
 	}
@@ -1025,7 +1025,7 @@
 		snd SOUNDLIST_AMMO
 		txtef COLOR_RED
 		txt lang("この牧場では生産が行われない。", "This area will prevent production.")
-		adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), gArea) = 10
+		adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), gdata(GDATA_AREA)) = 10
 		goto *label_4609
 		_switch_sw++
 	}
@@ -1035,7 +1035,7 @@
 		snd SOUNDLIST_ENC
 		txtef COLOR_GREEN
 		txt lang("繁殖が通常通り行われるようになった。", "This area does not prevent breeding.")
-		adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), gArea) = 0
+		adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), gdata(GDATA_AREA)) = 0
 		goto *label_4609
 		_switch_sw++
 	}
@@ -1045,7 +1045,7 @@
 		snd SOUNDLIST_ENC
 		txtef COLOR_GREEN
 		txt lang("生産が通常通り行われるようになった。", "This area does not prevent production.")
-		adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), gArea) = 0
+		adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), gdata(GDATA_AREA)) = 0
 		goto *label_4609
 		_switch_sw++
 	}
@@ -1068,19 +1068,19 @@
 		if ( rtval == 1 ) {
 			snd SOUNDLIST_ENC
 			repeat 400, 5080
-				if ( iNum(cnt) <= 0 ) {
+				if ( inv(INV_ITEM_NUM, cnt) <= 0 ) {
 					continue
 				}
-				if ( iProperty(cnt) == PROP_NPC | iProperty(cnt) == PROP_SPECIAL ) {
+				if ( inv(INV_ITEM_PROPERTY, cnt) == PROP_NPC | inv(INV_ITEM_PROPERTY, cnt) == PROP_SPECIAL ) {
 					continue
 				}
-				bkx = iX(cnt)
-				bky = iY(cnt)
-				iX(cnt) = cX(CHARA_PLAYER)
-				iY(cnt) = cY(CHARA_PLAYER)
+				bkx = inv(INV_ITEM_X, cnt)
+				bky = inv(INV_ITEM_Y, cnt)
+				inv(INV_ITEM_X, cnt) = cdata(CDATA_X, CHARA_PLAYER)
+				inv(INV_ITEM_Y, cnt) = cdata(CDATA_Y, CHARA_PLAYER)
 				cell_refresh bkx, bky
 			loop
-			cell_refresh cX(CHARA_PLAYER), cY(CHARA_PLAYER)
+			cell_refresh cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER)
 		}
 		goto *label_4609
 		_switch_sw++
@@ -1088,15 +1088,15 @@
 	if ( _switch_val == 5 | _switch_sw ) {
 		_switch_sw = 0
 		txtnew
-		if ( cGold(CHARA_PLAYER) < calcshopreform() ) {
+		if ( cdata(CDATA_GOLD, CHARA_PLAYER) < calcshopreform() ) {
 			txt lang("お金が足りない…", "You don't have enough money...")
 		}
 		else {
 			snd SOUNDLIST_PAYGOLD1
-			cGold(CHARA_PLAYER) -= calcshopreform()
-			mMaxInv = limit(mMaxInv + 10, 1, 400)
+			cdata(CDATA_GOLD, CHARA_PLAYER) -= calcshopreform()
+			mdata(MDATA_MAX_INV) = limit(mdata(MDATA_MAX_INV) + 10, 1, 400)
 			txtef COLOR_GREEN
-			txt lang("店を拡張した！これからは" + mMaxInv + "個のアイテムを陳列できる。", "You extend your shop! You can display max of " + mMaxInv + " items now!")
+			txt lang("店を拡張した！これからは" + mdata(MDATA_MAX_INV) + "個のアイテムを陳列できる。", "You extend your shop! You can display max of " + mdata(MDATA_MAX_INV) + " items now!")
 		}
 		goto *label_4609
 		_switch_sw++
@@ -1104,8 +1104,8 @@
 	if ( _switch_val == 11 | _switch_sw ) {
 		_switch_sw = 0
 		txtnew
-		if ( adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), gArea) > gHour + gDay * 24 + gMonth * 24 * 30 + gYear * 24 * 30 * 12 ) {
-			txt lang("次に変更できるのは" + cnvdate(adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), gArea), 1) + "だ。", "This Shop will be changeable again at " + cnvdate(adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), gArea), 1) + ".")
+		if ( adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), gdata(GDATA_AREA)) > gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 ) {
+			txt lang("次に変更できるのは" + cnvdate(adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), gdata(GDATA_AREA)), 1) + "だ。", "This Shop will be changeable again at " + cnvdate(adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), gdata(GDATA_AREA)), 1) + ".")
 			snd SOUNDLIST_FAIL1
 			goto *label_4609
 		}
@@ -1119,27 +1119,27 @@
 		if ( rtval == 0 ) {
 			goto *label_4609
 		}
-		adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), gArea) = gHour + gDay * 24 + gMonth * 24 * 30 + gYear * 24 * 30 * 12 + 24 * 15
-		areaShopType(gArea) = rtval - 1
-		if ( areaShopType(gArea) == SHOP_TYPE_GOODS ) {
+		adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), gdata(GDATA_AREA)) = gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 + 24 * 15
+		adata(ADATA_SHOP_TYPE, gdata(GDATA_AREA)) = rtval - 1
+		if ( adata(ADATA_SHOP_TYPE, gdata(GDATA_AREA)) == SHOP_TYPE_GOODS ) {
 			shops = lang("何でも屋", "Goods shop")
 		}
-		if ( areaShopType(gArea) == SHOP_TYPE_FOOD ) {
+		if ( adata(ADATA_SHOP_TYPE, gdata(GDATA_AREA)) == SHOP_TYPE_FOOD ) {
 			shops = lang("食品店", "Food shop")
 		}
-		if ( areaShopType(gArea) == SHOP_TYPE_MAGIC ) {
+		if ( adata(ADATA_SHOP_TYPE, gdata(GDATA_AREA)) == SHOP_TYPE_MAGIC ) {
 			shops = lang("魔法店", "Magic shop")
 		}
-		if ( areaShopType(gArea) == SHOP_TYPE_BLACKSMITH ) {
+		if ( adata(ADATA_SHOP_TYPE, gdata(GDATA_AREA)) == SHOP_TYPE_BLACKSMITH ) {
 			shops = lang("武具店", "Blacksmith")
 		}
-		if ( areaShopType(gArea) == SHOP_TYPE_INN ) {
+		if ( adata(ADATA_SHOP_TYPE, gdata(GDATA_AREA)) == SHOP_TYPE_INN ) {
 			shops = lang("宿屋", "Inn shop")
 		}
-		if ( areaShopType(gArea) == SHOP_TYPE_DECORATIVE_ARTS ) {
+		if ( adata(ADATA_SHOP_TYPE, gdata(GDATA_AREA)) == SHOP_TYPE_DECORATIVE_ARTS ) {
 			shops = lang("装飾家具店", "Decorative arts shop")
 		}
-		if ( areaShopType(gArea) == SHOP_TYPE_JUNK ) {
+		if ( adata(ADATA_SHOP_TYPE, gdata(GDATA_AREA)) == SHOP_TYPE_JUNK ) {
 			shops = lang("ジャンク屋", "Junk shop")
 		}
 		txtef COLOR_GREEN
@@ -1154,15 +1154,15 @@
 		item_find ITEM_ID_BRONZE_COIN, ITEM_FIND_MODE_DBID, ITEM_FIND_LOCATION_CHARAS
 		if ( stat != (-1) ) {
 			ci = stat
-			if ( iNum(ci) >= kunren ) {
-				sc = getworker(gArea)
+			if ( inv(INV_ITEM_NUM, ci) >= kunren ) {
+				sc = getworker(gdata(GDATA_AREA))
 				snd SOUNDLIST_PAYGOLD1
-				iNum(ci) -= kunren
+				inv(INV_ITEM_NUM, ci) -= kunren
 				modgrowth sc, SKILL_NORMAL_NEGOTIATION, 150
 				modgrowth sc, SKILL_ATTR_CHA, 150
 				snd SOUNDLIST_DING3
 				txtef COLOR_SKY_BLUE
-				txt lang(cnName(sc) + "は講師を呼び、潜在能力を伸ばした！", cnName(sc) + " calls a trainer and develops " + his(sc) + " potential!")
+				txt lang(cdatan(CDATAN_NAME, sc) + "は講師を呼び、潜在能力を伸ばした！", cdatan(CDATAN_NAME, sc) + " calls a trainer and develops " + his(sc) + " potential!")
 				goto *turn_end
 			}
 		}
@@ -1174,31 +1174,31 @@
 	if ( _switch_val == 13 | _switch_sw ) {
 		_switch_sw = 0
 		txtnew
-		sc = getworker(gArea)
+		sc = getworker(gdata(GDATA_AREA))
 		if ( 0 ) {
 			cdata(CDATA_SALES_EXP, sc) = 500
 		}
 		if ( cdata(CDATA_SALES_FEATS, sc) == 0 ) {
 			if ( cdata(CDATA_SALES_EXP, sc) < 120 ) {
-				txt lang("営業実績が120は必要だ…。", cnName(sc) + " don't have enough sales exp...")
+				txt lang("営業実績が120は必要だ…。", cdatan(CDATAN_NAME, sc) + " don't have enough sales exp...")
 				snd SOUNDLIST_FAIL1
 				goto *label_4609
 			}
 		}
 		if ( cdata(CDATA_SALES_FEATS, sc) == 1 ) {
 			if ( cdata(CDATA_SALES_EXP, sc) < 360 ) {
-				txt lang("営業実績が360は必要だ…。", cnName(sc) + " don't have enough sales exp...")
+				txt lang("営業実績が360は必要だ…。", cdatan(CDATAN_NAME, sc) + " don't have enough sales exp...")
 				snd SOUNDLIST_FAIL1
 				goto *label_4609
 			}
 		}
 		if ( cdata(CDATA_SALES_FEATS, sc) >= 2 ) {
-			txt lang("これ以上は獲得できない。", cnName(sc) + " can't get shopkeeper feat...")
+			txt lang("これ以上は獲得できない。", cdatan(CDATAN_NAME, sc) + " can't get shopkeeper feat...")
 			snd SOUNDLIST_FAIL1
 			goto *label_4609
 		}
 		txtef COLOR_GREEN
-		txt lang(cnName(sc) + "は営業で得た経験をもとにフィートを獲得できる！それは…", itemname(ci) + " sucked enough blood and ready to grow!")
+		txt lang(cdatan(CDATAN_NAME, sc) + "は営業で得た経験をもとにフィートを獲得できる！それは…", itemname(ci) + " sucked enough blood and ready to grow!")
 		txtsetshopfeat 6
 		repeat 6
 			promptl(0, promptmax) = s(cnt), key_select(cnt), "" + promptmax
@@ -1210,7 +1210,7 @@
 		txtnew
 		if ( shopval == 0 ) {
 			txtef COLOR_GREEN
-			txt lang(cnName(sc) + "はずっこけた。", cnName(sc) + " seems dissatisfied.")
+			txt lang(cdatan(CDATAN_NAME, sc) + "はずっこけた。", cdatan(CDATAN_NAME, sc) + " seems dissatisfied.")
 			goto *label_4609
 		}
 		if ( shopval > 0 & shopval <= 5 ) {
@@ -1231,7 +1231,7 @@
 			}
 			if ( cbit(bitp, sc) ) {
 				txtef COLOR_RED
-				txt lang(cnName(sc) + "はそのフィートを既に持っている。", cnName(sc) + " already has that feat.")
+				txt lang(cdatan(CDATAN_NAME, sc) + "はそのフィートを既に持っている。", cdatan(CDATAN_NAME, sc) + " already has that feat.")
 				snd SOUNDLIST_FAIL1
 				goto *label_4609
 			}
@@ -1242,7 +1242,7 @@
 			cdata(CDATA_SALES_FEATS, sc)++
 			snd SOUNDLIST_PRAY1
 			txtef COLOR_GREEN
-			txt lang(cnName(sc) + "はフィートを獲得した。", cnName(sc) + " got the new feat!")
+			txt lang(cdatan(CDATAN_NAME, sc) + "はフィートを獲得した。", cdatan(CDATAN_NAME, sc) + " got the new feat!")
 		}
 		goto *label_4609
 		_switch_sw++
@@ -1260,7 +1260,7 @@
 		if ( rtval == 0 ) {
 			goto *label_4609
 		}
-		adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), gArea) = rtval - 1
+		adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), gdata(GDATA_AREA)) = rtval - 1
 		snd SOUNDLIST_BUILD1
 		goto *label_4609
 		_switch_sw++
@@ -1274,21 +1274,21 @@
 	if ( _switch_val == 7 | _switch_sw ) {
 		_switch_sw = 0
 		txtnew
-		if ( mTileSet == MAP_TILESET_UNKNOWN ) {
+		if ( mdata(MDATA_TILESET) == MAP_TILESET_UNKNOWN ) {
 			tilep = 9
 		}
-		if ( mTileSet == MAP_TILESET_EASTERN ) {
+		if ( mdata(MDATA_TILESET) == MAP_TILESET_EASTERN ) {
 			tilep = 3
 		}
-		if ( mTileSet == MAP_TILESET_HOME ) {
+		if ( mdata(MDATA_TILESET) == MAP_TILESET_HOME ) {
 			tilep = 8
 		}
-		if ( mTileSet == MAP_TILESET_SF ) {
+		if ( mdata(MDATA_TILESET) == MAP_TILESET_SF ) {
 			tilep = 14
 		}
 		snd SOUNDLIST_BUILD1
-		mTileSet = tilep
-		areaTileSet(gArea) = tilep
+		mdata(MDATA_TILESET) = tilep
+		adata(ADATA_TILESET, gdata(GDATA_AREA)) = tilep
 		if ( tilep == 9 ) {
 			txtef COLOR_GREEN
 			txt lang("和風な扉が生成されるようになった。", "You changed door to Japan type.")
@@ -1313,34 +1313,34 @@
 	if ( _switch_val == 16 | _switch_sw ) {
 		_switch_sw = 0
 		txtnew
-		if ( areaTileFile(gArea) == 0 ) {
+		if ( adata(ADATA_TILE_FILE, gdata(GDATA_AREA)) == 0 ) {
 			tilep = 1
 		}
-		if ( areaTileFile(gArea) == 1 ) {
+		if ( adata(ADATA_TILE_FILE, gdata(GDATA_AREA)) == 1 ) {
 			tilep = 2
 		}
-		if ( areaTileFile(gArea) == 2 ) {
+		if ( adata(ADATA_TILE_FILE, gdata(GDATA_AREA)) == 2 ) {
 			tilep = 3
 		}
-		if ( areaTileFile(gArea) == 3 ) {
+		if ( adata(ADATA_TILE_FILE, gdata(GDATA_AREA)) == 3 ) {
 			tilep = 0
 		}
 		snd SOUNDLIST_BUILD1
-		mTileFile = tilep
-		areaTileFile(gArea) = tilep
-		if ( mTileFile == 0 ) {
+		mdata(MDATA_TILE_FILE) = tilep
+		adata(ADATA_TILE_FILE, gdata(GDATA_AREA)) = tilep
+		if ( mdata(MDATA_TILE_FILE) == 0 ) {
 			txtef COLOR_GREEN
 			txt lang("タイルグループをmap0に変更した。", "You changed tile group map0.")
 		}
-		if ( mTileFile == 1 ) {
+		if ( mdata(MDATA_TILE_FILE) == 1 ) {
 			txtef COLOR_GREEN
 			txt lang("タイルグループをmap1に変更した。", "You changed tile group map1.")
 		}
-		if ( mTileFile == 2 ) {
+		if ( mdata(MDATA_TILE_FILE) == 2 ) {
 			txtef COLOR_GREEN
 			txt lang("タイルグループをmap2に変更した。", "You changed tile group map2.")
 		}
-		if ( mTileFile == 3 ) {
+		if ( mdata(MDATA_TILE_FILE) == 3 ) {
 			txtef COLOR_GREEN
 			txt lang("タイルグループをmap3に変更した。", "You changed tile group map3.")
 		}
@@ -1351,8 +1351,8 @@
 	}
 	if ( _switch_val == 9 | _switch_sw ) {
 		_switch_sw = 0
-		if ( areaIcon(gArea) < xy2pic(0, 10) | areaIcon(gArea) > xy2pic(32, 10) ) {
-			adata(ADATA_ICON_ORG, gArea) = areaIcon(gArea)
+		if ( adata(ADATA_ICON, gdata(GDATA_AREA)) < xy2pic(0, 10) | adata(ADATA_ICON, gdata(GDATA_AREA)) > xy2pic(32, 10) ) {
+			adata(ADATA_ICON_ORG, gdata(GDATA_AREA)) = adata(ADATA_ICON, gdata(GDATA_AREA))
 		}
 		txtef COLOR_YELLOW
 		txt lang("対応する画像の番号は？（1〜33で入力。0を入力するとデフォルトに。）", "Input the number of map_ . (1-33) / If input 0, undo.")
@@ -1360,8 +1360,8 @@
 		inputlog = ""
 		gosub *prompt_word
 		if ( inputlog == "0" ) {
-			if ( adata(ADATA_ICON_ORG, gArea) != 0 ) {
-				areaIcon(gArea) = adata(ADATA_ICON_ORG, gArea)
+			if ( adata(ADATA_ICON_ORG, gdata(GDATA_AREA)) != 0 ) {
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = adata(ADATA_ICON_ORG, gdata(GDATA_AREA))
 				txtef COLOR_GREEN
 				txt lang("元の外装に戻した。", "You put back the original graphic.")
 			}
@@ -1369,105 +1369,105 @@
 		}
 		else {
 			if ( inputlog == "1" ) {
-				areaIcon(gArea) = xy2pic(0, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(0, 10)
 			}
 			if ( inputlog == "2" ) {
-				areaIcon(gArea) = xy2pic(1, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(1, 10)
 			}
 			if ( inputlog == "3" ) {
-				areaIcon(gArea) = xy2pic(2, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(2, 10)
 			}
 			if ( inputlog == "4" ) {
-				areaIcon(gArea) = xy2pic(3, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(3, 10)
 			}
 			if ( inputlog == "5" ) {
-				areaIcon(gArea) = xy2pic(4, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(4, 10)
 			}
 			if ( inputlog == "6" ) {
-				areaIcon(gArea) = xy2pic(5, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(5, 10)
 			}
 			if ( inputlog == "7" ) {
-				areaIcon(gArea) = xy2pic(6, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(6, 10)
 			}
 			if ( inputlog == "8" ) {
-				areaIcon(gArea) = xy2pic(7, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(7, 10)
 			}
 			if ( inputlog == "9" ) {
-				areaIcon(gArea) = xy2pic(8, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(8, 10)
 			}
 			if ( inputlog == "10" ) {
-				areaIcon(gArea) = xy2pic(9, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(9, 10)
 			}
 			if ( inputlog == "11" ) {
-				areaIcon(gArea) = xy2pic(10, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(10, 10)
 			}
 			if ( inputlog == "12" ) {
-				areaIcon(gArea) = xy2pic(11, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(11, 10)
 			}
 			if ( inputlog == "13" ) {
-				areaIcon(gArea) = xy2pic(12, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(12, 10)
 			}
 			if ( inputlog == "14" ) {
-				areaIcon(gArea) = xy2pic(13, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(13, 10)
 			}
 			if ( inputlog == "15" ) {
-				areaIcon(gArea) = xy2pic(14, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(14, 10)
 			}
 			if ( inputlog == "16" ) {
-				areaIcon(gArea) = xy2pic(15, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(15, 10)
 			}
 			if ( inputlog == "17" ) {
-				areaIcon(gArea) = xy2pic(16, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(16, 10)
 			}
 			if ( inputlog == "18" ) {
-				areaIcon(gArea) = xy2pic(17, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(17, 10)
 			}
 			if ( inputlog == "19" ) {
-				areaIcon(gArea) = xy2pic(18, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(18, 10)
 			}
 			if ( inputlog == "20" ) {
-				areaIcon(gArea) = xy2pic(19, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(19, 10)
 			}
 			if ( inputlog == "21" ) {
-				areaIcon(gArea) = xy2pic(20, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(20, 10)
 			}
 			if ( inputlog == "22" ) {
-				areaIcon(gArea) = xy2pic(21, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(21, 10)
 			}
 			if ( inputlog == "23" ) {
-				areaIcon(gArea) = xy2pic(22, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(22, 10)
 			}
 			if ( inputlog == "24" ) {
-				areaIcon(gArea) = xy2pic(23, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(23, 10)
 			}
 			if ( inputlog == "25" ) {
-				areaIcon(gArea) = xy2pic(24, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(24, 10)
 			}
 			if ( inputlog == "26" ) {
-				areaIcon(gArea) = xy2pic(25, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(25, 10)
 			}
 			if ( inputlog == "27" ) {
-				areaIcon(gArea) = xy2pic(26, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(26, 10)
 			}
 			if ( inputlog == "28" ) {
-				areaIcon(gArea) = xy2pic(27, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(27, 10)
 			}
 			if ( inputlog == "29" ) {
-				areaIcon(gArea) = xy2pic(28, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(28, 10)
 			}
 			if ( inputlog == "30" ) {
-				areaIcon(gArea) = xy2pic(29, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(29, 10)
 			}
 			if ( inputlog == "31" ) {
-				areaIcon(gArea) = xy2pic(30, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(30, 10)
 			}
 			if ( inputlog == "32" ) {
-				areaIcon(gArea) = xy2pic(31, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(31, 10)
 			}
 			if ( inputlog == "33" ) {
-				areaIcon(gArea) = xy2pic(32, 10)
+				adata(ADATA_ICON, gdata(GDATA_AREA)) = xy2pic(32, 10)
 			}
-			if ( areaIcon(gArea) >= xy2pic(0, 10) & areaIcon(gArea) <= xy2pic(32, 10) ) {
+			if ( adata(ADATA_ICON, gdata(GDATA_AREA)) >= xy2pic(0, 10) & adata(ADATA_ICON, gdata(GDATA_AREA)) <= xy2pic(32, 10) ) {
 				snd SOUNDLIST_DING2
 				sekaikousin = 100
 			}
@@ -1481,19 +1481,19 @@
 		txtnew
 		p = 0
 		repeat 245 - 57, 57
-			if ( cExist(cnt) == CHAR_STATE_ALIVE | cExist(cnt) == CHAR_STATE_SPIRIT ) {
-				if ( cRole(cnt) != ROLE_NONE ) {
+			if ( cdata(CDATA_EXIST, cnt) == CHAR_STATE_ALIVE | cdata(CDATA_EXIST, cnt) == CHAR_STATE_SPIRIT ) {
+				if ( cdata(CDATA_ROLE, cnt) != ROLE_NONE ) {
 					p++
 				}
 			}
 		loop
-		if ( p >= gHomeLevel + 2 ) {
+		if ( p >= gdata(GDATA_HOME_LEVEL) + 2 ) {
 			txt lang("家はすでに人であふれかえっている。", "You already have too many guests in your home.")
 			goto *label_4609
 		}
 		repeat 10
 			if ( 0 == 0 ) {
-				randomize gDay + cnt
+				randomize gdata(GDATA_DAY) + cnt
 			}
 			if ( rnd(2) ) {
 				continue
@@ -1506,51 +1506,51 @@
 			}
 			dbid = isethire(hire)
 			if ( 0 == 0 ) {
-				randomize gDay + cnt
+				randomize gdata(GDATA_DAY) + cnt
 			}
 			flt 20
 			characreate -1, dbid, -3, 0
 			if ( stat == 0 ) {
 				continue
 			}
-			cExist(rc) = CHAR_STATE_TEMP
-			cRole(rc) = isethirerole(hire)
-			if ( cId(rc) == CREATURE_ID_SHOPKEEPER ) {
+			cdata(CDATA_EXIST, rc) = CHAR_STATE_TEMP
+			cdata(CDATA_ROLE, rc) = isethirerole(hire)
+			if ( cdata(CDATA_ID, rc) == CREATURE_ID_SHOPKEEPER ) {
 				p = rnd(6)
 				if ( p == 0 ) {
-					cRole(rc) = ROLE_SHOP_ARMOR
-					cnName(rc) = lang("武具店の" + cnName(rc), cnName(rc) + " of armory")
+					cdata(CDATA_ROLE, rc) = ROLE_SHOP_ARMOR
+					cdatan(CDATAN_NAME, rc) = lang("武具店の" + cdatan(CDATAN_NAME, rc), cdatan(CDATAN_NAME, rc) + " of armory")
 				}
 				if ( p == 1 ) {
-					cRole(rc) = ROLE_SHOP_GENERAL
-					cnName(rc) = lang("雑貨屋の" + cnName(rc), cnName(rc) + " of general store")
+					cdata(CDATA_ROLE, rc) = ROLE_SHOP_GENERAL
+					cdatan(CDATAN_NAME, rc) = lang("雑貨屋の" + cdatan(CDATAN_NAME, rc), cdatan(CDATAN_NAME, rc) + " of general store")
 				}
 				if ( p == 2 ) {
-					cRole(rc) = ROLE_SHOP_MAGIC
-					cnName(rc) = lang("魔法店の" + cnName(rc), cnName(rc) + " of magic store")
+					cdata(CDATA_ROLE, rc) = ROLE_SHOP_MAGIC
+					cdatan(CDATAN_NAME, rc) = lang("魔法店の" + cdatan(CDATAN_NAME, rc), cdatan(CDATAN_NAME, rc) + " of magic store")
 				}
 				if ( p == 3 ) {
-					cRole(rc) = ROLE_SHOP_GOODS
-					cnName(rc) = lang("何でも屋の" + cnName(rc), cnName(rc) + " of goods store")
+					cdata(CDATA_ROLE, rc) = ROLE_SHOP_GOODS
+					cdatan(CDATAN_NAME, rc) = lang("何でも屋の" + cdatan(CDATAN_NAME, rc), cdatan(CDATAN_NAME, rc) + " of goods store")
 				}
 				if ( p == 4 ) {
-					cRole(rc) = ROLE_SHOP_ARMOR
-					cnName(rc) = lang("武具店の" + cnName(rc), cnName(rc) + " of armory")
+					cdata(CDATA_ROLE, rc) = ROLE_SHOP_ARMOR
+					cdatan(CDATAN_NAME, rc) = lang("武具店の" + cdatan(CDATAN_NAME, rc), cdatan(CDATAN_NAME, rc) + " of armory")
 				}
 				if ( p == 5 ) {
-					cRole(rc) = ROLE_SHOP_BLACKMARKET
-					cnName(rc) = lang("ブラックマーケットの" + cnName(rc), cnName(rc) + " of blackmarket")
+					cdata(CDATA_ROLE, rc) = ROLE_SHOP_BLACKMARKET
+					cdatan(CDATAN_NAME, rc) = lang("ブラックマーケットの" + cdatan(CDATAN_NAME, rc), cdatan(CDATAN_NAME, rc) + " of blackmarket")
 				}
 				randomize
-				cRoleShopLv(rc) = rnd(15) + 1
+				cdata(CDATA_ROLE_SHOP_LEVEL, rc) = rnd(15) + 1
 			}
 			cnt2 = cnt
 			repeat 245 - 57, 57
 				if ( cnt == rc ) {
 					continue
 				}
-				if ( cnName(cnt) == cnName(rc) ) {
-					if ( cExist(cnt) != CHAR_STATE_DEAD ) {
+				if ( cdatan(CDATAN_NAME, cnt) == cdatan(CDATAN_NAME, rc) ) {
+					if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_DEAD ) {
 						chara_vanquish rc
 					}
 				}
@@ -1564,21 +1564,21 @@
 		if ( stat != (-1) ) {
 			tc = stat
 			txtnew
-			if ( cGold(CHARA_PLAYER) < calchirecost(tc) * 20 ) {
+			if ( cdata(CDATA_GOLD, CHARA_PLAYER) < calchirecost(tc) * 20 ) {
 				txt lang("お金が足りない…", "You dont't have enough money...")
 			}
 			else {
 				snd SOUNDLIST_PAYGOLD1
-				cGold(CHARA_PLAYER) -= calchirecost(tc) * 20
+				cdata(CDATA_GOLD, CHARA_PLAYER) -= calchirecost(tc) * 20
 				await 250
-				cExist(tc) = CHAR_STATE_ALIVE
+				cdata(CDATA_EXIST, tc) = CHAR_STATE_ALIVE
 				txtef COLOR_GREEN
-				txt lang(cnName(tc) + "を家に迎えた。", "You hire " + cnName(tc) + ".")
+				txt lang(cdatan(CDATAN_NAME, tc) + "を家に迎えた。", "You hire " + cdatan(CDATAN_NAME, tc) + ".")
 				snd SOUNDLIST_PRAY1
 			}
 		}
 		repeat 245
-			if ( cExist(cnt) == CHAR_STATE_TEMP ) {
+			if ( cdata(CDATA_EXIST, cnt) == CHAR_STATE_TEMP ) {
 				chara_vanquish cnt
 			}
 		loop
@@ -1606,7 +1606,7 @@
 		}
 		f = 1
 		pget cnt \ 33 * 48, cnt / 33 * 48
-		if ( mTileFile != 2 | cnt >= 297 ) {
+		if ( mdata(MDATA_TILE_FILE) != 2 | cnt >= 297 ) {
 			if ( ginfo(16) == 0 ) {
 				if ( ginfo(17) == 0 ) {
 					if ( ginfo(18) == 0 ) {
@@ -1615,7 +1615,7 @@
 				}
 			}
 		}
-		if ( mTileFile == 1 & cnt == 267 ) {
+		if ( mdata(MDATA_TILE_FILE) == 1 & cnt == 267 ) {
 			f = 0
 		}
 		if ( chipm(CHIPM_ROLE, cnt) == MAP_CHIP_ROLE_CROP ) {
@@ -1631,7 +1631,7 @@
 			list(0, p) = cnt
 			p++
 		}
-		if ( mTileFile == 3 ) {
+		if ( mdata(MDATA_TILE_FILE) == 3 ) {
 			if ( chipm(CHIPM_ANIM, cnt) != 0 ) {
 				continue cnt + chipm(CHIPM_ANIM, cnt)
 			}
@@ -1645,15 +1645,15 @@
 	area = -1
 	midbk = mid
 	repeat 450 - 300, 300
-		if ( areaId(cnt) == AREA_SHOP ) {
+		if ( adata(ADATA_ID, cnt) == AREA_SHOP ) {
 			area = cnt
 			mid = "" + area + "_" + (100 + 1)
 			gosub *shop_turn_main
 		}
 	loop
 	mid = midbk
-	if ( areaId(gArea) == AREA_SHOP ) {
-		worker = getworker(gArea)
+	if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_SHOP ) {
+		worker = getworker(gdata(GDATA_AREA))
 		if ( worker != (-1) ) {
 			gosub *shop_update
 		}
@@ -1670,16 +1670,16 @@
 	sold = 0
 	income = 0, 0
 	listmax = 0
-	shoplv = 100 - gRankShop / 100
+	shoplv = 100 - gdata(GDATA_RANK_SHOP) / 100
 	customer = 0
 	repeat 3
 		customer += rnd(shoplv / 3 + 5)
 	loop
-	customer = customer * (80 + sCHR(worker) * 3 / 2) / 100
+	customer = customer * (80 + sdata(SKILL_ATTR_CHA, worker) * 3 / 2) / 100
 	if ( customer < 1 ) {
 		customer = 1
 	}
-	if ( gArea != area ) {
+	if ( gdata(GDATA_AREA) != area ) {
 		file = "shoptmp.s2"
 		fmode = 4
 		gosub *game_ctrlFile
@@ -1691,50 +1691,50 @@
 	dblistmax = 0
 	inv_getheader -1
 	repeat invrange, invhead
-		if ( iNum(cnt) <= 0 ) {
+		if ( inv(INV_ITEM_NUM, cnt) <= 0 ) {
 			continue
 		}
-		if ( iID(cnt) == ITEM_ID_SHOP_STRONGBOX ) {
+		if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_SHOP_STRONGBOX ) {
 			continue
 		}
-		if ( iID(cnt) == ITEM_ID_REGISTER ) {
+		if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_REGISTER ) {
 			continue
 		}
-		if ( iID(cnt) == ITEM_ID_YACA_POINT_CARD ) {
+		if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_YACA_POINT_CARD ) {
 			continue
 		}
-		if ( iID(cnt) == ITEM_ID_RED_BOOK ) {
+		if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_RED_BOOK ) {
 			continue
 		}
-		if ( iID(cnt) == ITEM_ID_GOLD_PIECE ) {
+		if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_GOLD_PIECE ) {
 			continue
 		}
-		if ( iID(cnt) == ITEM_ID_SHELTER ) {
+		if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_SHELTER ) {
 			continue
 		}
-		if ( iID(cnt) == ITEM_ID_DEED ) {
+		if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_DEED ) {
 			continue
 		}
-		if ( iWeight(cnt) < 0 ) {
+		if ( inv(INV_ITEM_WEIGHT, cnt) < 0 ) {
 			continue
 		}
-		if ( iQuality(cnt) >= FIX_QUALITY_UNIQUE ) {
+		if ( inv(INV_ITEM_QUALITY, cnt) >= FIX_QUALITY_UNIQUE ) {
 			continue
 		}
-		if ( iID(cnt) == ITEM_ID_ROD_WISHING ) {
+		if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_ROD_WISHING ) {
 			continue
 		}
 		if ( inv(INV_ITEM_SHOP_SAMPLE, cnt) == 100 ) {
 			continue
 		}
-		if ( area == gArea ) {
-			if ( chipm(CHIPM_ROLE, mapId(iX(cnt), iY(cnt))) == MAP_CHIP_ROLE_DISPLAY_SPACE ) {
+		if ( area == gdata(GDATA_AREA) ) {
+			if ( chipm(CHIPM_ROLE, map(inv(INV_ITEM_X, cnt), inv(INV_ITEM_Y, cnt), MAP_TILE_ID)) == MAP_CHIP_ROLE_DISPLAY_SPACE ) {
 				continue
 			}
 		}
-		a = refitem(iID(cnt), DBSPEC_TYPE)
-		if ( areaShopType(area) != SHOP_TYPE_DECORATIVE_ARTS ) {
-			if ( a == 60000 & iID(cnt) != ITEM_ID_WILD_FLOWER ) {
+		a = refitem(inv(INV_ITEM_ID, cnt), DBSPEC_TYPE)
+		if ( adata(ADATA_SHOP_TYPE, area) != SHOP_TYPE_DECORATIVE_ARTS ) {
+			if ( a == 60000 & inv(INV_ITEM_ID, cnt) != ITEM_ID_WILD_FLOWER ) {
 				continue
 			}
 		}
@@ -1749,39 +1749,39 @@
 		ci = dblist(0, p)
 		a = dblist(1, p)
 		val = calcitemvalue(ci, 2)
-		val = val * int(10 + sqrt(sTrade(worker) * 200)) / 100 + 10
+		val = val * int(10 + sqrt(sdata(SKILL_NORMAL_NEGOTIATION, worker) * 200)) / 100 + 10
 		if ( limitvalue > 0 ) {
 			if ( val > limitvalue ) {
 				val = limitvalue
 			}
 		}
-		if ( areaShopType(area) == SHOP_TYPE_FOOD ) {
-			if ( refitem(iID(ci), DBSPEC_TYPE) == FILTER_ITEM_FOOD ) {
+		if ( adata(ADATA_SHOP_TYPE, area) == SHOP_TYPE_FOOD ) {
+			if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ITEM_FOOD ) {
 				val = val * 6 / 5
 			}
 		}
-		if ( areaShopType(area) == SHOP_TYPE_MAGIC ) {
-			if ( refitem(iID(ci), DBSPEC_TYPE) == FILTER_ITEM_SCROLL | refitem(iID(ci), DBSPEC_TYPE) == FILTER_ITEM_SPELLBOOK | refitem(iID(ci), DBSPEC_TYPE) == FILTER_ITEM_ROD | iID(ci) == ITEM_ID_OHUDA ) {
+		if ( adata(ADATA_SHOP_TYPE, area) == SHOP_TYPE_MAGIC ) {
+			if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ITEM_SCROLL | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ITEM_SPELLBOOK | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ITEM_ROD | inv(INV_ITEM_ID, ci) == ITEM_ID_OHUDA ) {
 				val = val * 6 / 5
 			}
 		}
-		if ( areaShopType(area) == SHOP_TYPE_BLACKSMITH ) {
-			if ( refitem(iID(ci), DBSPEC_TYPE) == FILTER_WEAPON | refitem(iID(ci), DBSPEC_TYPE) == FILTER_RANGE | refitem(iID(ci), DBSPEC_TYPE) == FILTER_AMMO | refitem(iID(ci), DBSPEC_TYPE) == FILTER_HELM | refitem(iID(ci), DBSPEC_TYPE) == FILTER_ARMOR | refitem(iID(ci), DBSPEC_TYPE) == FILTER_CLOAK | refitem(iID(ci), DBSPEC_TYPE) == FILTER_GIRDLE | refitem(iID(ci), DBSPEC_TYPE) == FILTER_BOOTS | refitem(iID(ci), DBSPEC_TYPE) == FILTER_GLOVES | refitem(iID(ci), DBSPEC_TYPE) == FILTER_SHIELD | refitem(iID(ci), DBSPEC_TYPE) == FILTER_ACCESSORY_RING | refitem(iID(ci), DBSPEC_TYPE) == FILTER_ACCESSORY_AMULET ) {
+		if ( adata(ADATA_SHOP_TYPE, area) == SHOP_TYPE_BLACKSMITH ) {
+			if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_WEAPON | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_RANGE | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_AMMO | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_HELM | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ARMOR | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_CLOAK | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_GIRDLE | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_BOOTS | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_GLOVES | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_SHIELD | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ACCESSORY_RING | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ACCESSORY_AMULET ) {
 				val = val * 6 / 5
 			}
 		}
-		if ( areaShopType(area) == SHOP_TYPE_INN ) {
-			if ( refitem(iID(ci), DBSPEC_TYPE) == FILTER_CONTAINER | refitem(iID(ci), DBSPEC_TYPE) == FILTER_ITEM_POTION ) {
+		if ( adata(ADATA_SHOP_TYPE, area) == SHOP_TYPE_INN ) {
+			if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_CONTAINER | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ITEM_POTION ) {
 				val = val * 6 / 5
 			}
 		}
-		if ( areaShopType(area) == SHOP_TYPE_DECORATIVE_ARTS ) {
-			if ( refitem(iID(ci), DBSPEC_TYPE) == FILTER_ENVIRONMENT | refitem(iID(ci), DBSPEC_TYPE) == FILTER_FURNITURE | refitem(iID(ci), DBSPEC_TYPE) == FILTER_FURNITURE_WELL | refitem(iID(ci), DBSPEC_TYPE) == FILTER_FURNITURE_ALTAR ) {
+		if ( adata(ADATA_SHOP_TYPE, area) == SHOP_TYPE_DECORATIVE_ARTS ) {
+			if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ENVIRONMENT | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_FURNITURE | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_FURNITURE_WELL | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_FURNITURE_ALTAR ) {
 				val = val * 6 / 5
 			}
 		}
-		if ( areaShopType(area) == SHOP_TYPE_JUNK ) {
-			if ( refitem(iID(ci), DBSPEC_TYPE) == FILTER_JUNK | refitem(iID(ci), DBSPEC_TYPE) == FILTER_REMAINS | refitem(iID(ci), DBSPEC_TYPE) == FILTER_ITEM_TOOL ) {
+		if ( adata(ADATA_SHOP_TYPE, area) == SHOP_TYPE_JUNK ) {
+			if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_JUNK | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_REMAINS | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ITEM_TOOL ) {
 				val = val * 6 / 5
 			}
 		}
@@ -1791,65 +1791,65 @@
 		if ( rnd(val) > shoplv * 100 + 500 ) {
 			continue
 		}
-		if ( iNum(ci) <= 0 ) {
+		if ( inv(INV_ITEM_NUM, ci) <= 0 ) {
 			continue
 		}
-		if ( iID(ci) == ITEM_ID_YACA_POINT_CARD ) {
+		if ( inv(INV_ITEM_ID, ci) == ITEM_ID_YACA_POINT_CARD ) {
 			continue
 		}
-		if ( areaShopType(area) == SHOP_TYPE_GOODS ) {
+		if ( adata(ADATA_SHOP_TYPE, area) == SHOP_TYPE_GOODS ) {
 			if ( rnd(8) ) {
 				continue
 			}
 		}
-		if ( areaShopType(area) == SHOP_TYPE_FOOD ) {
-			if ( refitem(iID(ci), DBSPEC_TYPE) != FILTER_ITEM_FOOD ) {
+		if ( adata(ADATA_SHOP_TYPE, area) == SHOP_TYPE_FOOD ) {
+			if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_ITEM_FOOD ) {
 				if ( rnd(5) ) {
 					continue
 				}
 			}
 		}
-		if ( areaShopType(area) == SHOP_TYPE_MAGIC ) {
-			if ( refitem(iID(ci), DBSPEC_TYPE) != FILTER_ITEM_SCROLL & refitem(iID(ci), DBSPEC_TYPE) != FILTER_ITEM_SPELLBOOK & refitem(iID(ci), DBSPEC_TYPE) != FILTER_ITEM_ROD & iID(ci) != ITEM_ID_OHUDA ) {
+		if ( adata(ADATA_SHOP_TYPE, area) == SHOP_TYPE_MAGIC ) {
+			if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_ITEM_SCROLL & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_ITEM_SPELLBOOK & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_ITEM_ROD & inv(INV_ITEM_ID, ci) != ITEM_ID_OHUDA ) {
 				if ( rnd(5) ) {
 					continue
 				}
 			}
 		}
-		if ( areaShopType(area) == SHOP_TYPE_BLACKSMITH ) {
-			if ( refitem(iID(ci), DBSPEC_TYPE) != FILTER_WEAPON & refitem(iID(ci), DBSPEC_TYPE) != FILTER_RANGE & refitem(iID(ci), DBSPEC_TYPE) != FILTER_AMMO & refitem(iID(ci), DBSPEC_TYPE) != FILTER_HELM & refitem(iID(ci), DBSPEC_TYPE) != FILTER_ARMOR & refitem(iID(ci), DBSPEC_TYPE) != FILTER_CLOAK & refitem(iID(ci), DBSPEC_TYPE) != FILTER_GIRDLE & refitem(iID(ci), DBSPEC_TYPE) != FILTER_BOOTS & refitem(iID(ci), DBSPEC_TYPE) != FILTER_GLOVES & refitem(iID(ci), DBSPEC_TYPE) != FILTER_SHIELD & refitem(iID(ci), DBSPEC_TYPE) != FILTER_ACCESSORY_RING & refitem(iID(ci), DBSPEC_TYPE) != FILTER_ACCESSORY_AMULET ) {
+		if ( adata(ADATA_SHOP_TYPE, area) == SHOP_TYPE_BLACKSMITH ) {
+			if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_WEAPON & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_RANGE & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_AMMO & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_HELM & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_ARMOR & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_CLOAK & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_GIRDLE & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_BOOTS & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_GLOVES & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_SHIELD & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_ACCESSORY_RING & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_ACCESSORY_AMULET ) {
 				if ( rnd(5) ) {
 					continue
 				}
 			}
 		}
-		if ( areaShopType(area) == SHOP_TYPE_INN ) {
-			if ( refitem(iID(ci), DBSPEC_TYPE) != FILTER_CONTAINER & refitem(iID(ci), DBSPEC_TYPE) != FILTER_ITEM_POTION ) {
+		if ( adata(ADATA_SHOP_TYPE, area) == SHOP_TYPE_INN ) {
+			if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_CONTAINER & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_ITEM_POTION ) {
 				if ( rnd(5) ) {
 					continue
 				}
 			}
 		}
-		if ( areaShopType(area) == SHOP_TYPE_DECORATIVE_ARTS ) {
-			if ( refitem(iID(ci), DBSPEC_TYPE) != FILTER_ENVIRONMENT & refitem(iID(ci), DBSPEC_TYPE) != FILTER_FURNITURE & refitem(iID(ci), DBSPEC_TYPE) != FILTER_FURNITURE_WELL & refitem(iID(ci), DBSPEC_TYPE) != FILTER_FURNITURE_ALTAR ) {
+		if ( adata(ADATA_SHOP_TYPE, area) == SHOP_TYPE_DECORATIVE_ARTS ) {
+			if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_ENVIRONMENT & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_FURNITURE & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_FURNITURE_WELL & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_FURNITURE_ALTAR ) {
 				if ( rnd(5) ) {
 					continue
 				}
 			}
 		}
-		if ( areaShopType(area) == SHOP_TYPE_JUNK ) {
-			if ( refitem(iID(ci), DBSPEC_TYPE) != FILTER_JUNK & refitem(iID(ci), DBSPEC_TYPE) != FILTER_REMAINS & refitem(iID(ci), DBSPEC_TYPE) != FILTER_ITEM_TOOL ) {
+		if ( adata(ADATA_SHOP_TYPE, area) == SHOP_TYPE_JUNK ) {
+			if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_JUNK & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_REMAINS & refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_ITEM_TOOL ) {
 				if ( rnd(5) ) {
 					continue
 				}
 			}
 		}
-		if ( areaShopType(area) != SHOP_TYPE_GOODS ) {
+		if ( adata(ADATA_SHOP_TYPE, area) != SHOP_TYPE_GOODS ) {
 			if ( rnd(2) ) {
 				continue
 			}
 		}
-		in = rnd(iNum(ci)) + 1
+		in = rnd(inv(INV_ITEM_NUM, ci)) + 1
 		if ( adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), area) == 1 ) {
 			if ( in + sold > 15 ) {
 				in = 15 - sold
@@ -1860,36 +1860,36 @@
 				in = 5 - sold
 			}
 		}
-		if ( iID(ci) == ITEM_ID_PRODUCED_BOOK ) {
-			if ( iParam2(ci) == 0 ) {
-				bookfame = (iParam3(ci) + 5) * in
-				cFame(CHARA_PLAYER) += bookfame
+		if ( inv(INV_ITEM_ID, ci) == ITEM_ID_PRODUCED_BOOK ) {
+			if ( inv(INV_ITEM_PARAM2, ci) == 0 ) {
+				bookfame = (inv(INV_ITEM_PARAM3, ci) + 5) * in
+				cdata(CDATA_FAME, CHARA_PLAYER) += bookfame
 				if ( 0 ) {
 					txtef COLOR_GREEN
 					txt lang("" + bookfame + "の名声値を手に入れた。", "You gain " + bookfame + " fame.")
 				}
 			}
 		}
-		iNum(ci) -= in
+		inv(INV_ITEM_NUM, ci) -= in
 		sold += in
 		val = val * in
 		if ( rnd(4) == 0 ) {
-			list(0, listmax) = refitem(iID(ci), DBSPEC_OBJ_LEVEL), iQuality(ci)
+			list(0, listmax) = refitem(inv(INV_ITEM_ID, ci), DBSPEC_OBJ_LEVEL), inv(INV_ITEM_QUALITY, ci)
 			listn(0, listmax) = str(a), str(val)
 			listmax++
 		}
 		else {
 			income += val
 		}
-		if ( area == gArea ) {
+		if ( area == gdata(GDATA_AREA) ) {
 			repeat 245
-				if ( cExist(cnt) != CHAR_STATE_ALIVE ) {
+				if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
 					continue
 				}
-				if ( cRowAct(cnt) == ACTION_NONE | cActionPeriod(cnt) == 0 ) {
+				if ( cdata(CDATA_ROW_ACT, cnt) == ACTION_NONE | cdata(CDATA_ACTION_PERIOD, cnt) == 0 ) {
 					continue
 				}
-				if ( cItemUsing(cnt) == ci ) {
+				if ( cdata(CDATA_ITEM_USING, cnt) == ci ) {
 					rowactend cnt
 				}
 			loop
@@ -1906,7 +1906,7 @@
 		}
 	loop
 	mode = MODELIST_MAIN
-	if ( gArea != area ) {
+	if ( gdata(GDATA_AREA) != area ) {
 		file = "inv_" + mid + ".s2"
 		fmode = 4
 		gosub *game_ctrlFile
@@ -1925,7 +1925,7 @@
 	else {
 		inv_getheader -1
 		repeat invrange, invhead
-			iNum(cnt) = 0
+			inv(INV_ITEM_NUM, cnt) = 0
 		loop
 	}
 	mode = MODELIST_SHOP
@@ -1947,13 +1947,13 @@
 				f = 0
 				break
 			}
-			if ( iValue(ci) > int(listn(1, cnt2)) * 2 * (3 + eye) / 3 + 300 * eye ) {
-				yaca += iValue(ci) / 1000
+			if ( inv(INV_ITEM_VALUE, ci) > int(listn(1, cnt2)) * 2 * (3 + eye) / 3 + 300 * eye ) {
+				yaca += inv(INV_ITEM_VALUE, ci) / 1000
 				f = 1
 				break
 			}
 			else {
-				iNum(ci) = 0
+				inv(INV_ITEM_NUM, ci) = 0
 				if ( cnt == 3 ) {
 					f = 0
 					break
@@ -1973,16 +1973,16 @@
 	loop
 	eye = 0
 	yaca += income / 1000 + customer / 10
-	if ( gMonth == 12 ) {
+	if ( gdata(GDATA_MONTH) == 12 ) {
 		yaca *= 5
 	}
-	if ( areaId(gArea) == AREA_SHOP ) {
-		autosave = 1 * (gArea != AREA_SHOW_HOUSE)
+	if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_SHOP ) {
+		autosave = 1 * (gdata(GDATA_AREA) != AREA_SHOW_HOUSE)
 	}
 	if ( sold == 0 ) {
 		yaca = 0
 		if ( cfg_hideshopresult == 0 ) {
-			txt lang("[店]" + customer + "人が来客したが、" + cnName(worker) + "はアイテムを一つも売れなかった。", "[Shop]" + customer + " customers visited your shop but " + cnName(worker) + " couldn't sell any item.")
+			txt lang("[店]" + customer + "人が来客したが、" + cdatan(CDATAN_NAME, worker) + "はアイテムを一つも売れなかった。", "[Shop]" + customer + " customers visited your shop but " + cdatan(CDATAN_NAME, worker) + " couldn't sell any item.")
 		}
 	}
 	else {
@@ -1997,7 +1997,7 @@
 			snd SOUNDLIST_DING2
 			txtmore
 			txtef COLOR_YELLOW
-			txt lang("[店]" + customer + "人の来客があり、" + cnName(worker) + "は" + sold + "個のアイテムを売却した。" + s + "が売り上げとして金庫に保管された。そして" + yaca + "ヤカポイントを獲得した。", "[Shop]" + customer + " customers visited your shop and " + cnName(worker) + " sold " + sold + " items. " + cnName(worker) + " put " + s + " in the shop strong box. You got " + yaca + " yaca points.")
+			txt lang("[店]" + customer + "人の来客があり、" + cdatan(CDATAN_NAME, worker) + "は" + sold + "個のアイテムを売却した。" + s + "が売り上げとして金庫に保管された。そして" + yaca + "ヤカポイントを獲得した。", "[Shop]" + customer + " customers visited your shop and " + cdatan(CDATAN_NAME, worker) + " sold " + sold + " items. " + cdatan(CDATAN_NAME, worker) + " put " + s + " in the shop strong box. You got " + yaca + " yaca points.")
 		}
 		skillexp SKILL_NORMAL_NEGOTIATION, worker, limit(int(sqrt(income)) * 10, 25, 2000) * (adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), area) + 2) / 2
 		cdata(CDATA_SALES_EXP, worker)++
@@ -2009,27 +2009,27 @@
 			gdata(GDATA_FLAG_YACA_POINTS) = 100000
 		}
 	}
-	if ( sold > (110 - gRankShop / 100) / 10 ) {
+	if ( sold > (110 - gdata(GDATA_RANK_SHOP) / 100) / 10 ) {
 		modrank 5, 30, 2
 	}
 	if ( cbit(CHARA_BIT_SHOP_SALES_ROUTE, worker) ) {
-		dokuzi = sTrade(worker) * 5 + sTrade(worker) * rnd(6)
-		if ( gArea == AREA_VALM ) {
-			if ( gLevel == 3 ) {
+		dokuzi = sdata(SKILL_NORMAL_NEGOTIATION, worker) * 5 + sdata(SKILL_NORMAL_NEGOTIATION, worker) * rnd(6)
+		if ( gdata(GDATA_AREA) == AREA_VALM ) {
+			if ( gdata(GDATA_LEVEL) == 3 ) {
 				dokuzi = 1
 			}
 		}
 		flt
 		itemcreate -1, ITEM_ID_GOLD_PIECE, -1, -1, dokuzi
 		yaca = dokuzi / 100
-		if ( gMonth == 12 ) {
+		if ( gdata(GDATA_MONTH) == 12 ) {
 			yaca *= 5
 		}
 		if ( gdata(GDATA_FLAG_YACA_POINTS) >= 100000 ) {
 			yaca = 0
 		}
 		txtef COLOR_YELLOW
-		txt lang("[店]" + cnName(worker) + "は独自に" + dokuzi + "gold稼ぎ、金庫に保管した。そして" + yaca + "ヤカポイントを獲得した。", "[Shop]" + customer + " customers visited your shop and " + cnName(worker) + " sold " + sold + " items. " + cnName(worker) + " put " + s + " in the shop strong box. You got " + yaca + " yaca points.")
+		txt lang("[店]" + cdatan(CDATAN_NAME, worker) + "は独自に" + dokuzi + "gold稼ぎ、金庫に保管した。そして" + yaca + "ヤカポイントを獲得した。", "[Shop]" + customer + " customers visited your shop and " + cdatan(CDATAN_NAME, worker) + " sold " + sold + " items. " + cdatan(CDATAN_NAME, worker) + " put " + s + " in the shop strong box. You got " + yaca + " yaca points.")
 		dokuzi = 0
 		gdata(GDATA_FLAG_YACA_POINTS) += yaca
 		if ( gdata(GDATA_FLAG_YACA_POINTS) >= 100000 ) {
@@ -2046,22 +2046,22 @@
 	return
 
 *shop_update
-	mModerateCrowd = (100 - gRankShop / 100) / 4 + 1
+	mdata(MDATA_MODERATE_CROWD) = (100 - gdata(GDATA_RANK_SHOP) / 100) / 4 + 1
 	inv_getheader -1
-	repeat mHeight
+	repeat mdata(MDATA_HEIGHT)
 		y = cnt
-		repeat mWidth
-			mapItems(cnt, y) = 0
-			mapLight(cnt, y) = 0
+		repeat mdata(MDATA_WIDTH)
+			map(cnt, y, MAP_ITEM_CHIPS) = 0
+			map(cnt, y, MAP_LIGHT_TYPE) = 0
 		loop
 	loop
 	repeat invrange, invhead
-		if ( iNum(cnt) <= 0 ) {
+		if ( inv(INV_ITEM_NUM, cnt) <= 0 ) {
 			continue
 		}
-		x = iX(cnt)
-		y = iY(cnt)
-		if ( x < 0 | x >= mWidth | y < 0 | y >= mHeight ) {
+		x = inv(INV_ITEM_X, cnt)
+		y = inv(INV_ITEM_Y, cnt)
+		if ( x < 0 | x >= mdata(MDATA_WIDTH) | y < 0 | y >= mdata(MDATA_HEIGHT) ) {
 			continue
 		}
 		cell_refresh x, y
@@ -2073,21 +2073,21 @@
 	fixlv = FIX_QUALITY_GOOD
 	dbmode = DBMODE_SET
 	gosub *db_creature
-	dblist(val, cId(MAX_CHARA_NC))++
+	dblist(val, cdata(CDATA_ID, MAX_CHARA_NC))++
 	if ( fixlv == FIX_QUALITY_UNIQUE ) {
-		rtval = 70 + cLevel(MAX_CHARA_NC)
+		rtval = 70 + cdata(CDATA_LEVEL, MAX_CHARA_NC)
 	}
 	else {
-		rtval = cLevel(MAX_CHARA_NC) / 10 + 2
-		if ( chipc(CHIPC_HEIGHT, cPic(MAX_CHARA_NC) \ 1000) > inf_tiles ) {
+		rtval = cdata(CDATA_LEVEL, MAX_CHARA_NC) / 10 + 2
+		if ( chipc(CHIPC_HEIGHT, cdata(CDATA_PIC, MAX_CHARA_NC) \ 1000) > inf_tiles ) {
 			rtval = rtval / 2 * 3 + 40
 		}
-		p = refchara(cId(MAX_CHARA_NC), DBSPEC_CHARA_RARE)
+		p = refchara(cdata(CDATA_ID, MAX_CHARA_NC), DBSPEC_CHARA_RARE)
 		if ( p < 80 ) {
 			rtval = rtval + 80 - p
 		}
 	}
-	if ( dblist(val, cId(MAX_CHARA_NC)) > 1 ) {
+	if ( dblist(val, cdata(CDATA_ID, MAX_CHARA_NC)) > 1 ) {
 		rtval /= 3
 		if ( rtval > 15 ) {
 			rtval = 15
@@ -2095,51 +2095,51 @@
 	}
 	return
 
-*label_4627
+*museum_unique_level
 	rtval = 0
 	rc = MAX_CHARA_NC
 	fixlv = FIX_QUALITY_GOOD
 	dbmode = DBMODE_SET
 	gosub *db_creature
-	dblist(val, cId(MAX_CHARA_NC))++
-	if ( fixlv == FIX_QUALITY_UNIQUE | cId(MAX_CHARA_NC) == CREATURE_ID_AILE_THE_ATTENDANT | cId(MAX_CHARA_NC) == CREATURE_ID_LEND_THE_TAKER | cId(MAX_CHARA_NC) == CREATURE_ID_MOYER_THE_CROOKED ) {
-		rtval = cLevel(MAX_CHARA_NC)
+	dblist(val, cdata(CDATA_ID, MAX_CHARA_NC))++
+	if ( fixlv == FIX_QUALITY_UNIQUE | cdata(CDATA_ID, MAX_CHARA_NC) == CREATURE_ID_AILE_THE_ATTENDANT | cdata(CDATA_ID, MAX_CHARA_NC) == CREATURE_ID_LEND_THE_TAKER | cdata(CDATA_ID, MAX_CHARA_NC) == CREATURE_ID_MOYER_THE_CROOKED ) {
+		rtval = cdata(CDATA_LEVEL, MAX_CHARA_NC)
 	}
-	if ( cLevel(MAX_CHARA_NC) >= gdata(GDATA_DEEPEST_LEVEL) * 2 ) {
+	if ( cdata(CDATA_LEVEL, MAX_CHARA_NC) >= gdata(GDATA_DEEPEST_LEVEL) * 2 ) {
 		rtval = 0
 	}
-	if ( dblist(val, cId(MAX_CHARA_NC)) > 1 ) {
+	if ( dblist(val, cdata(CDATA_ID, MAX_CHARA_NC)) > 1 ) {
 		rtval = 0
 	}
 	return
 
 *museum_update
-	rankorg = gRankMuseum
+	rankorg = gdata(GDATA_RANK_MUSEUM)
 	inv_getheader -1
 	rankcur = 0
 	dim dblist, 2, 1499
 	repeat invrange, invhead
-		if ( iNum(cnt) == 0 ) {
+		if ( inv(INV_ITEM_NUM, cnt) == 0 ) {
 			continue
 		}
-		if ( iID(cnt) != ITEM_ID_FIGURINE & iID(cnt) != ITEM_ID_CARD ) {
+		if ( inv(INV_ITEM_ID, cnt) != ITEM_ID_FIGURINE & inv(INV_ITEM_ID, cnt) != ITEM_ID_CARD ) {
 			continue
 		}
-		if ( wpeek(mapItems(iX(cnt), iY(cnt)), 0) != iPic(cnt) ) {
+		if ( wpeek(map(inv(INV_ITEM_X, cnt), inv(INV_ITEM_Y, cnt), MAP_ITEM_CHIPS), 0) != inv(INV_ITEM_PIC, cnt) ) {
 			continue
 		}
-		if ( iID(cnt) == ITEM_ID_CARD & iCol(cnt) == 0 ) {
+		if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_CARD & inv(INV_ITEM_COL, cnt) == 0 ) {
 			continue
 		}
-		if ( iID(cnt) == ITEM_ID_FIGURINE ) {
+		if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_FIGURINE ) {
 			val = 0
 		}
 		else {
 			val = 1
 		}
-		dbid = iSubName(cnt)
+		dbid = inv(INV_ITEM_SUB_NAME, cnt)
 		gosub *museum_value
-		if ( iID(cnt) == ITEM_ID_FIGURINE ) {
+		if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_FIGURINE ) {
 			rankcur += rtval
 		}
 		else {
@@ -2150,7 +2150,7 @@
 	if ( rankcur < 100 ) {
 		rankcur = 100
 	}
-	gRankMuseum = rankcur
+	gdata(GDATA_RANK_MUSEUM) = rankcur
 	if ( rankorg != rankcur ) {
 		if ( rankorg > rankcur ) {
 			txtef COLOR_GREEN
@@ -2161,30 +2161,30 @@
 		txtnew
 		txt lang("ランク変動(" + rankn(10, 3) + " " + rankorg / 100 + "位 → " + rankcur / 100 + "位 )《" + ranktitle(3) + "》", "Museum Rank:" + cnvrank(rankorg / 100) + "->" + cnvrank(rankcur / 100) + " Your museum is now known as <" + ranktitle(3) + ">.")
 	}
-	mModerateCrowd = (100 - gRankMuseum / 100) / 2 + 1
+	mdata(MDATA_MODERATE_CROWD) = (100 - gdata(GDATA_RANK_MUSEUM) / 100) / 2 + 1
 	rankorg = gdata(GDATA_FLAG_MUSEUM_UNIQUE_LEVEL)
 	inv_getheader -1
 	gdata(GDATA_FLAG_MUSEUM_UNIQUE_LEVEL) = 0
 	dim dblist, 2, 1499
 	repeat invrange, invhead
-		if ( iNum(cnt) == 0 ) {
+		if ( inv(INV_ITEM_NUM, cnt) == 0 ) {
 			continue
 		}
-		if ( iID(cnt) != ITEM_ID_FIGURINE ) {
+		if ( inv(INV_ITEM_ID, cnt) != ITEM_ID_FIGURINE ) {
 			continue
 		}
-		if ( wpeek(mapItems(iX(cnt), iY(cnt)), 0) != iPic(cnt) ) {
+		if ( wpeek(map(inv(INV_ITEM_X, cnt), inv(INV_ITEM_Y, cnt), MAP_ITEM_CHIPS), 0) != inv(INV_ITEM_PIC, cnt) ) {
 			continue
 		}
-		if ( iID(cnt) == ITEM_ID_FIGURINE ) {
+		if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_FIGURINE ) {
 			val = 0
 		}
 		else {
 			val = 1
 		}
-		dbid = iSubName(cnt)
-		gosub *label_4627
-		if ( iID(cnt) == ITEM_ID_FIGURINE ) {
+		dbid = inv(INV_ITEM_SUB_NAME, cnt)
+		gosub *museum_unique_level
+		if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_FIGURINE ) {
 			gdata(GDATA_FLAG_MUSEUM_UNIQUE_LEVEL) += rtval
 		}
 	loop
@@ -2264,11 +2264,11 @@
 	return
 
 *house_value
-	a = refitem(iID(val), DBSPEC_TYPE)
+	a = refitem(inv(INV_ITEM_ID, val), DBSPEC_TYPE)
 	if ( a == 60000 ) {
-		gHomeFurniture += limit(iValue(val) / 50, 50, 500)
+		gdata(GDATA_HOME_FURNITURE) += limit(inv(INV_ITEM_VALUE, val) / 50, 50, 500)
 	}
-	p = iValue(val)
+	p = inv(INV_ITEM_VALUE, val)
 	repeat 1
 		if ( a == 60000 ) {
 			p /= 20
@@ -2295,23 +2295,23 @@
 	return
 
 *house_update
-	if ( gLevel != 1 ) {
+	if ( gdata(GDATA_LEVEL) != 1 ) {
 		return
 	}
-	rankorg = gRankHome
+	rankorg = gdata(GDATA_RANK_HOME)
 	inv_getheader -1
 	rankcur = 0
-	gHomeFurniture = 0
-	gHomeValue = 0
+	gdata(GDATA_HOME_FURNITURE) = 0
+	gdata(GDATA_HOME_VALUE) = 0
 	n = 0
 	repeat 10
 		list(0, cnt) = 0, 0
 	loop
 	repeat invrange, invhead
-		if ( iNum(cnt) == 0 ) {
+		if ( inv(INV_ITEM_NUM, cnt) == 0 ) {
 			continue
 		}
-		if ( wpeek(mapItems(iX(cnt), iY(cnt)), 0) != iPic(cnt) ) {
+		if ( wpeek(map(inv(INV_ITEM_X, cnt), inv(INV_ITEM_Y, cnt), MAP_ITEM_CHIPS), 0) != inv(INV_ITEM_PIC, cnt) ) {
 			continue
 		}
 		val = cnt
@@ -2319,20 +2319,20 @@
 	loop
 	repeat 10
 		if ( list(0, cnt) != 0 ) {
-			gHomeValue += limit(list(1, cnt), 100, 2000)
+			gdata(GDATA_HOME_VALUE) += limit(list(1, cnt), 100, 2000)
 		}
 	loop
-	if ( gHomeFurniture > 10000 ) {
-		gHomeFurniture = 10000
+	if ( gdata(GDATA_HOME_FURNITURE) > 10000 ) {
+		gdata(GDATA_HOME_FURNITURE) = 10000
 	}
-	if ( gHomeValue > 10000 ) {
-		gHomeValue = 10000
+	if ( gdata(GDATA_HOME_VALUE) > 10000 ) {
+		gdata(GDATA_HOME_VALUE) = 10000
 	}
-	rankcur = 10000 - (gHomeBase + gHomeFurniture + gHomeValue) / 3
+	rankcur = 10000 - (gdata(GDATA_HOME_BASE) + gdata(GDATA_HOME_FURNITURE) + gdata(GDATA_HOME_VALUE)) / 3
 	if ( rankcur < 100 ) {
 		rankcur = 100
 	}
-	gRankHome = rankcur
+	gdata(GDATA_RANK_HOME) = rankcur
 	if ( rankorg != rankcur ) {
 		if ( rankorg > rankcur ) {
 			txtef COLOR_GREEN
@@ -2341,39 +2341,39 @@
 			txtef COLOR_PURPLE
 		}
 		txtnew
-		txt lang("家具(" + gHomeFurniture / 100 + "点) 家宝(" + gHomeValue / 100 + "点) ランク変動(" + rankn(10, 4) + " " + rankorg / 100 + "位 → " + rankcur / 100 + "位 )《" + ranktitle(4) + "》", "Furniture Value:" + gHomeFurniture / 100 + " Heirloom Value:" + gHomeValue / 100 + " Home Rank:" + cnvrank(rankorg / 100) + "->" + cnvrank(rankcur / 100) + " Your home is now known as <" + ranktitle(4) + ">.")
+		txt lang("家具(" + gdata(GDATA_HOME_FURNITURE) / 100 + "点) 家宝(" + gdata(GDATA_HOME_VALUE) / 100 + "点) ランク変動(" + rankn(10, 4) + " " + rankorg / 100 + "位 → " + rankcur / 100 + "位 )《" + ranktitle(4) + "》", "Furniture Value:" + gdata(GDATA_HOME_FURNITURE) / 100 + " Heirloom Value:" + gdata(GDATA_HOME_VALUE) / 100 + " Home Rank:" + cnvrank(rankorg / 100) + "->" + cnvrank(rankcur / 100) + " Your home is now known as <" + ranktitle(4) + ">.")
 	}
 	return
 	goto *ranch_update
 
 #defcfunc cbreeder int cbreeder_charid
-	locvar_cbreeder_s = refchara(cId(cbreeder_charid), DBSPEC_CHARA_FILTER, 1)
-	locvar_cbreeder_p = refrace(cnRace(cbreeder_charid), DBSPEC_RACE_BREEDER)
-	locvar_cbreeder_p = locvar_cbreeder_p * 100 / (100 + cLevel(cbreeder_charid) * 5)
+	locvar_cbreeder_s = refchara(cdata(CDATA_ID, cbreeder_charid), DBSPEC_CHARA_FILTER, 1)
+	locvar_cbreeder_p = refrace(cdatan(CDATAN_RACE, cbreeder_charid), DBSPEC_RACE_BREEDER)
+	locvar_cbreeder_p = locvar_cbreeder_p * 100 / (100 + cdata(CDATA_LEVEL, cbreeder_charid) * 5)
 	return locvar_cbreeder_p
 
 *ranch_update
-	worker = getworker(gArea)
+	worker = getworker(gdata(GDATA_AREA))
 	livestock = 0
 	ooitama = 0
 	ooititi = 0
 	sickp = 0
 	inv_getheader -1
 	repeat invrange, invhead
-		if ( iNum(cnt) != 0 ) {
-			if ( iID(cnt) == ITEM_ID_SHIT ) {
+		if ( inv(INV_ITEM_NUM, cnt) != 0 ) {
+			if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_SHIT ) {
 				sicp += 100
 			}
 		}
 	loop
 	repeat 245
-		if ( cExist(cnt) != CHAR_STATE_ALIVE ) {
+		if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
 			continue
 		}
 		if ( cbit(CHARA_BIT_LIVESTOCK, cnt) == FALSE ) {
 			continue
 		}
-		if ( cSick(cnt) > 0 ) {
+		if ( cdata(CDATA_CONDITION_SICK, cnt) > 0 ) {
 			sicp += 500
 		}
 		if ( cdata(CDATA_LIVESTOCK_PRODUCE_QUALITY, cnt) >= 7 & cdata(CDATA_LIVESTOCK_PRODUCE_QUALITY, cnt) <= 9 ) {
@@ -2388,9 +2388,9 @@
 		if ( cdata(CDATA_LIVESTOCK_PRODUCE_QUALITY, cnt) >= 1 & cdata(CDATA_LIVESTOCK_PRODUCE_QUALITY, cnt) <= 3 ) {
 			ooititi -= cdata(CDATA_LIVESTOCK_PRODUCE_QUALITY, cnt)
 		}
-		cHunger(cnt) -= renewmulti * 300
-		if ( cHunger(cnt) < 4000 ) {
-			cHunger(cnt) = 4000
+		cdata(CDATA_HUNGER, cnt) -= renewmulti * 300
+		if ( cdata(CDATA_HUNGER, cnt) < 4000 ) {
+			cdata(CDATA_HUNGER, cnt) = 4000
 		}
 		livestock++
 	loop
@@ -2398,10 +2398,10 @@
 		if ( worker == (-1) ) {
 			goto *skipBreeder
 		}
-		if ( adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), gArea) == 10 ) {
+		if ( adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), gdata(GDATA_AREA)) == 10 ) {
 			goto *skipBreeder
 		}
-		if ( cnRace(worker) == "quickling" ) {
+		if ( cdatan(CDATAN_RACE, worker) == "quickling" ) {
 			if ( rnd(10) >= 8 ) {
 				goto *skipBreeder
 			}
@@ -2545,62 +2545,62 @@
 				}
 			}
 		}
-		flt calcobjlv(cLevel(worker)), FIX_QUALITY_BAD
+		flt calcobjlv(cdata(CDATA_LEVEL, worker)), FIX_QUALITY_BAD
 		if ( rnd(2) ) {
-			dbid = cId(worker)
+			dbid = cdata(CDATA_ID, worker)
 		}
 		else {
 			dbid = 0
 		}
 		if ( rnd(10) != 0 ) {
-			fltnrace = cnRace(worker)
+			fltnrace = cdatan(CDATAN_RACE, worker)
 		}
-		if ( cId(worker) == CREATURE_ID_LITTLE_SISTER ) {
+		if ( cdata(CDATA_ID, worker) == CREATURE_ID_LITTLE_SISTER ) {
 			dbid = 176
 		}
-		if ( cId(worker) == CREATURE_ID_STRAY_CAT ) {
+		if ( cdata(CDATA_ID, worker) == CREATURE_ID_STRAY_CAT ) {
 			dbid = 164
 		}
-		if ( cId(worker) == CREATURE_ID_TOWN_CHILD ) {
+		if ( cdata(CDATA_ID, worker) == CREATURE_ID_TOWN_CHILD ) {
 			dbid = 36
 		}
-		if ( cId(worker) == CREATURE_ID_SHEEPDOG ) {
+		if ( cdata(CDATA_ID, worker) == CREATURE_ID_SHEEPDOG ) {
 			dbid = 10
 		}
-		if ( cQuality(worker) == FIX_QUALITY_UNIQUE ) {
+		if ( cdata(CDATA_QUALITY, worker) == FIX_QUALITY_UNIQUE ) {
 			dbid = 323
 		}
-		if ( cId(worker) == CREATURE_ID_ITZPALT | cId(worker) == CREATURE_ID_THE_ELEMENT ) {
+		if ( cdata(CDATA_ID, worker) == CREATURE_ID_ITZPALT | cdata(CDATA_ID, worker) == CREATURE_ID_THE_ELEMENT ) {
 			dbid = 149
 		}
-		if ( cId(worker) == CREATURE_ID_YACATECT | cId(worker) == CREATURE_ID_HYPER_YACATECT ) {
+		if ( cdata(CDATA_ID, worker) == CREATURE_ID_YACATECT | cdata(CDATA_ID, worker) == CREATURE_ID_HYPER_YACATECT ) {
 			dbid = 1
 		}
-		if ( cId(worker) == CREATURE_ID_JURE | cId(worker) == CREATURE_ID_BLESSED_JURE ) {
+		if ( cdata(CDATA_ID, worker) == CREATURE_ID_JURE | cdata(CDATA_ID, worker) == CREATURE_ID_BLESSED_JURE ) {
 			dbid = 347
 		}
-		if ( cId(worker) == CREATURE_ID_LULWY | cId(worker) == CREATURE_ID_DEVASTATE_LULWY ) {
+		if ( cdata(CDATA_ID, worker) == CREATURE_ID_LULWY | cdata(CDATA_ID, worker) == CREATURE_ID_DEVASTATE_LULWY ) {
 			dbid = 337
 		}
-		if ( cId(worker) == CREATURE_ID_BUILDUP_OPATOS | cId(worker) == CREATURE_ID_OPATOS ) {
+		if ( cdata(CDATA_ID, worker) == CREATURE_ID_BUILDUP_OPATOS | cdata(CDATA_ID, worker) == CREATURE_ID_OPATOS ) {
 			dbid = 245
 		}
-		if ( cId(worker) == CREATURE_ID_INSANE_KUMIROMI | cId(worker) == CREATURE_ID_KUMIROMI ) {
+		if ( cdata(CDATA_ID, worker) == CREATURE_ID_INSANE_KUMIROMI | cdata(CDATA_ID, worker) == CREATURE_ID_KUMIROMI ) {
 			dbid = 19
 		}
-		if ( cId(worker) == CREATURE_ID_DEUS_EX_MANINA | cId(worker) == CREATURE_ID_MANI ) {
+		if ( cdata(CDATA_ID, worker) == CREATURE_ID_DEUS_EX_MANINA | cdata(CDATA_ID, worker) == CREATURE_ID_MANI ) {
 			dbid = 171
 		}
-		if ( cId(worker) == CREATURE_ID_EHEKATL | cId(worker) == CREATURE_ID_GOD_INSIDE_EHEKATL ) {
+		if ( cdata(CDATA_ID, worker) == CREATURE_ID_EHEKATL | cdata(CDATA_ID, worker) == CREATURE_ID_GOD_INSIDE_EHEKATL ) {
 			dbid = 164
 		}
-		if ( cId(worker) == CREATURE_ID_MESHERA_PLANT | cId(worker) == CREATURE_ID_MESHERA_ALPHA_THE_DEFORMED_ANGEL ) {
+		if ( cdata(CDATA_ID, worker) == CREATURE_ID_MESHERA_PLANT | cdata(CDATA_ID, worker) == CREATURE_ID_MESHERA_ALPHA_THE_DEFORMED_ANGEL ) {
 			dbid = 452
 		}
 		characreate -1, dbid, 4 + rnd(11), 4 + rnd(8)
 		if ( stat != 0 ) {
 			cbitmod CHARA_BIT_LIVESTOCK, rc, TRUE
-			cAge(rc) = gYear
+			cdata(CDATA_AGE, rc) = gdata(GDATA_YEAR)
 			cdata(CDATA_SPRITE_SIZE_MILK, rc) = -5
 			cdata(CDATA_LIVESTOCK_QUALITY, rc) = keisitu
 			cdata(CDATA_LIVESTOCK_PRODUCE_QUALITY, rc) = keisitu2
@@ -2609,11 +2609,11 @@
 
 *skipBreeder
 		egg = 0
-		if ( getworker(gArea) != (-1) ) {
-			wtc = getworker(gArea)
+		if ( getworker(gdata(GDATA_AREA)) != (-1) ) {
+			wtc = getworker(gdata(GDATA_AREA))
 		}
 		repeat 245
-			if ( cExist(cnt) != CHAR_STATE_ALIVE ) {
+			if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
 				continue
 			}
 			if ( cbit(CHARA_BIT_LIVESTOCK, cnt) == FALSE & cnt != wtc ) {
@@ -2622,21 +2622,21 @@
 			if ( cnt != wtc ) {
 				if ( findbuff(cnt, BUFF_DISINFECTION) == (-1) ) {
 					if ( rnd(10000) <= sickp ) {
-						if ( cSick(cnt) < 100 ) {
-							cSick(cnt) += 30
+						if ( cdata(CDATA_CONDITION_SICK, cnt) < 100 ) {
+							cdata(CDATA_CONDITION_SICK, cnt) += 30
 						}
 					}
-					if ( cSick(cnt) > 0 ) {
-						if ( cPoison(cnt) < 100 ) {
-							cPoison(cnt) += 30
+					if ( cdata(CDATA_CONDITION_SICK, cnt) > 0 ) {
+						if ( cdata(CDATA_CONDITION_POISON, cnt) < 100 ) {
+							cdata(CDATA_CONDITION_POISON, cnt) += 30
 						}
 					}
 				}
-				if ( cSick(cnt) > 0 ) {
-					cEmoIcon(cnt) = 8 + 100 * 30
+				if ( cdata(CDATA_CONDITION_SICK, cnt) > 0 ) {
+					cdata(CDATA_EMO_ICON, cnt) = 8 + 100 * 30
 				}
 			}
-			if ( adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), gArea) == 10 ) {
+			if ( adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), gdata(GDATA_AREA)) == 10 ) {
 				break
 			}
 			if ( cnt == 0 ) {
@@ -2644,10 +2644,10 @@
 			}
 			x = rnd(11) + 4
 			y = rnd(8) + 4
-			if ( mapItems(x, y) != 0 ) {
+			if ( map(x, y, MAP_ITEM_CHIPS) != 0 ) {
 				continue
 			}
-			flt calcobjlv(cLevel(cnt)), FIX_QUALITY_GOOD
+			flt calcobjlv(cdata(CDATA_LEVEL, cnt)), FIX_QUALITY_GOOD
 			p = rnd(5)
 			f = 0
 			if ( rnd(egg + 1) > 2 ) {
@@ -2673,7 +2673,7 @@
 					continue
 				}
 			}
-			if ( cSick(cnt) > 0 ) {
+			if ( cdata(CDATA_CONDITION_SICK, cnt) > 0 ) {
 				p = 2
 			}
 			if ( p == 0 ) {
@@ -2682,9 +2682,9 @@
 						flt
 						itemcreate -1, ITEM_ID_EGG, x, y, 0
 						if ( stat ) {
-							iSubName(ci) = cId(cnt)
-							iWeight(ci) = limit(cWeight(cnt) / 10 * 40, 20, 10000)
-							iValue(ci) = limit((iWeight(cnt) + 2400) / 4, 600, 3000)
+							inv(INV_ITEM_SUB_NAME, ci) = cdata(CDATA_ID, cnt)
+							inv(INV_ITEM_WEIGHT, ci) = limit(cdata(CDATA_WEIGHT, cnt) / 10 * 40, 20, 10000)
+							inv(INV_ITEM_VALUE, ci) = limit((inv(INV_ITEM_WEIGHT, cnt) + 2400) / 4, 600, 3000)
 						}
 					}
 				}
@@ -2696,7 +2696,7 @@
 				if ( rnd(60) == 0 ) {
 					f = 1
 				}
-				if ( cId(cnt) == CREATURE_ID_CHICKEN ) {
+				if ( cdata(CDATA_ID, cnt) == CREATURE_ID_CHICKEN ) {
 					if ( rnd(20) == 0 ) {
 						f = 1
 					}
@@ -2706,9 +2706,9 @@
 					flt
 					itemcreate -1, ITEM_ID_EGG, x, y, 0
 					if ( stat ) {
-						iSubName(ci) = cId(cnt)
-						iWeight(ci) = limit(cWeight(cnt) / 10 * 40, 20, 10000)
-						iValue(ci) = limit((iWeight(cnt) + 2400) / 4, 600, 3000)
+						inv(INV_ITEM_SUB_NAME, ci) = cdata(CDATA_ID, cnt)
+						inv(INV_ITEM_WEIGHT, ci) = limit(cdata(CDATA_WEIGHT, cnt) / 10 * 40, 20, 10000)
+						inv(INV_ITEM_VALUE, ci) = limit((inv(INV_ITEM_WEIGHT, cnt) + 2400) / 4, 600, 3000)
 					}
 				}
 				continue
@@ -2719,7 +2719,7 @@
 						flt
 						itemcreate -1, ITEM_ID_BOTTLE_MILK, x, y, 0
 						if ( stat ) {
-							iSubName(ci) = cId(cnt)
+							inv(INV_ITEM_SUB_NAME, ci) = cdata(CDATA_ID, cnt)
 						}
 					}
 				}
@@ -2731,12 +2731,12 @@
 				if ( rnd(60) == 0 ) {
 					f = 1
 				}
-				if ( cnRace(cnt) == "sheep" ) {
+				if ( cdatan(CDATAN_RACE, cnt) == "sheep" ) {
 					if ( rnd(20) == 0 ) {
 						f = 1
 					}
 				}
-				if ( cId(cnt) == CREATURE_ID_CATTLE ) {
+				if ( cdata(CDATA_ID, cnt) == CREATURE_ID_CATTLE ) {
 					if ( rnd(20) == 0 ) {
 						f = 1
 					}
@@ -2746,7 +2746,7 @@
 					flt
 					itemcreate -1, ITEM_ID_BOTTLE_MILK, x, y, 0
 					if ( stat ) {
-						iSubName(ci) = cId(cnt)
+						inv(INV_ITEM_SUB_NAME, ci) = cdata(CDATA_ID, cnt)
 					}
 				}
 				continue
@@ -2761,9 +2761,9 @@
 					flt
 					itemcreate -1, ITEM_ID_SHIT, x, y, 0
 					if ( stat ) {
-						iSubName(ci) = cId(cnt)
-						iWeight(ci) = limit(cWeight(cnt) / 10 * 150, 30, 15000)
-						iValue(ci) = limit((cWeight(cnt) + 3600) / 4, 900, 4500)
+						inv(INV_ITEM_SUB_NAME, ci) = cdata(CDATA_ID, cnt)
+						inv(INV_ITEM_WEIGHT, ci) = limit(cdata(CDATA_WEIGHT, cnt) / 10 * 150, 30, 15000)
+						inv(INV_ITEM_VALUE, ci) = limit((cdata(CDATA_WEIGHT, cnt) + 3600) / 4, 900, 4500)
 					}
 				}
 				continue

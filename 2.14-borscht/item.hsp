@@ -134,7 +134,7 @@
 	magebookn = lang("ヴォイニッチ写本", "Voynich Manuscript"), lang("ドール賛歌", "Dhol Chants"), lang("ポナペ教教典", "Ponape Scripture"), lang("グラーキ黙示録", "Revelations of Glaaki"), lang("グ＝ハーン断章", "G'harne Fragments"), lang("断罪の書", "Liber Damnatus"), lang("ドジアンの書", "Book of Dzyan"), lang("エイボンの書", "Book of Eibon"), lang("大いなる教書", "Grand Grimoire"), lang("セラエノ断章", "Celaeno Fragments"), lang("ネクロノミコン", "Necronomicon"), lang("ルルイエ異本", "The R'lyeh Text"), lang("エルトダウン・シャールズ", "Eltdown Shards"), lang("金枝篇", "The Golden Bough"), lang("終焉の書", "Apocalypse"), lang("真なる終焉の書", "True Apocalypse")
 	return
 
-*label_4225
+*item_loot
 	if ( rc == CHARA_PLAYER ) {
 		if ( gdata(GDATA_QUEST) != QUEST_TYPE_NONE ) {
 			return
@@ -638,7 +638,7 @@
 			flttypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
 			itemcreate -1, ITEM_ID_DUMMY, cdata(CDATA_X, rc), cdata(CDATA_Y, rc), 0
 		}
-		goto *label_4228
+		goto *item_loot_SWEND1
 		_switch_sw++
 	}
 	if ( _switch_val == 7 | _switch_sw ) {
@@ -650,7 +650,7 @@
 			flttypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
 			itemcreate -1, ITEM_ID_DUMMY, cdata(CDATA_X, rc), cdata(CDATA_Y, rc), 0
 		}
-		goto *label_4228
+		goto *item_loot_SWEND1
 		_switch_sw++
 	}
 	if ( _switch_val == 3 | _switch_sw ) {
@@ -662,7 +662,7 @@
 			flttypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
 			itemcreate -1, ITEM_ID_DUMMY, cdata(CDATA_X, rc), cdata(CDATA_Y, rc), 0
 		}
-		goto *label_4228
+		goto *item_loot_SWEND1
 		_switch_sw++
 	}
 	if ( _switch_val == 2 | _switch_sw ) {
@@ -681,7 +681,7 @@
 			flttypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
 			itemcreate -1, ITEM_ID_DUMMY, cdata(CDATA_X, rc), cdata(CDATA_Y, rc), 0
 		}
-		goto *label_4228
+		goto *item_loot_SWEND1
 		_switch_sw++
 	}
 	if ( _switch_val == 4 | _switch_sw ) {
@@ -693,7 +693,7 @@
 			flttypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
 			itemcreate -1, ITEM_ID_DUMMY, cdata(CDATA_X, rc), cdata(CDATA_Y, rc), 0
 		}
-		goto *label_4228
+		goto *item_loot_SWEND1
 		_switch_sw++
 	}
 	if ( _switch_val == 5 | _switch_sw ) {
@@ -705,10 +705,10 @@
 			flttypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
 			itemcreate -1, ITEM_ID_DUMMY, cdata(CDATA_X, rc), cdata(CDATA_Y, rc), 0
 		}
-		goto *label_4228
+		goto *item_loot_SWEND1
 	}
 
-*label_4228
+*item_loot_SWEND1
 	_switch_val = refchara(cdata(CDATA_ID, rc), DBSPEC_CHARA_LOOT)
 	if ( 0 ) {
 		_switch_sw++
@@ -750,7 +750,7 @@
 			flttypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
 			itemcreate -1, ITEM_ID_DUMMY, cdata(CDATA_X, rc), cdata(CDATA_Y, rc), 0
 		}
-		goto *label_4229
+		goto *item_loot_SWEND2
 		_switch_sw++
 	}
 	if ( _switch_val == 1 | _switch_sw ) {
@@ -765,7 +765,7 @@
 				remain_make ci, rc
 			}
 		}
-		goto *label_4229
+		goto *item_loot_SWEND2
 		_switch_sw++
 	}
 	if ( _switch_val == 2 | _switch_sw ) {
@@ -780,7 +780,7 @@
 				remain_make ci, rc
 			}
 		}
-		goto *label_4229
+		goto *item_loot_SWEND2
 		_switch_sw++
 	}
 	if ( _switch_val == 6 | _switch_sw ) {
@@ -841,7 +841,7 @@
 			flttypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
 			itemcreate -1, ITEM_ID_DUMMY, cdata(CDATA_X, rc), cdata(CDATA_Y, rc), 0
 		}
-		goto *label_4229
+		goto *item_loot_SWEND2
 		_switch_sw++
 	}
 	if ( _switch_val == 4 | _switch_sw ) {
@@ -874,7 +874,7 @@
 			flttypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
 			itemcreate -1, ITEM_ID_DUMMY, cdata(CDATA_X, rc), cdata(CDATA_Y, rc), 0
 		}
-		goto *label_4229
+		goto *item_loot_SWEND2
 		_switch_sw++
 	}
 	if ( _switch_val == 5 | _switch_sw ) {
@@ -935,10 +935,10 @@
 			flttypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
 			itemcreate -1, ITEM_ID_DUMMY, cdata(CDATA_X, rc), cdata(CDATA_Y, rc), 0
 		}
-		goto *label_4229
+		goto *item_loot_SWEND2
 	}
 
-*label_4229
+*item_loot_SWEND2
 	if ( gdata(GDATA_FLAG_FLESH_DOLL_LOOT_SPAWN) == 0 & gdata(GDATA_FLAG_TALKING_USED) == 0 ) {
 		if ( rnd(40) == 0 ) {
 			p = 0
@@ -2603,7 +2603,7 @@
 			}
 		}
 	}
-	gosub *label_4251
+	gosub *item_value
 	itemturn ci
 	if ( initnum != 0 ) {
 		inv(INV_ITEM_NUM, ci) = initnum
@@ -2623,7 +2623,7 @@
 	}
 	return 1
 
-*label_4251
+*item_value
 	if ( reftype == FILTER_FURNITURE ) {
 		if ( inv(INV_ITEM_SUB_NAME, ci) != 0 ) {
 			inv(INV_ITEM_VALUE, ci) = inv(INV_ITEM_VALUE, ci) * (80 + inv(INV_ITEM_SUB_NAME, ci) * 20) / 100
@@ -2647,7 +2647,7 @@
 			if ( iequiploc(cnt) == cdata(body, rc) / EXT_EQUIP_SLOTS ) {
 				ci = cnt
 				r1 = rc
-				gosub *label_6352
+				gosub *act_equip
 				if ( stat == 1 ) {
 					break
 				}
@@ -2836,7 +2836,7 @@
 		skillexp SKILL_NORMAL_COOKING, cc, 30 + r1 * 5
 	}
 	item_stack CHARA_PLAYER, ci
-	gosub *label_4102
+	gosub *calcBurdenPc
 	return
 
 *eatEffect
@@ -3729,10 +3729,10 @@
 		if ( cc < MAX_CHARA_FOLLOWER ) {
 			txt lang(name(cc) + "はクッキーの中のおみくじを読んだ。", name(cc) + " read" + _s(cc) + " the paper fortune.")
 			valn = "%COOKIE2"
-			gosub *label_0426
+			gosub *spec_talk
 			if ( inv(INV_ITEM_STATUS, ci) >= ITEM_STATUS_BLESSED | (inv(INV_ITEM_STATUS, ci) == ITEM_STATUS_NORMAL & rnd(2)) ) {
 				valn = "%COOKIE1"
-				gosub *label_0426
+				gosub *spec_talk
 			}
 			txtef COLOR_YELLOW
 			txt "" + buff
@@ -4018,7 +4018,7 @@
 			txtef COLOR_GREEN
 			txt lang("[HAPPY BIRTHDAY！！]　フェイズ2が完了した。", "[HAPPY BIRTHDAY!!] Phase 2 completed.")
 			ccbk = cc
-			evadd 93
+			evadd EVENT_BIRTH
 		}
 	}
 	eatstatusfood inv(INV_ITEM_STATUS, cieat), cc
@@ -4084,7 +4084,7 @@
 	}
 	return
 
-*label_4274
+*eatIssizzle
 	if ( inv(INV_ITEM_AMUR_CAGE, ci) != 1 ) {
 		if ( synccheck(cc, -1) ) {
 			txtef COLOR_PURPLE
@@ -4169,7 +4169,7 @@
 	healsan cc, 20
 	return
 
-*label_4284
+*eatYith
 	if ( synccheck(cc, -1) ) {
 		txtef COLOR_PURPLE
 		txt lang(name(cc) + "の胃は狂気で満たされた。", "Sheer madness!")

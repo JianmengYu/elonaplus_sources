@@ -40653,7 +40653,7 @@
 	}
 	if ( dbid == 1007 ) {
 		if ( dbmode == DBMODE_ON_EAT ) {
-			gosub *label_4274
+			gosub *eatIssizzle
 			return -1
 		}
 		if ( dbmode == DBMODE_REF_SPEC ) {
@@ -70108,7 +70108,7 @@
 			}
 		}
 		if ( dbmode == DBMODE_ON_EAT ) {
-			gosub *label_4284
+			gosub *eatYith
 			return -1
 		}
 		if ( dbmode == DBMODE_REF_SPEC ) {
@@ -70220,7 +70220,7 @@
 			}
 		}
 		if ( dbmode == DBMODE_ON_EAT ) {
-			gosub *label_4284
+			gosub *eatYith
 			return -1
 		}
 		if ( dbmode == DBMODE_REF_SPEC ) {
@@ -71018,7 +71018,7 @@
 			}
 		}
 		if ( dbmode == DBMODE_ON_EAT ) {
-			gosub *label_4284
+			gosub *eatYith
 			return -1
 		}
 		if ( dbmode == DBMODE_REF_SPEC ) {
@@ -91527,7 +91527,7 @@
 			}
 		}
 		if ( dbmode == DBMODE_ON_EAT ) {
-			gosub *label_4284
+			gosub *eatYith
 			return -1
 		}
 		if ( dbmode == DBMODE_REF_SPEC ) {
@@ -95201,7 +95201,7 @@
 			}
 		}
 		if ( dbmode == DBMODE_ON_EAT ) {
-			gosub *label_4274
+			gosub *eatIssizzle
 			return -1
 		}
 		if ( dbmode == DBMODE_REF_SPEC ) {
@@ -97752,7 +97752,7 @@
 	}
 	if ( dbid == 391 ) {
 		if ( dbmode == DBMODE_ON_EAT ) {
-			gosub *label_4284
+			gosub *eatYith
 			return -1
 		}
 		if ( dbmode == DBMODE_REF_SPEC ) {
@@ -97836,7 +97836,7 @@
 	}
 	if ( dbid == 390 ) {
 		if ( dbmode == DBMODE_ON_EAT ) {
-			gosub *label_4284
+			gosub *eatYith
 			return -1
 		}
 		if ( dbmode == DBMODE_REF_SPEC ) {
@@ -97921,7 +97921,7 @@
 	}
 	if ( dbid == 389 ) {
 		if ( dbmode == DBMODE_ON_EAT ) {
-			gosub *label_4284
+			gosub *eatYith
 			return -1
 		}
 		if ( dbmode == DBMODE_REF_SPEC ) {
@@ -99219,7 +99219,7 @@
 			}
 		}
 		if ( dbmode == DBMODE_ON_EAT ) {
-			gosub *label_4274
+			gosub *eatIssizzle
 			return -1
 		}
 		if ( dbmode == DBMODE_REF_SPEC ) {
@@ -104759,7 +104759,7 @@
 	}
 	if ( dbid == 141 ) {
 		if ( dbmode == DBMODE_ON_EAT ) {
-			gosub *label_4274
+			gosub *eatIssizzle
 			return -1
 		}
 		if ( dbmode == DBMODE_REF_SPEC ) {
@@ -126134,7 +126134,7 @@
 			}
 		}
 		if ( dbmode == DBMODE_ON_EAT ) {
-			gosub *label_4274
+			gosub *eatIssizzle
 			return -1
 		}
 		if ( dbmode == DBMODE_REF_SPEC ) {
@@ -130796,7 +130796,7 @@
 	}
 	if ( dbid == 216 ) {
 		if ( dbmode == DBMODE_ON_EAT ) {
-			gosub *label_4284
+			gosub *eatYith
 			return -1
 		}
 		if ( dbmode == DBMODE_REF_SPEC ) {
@@ -130880,7 +130880,7 @@
 	}
 	if ( dbid == 218 ) {
 		if ( dbmode == DBMODE_ON_EAT ) {
-			gosub *label_4284
+			gosub *eatYith
 			return -1
 		}
 		if ( dbmode == DBMODE_REF_SPEC ) {
@@ -131044,7 +131044,7 @@
 	}
 	if ( dbid == 220 ) {
 		if ( dbmode == DBMODE_ON_EAT ) {
-			gosub *label_4284
+			gosub *eatYith
 			return -1
 		}
 		if ( dbmode == DBMODE_REF_SPEC ) {

@@ -1151,7 +1151,7 @@
 				rpref(2) = rpdata(RPDATA_TIME, rpid)
 				rpref(3) = rpdiff(rpid, step, -1)
 				gosub *blend
-				goto *label_9247
+				goto *turn_end
 			}
 			if ( rtval == 2 ) {
 				step = -1
@@ -1621,7 +1621,7 @@
 		}
 		cell_refresh inv(INV_ITEM_X, rpref(10 + cnt * 2)), inv(INV_ITEM_Y, rpref(10 + cnt * 2))
 	loop
-	gosub *label_4102
+	gosub *calcBurdenPc
 	return 1
 
 *blend_complete
@@ -2132,7 +2132,7 @@
 		repeat
 			mode = MODELIST_RP
 			gdata(GDATA_HOUR)++
-			gosub *label_9228
+			gosub *advance_hour
 			redraw 0
 			gosub *screen_drawStatus
 			if ( cnt \ 5 == 0 ) {

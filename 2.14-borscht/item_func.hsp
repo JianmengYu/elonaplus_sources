@@ -407,7 +407,7 @@
 	}
 	inv(INV_ITEM_NUM, removeitem_itemid) -= locvar_removeitem_n
 	if ( removeitem_itemid < SIZE_INV1 ) {
-		gosub *label_4102
+		gosub *calcBurdenPc
 	}
 	if ( inv(INV_ITEM_NUM, removeitem_itemid) <= 0 ) {
 		inv(INV_ITEM_NUM, removeitem_itemid) = 0
@@ -562,7 +562,7 @@
 		cell_refresh inv(INV_ITEM_X, item_num_itemid), inv(INV_ITEM_Y, item_num_itemid)
 	}
 	else {
-		gosub *label_4102
+		gosub *calcBurdenPc
 	}
 	return
 
@@ -596,7 +596,7 @@
 			itemturn locvar_item_separate_ti
 			cell_refresh inv(INV_ITEM_X, locvar_item_separate_ti), inv(INV_ITEM_Y, locvar_item_separate_ti)
 			txt lang("何かが地面に落ちた。", "Something falls to the ground from your backpack.")
-			gosub *label_4102
+			gosub *calcBurdenPc
 		}
 	}
 	return locvar_item_separate_ti
@@ -628,7 +628,7 @@
 			itemturn locvar_item_separate_ti
 			cell_refresh inv(INV_ITEM_X, locvar_item_separate_ti), inv(INV_ITEM_Y, locvar_item_separate_ti)
 			txt lang("何かが餌に気づいて浮かんできた。", "Something has emerged in order to get the bait.")
-			gosub *label_4102
+			gosub *calcBurdenPc
 		}
 	}
 	return locvar_item_separate_ti
@@ -713,7 +713,7 @@
 	}
 	return 0
 
-*label_0699
+*itemNameSub
 	if ( inv(INV_ITEM_ID, itemowner_itemid) == ITEM_ID_KITTY_BANK ) {
 		locvar_itemowner_s += lang("" + moneyboxn(inv(INV_ITEM_PARAM2, itemowner_itemid)), "(" + moneyboxn(inv(INV_ITEM_PARAM2, itemowner_itemid)) + ")")
 	}
@@ -1223,7 +1223,7 @@
 		}
 	}
 	if ( jp ) {
-		gosub *label_0699
+		gosub *itemNameSub
 	}
 	if ( locvar_itemowner_a == 60000 ) {
 		if ( inv(INV_ITEM_ID, itemname_itemid) != ITEM_ID_WILD_FLOWER ) {
@@ -1636,7 +1636,7 @@
 				}
 			}
 		}
-		gosub *label_0699
+		gosub *itemNameSub
 	}
 	if ( inv(INV_ITEM_KNOWN, itemname_itemid) >= ITEM_KNOWN_FULL ) {
 		if ( inv(INV_ITEM_LEVEL, itemname_itemid) != 0 ) {

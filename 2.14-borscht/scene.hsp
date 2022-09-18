@@ -19,7 +19,7 @@
 	s = "{" + sceneid + "}"
 	scidx = instr(buff, 0, s)
 	if ( scidx == (-1) ) {
-		goto *label_8967
+		goto *scene_end
 	}
 	scidx += strlen(s)
 
@@ -32,7 +32,7 @@
 		scene_cut = 1
 	}
 	if ( scene_cut == 1 ) {
-		goto *label_8967
+		goto *scene_end
 	}
 	notesel buff
 	noteload lang("scene1.hsp", "scene2.hsp")
@@ -48,11 +48,11 @@
 	}
 	p(1) = instr(buff, scidx, "{") + scidx
 	if ( p(1) == (-1) ) {
-		goto *label_8967
+		goto *scene_end
 	}
 	p(2) = instr(buff, scidx, "}") + scidx + 1
 	if ( p(2) == (-1) ) {
-		goto *label_8967
+		goto *scene_end
 	}
 	if ( scidxtop != 0 ) {
 		scidx = p(1)
@@ -98,7 +98,7 @@
 	}
 	if ( s == "{end}" ) {
 		await 1000
-		goto *label_8967
+		goto *scene_end
 	}
 	p(3) = instr(buff, scidx, "\"") + scidx + 1
 	p(4) = instr(buff, p(3), "\"") + p(3)
@@ -477,7 +477,7 @@
 	boxf 0, y2, windoww, windowh
 	goto *scene_loop
 
-*label_8967
+*scene_end
 	procid = (procid + 1) \ 4
 	proclist(procid) = "Scene:Exit" + " ct:" + ct
 	gsel BUFFER_BUF

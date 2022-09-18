@@ -318,7 +318,7 @@
 
 *com_txtAdvQuit
 	mtilefilecur = -1
-	gosub *label_4912
+	gosub *map_prepareTile
 	f = 0
 	inv_getheader -1
 	repeat invrange, invhead
@@ -1098,7 +1098,7 @@
 		winrow = 0
 	}
 	goto *adv_casinoBlackJack
-	goto *label_5207
+	goto *set_npcGod
 
 
 

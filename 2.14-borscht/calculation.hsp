@@ -535,16 +535,16 @@
 			locvar_calccosthire_cost += 750
 		}
 	loop
-	if ( gdata(250 + 442) == 1 ) {
+	if ( gdata(GDATA_FLAG_MOST_EXPENSIVE_WORLD_MAP_VEHICLE_THIS_MONTH) == 1 ) {
 		locvar_calccosthire_cost += 500
 	}
-	if ( gdata(250 + 442) == 2 ) {
+	if ( gdata(GDATA_FLAG_MOST_EXPENSIVE_WORLD_MAP_VEHICLE_THIS_MONTH) == 2 ) {
 		locvar_calccosthire_cost += 2000
 	}
-	if ( gdata(250 + 442) == 3 ) {
+	if ( gdata(GDATA_FLAG_MOST_EXPENSIVE_WORLD_MAP_VEHICLE_THIS_MONTH) == 3 ) {
 		locvar_calccosthire_cost += 10000
 	}
-	if ( gdata(250 + 442) == 4 ) {
+	if ( gdata(GDATA_FLAG_MOST_EXPENSIVE_WORLD_MAP_VEHICLE_THIS_MONTH) == 4 ) {
 		locvar_calccosthire_cost += 200000
 	}
 	if ( locvar_calccostbuilding_hantei == 0 ) {
@@ -1532,14 +1532,14 @@
 	gosub *effect
 	return 0
 
-*label_4091
+*calcSearch
 	if ( rnd(sdata(SKILL_NORMAL_DETECTION, cc) * 15 + 20 + sdata(SKILL_ATTR_PER, cc)) > rnd(gdata(GDATA_LEVEL) * 8 + 60) ) {
-		gosub *label_3996
+		gosub *expDetection
 		return 1
 	}
 	return 0
 
-*label_4092
+*calcTrap
 	if ( feat(FEAT_CELL_SUB_FEATURE_ID) == CELL_SUB_FEATURE_TRAP_QUEST_MINE ) {
 		return 0
 	}
@@ -1572,7 +1572,7 @@
 	}
 	return 0
 
-*label_4095
+*calcStealth
 	if ( cdata(CDATA_CONDITION_SEPPUKU, r2) > 0 ) {
 		return 0
 	}
@@ -2303,7 +2303,7 @@
 		return
 	}
 
-*label_4102
+*calcBurdenPc
 	if ( findbuff(CHARA_PLAYER, BUFF_GRAVITY_ACCEL) != (-1) ) {
 		cdata(CDATA_INV_WEIGHT, CHARA_PLAYER) = limit(inv_weight(CHARA_PLAYER), 0, 20000000) * (10 + trait(TRAIT_ETHER_EQUIP_BACK) * 2) / 10
 	}

@@ -35,7 +35,7 @@
 	if ( breakfast < 100 & kitune != 10 ) {
 		child = 0
 		repeat 245
-			if ( cbit(1034, cnt) != TRUE ) {
+			if ( cbit(CHARA_BIT_BIRTHED_CHILD, cnt) != TRUE ) {
 				continue
 			}
 			if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
@@ -492,7 +492,7 @@
 		await 400
 		snd SOUNDLIST_CHAT
 		customtalk tc, DBMODE_FLAVOR_BREAKFAST
-		gosub *label_0416
+		gosub *convert_word
 		if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 			if ( jp ) {
 				txtef COLOR_SKY_BLUE
@@ -641,7 +641,7 @@
 		await 400
 		snd SOUNDLIST_CHAT
 		customtalk tc, DBMODE_FLAVOR_CREATE
-		gosub *label_0416
+		gosub *convert_word
 		if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 			if ( jp ) {
 				txtef COLOR_SKY_BLUE
@@ -819,7 +819,7 @@
 		await 400
 		snd SOUNDLIST_CHAT
 		customtalk tc, DBMODE_FLAVOR_CREATE
-		gosub *label_0416
+		gosub *convert_word
 		if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 			if ( jp ) {
 				txtef COLOR_SKY_BLUE
@@ -1057,7 +1057,7 @@
 		else {
 			milk = 0
 		}
-		snd 302
+		snd SOUNDLIST_CHANDLER23
 		s = lang("原因は何だ？", "Cause Unknown")
 		file = "bg_re21"
 		buff = lang(cdatan(CDATAN_NAME, child) + "が突然泣き始めた！", cdatan(CDATAN_NAME, child) + " suddenly started crying out loud!")
@@ -1143,7 +1143,7 @@
 			inv(INV_ITEM_NUM, cibk)--
 			cell_refresh inv(INV_ITEM_X, cibk), inv(INV_ITEM_Y, cibk)
 			cdata(CDATA_HUNGER, child) += 1000
-			gosub *label_4102
+			gosub *calcBurdenPc
 			snd SOUNDLIST_DRINK1
 			if ( seikai != 4 ) {
 				txtef COLOR_RED
@@ -1164,7 +1164,7 @@
 	if ( _switch_val == 37 | _switch_sw ) {
 		_switch_sw = 0
 		tc = child
-		snd 302
+		snd SOUNDLIST_CHANDLER23
 		s = lang("子供の自己表現", "Child Self-Expression")
 		file = "bg_re21"
 		buff = lang(cdatan(CDATAN_NAME, child) + "が突然座り込んで、駄々をこね始めた！", cdatan(CDATAN_NAME, child) + " suddenly sat down and started whining!")
@@ -2191,7 +2191,7 @@
 		cdata(CDATA_POWER_GAUGE, CHARA_PLAYER) = 0
 		txt lang("あなたはふと目を覚ました。隣に" + cdatan(CDATAN_NAME, tc) + "が寝ている…。", "You wake up suddenly.")
 		customtalk tc, DBMODE_FLAVOR_NIGHT
-		gosub *label_0416
+		gosub *convert_word
 		if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 			txtef COLOR_SKY_BLUE
 			if ( jp ) {
@@ -2339,7 +2339,7 @@
 				cdata(CDATA_POWER_GAUGE, CHARA_PLAYER) += rnd(20) + 5
 				cdata(CDATA_POWER_GAUGE, tc) += rnd(20) + 5
 				customtalk tc, DBMODE_FLAVOR_EX_REACT
-				gosub *label_0416
+				gosub *convert_word
 				if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 					if ( jp ) {
 						txtef COLOR_YELLOW
@@ -2364,7 +2364,7 @@
 					gosub *screen_fade
 					redraw 0
 					gosub *sleep_draw_init
-					gain_iden 0, tc, 18
+					gain_iden CREATURE_ID_BUG, tc, 18
 					break
 				}
 			}
@@ -2386,10 +2386,10 @@
 				itemcreate -1, ITEM_ID_BLOOD, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), 0
 				inv(INV_ITEM_SUB_NAME, ci) = cdata(CDATA_ID, tc)
 				customtalk tc, DBMODE_FLAVOR_LIMIT
-				gosub *label_0416
+				gosub *convert_word
 				if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 					customtalk tc, DBMODE_FLAVOR_RIDE_ON_PC
-					gosub *label_0416
+					gosub *convert_word
 				}
 				if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 					if ( jp ) {
@@ -2405,8 +2405,8 @@
 				gosub *screen_fade
 				redraw 0
 				gosub *sleep_draw_init
-				gain_iden 0, tc, 18
-				gain_iden tc, 0, 18
+				gain_iden CREATURE_ID_BUG, tc, 18
+				gain_iden tc, CREATURE_ID_BUG, 18
 				break
 			}
 		loop
@@ -2493,7 +2493,7 @@
 		listmax++
 		repeat 20
 			customtalk tc, DBMODE_FLAVOR_MIDNIGHT
-			gosub *label_0416
+			gosub *convert_word
 			if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 				if ( jp ) {
 					if ( cdata(CDATA_MASTER_SERVANT, tc) < 200 ) {
@@ -2618,7 +2618,7 @@
 					snd SOUNDLIST_GET1
 				}
 				customtalk CHARA_PLAYER, DBMODE_FLAVOR_LIMIT
-				gosub *label_0416
+				gosub *convert_word
 				await 800
 				gosub *screen_fade
 				redraw 0
@@ -2631,7 +2631,7 @@
 				txtmore
 				txt lang("あなたはこれ以上我慢できない！", "You can not stand any more!")
 				customtalk CHARA_PLAYER, DBMODE_FLAVOR_LIMIT
-				gosub *label_0416
+				gosub *convert_word
 				await 800
 				gosub *screen_fade
 				redraw 0

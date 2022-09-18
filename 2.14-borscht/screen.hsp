@@ -130,7 +130,7 @@
 	pos inf_raderw + 114, inf_bary + 3 + vfix - en
 	mes maplevel()
 
-*label_3797
+*screen_raderRefresh
 	repeat mdata(MDATA_HEIGHT)
 		sy = cnt
 		repeat mdata(MDATA_WIDTH)
@@ -151,8 +151,8 @@
 	else {
 		sxfix = 0
 		syfix = 0
-		gosub *label_3908
-		gosub *label_3912
+		gosub *screen_setPos
+		gosub *los
 		gosub *los_draw
 	}
 	screendrawhack = 10
@@ -922,7 +922,7 @@
 	color 0
 	if ( navi == (-1) ) {
 		navi = 0
-		gosub *label_3797
+		gosub *screen_raderRefresh
 	}
 	if ( navi != 0 ) {
 		cdata(CDATA_CAN_REVIVE, CHARA_PLAYER) = 0
@@ -935,7 +935,7 @@
 		font lang(cfg_font1, cfg_font2), 14 - en * 2, 0
 		color 50, 50, 50
 		valn = "" + navis
-		gosub *label_0425
+		gosub *guide_talk
 		talk_conv buffg, 68 - en * 10
 		buffg += "\n"
 		pos (windoww - 600) / 2 + inf_screenx + 80, windowh - 133
@@ -7077,7 +7077,7 @@
 	anicol = 0
 	return
 
-*label_3908
+*screen_setPos
 	if ( scposval == 0 ) {
 		if ( scroll ) {
 			sx = cdata(CDATA_X_NEW, CHARA_PLAYER) - scx, cdata(CDATA_X_NEW, CHARA_PLAYER)
@@ -7128,7 +7128,7 @@
 	}
 	return
 	gmode 2, inf_tiles, inf_tiles
-	gosub *label_3908
+	gosub *screen_setPos
 	repeat inf_screenh
 		sy = cnt + scy
 		if ( sy < 0 | sy >= mdata(MDATA_HEIGHT) ) {
@@ -7144,7 +7144,7 @@
 	loop
 	return
 
-*label_3912
+*los
 	memset slight, 0, (inf_screenw + 4) * (inf_screenh + 4) * 4
 	msync++
 	sy(2) = cdata(CDATA_Y, CHARA_PLAYER) - 17 / 2, cdata(CDATA_Y, CHARA_PLAYER) + 17 / 2, 17 / 2 - cdata(CDATA_Y, CHARA_PLAYER)
@@ -7191,7 +7191,7 @@
 				continue
 			}
 			if ( gdata(GDATA_AREA) == AREA_PET_ARENA ) {
-				goto *label_3914
+				goto *los_jump
 			}
 			if ( cdata(CDATA_CONDITION_BLIND, CHARA_PLAYER) != 0 ) {
 				if ( sx != cdata(CDATA_X, CHARA_PLAYER) | sy != cdata(CDATA_Y, CHARA_PLAYER) ) {
@@ -7205,7 +7205,7 @@
 					if ( sx >= sx(2) ) {
 						if ( sx < fovlist(1, sy + sy(4)) + sx(3) ) {
 							if ( fov_los(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), sx, sy) ) {
-*label_3914
+*los_jump
 								mapsync(sx, sy) = msync
 								if ( map(sx, sy, MAP_CHARA_INDEX_PLUS_ONE) != 0 ) {
 									cdata(CDATA_SYNC, map(sx, sy, MAP_CHARA_INDEX_PLUS_ONE) - 1) = msync
@@ -7573,7 +7573,7 @@
 	scxbk2 = scx
 	scybk2 = scy
 	scroll = 1
-	gosub *label_3908
+	gosub *screen_setPos
 	scroll = 0
 	scxbk = scx
 	scybk = scy
@@ -7896,12 +7896,12 @@
 	}
 
 *label_3960
-	goto *label_3962
+	goto *calcBodyFix
 
 #defcfunc calcexpalive int calcexpalive_arg1
 	return calcexpalive_arg1 * 100
 
-*label_3962
+*calcBodyFix
 	cdata(CDATA_BODY_SPEED_FIX, r1) = 0
 	repeat 30, 100
 		if ( cdata(cnt, r1) != 0 ) {
@@ -8003,10 +8003,10 @@
 		}
 		break
 	loop
-	gosub *label_3962
+	gosub *calcBodyFix
 	return
 
-*label_3967
+*calcLevelUp
 	cdata(CDATA_EXP, r1) -= cdata(CDATA_EXP_TO_NEXT_LVL, r1)
 	if ( cdata(CDATA_EXP, r1) < 0 ) {
 		cdata(CDATA_EXP, r1) = 0
@@ -8091,7 +8091,7 @@
 		if ( r1 >= 16 ) {
 			gosub *calcPowerUp
 		}
-		gosub *label_3991
+		gosub *calcExpToNextLevel
 		gosub *charaRefresh
 	}
 	return
@@ -8184,7 +8184,7 @@
 	loop
 	return
 
-*label_3991
+*calcExpToNextLevel
 	cdata(CDATA_EXP_TO_NEXT_LVL, r1) = limit(cdata(CDATA_LEVEL, r1), 1, 200) * (limit(cdata(CDATA_LEVEL, r1), 1, 200) + 1) * (limit(cdata(CDATA_LEVEL, r1), 1, 200) + 2) * (limit(cdata(CDATA_LEVEL, r1), 1, 200) + 3) + 3000
 	if ( cdata(CDATA_EXP_TO_NEXT_LVL, r1) > 100000000 | cdata(CDATA_EXP_TO_NEXT_LVL, r1) < 0 ) {
 		cdata(CDATA_EXP_TO_NEXT_LVL, r1) = 100000000
@@ -8209,7 +8209,7 @@
 	skillexp SKILL_NORMAL_LOCK_PICKING, r1, 100
 	return
 
-*label_3996
+*expDetection
 	skillexp SKILL_NORMAL_DETECTION, cc, gdata(GDATA_LEVEL) * 2 + 20
 	return
 
@@ -8230,7 +8230,7 @@
 	skillexp SKILL_NORMAL_FAITH, CHARA_PLAYER, r1, 6, 1000
 	return
 
-*label_3999
+*expMagicCapacity
 	skillexp SKILL_NORMAL_MAGIC_CAPACITY, r1, limit(abs(cdata(CDATA_MP, r1)) * 400 / (cdata(CDATA_MAX_MP, r1) + 1), 1, 400)
 	return
 
@@ -9263,7 +9263,7 @@
 			snd SOUNDLIST_BOLT1
 			if ( cc != CHARA_PLAYER ) {
 				customtalk cc, DBMODE_FLAVOR_CHARGE_A
-				gosub *label_0416
+				gosub *convert_word
 			}
 			if ( synccheck(cc, -1) ) {
 				txtef COLOR_RED
@@ -9464,7 +9464,7 @@
 		sdata(cnt, r1) = sdata(cnt + STARTING_SKILL_SPACT, r1) / 1000000
 	loop
 	if ( cdata(CDATA_RACE_ID, r1) == 0 ) {
-		gosub *label_6750
+		gosub *raceID_fix
 	}
 	if ( r1 == 0 ) {
 		memset cdata(STARTING_CDATA_CHARA_BIT, r1), 0, 30 * 4
@@ -9904,7 +9904,7 @@
 		}
 	loop
 	if ( r1 == 0 ) {
-		gosub *label_5210
+		gosub *god_effect
 		traitmode = 1
 		repeat 228
 			if ( trait(cnt) != 0 ) {
@@ -10015,7 +10015,7 @@
 		cdata(CDATA_ATTACK, r1) += (cdata(CDATA_CRIT_CHANCE, r1) - 30) * 2
 		cdata(CDATA_CRIT_CHANCE, r1) = 30
 	}
-	gosub *label_4102
+	gosub *calcBurdenPc
 	refreshspeed r1
 	cbitmod CHARA_BIT_REFRESH, r1, FALSE
 	chararefreshhack = FALSE

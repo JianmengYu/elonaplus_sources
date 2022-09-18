@@ -427,7 +427,7 @@
 	flt calcobjlv(cdata(CDATA_LEVEL, CHARA_PLAYER)), calcfixlv(FIX_QUALITY_GOOD)
 	return
 
-*label_4647
+*chara_spawn
 	if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_MUSEUM | adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_SHOP ) {
 		if ( gdata(GDATA_CROWD) < mdata(MDATA_MODERATE_CROWD) / 2 ) {
 			if ( rnd(4) == 0 ) {
@@ -673,7 +673,7 @@
 				cdata(CDATA_CONDITION_POISON, cnt) = 0
 			loop
 			gdata(GDATA_HOUR) += 2
-			gosub *label_9228
+			gosub *advance_hour
 		}
 	}
 	if ( gdata(GDATA_AREA_PREV) == 73 ) {
@@ -681,7 +681,7 @@
 			snd SOUNDLIST_BOLT1
 			txt lang("あなた達はエウダーナ王都から帰還した。", "Sorry, this is untranslated sentence.")
 			gdata(GDATA_HOUR) += 2
-			gosub *label_9228
+			gosub *advance_hour
 		}
 	}
 	if ( gdata(GDATA_AREA_PREV) == 33 ) {
@@ -712,7 +712,7 @@
 			loop
 			txt lang("あなた達はどうにかノイエルに戻ってこられた。", "Sorry, this is untranslated sentence.")
 			gdata(GDATA_HOUR) += 2
-			gosub *label_9228
+			gosub *advance_hour
 		}
 	}
 	if ( gdata(GDATA_AREA_PREV) == 43 ) {
@@ -742,7 +742,7 @@
 			loop
 			txt lang("あなた達はどうにか関所に戻ってこられた。", "Sorry, this is untranslated sentence.")
 			gdata(GDATA_HOUR) += 2
-			gosub *label_9228
+			gosub *advance_hour
 		}
 	}
 	if ( gdata(GDATA_AREA_PREV) == 30 ) {
@@ -929,7 +929,7 @@
 	}
 	if ( mdata(MDATA_TYPE) == MAP_TYPE_QUEST ) {
 		rq = gdata(GDATA_QUEST_REF)
-		gosub *label_8947
+		gosub *quest_exit
 		gdata(GDATA_AREA) = gdata(GDATA_RETURN_AREA)
 		gdata(GDATA_LEVEL) = gdata(GDATA_RETURN_LEVEL)
 		mapstartx = gdata(GDATA_RETURN_X)
@@ -944,7 +944,7 @@
 			if ( gdata(GDATA_AREA_PREV) != 2 ) {
 				gdata(GDATA_WORLD_X) = adata(ADATA_X, gdata(GDATA_AREA))
 				gdata(GDATA_WORLD_Y) = adata(ADATA_Y, gdata(GDATA_AREA))
-				gosub *label_9227
+				gosub *weather_change
 			}
 		}
 		if ( gdata(GDATA_AREA) == AREA_VALM ) {
@@ -1028,7 +1028,7 @@
 		}
 		if ( evfind(6) ) {
 			msgtemp += lang("あなたは復帰ポイントまで運ばれた。", "You were delivered to your home.")
-			gosub *label_9227
+			gosub *weather_change
 		}
 		else {
 			if ( adata(ADATA_TYPE, gdata(GDATA_AREA_PREV)) == MAP_TYPE_WORLD ) {
@@ -1137,7 +1137,7 @@
 		gosub *map_save
 	}
 	else {
-		gosub *label_4658
+		gosub *map_clean
 		existwrapper exedir + "tmp\\mdata_" + mid + ".s2"
 		if ( strsize != (-1) ) {
 			fmode = 11
@@ -1159,7 +1159,7 @@
 	mode = MODELIST_NEW
 	goto *map_init
 
-*label_4658
+*map_clean
 	repeat 57
 		rowactend cnt
 		if ( cdata(CDATA_AI_ITEM, cnt) == 0 ) {
@@ -1182,7 +1182,7 @@
 	return
 
 *map_save
-	gosub *label_4658
+	gosub *map_clean
 	repeat mdata(MDATA_HEIGHT)
 		y = cnt
 		repeat mdata(MDATA_WIDTH)
@@ -2285,32 +2285,32 @@
 			flt
 			itemcreate -1, ITEM_ID_TIGHT_ROPE, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), 0
 		}
-		gosub *label_4573
+		gosub *home_setup
 		map_placeplayer
 	}
 	if ( gdata(GDATA_AREA) == AREA_NORTH_TYRIS ) {
 		map_initcustom "ntyris"
-		gosub *label_4913
+		gosub *world_newRandArea
 		map_placeplayer
 	}
 	if ( gdata(GDATA_AREA) == AREA_SOUTH_TYRIS ) {
 		map_initcustom "styris"
-		gosub *label_4913
+		gosub *world_newRandArea
 		map_placeplayer
 	}
 	if ( gdata(GDATA_AREA) == AREA_LOST_YLVA ) {
 		map_initcustom "lost"
-		gosub *label_4913
+		gosub *world_newRandArea
 		map_placeplayer
 	}
 	if ( gdata(GDATA_AREA) == AREA_AIMWELL ) {
 		map_initcustom "ether"
-		gosub *label_4913
+		gosub *world_newRandArea
 		map_placeplayer
 	}
 	if ( gdata(GDATA_AREA) == AREA_TEST_WORLD ) {
 		map_initcustom "test"
-		gosub *label_4913
+		gosub *world_newRandArea
 		map_placeplayer
 	}
 	if ( gdata(GDATA_AREA) == AREA_DERPHY ) {
@@ -2384,7 +2384,7 @@
 				characreate -1, CREATURE_ID_CITIZEN2, -3, 0
 				cdata(CDATA_ROLE, rc) = ROLE_CITIZEN
 			loop
-			gosub *label_8928
+			gosub *client_update
 			repeat 20
 				dbid = 0
 				gosub *fltChara
@@ -2571,7 +2571,7 @@
 			characreate -1, CREATURE_ID_GUARD2, -3, 0
 			cdata(CDATA_ROLE, rc) = ROLE_GUARD
 		loop
-		gosub *label_8928
+		gosub *client_update
 		repeat 25
 			dbid = 0
 			gosub *fltChara
@@ -2676,7 +2676,7 @@
 				characreate -1, CREATURE_ID_GUARD2, -3, 0
 				cdata(CDATA_ROLE, rc) = ROLE_GUARD
 			loop
-			gosub *label_8928
+			gosub *client_update
 			repeat 25
 				dbid = 0
 				gosub *fltChara
@@ -2922,7 +2922,7 @@
 				characreate -1, CREATURE_ID_GUARD2, -3, 0
 				cdata(CDATA_ROLE, rc) = ROLE_GUARD
 			loop
-			gosub *label_8928
+			gosub *client_update
 			repeat 15
 				dbid = 0
 				gosub *fltChara
@@ -3079,7 +3079,7 @@
 				characreate -1, CREATURE_ID_GUARD2, rnd(32), rnd(mdata(MDATA_HEIGHT))
 				cdata(CDATA_ROLE, rc) = ROLE_GUARD
 			loop
-			gosub *label_8928
+			gosub *client_update
 			repeat 8
 				gosub *fltChara
 				characreate -1, CREATURE_ID_TOWN_CHILD, rnd(11) + 25, rnd(5) + 15
@@ -3224,7 +3224,7 @@
 			flt
 			characreate -1, CREATURE_ID_CAPTAIN, 7, 6
 			cdata(CDATA_ROLE, rc) = ROLE_CITIZEN
-			gosub *label_8928
+			gosub *client_update
 			repeat 20
 				gosub *fltChara
 				characreate -1, CREATURE_ID_BUG, -3, 0
@@ -3380,7 +3380,7 @@
 				characreate -1, CREATURE_ID_GUARD2, -3, 0
 				cdata(CDATA_ROLE, rc) = ROLE_GUARD
 			loop
-			gosub *label_8928
+			gosub *client_update
 			repeat 25
 				dbid = 0
 				gosub *fltChara
@@ -3731,7 +3731,7 @@
 			repeat encounterlv / 2 + 1
 				r1 = rc
 				r2 = 1
-				gosub *label_3967
+				gosub *calcLevelUp
 			loop
 			evadd EVENT_SHOP_WANDER
 			repeat 6 + rnd(6)
@@ -4174,7 +4174,7 @@
 					proclist(procid) = "Chaos10" + " ct:" + ct
 					map_placeplayer
 					tc = CHARA_PLAYER
-					gosub *label_6338
+					gosub *effect_elixer
 					r1 = 0
 					gosub *charaRefresh
 					break
@@ -5245,7 +5245,7 @@
 				cdata(CDATA_RELATION_ORG, rc) = RELATION_NEUTRAL
 				cdata(CDATA_ROLE, rc) = ROLE_GUARD
 			}
-			gosub *label_8928
+			gosub *client_update
 			flt
 			characreate -1, CREATURE_ID_ARKHAI, 37, 40
 			cdata(CDATA_AI_CALM, rc) = 3
@@ -7363,7 +7363,7 @@
 			cdata(CDATA_AI_CALM, rc) = 3
 			cdata(CDATA_ROLE, rc) = ROLE_SHOP_MAGIC, 21
 			snmagic cdatan(CDATAN_NAME, rc)
-			gosub *label_8928
+			gosub *client_update
 			repeat 10
 				flt
 				characreate -1, CREATURE_ID_HILL_CHILD, -3, 0
@@ -7570,7 +7570,7 @@
 				characreate -1, CREATURE_ID_GUARD2, -3, 0
 				cdata(CDATA_ROLE, rc) = ROLE_GUARD
 			loop
-			gosub *label_8928
+			gosub *client_update
 			repeat 11
 				dbid = 0
 				gosub *fltChara
@@ -7802,7 +7802,7 @@
 				characreate -1, CREATURE_ID_BOUNTY_HUNTER, -3, 0
 				cdata(CDATA_ROLE, rc) = ROLE_BOUNTY_HUNTER
 			loop
-			gosub *label_8928
+			gosub *client_update
 			repeat 20
 				dbid = 0
 				gosub *fltChara
@@ -7961,7 +7961,7 @@
 			flt
 			characreate -1, CREATURE_ID_CAPTAIN, 44, 31
 			cdata(CDATA_ROLE, rc) = ROLE_CITIZEN
-			gosub *label_8928
+			gosub *client_update
 			repeat 20
 				gosub *fltChara
 				characreate -1, CREATURE_ID_BUG, -3, 0
@@ -8078,7 +8078,7 @@
 				flt
 				characreate -1, CREATURE_ID_SWIMMER, -3, 0
 			loop
-			gosub *label_8928
+			gosub *client_update
 			repeat 11
 				gosub *fltChara
 				characreate -1, CREATURE_ID_BUG, -3, 0
@@ -8266,7 +8266,7 @@
 				characreate -1, CREATURE_ID_GUARD2, -3, 0
 				cdata(CDATA_ROLE, rc) = ROLE_GUARD
 			loop
-			gosub *label_8928
+			gosub *client_update
 			repeat 10
 				gosub *fltChara
 				characreate -1, CREATURE_ID_BUG, -3, 0
@@ -8397,7 +8397,7 @@
 				characreate -1, CREATURE_ID_BOUNTY_HUNTER, -3, 0
 				cdata(CDATA_ROLE, rc) = ROLE_BOUNTY_HUNTER
 			loop
-			gosub *label_8928
+			gosub *client_update
 			repeat 10
 				dbid = 0
 				gosub *fltChara
@@ -8466,7 +8466,7 @@
 				characreate -1, CREATURE_ID_BOUNTY_HUNTER, -3, 0
 				cdata(CDATA_ROLE, rc) = ROLE_BOUNTY_HUNTER
 			loop
-			gosub *label_8928
+			gosub *client_update
 			repeat 11
 				dbid = 0
 				gosub *fltChara
@@ -8797,7 +8797,7 @@
 				loop
 			loop
 			prevsekai = 0
-			gosub *label_4923
+			gosub *world_refresh
 		}
 		mapupdate = 0
 		repeat 245
@@ -8840,7 +8840,7 @@
 			loop
 			gsel BUFFER_SCREEN
 			sekaikousin = 0
-			gosub *label_4923
+			gosub *world_refresh
 		}
 	}
 	if ( gdata(GDATA_AREA) == AREA_NORTH_TYRIS ) {
@@ -8891,11 +8891,11 @@
 		if ( cbit(CHARA_BIT_HIRED, cnt) == TRUE ) {
 			cxinit = cdata(CDATA_X, CHARA_PLAYER)
 			cyinit = cdata(CDATA_Y, CHARA_PLAYER)
-			gosub *label_4125
+			gosub *place_chara
 		}
 		else {
 			cxinit = -1
-			gosub *label_4125
+			gosub *place_chara
 			cdata(CDATA_HP, rc) = cdata(CDATA_MAX_HP, rc)
 			cdata(CDATA_MP, rc) = cdata(CDATA_MAX_MP, rc)
 			cdata(CDATA_SP, rc) = cdata(CDATA_MAX_SP, rc)
@@ -9137,7 +9137,7 @@
 						if ( cdata(CDATA_LEVEL, CHARA_PLAYER) > cdata(CDATA_LEVEL, rc) ) {
 							r1 = rc
 							r2 = 1
-							gosub *label_3967
+							gosub *calcLevelUp
 						}
 					}
 				}
@@ -9146,7 +9146,7 @@
 				repeat gdata(GDATA_GWEN_PITILESS_LVL)
 					r1 = rc
 					r2 = 1
-					gosub *label_3967
+					gosub *calcLevelUp
 				loop
 				gdata(GDATA_GWEN_PITILESS_LVL) = 0
 			}
@@ -9457,16 +9457,16 @@
 	scx = cdata(CDATA_X, CHARA_PLAYER)
 	scy = cdata(CDATA_Y, CHARA_PLAYER)
 	msync = 1
-	gosub *label_4912
+	gosub *map_prepareTile
 	gosub *rader_preDraw
-	gosub *label_3908
+	gosub *screen_setPos
 	procid = (procid + 1) \ 4
 	proclist(procid) = "Map:Update quest" + " ct:" + ct
 	if ( mdata(MDATA_TYPE) == MAP_TYPE_TOWN | gdata(GDATA_AREA) == AREA_LUDUS ) {
 		if ( gdata(GDATA_AREA) != AREA_GUARDIAN_SHRINE & gdata(GDATA_AREA) != AREA_BLIMP ) {
 			if ( adata(ADATA_QUEST_RENEW, gdata(GDATA_AREA)) != 4 ) {
-				gosub *label_8928
-				gosub *label_8933
+				gosub *client_update
+				gosub *quest_update
 			}
 		}
 	}
@@ -11261,7 +11261,7 @@
 	procid = (procid + 1) \ 4
 	proclist(procid) = "Map:Init music" + " ct:" + ct
 	gosub *music_play
-	gosub *label_5778
+	gosub *fixOnMapEnter
 	procid = (procid + 1) \ 4
 	proclist(procid) = "Map:Init world" + " ct:" + ct
 	noaggrorefresh = 0
@@ -11269,9 +11269,9 @@
 		gosub *cloud_init
 		if ( rnd(150) == 0 ) {
 			gdata(GDATA_WORLD_RENEW) = TRUE
-			gosub *label_4913
+			gosub *world_newRandArea
 		}
-		gosub *label_4919
+		gosub *world_update
 	}
 	procid = (procid + 1) \ 4
 	proclist(procid) = "Map:Continue" + " ct:" + ct
@@ -11417,14 +11417,14 @@
 	}
 	if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_MUSEUM | adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_SHOP ) {
 		repeat 5
-			gosub *label_4647
+			gosub *chara_spawn
 		loop
 	}
 	if ( mdata(MDATA_CAN_SAVE) == 1 ) {
 		gosub *item_rot
 	}
 	if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_SHOP ) {
-		gosub *label_4622
+		gosub *shop_update
 	}
 	if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_MUSEUM ) {
 		gosub *museum_update
@@ -11920,7 +11920,7 @@
 								else {
 									val = 0
 								}
-								gosub *label_6525
+								gosub *item_seedGrowth
 							loop
 							cell_featset cnt, y, feat, feat(FEAT_CELL_FEATURE_ID), feat(FEAT_CELL_SUB_FEATURE_ID), feat(FEAT_CELL_PARAM_1)
 						}
@@ -11972,7 +11972,7 @@
 	}
 	return
 
-*label_4912
+*map_prepareTile
 	procid = (procid + 1) \ 4
 	proclist(procid) = "map_prepareTile:begin" + " ct:" + ct
 	if ( gdata(GDATA_AREA) == AREA_ZAILE ) {
@@ -12126,7 +12126,7 @@
 	proclist(procid) = "map_prepareTile:end" + " ct:" + ct
 	return
 
-*label_4913
+*world_newRandArea
 	procid = (procid + 1) \ 4
 	proclist(procid) = "world_newRandArea" + " ct:" + ct
 	p = 0
@@ -12145,11 +12145,11 @@
 		repeat p
 			cxinit = rnd(mdata(MDATA_WIDTH))
 			cyinit = rnd(mdata(MDATA_HEIGHT))
-			gosub *label_4933
+			gosub *map_createRandArea
 		loop
 	}
 	gdata(GDATA_FLAG_STATUE_OPATOS) = 0
-	gosub *label_4923
+	gosub *world_refresh
 	return 1
 	repeat 500 - 450, 450
 		if ( adata(ADATA_ID, cnt) == AREA_NONE ) {
@@ -12161,7 +12161,7 @@
 			}
 		}
 	loop
-	gosub *label_4919
+	gosub *world_update
 	repeat 500 - 450, 450
 		if ( adata(ADATA_ID, cnt) == AREA_NONE ) {
 			continue
@@ -12173,42 +12173,42 @@
 			adata(ADATA_MAX_LEVEL, cnt) = 33
 		}
 	loop
-	gosub *label_4929
-	gosub *label_4924
+	gosub *world_clear
+	gosub *world_setArea
 	return
 
-*label_4919
+*world_update
 	procid = (procid + 1) \ 4
 	proclist(procid) = "world_update" + " ct:" + ct
 	if ( gdata(GDATA_WORLD_RENEW) == TRUE ) {
-		gosub *label_4932
-		gosub *label_4923
+		gosub *setArea
+		gosub *world_refresh
 		repeat 500 - 450, 450
 			adata(ADATA_ID, cnt) = AREA_NONE
 		loop
 		if ( gdata(GDATA_AREA) == AREA_NORTH_TYRIS ) {
 			map_initcustom "ntyris"
-			gosub *label_4913
+			gosub *world_newRandArea
 			map_placeplayer
 		}
 		if ( gdata(GDATA_AREA) == AREA_SOUTH_TYRIS ) {
 			map_initcustom "styris"
-			gosub *label_4913
+			gosub *world_newRandArea
 			map_placeplayer
 		}
 		if ( gdata(GDATA_AREA) == AREA_TEST_WORLD ) {
 			map_initcustom "test"
-			gosub *label_4913
+			gosub *world_newRandArea
 			map_placeplayer
 		}
 		if ( gdata(GDATA_AREA) == AREA_LOST_YLVA ) {
 			map_initcustom "lost"
-			gosub *label_4913
+			gosub *world_newRandArea
 			map_placeplayer
 		}
 		if ( gdata(GDATA_AREA) == AREA_AIMWELL ) {
 			map_initcustom "ether"
-			gosub *label_4913
+			gosub *world_newRandArea
 			map_placeplayer
 		}
 	}
@@ -12236,18 +12236,18 @@
 				}
 			}
 		loop
-		gosub *label_4913
-		gosub *label_4923
+		gosub *world_newRandArea
+		gosub *world_refresh
 	}
 	gdata(GDATA_WORLD_RENEW) = FALSE
 	return
 
-*label_4923
-	gosub *label_4929
-	gosub *label_4924
+*world_refresh
+	gosub *world_clear
+	gosub *world_setArea
 	return
 
-*label_4924
+*world_setArea
 	procid = (procid + 1) \ 4
 	proclist(procid) = "world_setArea:building" + " ct:" + ct
 	gosub *mapchip_init
@@ -12333,7 +12333,7 @@
 	proclist(procid) = "world_setArea:end" + " ct:" + ct
 	return
 
-*label_4929
+*world_clear
 	repeat mdata(MDATA_HEIGHT)
 		y = cnt
 		repeat mdata(MDATA_WIDTH)
@@ -12349,7 +12349,7 @@
 	loop
 	return
 
-*label_4932
+*setArea
 	p = 91
 	adata(ADATA_ID, p) = AREA_AIMWELL
 	adata(ADATA_ICON, p) = xy2pic(0, 0)
@@ -13853,7 +13853,7 @@
 	adata(ADATA_PARENT, p) = AREA_NORTH_TYRIS
 	return
 
-*label_4933
+*map_createRandArea
 	repeat 500 - 450, 450
 		if ( adata(ADATA_ID, cnt) != AREA_NONE ) {
 			continue
@@ -13994,7 +13994,7 @@
 	loop
 	return p
 
-*label_4937
+*mapEvent
 	if ( gdata(GDATA_AREA) == AREA_NOYEL ) {
 		if ( gdata(GDATA_FLAG_FIRE_GIANT) == 1 ) {
 			if ( cdata(CDATA_EXIST, gdata(GDATA_FLAG_GIANT_ID)) == CHAR_STATE_ALIVE ) {

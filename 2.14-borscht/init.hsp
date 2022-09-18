@@ -2792,23 +2792,23 @@
 	if ( 701 < 600 ) {
 		skillencdesc(SKILL_SPACT_RUBBING) = lang("", "")
 	}
-	sdataref(SKILL_DATAREF_USE, MAX_SKILL) = SKILL_ATTR_DEX, SKILL_TYPE_SP, 10, TARGET_TYPE_SELF_ONLY, 500
-	skillname(MAX_SKILL) = lang("直輸血", "Direct Transfusion")
-	skilldesc(MAX_SKILL) = lang("近くのキャラ間で血と遺伝子受け渡し", "Transfer blood and genes between nearby characters")
+	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_DIRECT_TRANSFUSION) = SKILL_ATTR_DEX, SKILL_TYPE_SP, 10, TARGET_TYPE_SELF_ONLY, 500
+	skillname(SKILL_SPACT_DIRECT_TRANSFUSION) = lang("直輸血", "Direct Transfusion")
+	skilldesc(SKILL_SPACT_DIRECT_TRANSFUSION) = lang("近くのキャラ間で血と遺伝子受け渡し", "Transfer blood and genes between nearby characters")
 	if ( 843 < 600 ) {
-		skillencdesc(MAX_SKILL) = lang("", "")
+		skillencdesc(SKILL_SPACT_DIRECT_TRANSFUSION) = lang("", "")
 	}
-	sdataref(SKILL_DATAREF_USE, 844) = SKILL_ATTR_DEX, SKILL_TYPE_SP, 20, TARGET_TYPE_DIRECTION, 0
-	skillname(844) = lang("電気衝駆", "Electric Shock")
-	skilldesc(844) = lang("生化学依存電撃/味方は呼吸困難半減", "Lightning attack/SP and Dyspnea recovery")
+	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_ELECTRIC_SHOCK) = SKILL_ATTR_DEX, SKILL_TYPE_SP, 20, TARGET_TYPE_DIRECTION, 0
+	skillname(SKILL_SPACT_ELECTRIC_SHOCK) = lang("電気衝駆", "Electric Shock")
+	skilldesc(SKILL_SPACT_ELECTRIC_SHOCK) = lang("生化学依存電撃/味方は呼吸困難半減", "Lightning attack/SP and Dyspnea recovery")
 	if ( 844 < 600 ) {
-		skillencdesc(844) = lang("", "")
+		skillencdesc(SKILL_SPACT_ELECTRIC_SHOCK) = lang("", "")
 	}
-	sdataref(SKILL_DATAREF_USE, 845) = SKILL_ATTR_DEX, SKILL_TYPE_SP, 15, TARGET_TYPE_DIRECTION, 0
-	skillname(845) = lang("神速縫合", "Instant Suture")
-	skilldesc(845) = lang("敵を束縛/味方は出血半減", "Bind enemy/Halved bleeding")
+	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_INSTANT_SUTURE) = SKILL_ATTR_DEX, SKILL_TYPE_SP, 15, TARGET_TYPE_DIRECTION, 0
+	skillname(SKILL_SPACT_INSTANT_SUTURE) = lang("神速縫合", "Instant Suture")
+	skilldesc(SKILL_SPACT_INSTANT_SUTURE) = lang("敵を束縛/味方は出血半減", "Bind enemy/Halved bleeding")
 	if ( 845 < 600 ) {
-		skillencdesc(845) = lang("", "")
+		skillencdesc(SKILL_SPACT_INSTANT_SUTURE) = lang("", "")
 	}
 	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_BLADE_STRINGS) = SKILL_ATTR_DEX, SKILL_TYPE_SP, 10, TARGET_TYPE_DIRECTION, 0
 	skillname(SKILL_SPACT_BLADE_STRINGS) = lang("ブレードストリングス", "Blade Strings")
@@ -5842,7 +5842,7 @@
 	}
 	return 0
 
-*label_0046
+*cm_putTrait
 	if ( cdatan(CDATAN_RACE, CHARA_PLAYER) == "dwarf" ) {
 		trait(TRAIT_RACE_RES_POISON) = 2
 		trait(TRAIT_RACE_RES_DARKNESS) = 1
@@ -6326,7 +6326,7 @@
 	sndload folder + "crash14.wav", SOUNDLIST_CRASH14
 	sndload folder + "whistle00.wav", SOUNDLIST_WHISTLE00
 	sndload folder + "gun10.wav", SOUNDLIST_GUN10
-	sndload folder + "chandler23.wav", 302
+	sndload folder + "chandler23.wav", SOUNDLIST_CHANDLER23
 	folder = exedir + "user\\sound\\"
 	sndload folder + "se0.wav", SOUNDLIST_USER_SE00
 	sndload folder + "se1.wav", SOUNDLIST_USER_SE01
@@ -12858,7 +12858,7 @@
 	picfood(0, FOOD_TYPE_FISH) = xy2pic(32, 6), xy2pic(27, 24), xy2pic(28, 24), xy2pic(10, 23), xy2pic(11, 23), xy2pic(12, 23), xy2pic(13, 23), xy2pic(14, 23), xy2pic(15, 23), xy2pic(16, 23)
 	picfood(0, FOOD_TYPE_BREAD) = xy2pic(32, 6), xy2pic(7, 24), xy2pic(8, 24), xy2pic(9, 24), xy2pic(10, 24), xy2pic(11, 24), xy2pic(12, 24), xy2pic(13, 24), xy2pic(14, 24), xy2pic(15, 24)
 	return
-	goto *label_0416
+	goto *convert_word
 
 #defcfunc _yoro int _yoro_arg1
 	if ( cdata(CDATA_TONE, tc) == 0 ) {
@@ -15209,7 +15209,7 @@
 	}
 	return locvar__yoro__tone
 
-*label_0416
+*convert_word
 	repeat 30
 		await
 		p = instr(buff, 0, "{"), instr(buff, p, "}"), strlen(buff)
@@ -15907,7 +15907,7 @@
 	gdata(GDATA_CUSTOM_TEXT_DIALOG) = 0
 	return
 
-*label_0420
+*convert_guide
 	repeat 30
 		await
 		pg = instr(buffg, 0, "{"), instr(buffg, pg, "}"), strlen(buffg)
@@ -16540,7 +16540,7 @@
 	loop
 	return
 
-*label_0423
+*convert_talk
 	buff = strmid(buff, p, instr(buff, p, "%END"))
 	if ( noteinfo(0) <= 1 ) {
 		noteload exedir + "data\\talk.txt"
@@ -16551,10 +16551,10 @@
 	p = rnd(noteinfo(0))
 	noteget s, p
 	buff = s
-	gosub *label_0416
+	gosub *convert_word
 	return
 
-*label_0424
+*guide_talk_2
 	buffg = strmid(buffg, pg, instr(buffg, pg, "%END"))
 	if ( noteinfo(0) <= 1 ) {
 		noteload exedir + "guide\\guide.txt"
@@ -16565,26 +16565,26 @@
 	pg = rnd(noteinfo(0))
 	noteget sg, pg
 	buffg = sg
-	gosub *label_0420
+	gosub *convert_guide
 	return
 
-*label_0425
+*guide_talk
 	buffg = ""
 	notesel buffg
 	noteload exedir + "guide\\guide.txt"
 	pg = instr(buffg, 0, valn + "," + lang("JP", "EN"))
-	gosub *label_0424
+	gosub *guide_talk_2
 	return
 
-*label_0426
+*spec_talk
 	buff = ""
 	notesel buff
 	noteload exedir + "data\\talk.txt"
 	p = instr(buff, 0, valn + "," + lang("JP", "EN"))
-	gosub *label_0423
+	gosub *convert_talk
 	return
 
-*label_0427
+*random_talk
 	buff = ""
 	notesel buff
 	noteload exedir + "data\\talk.txt"
@@ -16798,7 +16798,7 @@
 			p = instr(buff, 0, "%DEFAULT," + lang("JP", "EN"))
 		}
 	}
-	gosub *label_0423
+	gosub *convert_talk
 	return
 	goto *quest_info
 
@@ -17050,7 +17050,7 @@
 	noteadd ""
 	return
 
-*itemNameSub
+*quest_info2
 	if ( val == 0 ) {
 		noteadd ""
 		noteadd lang("@QM[サブクエスト]", "@QM[Sub Quest]")
@@ -19783,7 +19783,7 @@
 	gosub *db_setFilterItem
 	gosub *chip_init
 	gosub *building_init
-	gosub *label_4932
+	gosub *setArea
 	gosub *setCellObj
 	gosub *random_titleInit
 	gdata(GDATA_RAND_SEED_A) = rnd(800) + 2
@@ -19801,7 +19801,7 @@
 	gosub *recipe_init
 	gosub *fish_init
 	gosub *map_randNameInit
-	gosub *label_4578
+	gosub *setHome
 	gosub *label_0003
 	gosub *userNpc_update
 	if ( cfg_music == 1 ) {

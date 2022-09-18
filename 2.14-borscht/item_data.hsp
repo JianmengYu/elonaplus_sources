@@ -2742,7 +2742,7 @@
 	else {
 		gosub *apply_materialEnc
 	}
-	gosub *label_4251
+	gosub *item_value
 	r1 = cc
 	gosub *charaRefresh
 	return

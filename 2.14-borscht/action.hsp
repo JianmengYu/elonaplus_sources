@@ -94,7 +94,7 @@
 		}
 	}
 	if ( cc == CHARA_PLAYER ) {
-		gosub *label_4102
+		gosub *calcBurdenPc
 	}
 	animeid = ANIMATION_CRUSH
 	x = tlocx
@@ -118,19 +118,19 @@
 			if ( inv(INV_ITEM_ID, ci) == ITEM_ID_MONSTER_BALL ) {
 				if ( tc < MAX_CHARA_SAVE | cdata(CDATA_ROLE, tc) != ROLE_NONE | cdata(CDATA_QUALITY, tc) == FIX_QUALITY_UNIQUE | cbit(CHARA_BIT_PRECIOUS, tc) == TRUE | cbit(CHARA_BIT_NECRO, tc) == TRUE | gdata(GDATA_FLAG_DUEL_TARGET) == tc ) {
 					txt lang("その生物には無効だ。", "The creature can't be captured.")
-					goto *label_9247
+					goto *turn_end
 				}
 				if ( cdata(CDATA_LEVEL, tc) > inv(INV_ITEM_PARAM2, ci) ) {
 					txt lang("その生物を捕獲するには、より高レベルのモンスターボールが必要だ。", "Power level of the ball is not enough to capture the creature.")
-					goto *label_9247
+					goto *turn_end
 				}
 				if ( cdata(CDATA_HP, tc) > cdata(CDATA_MAX_HP, tc) / 10 ) {
 					txt lang("捕獲するためにはもっと弱らせる必要がある。", "You need to weaken the creature to capture it.")
-					goto *label_9247
+					goto *turn_end
 				}
 				if ( gdata(GDATA_AREA) == AREA_ARENA | gdata(GDATA_AREA) == AREA_PET_ARENA | gdata(GDATA_AREA) == AREA_SHOW_HOUSE | (gdata(GDATA_AREA) == AREA_SHELTER & gdata(GDATA_LEVEL) == 1) ) {
 					txt lang("この場所では捕獲できない。", "This doesn't work in this area.")
-					goto *label_9247
+					goto *turn_end
 				}
 				txtef COLOR_GREEN
 				txt lang(name(tc) + "をモンスターボールに捕獲した。", "You capture " + name(tc) + ".")
@@ -143,11 +143,11 @@
 			else {
 				if ( cdata(CDATA_ID, tc) != CREATURE_ID_LITTLE_SISTER | tc < MAX_CHARA_FOLLOWER | gdata(GDATA_FLAG_DUEL_TARGET) == tc ) {
 					txt lang("何もおきない… ", "Nothing happens...")
-					goto *label_9247
+					goto *turn_end
 				}
 				if ( gdata(GDATA_AREA) == AREA_ARENA | gdata(GDATA_AREA) == AREA_PET_ARENA | gdata(GDATA_AREA) == AREA_SHOW_HOUSE ) {
 					txt lang("この場所では効果がない。", "This doesn't work in this area.")
-					goto *label_9247
+					goto *turn_end
 				}
 				rc = tc
 				gosub *add_ally
@@ -155,7 +155,7 @@
 			chara_vanquish tc
 			check_quest
 		}
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ITEM_POTION | inv(INV_ITEM_ID, ci) == ITEM_ID_TOMATO | inv(INV_ITEM_ID, ci) == ITEM_ID_BUTTER | inv(INV_ITEM_ID, ci) == ITEM_ID_YOGURT | inv(INV_ITEM_ID, ci) == ITEM_ID_NATTO | inv(INV_ITEM_ID, ci) == ITEM_ID_KEMURIDAMA | inv(INV_ITEM_ID, ci) == ITEM_ID_DYING_CICADA ) {
 		if ( inv(INV_ITEM_ID, ci) != ITEM_ID_EMPTY_BOTTLE ) {
@@ -202,7 +202,7 @@
 								txt lang("「いてー！」", cnvtalk("Hey!")), lang("「やったな」", cnvtalk("Now you did it.")), lang(" *クスクス* ", "*chuckle*"), lang("「キャハハ」", cnvtalk("Tee-hee-hee!")), lang("「こやつめ」", cnvtalk("You'll pay for this.")), lang("「むむっ」", "*grin*")
 							}
 						}
-						goto *label_9247
+						goto *turn_end
 					}
 					if ( inv(INV_ITEM_ID, ci) == ITEM_ID_TOMATO ) {
 						if ( synccheck(tc, -1) ) {
@@ -220,7 +220,7 @@
 						}
 						inv(INV_ITEM_NUM, ci)--
 						cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
-						goto *label_9247
+						goto *turn_end
 					}
 					if ( inv(INV_ITEM_ID, ci) == ITEM_ID_DYING_CICADA ) {
 						kaiwa = rnd(2)
@@ -255,7 +255,7 @@
 						inv(INV_ITEM_PIC, ci) = xy2pic(26, 11)
 						inv(INV_ITEM_VALUE, ci) = 4 * 4 * 500 + 200
 						cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
-						goto *label_9247
+						goto *turn_end
 					}
 					if ( inv(INV_ITEM_ID, ci) == ITEM_ID_NATTO ) {
 						if ( synccheck(tc, -1) ) {
@@ -271,7 +271,7 @@
 						}
 						inv(INV_ITEM_NUM, ci)--
 						cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
-						goto *label_9247
+						goto *turn_end
 					}
 					if ( inv(INV_ITEM_ID, ci) == ITEM_ID_BUTTER ) {
 						if ( synccheck(tc, -1) ) {
@@ -284,7 +284,7 @@
 						cdata(CDATA_CONDITION_OIL, tc) += 15
 						inv(INV_ITEM_NUM, ci)--
 						cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
-						goto *label_9247
+						goto *turn_end
 					}
 					if ( inv(INV_ITEM_ID, ci) == ITEM_ID_YOGURT ) {
 						if ( synccheck(tc, -1) ) {
@@ -294,7 +294,7 @@
 						cdata(CDATA_CONDITION_ANGRY, tc) += rnd(3) + 5
 						inv(INV_ITEM_NUM, ci)--
 						cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
-						goto *label_9247
+						goto *turn_end
 					}
 					if ( inv(INV_ITEM_ID, ci) == ITEM_ID_MOLOTOV ) {
 						if ( synccheck(tc, -1) ) {
@@ -318,7 +318,7 @@
 					if ( findbuff(cc, BUFF_POWER_ITEM) != (-1) ) {
 						modgauge cc, 5
 					}
-					goto *label_9247
+					goto *turn_end
 				}
 			}
 			if ( inv(INV_ITEM_ID, ci) == ITEM_ID_HANDFUL_SNOW ) {
@@ -339,13 +339,13 @@
 					loop
 					if ( f == 1 ) {
 						cell_refresh tlocx, tlocy
-						goto *label_9247
+						goto *turn_end
 					}
 				}
 			}
 			if ( inv(INV_ITEM_ID, ci) == ITEM_ID_HANDFUL_SNOW ) {
 				if ( chipm(CHIPM_ROLE, map(tlocx, tlocy, MAP_TILE_ID)) == MAP_CHIP_ROLE_SNOW ) {
-					goto *label_9247
+					goto *turn_end
 				}
 				if ( synccheck(tlocx, tlocy) ) {
 					txtmore
@@ -380,7 +380,7 @@
 				inv(INV_ITEM_PIC, ci) = xy2pic(26, 11)
 				inv(INV_ITEM_VALUE, ci) = 4 * 4 * 500 + 200
 				cell_refresh tlocx, tlocy
-				goto *label_9247
+				goto *turn_end
 			}
 			if ( inv(INV_ITEM_ID, ci) == ITEM_ID_YOGURT | inv(INV_ITEM_ID, ci) == ITEM_ID_BUTTER | inv(INV_ITEM_ID, ci) == ITEM_ID_NATTO ) {
 				inv(INV_ITEM_NUM, ci)--
@@ -389,7 +389,7 @@
 					txtef COLOR_BLUE
 					txt lang(" *べちゃ* ", "*crumble*")
 				}
-				goto *label_9247
+				goto *turn_end
 			}
 			if ( inv(INV_ITEM_ID, ci) == ITEM_ID_TOMATO ) {
 				inv(INV_ITEM_NUM, ci)--
@@ -398,17 +398,17 @@
 					txtef COLOR_BLUE
 					txt lang(" *ぷちゅ* ", "*crumble*")
 				}
-				goto *label_9247
+				goto *turn_end
 			}
 			efp = 50 + sdata(SKILL_WEAPON_THROWING, cc) * 10
 			if ( inv(INV_ITEM_ID, ci) == ITEM_ID_BOTTLE_SULFURIC ) {
 				addmef tlocx, tlocy, MEF_TYPE_ACID, xy2pic(19, 0), rnd(15) + 5, efp, cc
-				goto *label_9247
+				goto *turn_end
 			}
 			if ( inv(INV_ITEM_ID, ci) == ITEM_ID_MOLOTOV ) {
 				addmef tlocx, tlocy, MEF_TYPE_FIRE, xy2pic(24, 0), rnd(15) + 25, efp, cc
 				mapitem_fire tlocx, tlocy
-				goto *label_9247
+				goto *turn_end
 			}
 			if ( inv(INV_ITEM_ID, ci) == ITEM_ID_KEMURIDAMA ) {
 				p = 3
@@ -437,13 +437,13 @@
 					}
 					addmef x, y, MEF_TYPE_KEMURIDAMA, xy2pic(6, 29), 30, 500
 				loop
-				goto *label_9247
+				goto *turn_end
 			}
 			addmef tlocx, tlocy, MEF_TYPE_POTION, xy2pic(27, 0), -1, efp, cc, inv(INV_ITEM_ID, ci), inv(INV_ITEM_STATUS, ci), inv(INV_ITEM_COL, ci)
 			if ( findbuff(cc, BUFF_POWER_ITEM) != (-1) ) {
 				modgauge cc, 5
 			}
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_SUIGARA ) {
@@ -468,7 +468,7 @@
 			addmef tlocx, tlocy, MEF_TYPE_FIRE, xy2pic(24, 0), 5 + rnd(5), 40, cc
 			mapitem_fire tlocx, tlocy
 		}
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_CHESTNUT & inv(INV_ITEM_PARAM2, ci) == 0 ) {
 		snd SOUNDLIST_THROW2
@@ -505,7 +505,7 @@
 				gdata(GDATA_FLAG_THROWN_CHESTNUTS)++
 			}
 		}
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_LULWYS_PHOTO_COLLECTION ) {
 		snd SOUNDLIST_THROW2
@@ -517,7 +517,7 @@
 			}
 			rowact_check tc
 		}
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_DUEL_GLOVE ) {
 		snd SOUNDLIST_THROW2
@@ -529,7 +529,7 @@
 			}
 			rowact_check tc
 			if ( cdata(CDATA_CONDITION_SLEEP, tc) != 0 | cdata(CDATA_CONDITION_PARALYZE, tc) != 0 | cdata(CDATA_CONDITION_BLIND, tc) != 0 | cdata(CDATA_CONDITION_FEAR, tc) != 0 | cdata(CDATA_CONDITION_DIM, tc) != 0 ) {
-				goto *label_9247
+				goto *turn_end
 			}
 			if ( gdata(GDATA_FLAG_DUEL_TARGET) <= 0 & gdata(GDATA_FLAG_DUEL_TARGET) != tc & cdata(CDATA_RELATION, tc) == RELATION_NEUTRAL & tc >= MAX_CHARA_FOLLOWER ) {
 				gdata(GDATA_FLAG_DUEL_TARGET) = tc
@@ -550,7 +550,7 @@
 				}
 			}
 		}
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_SOYBEAN | inv(INV_ITEM_ID, ci) == ITEM_ID_TOFU ) {
 		snd SOUNDLIST_THROW2
@@ -585,7 +585,7 @@
 				dmghp tc, sdata(SKILL_WEAPON_THROWING, cc) * inv(INV_ITEM_LEVEL, ci) + rnd(sdata(SKILL_WEAPON_THROWING, cc) + 10) + 1, cc, SKILL_RESDMG_TOFU, 1000
 			}
 		}
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ITEM_FOOD | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_FURNITURE | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_JUNK | refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ENVIRONMENT ) {
 		if ( map(tlocx, tlocy, MAP_CHARA_INDEX_PLUS_ONE) != 0 ) {
@@ -721,7 +721,7 @@
 			snd SOUNDLIST_THROW2
 		}
 		cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( synccheck(tlocx, tlocy) ) {
 		txt lang("それは地面に落ちて砕けた。", "It falls on the ground and shatters.")
@@ -733,7 +733,7 @@
 			itemcreate -1, ITEM_ID_GOLD_PIECE, tlocx, tlocy, inv(INV_ITEM_PARAM1, ci)
 		}
 	}
-	goto *label_9247
+	goto *turn_end
 
 *act_pray
 	item_find 60002
@@ -741,7 +741,7 @@
 		ci = stat
 		if ( inv(INV_ITEM_PARAM1, ci) != cdata(CDATA_GOD, CHARA_PLAYER) ) {
 			gosub *god_select
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	goto *god_pray
@@ -832,7 +832,7 @@
 						return 0
 					}
 					gdata(GDATA_ROW_ACT) = ACTION_HARVEST
-					gosub *label_6023
+					gosub *generalAct
 					return -1
 				}
 			}
@@ -1089,10 +1089,10 @@
 				gosub *house_update
 			}
 		}
-		gosub *label_4102
+		gosub *calcBurdenPc
 	}
 	if ( cc == (-1) ) {
-		gosub *label_4102
+		gosub *calcBurdenPc
 	}
 	return 1
 
@@ -1130,7 +1130,7 @@
 		snd SOUNDLIST_DROP1
 		txt lang(itemname(ti, in) + "を地面に置いた。", "You drop " + itemname(ti, in) + ".")
 	}
-	gosub *label_4102
+	gosub *calcBurdenPc
 	if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_SHOP ) {
 		if ( chipm(CHIPM_ROLE, map(inv(INV_ITEM_X, ti), inv(INV_ITEM_Y, ti), MAP_TILE_ID)) == MAP_CHIP_ROLE_DISPLAY_SPACE ) {
 			inv(INV_ITEM_SHOP_SAMPLE, ti) = 100
@@ -1167,7 +1167,7 @@
 	}
 	return 1
 
-*label_6352
+*act_equip
 	if ( ci == (-1) ) {
 		return 0
 	}
@@ -1185,7 +1185,7 @@
 	cdata(body, r1) = cdata(body, r1) / EXT_EQUIP_SLOTS * 10000 + ci + 1
 	return 1
 
-*label_6353
+*act_unequip
 	p = cdata(body, r1) \ EXT_EQUIP_SLOTS
 	if ( p == 0 ) {
 		rtval = -2
@@ -1215,7 +1215,7 @@
 	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_RECIPE ) {
 		if ( inv(INV_ITEM_SUB_NAME, ci) == 0 ) {
 			txt lang("最後に調合したアイテムを、レシピに加えることができる。", "You can add a recipe of the item you previously created.(Not implemented yet)")
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	efid = (0 /*!!!@[BUFF_NONE @@@ SKILL_NONE]@!!! */)
@@ -1228,7 +1228,7 @@
 	if ( findbuff(cc, BUFF_POWER_ITEM) != (-1) ) {
 		modgauge cc, 5
 	}
-	goto *label_9247
+	goto *turn_end
 
 *act_eat
 	if ( cc == CHARA_PLAYER ) {
@@ -1255,7 +1255,7 @@
 	}
 	cdata(CDATA_EMO_ICON, cc) = 16 + 100
 	gosub *eat
-	goto *label_9247
+	goto *turn_end
 
 *act_drink
 	dbmode = DBMODE_ON_DRINK
@@ -1271,7 +1271,7 @@
 			gdata(GDATA_FLAG_TOTAL_POTION_PLUGS)++
 		}
 	}
-	goto *label_9247
+	goto *turn_end
 
 *act_zap
 	if ( cc != CHARA_PLAYER ) {
@@ -1298,7 +1298,7 @@
 	if ( findbuff(cc, BUFF_POWER_ITEM) != (-1) ) {
 		modgauge cc, 5
 	}
-	goto *label_9247
+	goto *turn_end
 
 *act_bash
 	if ( map(x, y, MAP_ITEM_CHIPS_MEMORY) != 0 ) {
@@ -1310,7 +1310,7 @@
 			if ( inv(INV_ITEM_PROPERTY, ci) == PROP_SPECIAL | inv(INV_ITEM_PARAM1, ci) <= 0 ) {
 				txtmore
 				txt lang("もう実はないようだ… ", "It seems there are no fruits left on the tree.")
-				goto *label_9247
+				goto *turn_end
 			}
 			inv(INV_ITEM_PARAM1, ci)--
 			if ( inv(INV_ITEM_PARAM1, ci) <= 0 ) {
@@ -1325,7 +1325,7 @@
 			flt
 			itemcreate -1, inv(INV_ITEM_PARAM2, ci), x, y, 0
 			txt lang(itemname(ci, 1) + "が降ってきた。", itemname(ci, 1) + " falls down from the tree.")
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( map(x, y, MAP_ITEM_CHIPS_MEMORY) != 0 ) {
@@ -1341,7 +1341,7 @@
 				flt
 				itemcreate -1, ITEM_ID_GOLD_PIECE, tlocx, tlocy, okane
 			}
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( map(x, y, MAP_CHARA_INDEX_PLUS_ONE) != 0 ) {
@@ -1404,7 +1404,7 @@
 			cdata(CDATA_CONDITION_DIM, tc) = 59
 		}
 		cdata(CDATA_CONDITION_SLEEP, tc) = 0
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( map(x, y, MAP_FEATS_ON_TILE) != 0 ) {
 		cell_featread x, y
@@ -1421,7 +1421,7 @@
 				animeid = ANIMATION_CRUSH
 				gosub *anime
 			}
-			goto *label_9247
+			goto *turn_end
 		}
 		if ( feat(FEAT_CELL_FEATURE_ID) == CELL_FEATURE_DOOR_CLOSED ) {
 			snd SOUNDLIST_BASH1
@@ -1435,7 +1435,7 @@
 					skillexp SKILL_ATTR_STR, cc, (feat(FEAT_CELL_SUB_FEATURE_ID) - sdata(SKILL_ATTR_STR, cc)) * 15
 				}
 				cell_featset x, y, 0, CELL_FEATURE_NONE, 0, 0
-				goto *label_9247
+				goto *turn_end
 			}
 			else {
 				txt lang("扉に体当たりした。", "You bash up the door.")
@@ -1475,14 +1475,14 @@
 						}
 					}
 				}
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 	}
 	txt_check 0
 	txt lang(name(cc) + "は空気に体当たりした。", name(cc) + " bash" + _s(cc) + " up the air.")
 	snd SOUNDLIST_MISS
-	goto *label_9247
+	goto *turn_end
 	gosub *search_for_chara
 	if ( cc == CHARA_PLAYER ) {
 	}
@@ -1650,7 +1650,7 @@
 				}
 				if ( cdata(CDATA_ROW_ACT, tc) == ACTION_EAT ) {
 					if ( cdata(CDATA_ACTION_PERIOD, tc) > 0 ) {
-						if ( cbit(1032, tc) == TRUE ) {
+						if ( cbit(CHARA_BIT_PROHIBIT_PICKING_UP_ITEMS, tc) == TRUE ) {
 							if ( cdata(CDATA_ITEM_USING, tc) >= 5080 ) {
 								txt lang(name(tc) + "はバツが悪そうにあなたを見た。", name(tc) + " stares in your face.")
 								cdata(CDATA_ROW_ACT, tc) = ACTION_NONE, 0
@@ -1666,7 +1666,7 @@
 				if ( cdata(CDATA_IN_TAGTEAM, tc) != 0 ) {
 					ttc = cdata(CDATA_TAGTEAM_PARTNER, tc)
 					if ( cdata(CDATA_ROW_ACT, ttc) == ACTION_EAT ) {
-						if ( cbit(1032, ttc) == TRUE ) {
+						if ( cbit(CHARA_BIT_PROHIBIT_PICKING_UP_ITEMS, ttc) == TRUE ) {
 							if ( cdata(CDATA_ACTION_PERIOD, ttc) > 0 ) {
 								if ( cdata(CDATA_ITEM_USING, ttc) >= 5080 ) {
 									txt lang(cdatan(CDATAN_NAME, ttc) + "はバツが悪そうにあなたを見た。", cdatan(CDATAN_NAME, ttc) + " stares in your face.")
@@ -1683,7 +1683,7 @@
 				}
 				if ( cdata(CDATA_ROW_ACT, tc) == ACTION_EAT ) {
 					if ( cdata(CDATA_ACTION_PERIOD, tc) > 0 ) {
-						if ( cbit(1032, tc) != TRUE | (cbit(1032, tc) == TRUE & cdata(CDATA_ITEM_USING, tc) < 5080) ) {
+						if ( cbit(CHARA_BIT_PROHIBIT_PICKING_UP_ITEMS, tc) != TRUE | (cbit(CHARA_BIT_PROHIBIT_PICKING_UP_ITEMS, tc) == TRUE & cdata(CDATA_ITEM_USING, tc) < 5080) ) {
 							if ( cdata(CDATA_IMPRESSION, tc) + cdata(CDATA_MASTER_SERVANT, tc) < 200 ) {
 								txt lang(name(tc) + "はあなたを睨み付けた。", name(tc) + " glare" + _s(tc) + " you.")
 							}
@@ -1707,7 +1707,7 @@
 				if ( cdata(CDATA_IN_TAGTEAM, tc) != 0 ) {
 					ttc = cdata(CDATA_TAGTEAM_PARTNER, tc)
 					if ( cdata(CDATA_ROW_ACT, ttc) == ACTION_EAT ) {
-						if ( cbit(1032, ttc) != TRUE | (cbit(1032, ttc) == TRUE & cdata(CDATA_ITEM_USING, ttc) < 5080) ) {
+						if ( cbit(CHARA_BIT_PROHIBIT_PICKING_UP_ITEMS, ttc) != TRUE | (cbit(CHARA_BIT_PROHIBIT_PICKING_UP_ITEMS, ttc) == TRUE & cdata(CDATA_ITEM_USING, ttc) < 5080) ) {
 							if ( cdata(CDATA_ACTION_PERIOD, ttc) > 0 ) {
 								if ( cdata(CDATA_IMPRESSION, ttc) + cdata(CDATA_MASTER_SERVANT, ttc) < 200 ) {
 									txt lang(cdatan(CDATAN_NAME, ttc) + "はあなたを睨み付けた。", cdatan(CDATAN_NAME, ttc) + " glare" + _s(ttc) + " you.")
@@ -1731,7 +1731,7 @@
 					}
 				}
 				gosub *cell_info
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 		if ( gdata(GDATA_RIDER) != 0 ) {
@@ -1763,7 +1763,7 @@
 						skillexp SKILL_ACTIVE_RIDING, gdata(GDATA_RIDER), 20
 					}
 					gosub *cell_info
-					goto *label_9247
+					goto *turn_end
 				}
 			}
 		}
@@ -1785,15 +1785,15 @@
 				keybd_wait = 1
 				keybd_attacking = 1
 			}
-			gosub *label_6394
-			goto *label_9247
+			gosub *act_melee
+			goto *turn_end
 		}
 		gosub *chat
 		if ( chatteleport == 1 ) {
 			chatteleport = 0
 			goto *map_exit
 		}
-		goto *label_9247
+		goto *turn_end
 	}
 	else {
 		keybd_attacking = 0
@@ -1860,7 +1860,7 @@
 								if ( qexit == 0 ) {
 									evadd EVENT_QUEST_TIMEOUT
 								}
-								goto *label_9247
+								goto *turn_end
 							}
 							gdata(GDATA_LAST_EDGE_X) = cdata(CDATA_X, CHARA_PLAYER)
 							gdata(GDATA_LAST_EDGE_Y) = cdata(CDATA_Y, CHARA_PLAYER)
@@ -1874,7 +1874,7 @@
 								goto *map_exit
 							}
 							if ( qexit == 100 ) {
-								goto *label_9247
+								goto *turn_end
 							}
 						}
 						goto *pc_turn
@@ -1895,7 +1895,7 @@
 		if ( cellfeat == 31 ) {
 			snd SOUNDLIST_CHAT
 			gosub *com_vote_new
-			goto *label_9247
+			goto *turn_end
 		}
 		if ( cellfeat == 33 ) {
 			menucycle = 1
@@ -1916,25 +1916,25 @@
 	}
 	if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE ) {
 		if ( cdata(CDATA_TARGET, cc) != 0 ) {
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( cdata(CDATA_CONDITION_BIND, cc) > 0 ) {
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( cdata(CDATA_IN_TAGTEAM, cc) == (-1) ) {
 		tcc = cdata(CDATA_TAGTEAM_PARTNER, cc)
 		if ( cdata(CDATA_ROW_ACT, tcc) == ACTION_EAT ) {
 			if ( cdata(CDATA_ACTION_PERIOD, tcc) > 0 ) {
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 	}
 	if ( cbit(CHARA_BIT_RIDE, cc) ) {
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( cdata(CDATA_IN_TAGTEAM, cc) == 1 ) {
-		goto *label_9247
+		goto *turn_end
 	}
 	dx = cdata(CDATA_X_NEW, cc)
 	dy = cdata(CDATA_Y_NEW, cc)
@@ -1985,7 +1985,7 @@
 					if ( synccheck(cc, -1) ) {
 						txt lang(name(cc) + "は蜘蛛の巣にひっかかった。", name(cc) + " " + is(cc) + " caught in a cobweb.")
 					}
-					goto *label_9247
+					goto *turn_end
 				}
 			}
 		}
@@ -1996,7 +1996,7 @@
 				if ( traveldone == 0 ) {
 					gosub *travel
 					keybd_wait = 1
-					goto *label_9247
+					goto *turn_end
 				}
 				else {
 					traveldone = 0
@@ -2200,7 +2200,7 @@
 			}
 		}
 	}
-	goto *label_9247
+	goto *turn_end
 
 *cell_info
 	if ( cc == CHARA_PLAYER ) {
@@ -2517,7 +2517,7 @@
 			comctrl = 2
 			gosub *com_import
 			if ( stat == 1 ) {
-				goto *label_5895
+				goto *extract_map
 			}
 		}
 	}
@@ -2537,7 +2537,7 @@
 			}
 			txt lang("まっくらだ！", "It's dark here!")
 			cdata(CDATA_CONDITION_BLIND, CHARA_PLAYER) += 2
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( gdata(GDATA_FLAG_MAIN) >= 715 & gdata(GDATA_FLAG_MAIN) < 760 & gdata(GDATA_AREA) == AREA_CHAOS_CRADLE & gdata(GDATA_LEVEL) == 179 ) {
@@ -2712,11 +2712,11 @@
 			}
 			snd SOUNDLIST_CHEST1
 			cell_featset cdata(CDATA_X, cc), cdata(CDATA_Y, cc), tile_downstairs, CELL_FEATURE_DOWNSTAIRS
-			goto *label_9247
+			goto *turn_end
 		}
 		snd SOUNDLIST_LOCKED1
 		txt lang("鍵のかかった扉が行く手を塞いでいる。", "The door is locked. It seems you need a specific key to unlock the door.")
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_RANDOM_DUNGEON ) {
 		if ( gdata(GDATA_LEVEL) == adata(ADATA_MAX_LEVEL, gdata(GDATA_AREA)) ) {
@@ -2762,7 +2762,7 @@
 			comctrl = 0
 			gosub *com_import
 			if ( stat == 1 ) {
-				goto *label_5895
+				goto *extract_map
 			}
 			else {
 				goto *pc_turn
@@ -2852,7 +2852,7 @@
 		gosub *shop
 		screenupdate = -1
 		gosub *screen_draw
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_MASTERS_DELIVERY_CHEST ) {
 		invctrl = INVCTRL_PUT, 0
@@ -2884,7 +2884,7 @@
 				}
 			}
 		}
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) != 0 ) {
 		invfile = inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci)
@@ -2976,11 +2976,11 @@
 		gosub *game_ctrlFile
 		if ( refweight != 0 ) {
 			inv(INV_ITEM_WEIGHT, invcontainer(1)) = refweight
-			gosub *label_4102
+			gosub *calcBurdenPc
 		}
 		gosub *screen_draw
 		mode = MODELIST_MAIN
-		goto *label_9247
+		goto *turn_end
 	}
 	item_separate ci
 	if ( inv(INV_ITEM_PARAM1, ci) != 0 ) {
@@ -2991,7 +2991,7 @@
 				if ( stat == 0 ) {
 					screenupdate = -1
 					gosub *screen_draw
-					goto *label_9247
+					goto *turn_end
 				}
 			}
 		}
@@ -3144,7 +3144,7 @@
 			goto *act_open_SWEND1
 		}
 		if ( 1 ) {
-			gosub *label_6382
+			gosub *open_chest
 			goto *act_open_SWEND1
 		}
 *act_open_SWEND1
@@ -3152,9 +3152,9 @@
 	}
 	screenupdate = -1
 	gosub *screen_draw
-	goto *label_9247
+	goto *turn_end
 
-*label_6382
+*open_chest
 	snd SOUNDLIST_CHEST1
 	txt lang("あなたは" + itemname(ci) + "を開けた。", "You open " + itemname(ci) + ".")
 	msg_halt
@@ -3515,12 +3515,12 @@
 				screenupdate = -1
 				gosub *screen_draw
 				await 100
-				goto *label_9247
+				goto *turn_end
 			}
 			feat(FEAT_CELL_SUB_FEATURE_ID) = CELL_SUB_FEATURE_TRAP_IMPALEMENT
 		}
 		else {
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( feat(FEAT_CELL_SUB_FEATURE_ID) > CELL_SUB_FEATURE_TRAP_IMPALEMENT ) {
@@ -3532,7 +3532,7 @@
 	else {
 		if ( cdata(CDATA_ALLIED, cc) == 100 ) {
 			if ( cc != CHARA_PLAYER ) {
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 		f = 1
@@ -3567,7 +3567,7 @@
 	if ( cc == CHARA_PLAYER ) {
 		await 100
 	}
-	goto *label_9247
+	goto *turn_end
 
 *act_close
 	txt lang("何を閉める？", "Which door do you want to close? ")
@@ -3592,7 +3592,7 @@
 	}
 	cell_featset x, y, tile_doorclosed, CELL_FEATURE_DOOR_CLOSED, -1, -1
 	txt lang(name(cc) + "は扉を閉めた。", name(cc) + " close the door.")
-	goto *label_9247
+	goto *turn_end
 
 *act_fire
 	if ( cbit(CHARA_BIT_AWAKE_MAGIC_ATTACK, cc) ) {
@@ -3744,7 +3744,7 @@
 			extraattack = 0
 			gosub *act_attack
 			if ( cdata(CDATA_EXIST, tc) != CHAR_STATE_ALIVE ) {
-				gosub *label_5740
+				gosub *findTarget
 				if ( stat == 0 ) {
 					break
 				}
@@ -3763,7 +3763,7 @@
 			repeat 40
 				gosub *FindRangeWeapon
 				ele = SKILL_NONE
-				gosub *label_5748
+				gosub *com_findTarget
 				if ( listmax == 0 ) {
 					break
 				}
@@ -3798,7 +3798,7 @@
 	ammoproc = ENCHANT_AMMO_NONE
 	return
 
-*label_6394
+*act_melee
 	if ( cbit(CHARA_BIT_AWAKE_MAGIC_ATTACK, cc) ) {
 		actaa = 414
 		bvar = sdata(SKILL_RES_MAGIC, cc)
@@ -5029,7 +5029,7 @@
 		else {
 			bakucut = 0
 			bakuretu = 0
-			gosub *label_6405
+			gosub *act_attackSub
 		}
 		if ( trait(TRAIT_ETHER_TENTACLES) != 0 ) {
 			if ( cc == CHARA_PLAYER ) {
@@ -5541,7 +5541,7 @@
 	}
 	return
 
-*label_6405
+*act_attackSub
 	if ( gdata(GDATA_TEMPORARY_FLAGS2) >= 100 ) {
 		return
 	}
@@ -5760,7 +5760,7 @@
 		if ( gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND) == 4 ) {
 			snd SOUNDLIST_SIREN
 		}
-		goto *label_9247
+		goto *turn_end
 	}
 	msgdup++
 	txt lang("周囲を注意深く調べた。", "You search the surroundings carefully.")
@@ -5816,7 +5816,7 @@
 				if ( abs(cdata(CDATA_Y, cc) - y) <= 1 & abs(cdata(CDATA_X, cc) - x) <= 1 ) {
 					if ( feat(FEAT_CELL_FEATURE_ID) == CELL_FEATURE_TRAP ) {
 						if ( feat(FEAT_CELL_PIC) == 0 ) {
-							gosub *label_4091
+							gosub *calcSearch
 							if ( stat == 1 ) {
 								gosub *revealTrap
 								txt lang("罠を発見した。", "You discover a trap.")
@@ -5824,9 +5824,9 @@
 						}
 					}
 					if ( feat(FEAT_CELL_FEATURE_ID) == CELL_FEATURE_HIDDEN_PATH ) {
-						gosub *label_4091
+						gosub *calcSearch
 						if ( stat == 1 | 0 ) {
-							gosub *label_6413
+							gosub *revealHiddenPath
 							txt lang("隠れた通路を発見した。", "You discover a hidden path.")
 						}
 					}
@@ -5880,13 +5880,13 @@
 			gosub *plant
 		}
 	}
-	goto *label_9247
+	goto *turn_end
 
 *revealTrap
 	cell_featset refx, refy, tile_trap, -1, -1
 	return
 
-*label_6413
+*revealHiddenPath
 	map(refx, refy, MAP_TILE_ID) = tile_tunnel
 	cell_featset refx, refy, 0, CELL_FEATURE_NONE
 	return
@@ -5901,7 +5901,7 @@
 	digx = tlocx
 	digy = tlocy
 	gosub *dig
-	goto *label_9247
+	goto *turn_end
 	goto *act_dip
 
 #deffunc dipcursed int dipcursed_item, int dipcursed_arg1
@@ -5967,7 +5967,7 @@
 			inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) = rnd(10) + 15
 			inv(INV_ITEM_PARAM4, ci) = inv(INV_ITEM_PARAM1, cidip)
 		}
-		goto *label_9247
+		goto *turn_end
 	}
 	snd SOUNDLIST_DRINK1
 	if ( refitem(inv(INV_ITEM_ID, cidip), DBSPEC_TYPE) == FILTER_ITEM_POTION ) {
@@ -5979,11 +5979,11 @@
 				txtmore
 				if ( inv(INV_ITEM_ID, ci) == ITEM_ID_HOLY_WELL ) {
 					txt lang("井戸は汚れた。", "The holy well is polluted.")
-					goto *label_9247
+					goto *turn_end
 				}
 				if ( inv(INV_ITEM_PARAM3, ci) >= 20 ) {
 					txt lang(itemname(ci) + "は完全に枯れている。", itemname(ci) + " is completely dry.")
-					goto *label_9247
+					goto *turn_end
 				}
 				txt lang(itemname(ci) + "は一瞬輝いた。", itemname(ci) + " shines for a moment.")
 				if ( inv(INV_ITEM_ID, cidip) == ITEM_ID_HANDFUL_SNOW ) {
@@ -5992,7 +5992,7 @@
 				else {
 					inv(INV_ITEM_PARAM1, ci) += rnd(3)
 				}
-				goto *label_9247
+				goto *turn_end
 			}
 			else {
 				if ( inv(INV_ITEM_PARAM1, ci) < (-5) | inv(INV_ITEM_PARAM3, ci) >= 20 | (inv(INV_ITEM_ID, ci) == ITEM_ID_HOLY_WELL & gdata(GDATA_FLAG_HOLY_WELL) <= 0) ) {
@@ -6000,17 +6000,17 @@
 					txt lang(valn + "は涸れている。", valn + " is dry.")
 					txtmore
 					txt lang("あっ！空き瓶を井戸に落としてしまった…", "Ops! You drop the empty bottle into the well...")
-					goto *label_9247
+					goto *turn_end
 				}
 				if ( gdata(GDATA_FLAG_GAME_MODE) == 1 ) {
 					if ( inv_sum(CHARA_PLAYER) > 20 ) {
 						txt lang("バックパックが一杯だ。", "Your inventory is full.")
-						goto *label_9247
+						goto *turn_end
 					}
 				}
 				if ( inv_getspace(CHARA_PLAYER) == 0 ) {
 					txt lang("あっ！空き瓶を井戸に落としてしまった…", "Ops! You drop the empty bottle into the well...")
-					goto *label_9247
+					goto *turn_end
 				}
 				if ( inv(INV_ITEM_ID, ci) == ITEM_ID_HOLY_WELL ) {
 					gdata(GDATA_FLAG_HOLY_WELL)--
@@ -6022,7 +6022,7 @@
 					if ( inv_getfreeid(CHARA_PLAYER) == (-1) ) {
 						item_num cidip, 1
 						txt lang("バックパックには、もうアイテムを入れる余裕がない。", "Your inventory is full.")
-						goto *label_9247
+						goto *turn_end
 					}
 				}
 				else {
@@ -6035,7 +6035,7 @@
 				txtvalid = 0
 				txt lang(itemname(ci, 1) + "を手に入れた。", "You get " + itemname(ci, 1) + ".")
 				item_stack CHARA_PLAYER, ci, 1
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 	}
@@ -6048,7 +6048,7 @@
 				dipcursed ci
 			}
 			ibitmod ITEM_BIT_POISON_BLEND, ci, TRUE
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( inv(INV_ITEM_ID, cidip) == ITEM_ID_JUICE ) {
@@ -6057,7 +6057,7 @@
 			item_separate ci
 			txt lang(itemname(ci) + "はミックスジュースになった！", "You made a mix juice!")
 			ibitmod ITEM_BIT_HERBED_IN, ci, TRUE
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( inv(INV_ITEM_ID, cidip) == ITEM_ID_BOTTLE_MILK ) {
@@ -6066,7 +6066,7 @@
 			item_separate ci
 			txt lang(itemname(ci) + "に乳を混ぜた！", "You mixed milk.")
 			ibitmod ITEM_BIT_ACIDPROOF, ci, TRUE
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( inv(INV_ITEM_ID, cidip) == ITEM_ID_LOVE_POTION ) {
@@ -6078,7 +6078,7 @@
 				dipcursed ci
 			}
 			ibitmod ITEM_BIT_LOVE_BLEND, ci, TRUE
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( refitem(inv(INV_ITEM_ID, cidip), DBSPEC_TYPE) == FILTER_ITEM_POTION ) {
@@ -6087,7 +6087,7 @@
 			if ( inv(INV_ITEM_ID, ci) == ITEM_ID_CF_POTIOMAN & inv(INV_ITEM_LEVEL, ci) >= 4 | (inv(INV_ITEM_ID, ci) != ITEM_ID_CF_POTIOMAN & inv(INV_ITEM_LEVEL, ci) >= 3) ) {
 				snd SOUNDLIST_FAIL1
 				txt lang("これ以上はチャージできない。", "You can't charge " + itemname(ci) + " anymore.")
-				goto *label_9247
+				goto *turn_end
 			}
 			pcharge = calcitemvalue(cidip, 5)
 			if ( inv(INV_ITEM_ID, ci) == ITEM_ID_CF_POTIOMAN ) {
@@ -6097,7 +6097,7 @@
 			if ( pcharge == 0 ) {
 				snd SOUNDLIST_FAIL1
 				txt lang(itemname(cidip) + "にはチャージに充分な魔力が含まれていない。", "It doesn't have enough magic power to charge " + itemname(ci) + ".")
-				goto *label_9247
+				goto *turn_end
 			}
 			repeat pcharge
 				snd SOUNDLIST_ATK_ELEC
@@ -6117,7 +6117,7 @@
 			txtnew
 			txtef COLOR_SKY_BLUE
 			txt lang("Potion-charge Lv" + inv(INV_ITEM_LEVEL, ci) + "!!", "Potion-charge Lv" + inv(INV_ITEM_LEVEL, ci) + "!!")
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( inv(INV_ITEM_ID, cidip) == ITEM_ID_BOTTLE_DIRTY_WATER | inv(INV_ITEM_ID, cidip) == ITEM_ID_VOMIT | inv(INV_ITEM_ID, cidip) == ITEM_ID_URINE ) {
@@ -6144,7 +6144,7 @@
 		}
 		r1 = cc
 		gosub *charaRefresh
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( inv(INV_ITEM_ID, cidip) == ITEM_ID_BOTTLE_ANTISEPTIC ) {
 		if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ITEM_FOOD ) {
@@ -6155,7 +6155,7 @@
 				dipcursed ci
 			}
 			ibitmod ITEM_BIT_ANTISEPTIC, ci, TRUE
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( inv(INV_ITEM_ID, cidip) == ITEM_ID_BOTTLE_DYE ) {
@@ -6175,7 +6175,7 @@
 		if ( inv(INV_ITEM_EQUIP, ci) != 0 ) {
 			create_pcpic cc, 1
 		}
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( inv(INV_ITEM_ID, cidip) == ITEM_ID_ACIDPROOF_LIQUID ) {
 		if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) != FILTER_ITEM_POTION ) {
@@ -6195,7 +6195,7 @@
 				txt lang(itemname(ci) + "は酸から守られた。", itemname(ci) + " gain" + _s2(in) + " acidproof.")
 			}
 			item_num cidip, -1
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( inv(INV_ITEM_ID, cidip) == ITEM_ID_FIREPROOF_LIQUID ) {
@@ -6220,7 +6220,7 @@
 			}
 		}
 		item_num cidip, -1
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( inv(INV_ITEM_ID, cidip) == ITEM_ID_BOTTLE_WATER ) {
 		item_num cidip, -1
@@ -6230,7 +6230,7 @@
 			inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_BLESSED
 			r1 = cc
 			gosub *charaRefresh
-			goto *label_9247
+			goto *turn_end
 		}
 		if ( inv(INV_ITEM_STATUS, cidip) <= ITEM_STATUS_CURSED ) {
 			txtef COLOR_PURPLE
@@ -6238,11 +6238,11 @@
 			inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_CURSED
 			r1 = cc
 			gosub *charaRefresh
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	txt lang("何もおきない… ", "Nothing happens...")
-	goto *label_9247
+	goto *turn_end
 
 *act_use
 	if ( cc != CHARA_PLAYER ) {
@@ -6319,8 +6319,8 @@
 			}
 		}
 		gdata(GDATA_ROW_ACT) = ACTION_SLEEP
-		gosub *label_6023
-		goto *label_9247
+		gosub *generalAct
+		goto *turn_end
 	}
 	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_RED_TREASURE_MACHINE | inv(INV_ITEM_ID, ci) == ITEM_ID_BLUE_TREASURE_MACHINE ) {
 		goto *com_gasha
@@ -6328,14 +6328,14 @@
 	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_PACHISURO_MACHINE | inv(INV_ITEM_ID, ci) == ITEM_ID_CASINO_TABLE | inv(INV_ITEM_ID, ci) == ITEM_ID_SLOT_MACHINE | inv(INV_ITEM_ID, ci) == ITEM_ID_DARTS_BOARD ) {
 		atxid = 1
 		gosub *com_txtadv
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( inv(INV_ITEM_EFFECT, ci) == EFFECT_CARPENTRY | inv(INV_ITEM_EFFECT, ci) == EFFECT_ALCHEMY | inv(INV_ITEM_EFFECT, ci) == EFFECT_JEWELER | inv(INV_ITEM_EFFECT, ci) == EFFECT_TAILOR ) {
 		prodtype = inv(INV_ITEM_EFFECT, ci)
 		snd SOUNDLIST_POP2
 		invctrl = 0
 		gosub *label_5149
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( ibit(ITEM_BIT_ULTIMATE, ci) == TRUE ) {
 		if ( synccheck(tc, -1) ) {
@@ -6350,11 +6350,11 @@
 		if ( rtval == 0 ) {
 			if ( cdata(CDATA_SP, CHARA_PLAYER) <= 0 ) {
 				txt lang("疲労し過ぎて失敗した！", "You are too exhausted!")
-				goto *label_9247
+				goto *turn_end
 			}
 			if ( gdata(GDATA_AREA) == AREA_PET_ARENA | mdata(MDATA_TYPE) == MAP_TYPE_WORLD | gdata(GDATA_AREA) == AREA_PYRAMID | gdata(GDATA_AREA) == AREA_JAIL ) {
 				txt lang("何もおきない… ", "Nothing happens...")
-				goto *label_9247
+				goto *turn_end
 			}
 			snd SOUNDLIST_ATK_ICE
 			txtef COLOR_BLUE
@@ -6440,7 +6440,7 @@
 					loop
 				loop
 			loop
-			goto *label_9247
+			goto *turn_end
 		}
 		else {
 			goto *pc_turn
@@ -7513,7 +7513,7 @@
 				syukuzyu = inv(INV_ITEM_STATUS, ci)
 				inv(INV_ITEM_NUM, ci) = 0
 				cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
-				gosub *label_4102
+				gosub *calcBurdenPc
 				redraw 0
 				gosub *screen_draw
 				gosub *screen_fade
@@ -7843,7 +7843,7 @@
 			if ( rtval == 6 ) {
 				txt lang("とりあえずなんか大量にあるメモやファイルを整理した…。", "For the time being, you've organized some files...")
 				gdata(GDATA_HOUR)++
-				gosub *label_9228
+				gosub *advance_hour
 				seiton++
 				if ( seiton == 3 ) {
 					await 1000
@@ -8177,7 +8177,7 @@
 	}
 	if ( _switch_val == 119 | _switch_sw ) {
 		_switch_sw = 0
-		gosub *label_5740
+		gosub *findTarget
 		if ( stat == 0 ) {
 			goto *act_use_SWEND1
 		}
@@ -8259,7 +8259,7 @@
 				txtef COLOR_PURPLE
 				snd SOUNDLIST_ATK_DARK
 				txt lang("…" + cdatan(CDATAN_NAME, tc) + "はきっぱりと断った。", "..." + cdatan(CDATAN_NAME, tc) + " gently refuses your proposal. ")
-				goto *label_9247
+				goto *turn_end
 			}
 			cbitmod CHARA_BIT_MARRIED, tc, TRUE
 			txtef COLOR_PINK
@@ -8271,7 +8271,7 @@
 			cdata(CDATA_EMO_ICON, tc) = 17 + 100 * 3
 			marry = tc
 			evadd EVENT_MARRY
-			goto *label_9247
+			goto *turn_end
 		}
 		else {
 			txt lang("何もおきない… ", "Nothing happens...")
@@ -8366,7 +8366,7 @@
 		zouka = 0
 		r1 = tc
 		gosub *charaRefresh
-		gosub *label_4102
+		gosub *calcBurdenPc
 		goto *act_use_SWEND1
 		_switch_sw++
 	}
@@ -8380,7 +8380,7 @@
 		cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
 		r1 = tc
 		gosub *charaRefresh
-		gosub *label_4102
+		gosub *calcBurdenPc
 		goto *act_use_SWEND1
 		_switch_sw++
 	}
@@ -8468,7 +8468,7 @@
 		cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
 		txtef COLOR_GREEN
 		txt lang(name(tc) + "に新たな生命核が生成された。" + name(tc) + "以外の遺伝子を与える必要がある。また、フェイズ1の間は追加投与することもできる。", "A new life core was created in " + name(tc) + ". It needs to give the genes other than " + name(tc) + ". Additional infusions are possible during Phase 1.")
-		gosub *label_4102
+		gosub *calcBurdenPc
 		goto *act_use_SWEND1
 		_switch_sw++
 	}
@@ -8589,7 +8589,7 @@
 		cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
 		r1 = tc
 		gosub *charaRefresh
-		gosub *label_4102
+		gosub *calcBurdenPc
 		goto *act_use_SWEND1
 		_switch_sw++
 	}
@@ -8681,7 +8681,7 @@
 			cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
 			r1 = tc
 			gosub *charaRefresh
-			gosub *label_4102
+			gosub *calcBurdenPc
 		}
 		goto *act_use_SWEND1
 		_switch_sw++
@@ -8752,7 +8752,7 @@
 		cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
 		r1 = tc
 		gosub *charaRefresh
-		gosub *label_4102
+		gosub *calcBurdenPc
 		goto *act_use_SWEND1
 		_switch_sw++
 	}
@@ -9063,7 +9063,7 @@
 		}
 		inv(INV_ITEM_NUM, ci)--
 		cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
-		gosub *label_4102
+		gosub *calcBurdenPc
 		toba = 0
 		goto *act_use_SWEND1
 		_switch_sw++
@@ -9211,7 +9211,7 @@
 		}
 		inv(INV_ITEM_NUM, ci)--
 		cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
-		gosub *label_4102
+		gosub *calcBurdenPc
 		if ( inv(INV_ITEM_ID, ci) == ITEM_ID_CIGARETTE ) {
 			flt
 			itemcreate -1, ITEM_ID_SUIGARA, cdata(CDATA_X, tc), cdata(CDATA_Y, tc), 0
@@ -9256,7 +9256,7 @@
 			goto *act_use_SWEND1
 		}
 		if ( cdata(CDATA_TARGET, cc) == 0 ) {
-			gosub *label_5740
+			gosub *findTarget
 			if ( stat == 0 ) {
 				goto *act_use_SWEND1
 			}
@@ -9393,7 +9393,7 @@
 		if ( mdata(MDATA_TYPE) == MAP_TYPE_WORLD ) {
 			goto *act_use_SWEND1
 		}
-		gosub *label_5349
+		gosub *findLocation
 		if ( stat != 1 ) {
 			if ( stat == 0 ) {
 				txt lang("その場所は見えない。", "You can't see the location.")
@@ -9409,7 +9409,7 @@
 		animeid = ANIMATION_NUCLEAR
 		gosub *anime
 		inv(INV_ITEM_NUM, ci)--
-		gosub *label_4102
+		gosub *calcBurdenPc
 		repeat 40
 			if ( cnt == 14 ) {
 				snd SOUNDLIST_ATK_FIRE
@@ -9491,7 +9491,7 @@
 			goto *act_use_SWEND1
 		}
 		if ( cdata(CDATA_TARGET, cc) == 0 ) {
-			gosub *label_5740
+			gosub *findTarget
 			if ( stat == 0 ) {
 				goto *act_use_SWEND1
 			}
@@ -9565,7 +9565,7 @@
 			goto *act_use_SWEND1
 		}
 		if ( cdata(CDATA_TARGET, cc) == 0 ) {
-			gosub *label_5740
+			gosub *findTarget
 			if ( stat == 0 ) {
 				goto *act_use_SWEND1
 			}
@@ -9639,7 +9639,7 @@
 			goto *act_use_SWEND1
 		}
 		if ( cc == CHARA_PLAYER ) {
-			gosub *label_5349
+			gosub *findLocation
 			if ( stat != 1 ) {
 				if ( stat == 0 ) {
 					txt lang("その場所は見えない。", "You can't see the location.")
@@ -9655,7 +9655,7 @@
 		}
 		if ( cc != CHARA_PLAYER ) {
 			if ( cdata(CDATA_TARGET, cc) == 0 ) {
-				gosub *label_5740
+				gosub *findTarget
 				if ( stat == 0 ) {
 					goto *act_use_SWEND1
 				}
@@ -9759,7 +9759,7 @@
 		snd SOUNDLIST_FIRE1
 		inv(INV_ITEM_NUM, ci)--
 		cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
-		gosub *label_4102
+		gosub *calcBurdenPc
 		flt
 		itemcreate -1, ITEM_ID_CAMPFIRE, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), 0
 		goto *act_use_SWEND1
@@ -9787,7 +9787,7 @@
 		inv(INV_ITEM_PARAM3, ci) = 0
 		txt lang(itemname(ci) + "を作った。", "You made " + itemname(ci) + ".")
 		item_stack CHARA_PLAYER, ci, 1
-		gosub *label_4102
+		gosub *calcBurdenPc
 		goto *act_use_SWEND1
 		_switch_sw++
 	}
@@ -9854,9 +9854,9 @@
 	}
 	if ( _switch_val == 9 | _switch_sw ) {
 		_switch_sw = 0
-		gosub *label_5761
+		gosub *com_train
 		if ( stat == 1 ) {
-			goto *label_9247
+			goto *turn_end
 		}
 		else {
 			gosub *screen_draw
@@ -9867,9 +9867,9 @@
 	}
 	if ( _switch_val == 107 | _switch_sw ) {
 		_switch_sw = 0
-		gosub *label_5761
+		gosub *com_train
 		if ( stat == 1 ) {
-			goto *label_9247
+			goto *turn_end
 		}
 		else {
 			gosub *screen_draw
@@ -9916,7 +9916,7 @@
 		if ( tc == CHARA_PLAYER ) {
 			txt lang(" *ドクン ドクン* ", "You blush.")
 			gdata(GDATA_SCOPE) = 0
-			goto *label_9247
+			goto *turn_end
 		}
 		if ( tc > CHARA_PLAYER & tc < MAX_CHARA_FOLLOWER ) {
 			if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
@@ -9924,7 +9924,7 @@
 				if ( cbit(CHARA_BIT_STETHOSCOPE, tc) == TRUE ) {
 					cbitmod CHARA_BIT_STETHOSCOPE, tc, FALSE
 					txt lang(name(tc) + "から聴診器を外した。", "You no longer watch on " + his(tc) + " health.")
-					goto *label_9247
+					goto *turn_end
 				}
 				txt lang("あなたは" + name(tc) + "に聴診器を当てた。", "You start to keep an eye on " + his(tc) + " health.")
 				if ( cdata(CDATA_SEX, tc) == 1 ) {
@@ -9934,7 +9934,7 @@
 					txt lang("「キャー」", cnvtalk("Pervert!"))
 				}
 				cbitmod CHARA_BIT_STETHOSCOPE, tc, TRUE
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 		txt lang("それは無理だ。", "It's impossible.")
@@ -9979,7 +9979,7 @@
 								txt lang(name(tc) + "が激しく抵抗したため紐は切れた。", "The leash is cut as " + name(tc) + " resists.")
 								inv(INV_ITEM_NUM, ci)--
 								cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
-								gosub *label_4102
+								gosub *calcBurdenPc
 								goto *act_use_SWEND1
 							}
 						}
@@ -10052,7 +10052,7 @@
 					animeload 8, tc
 					inv(INV_ITEM_NUM, ci)--
 					cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
-					gosub *label_4102
+					gosub *calcBurdenPc
 				}
 				f = 1
 			}
@@ -10507,7 +10507,7 @@
 					gsel BUFFER_SCREEN
 					ccbk = cc
 					cc = tc
-					gosub *label_5658
+					gosub *com_portrait
 					cc = ccbk
 				}
 				else {
@@ -10521,7 +10521,7 @@
 					gdata(GDATA_TEMPORARY_FLAGS) = 7777
 				}
 				customtalk tc, DBMODE_FLAVOR_SHIFT
-				gosub *label_0416
+				gosub *convert_word
 				if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 					if ( jp ) {
 						txt "「変身！」", "「フォームアップ！」", "「ドレスアップ！」", "「トランスフォーム！」"
@@ -10940,7 +10940,7 @@
 					}
 					if ( cdata(CDATA_MASTER_SERVANT2, tc) > (-5) & cdata(CDATA_MASTER_SERVANT2, tc) < 5 ) {
 						customtalk tc, DBMODE_FLAVOR_INSULT2
-						gosub *label_0416
+						gosub *convert_word
 						if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 							if ( jp ) {
 								txtef COLOR_RED
@@ -10950,7 +10950,7 @@
 					}
 					if ( cdata(CDATA_MASTER_SERVANT2, tc) >= 5 & cdata(CDATA_MASTER_SERVANT2, tc) < 10 ) {
 						customtalk tc, DBMODE_FLAVOR_INSULT2
-						gosub *label_0416
+						gosub *convert_word
 						if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 							if ( jp ) {
 								txtef COLOR_RED
@@ -10960,7 +10960,7 @@
 					}
 					if ( cdata(CDATA_MASTER_SERVANT2, tc) == 10 ) {
 						customtalk tc, DBMODE_FLAVOR_INSULT2
-						gosub *label_0416
+						gosub *convert_word
 						if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 							if ( jp ) {
 								txtef COLOR_RED
@@ -11007,27 +11007,27 @@
 						hostileaction CHARA_PLAYER, tc
 					}
 					if ( rtval == 0 ) {
-						if ( cbit(1033, tc) == TRUE ) {
-							cbitmod 1033, tc, FALSE
+						if ( cbit(CHARA_BIT_PROHIBIT_EATING_FROM_GROUND, tc) == TRUE ) {
+							cbitmod CHARA_BIT_PROHIBIT_EATING_FROM_GROUND, tc, FALSE
 						}
 						else {
-							cbitmod 1033, tc, TRUE
+							cbitmod CHARA_BIT_PROHIBIT_EATING_FROM_GROUND, tc, TRUE
 						}
 					}
 					if ( rtval == 1 ) {
-						if ( cbit(1032, tc) == TRUE ) {
-							cbitmod 1032, tc, FALSE
+						if ( cbit(CHARA_BIT_PROHIBIT_PICKING_UP_ITEMS, tc) == TRUE ) {
+							cbitmod CHARA_BIT_PROHIBIT_PICKING_UP_ITEMS, tc, FALSE
 						}
 						else {
-							cbitmod 1032, tc, TRUE
+							cbitmod CHARA_BIT_PROHIBIT_PICKING_UP_ITEMS, tc, TRUE
 						}
 					}
-					if ( rtval == 0 & cbit(1033, tc) == TRUE | (rtval == 1 & cbit(1032, tc) == TRUE) | rtval == 3 ) {
+					if ( rtval == 0 & cbit(CHARA_BIT_PROHIBIT_EATING_FROM_GROUND, tc) == TRUE | (rtval == 1 & cbit(CHARA_BIT_PROHIBIT_PICKING_UP_ITEMS, tc) == TRUE) | rtval == 3 ) {
 						txt lang("あなたは鞭を振り下ろした。", "You beat " + name(tc) + ".")
-						if ( rtval == 0 & cbit(1033, tc) == TRUE ) {
+						if ( rtval == 0 & cbit(CHARA_BIT_PROHIBIT_EATING_FROM_GROUND, tc) == TRUE ) {
 							txt lang("[拾い食い禁止！]", "[Prohibition!]")
 						}
-						if ( rtval == 1 & cbit(1032, tc) == TRUE ) {
+						if ( rtval == 1 & cbit(CHARA_BIT_PROHIBIT_PICKING_UP_ITEMS, tc) == TRUE ) {
 							txt lang("[アイテム拾い禁止！]", "[Prohibition!]")
 						}
 						animeload 28, tc
@@ -11063,7 +11063,7 @@
 						}
 						if ( cdata(CDATA_MASTER_SERVANT2, tc) >= 5 ) {
 							customtalk tc, DBMODE_FLAVOR_INSULT
-							gosub *label_0416
+							gosub *convert_word
 							if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 								if ( jp ) {
 									txtef COLOR_RED
@@ -11073,7 +11073,7 @@
 						}
 						if ( cdata(CDATA_MASTER_SERVANT2, tc) > (-5) & cdata(CDATA_MASTER_SERVANT2, tc) < 5 ) {
 							customtalk tc, DBMODE_FLAVOR_DISCIPLINE
-							gosub *label_0416
+							gosub *convert_word
 							if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 								if ( jp ) {
 									txtef COLOR_SKY_BLUE
@@ -11083,7 +11083,7 @@
 						}
 						if ( cdata(CDATA_MASTER_SERVANT2, tc) <= (-5) & cdata(CDATA_MASTER_SERVANT2, tc) > (-10) ) {
 							customtalk tc, DBMODE_FLAVOR_DISCIPLINE2
-							gosub *label_0416
+							gosub *convert_word
 							if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 								if ( jp ) {
 									txtef COLOR_SKY_BLUE
@@ -11093,7 +11093,7 @@
 						}
 						if ( cdata(CDATA_MASTER_SERVANT2, tc) == (-10) ) {
 							customtalk tc, DBMODE_FLAVOR_DISCIPLINE2
-							gosub *label_0416
+							gosub *convert_word
 							if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 								if ( jp ) {
 									txtef COLOR_SKY_BLUE
@@ -11110,7 +11110,7 @@
 					}
 					else {
 						customtalk tc, DBMODE_FLAVOR_DISCIPLINE_OFF
-						gosub *label_0416
+						gosub *convert_word
 						if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 							txtef COLOR_SKY_BLUE
 							txt lang(name(tc) + "はホッと胸をなでおろした。", name(tc) + " gasp" + _s(tc) + ", " + cnvtalk("Don't stop!"))
@@ -11412,11 +11412,11 @@
 				gosub *effect
 			}
 			if ( cdata(CDATA_IN_TAGTEAM, cc) != 1 ) {
-				gosub *label_6018
+				gosub *eat_meal_xmas_cake
 			}
 			if ( cdata(CDATA_IN_TAGTEAM, cc) == (-1) ) {
 				cc = cdata(CDATA_TAGTEAM_PARTNER, cc)
-				gosub *label_6018
+				gosub *eat_meal_xmas_cake
 			}
 		loop
 		cc = CHARA_PLAYER
@@ -11449,11 +11449,11 @@
 				gosub *effect
 			}
 			if ( cdata(CDATA_IN_TAGTEAM, cc) != 1 ) {
-				gosub *label_6016
+				gosub *eat_meal
 			}
 			if ( cdata(CDATA_IN_TAGTEAM, cc) == (-1) ) {
 				cc = cdata(CDATA_TAGTEAM_PARTNER, cc)
-				gosub *label_6016
+				gosub *eat_meal
 			}
 		loop
 		cc = CHARA_PLAYER
@@ -11836,7 +11836,7 @@
 					}
 					break
 				loop
-				gosub *label_3962
+				gosub *calcBodyFix
 				inv(INV_ITEM_NUM, ci)--
 				cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
 				animeload 8, tc
@@ -12005,7 +12005,7 @@
 		cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
 		dbg_skipevent = 1
 		gdata(GDATA_HOUR)++
-		gosub *label_9228
+		gosub *advance_hour
 		dbg_skipevent = 0
 		txtef COLOR_GREEN
 		txt lang("チョコレートを刻んで、テンパリングしながら湯煎で溶かした！次はどうしようか。", "You have to wait next February.")
@@ -12089,7 +12089,7 @@
 		}
 		dbg_skipevent = 1
 		gdata(GDATA_MIN) += 10
-		gosub *label_9228
+		gosub *advance_hour
 		dbg_skipevent = 0
 		txtef COLOR_YELLOW
 		txt lang("手作りチョコができた！", "It was delicious.")
@@ -12272,7 +12272,7 @@
 						goto *pc_turn
 					}
 				}
-				if ( cbit(1034, tc) == TRUE ) {
+				if ( cbit(CHARA_BIT_BIRTHED_CHILD, tc) == TRUE ) {
 					txt lang("子供のうちは夢を見させてあげよう。", "It cannot be used among children.")
 					goto *pc_turn
 				}
@@ -12378,8 +12378,8 @@
 				goto *pc_turn
 			}
 			gdata(GDATA_ROW_ACT) = ACTION_CONSTRUCT
-			gosub *label_6023
-			goto *label_9247
+			gosub *generalAct
+			goto *turn_end
 		}
 		if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_RANDOM_DUNGEON ) {
 			if ( gdata(GDATA_LEVEL) == adata(ADATA_MAX_LEVEL, gdata(GDATA_AREA)) ) {
@@ -12398,7 +12398,7 @@
 			}
 		}
 		gdata(GDATA_ROW_ACT) = ACTION_OPEN_HATCH
-		gosub *label_6023
+		gosub *generalAct
 		goto *act_use_SWEND1
 		_switch_sw++
 	}
@@ -12593,7 +12593,7 @@
 		comctrl = 2
 		gosub *com_import
 		if ( stat == 1 ) {
-			goto *label_5895
+			goto *extract_map
 		}
 		goto *act_use_SWEND1
 		_switch_sw++
@@ -13543,7 +13543,7 @@
 				continue
 			}
 			cc = cnt
-			gosub *label_5740
+			gosub *findTarget
 			if ( stat == 0 ) {
 				continue
 			}
@@ -13628,7 +13628,7 @@
 			if ( fov_los(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), dx, dy) == 0 ) {
 				continue
 			}
-			if ( cbit(1034, tc) == TRUE ) {
+			if ( cbit(CHARA_BIT_BIRTHED_CHILD, tc) == TRUE ) {
 				if ( cdata(CDATA_SPRITE_SIZE_MILK, tc) == (-1) ) {
 					if ( rnd(2) == 0 ) {
 						snd SOUNDLIST_FAIL1
@@ -15155,13 +15155,13 @@
 						if ( cdata(CDATA_IMPRESSION, tc) < 150 ) {
 							txt lang(cdatan(CDATAN_NAME, tc) + "は進化を拒絶した。", "You will need to deepen the friendship.")
 							evmode = 0
-							goto *label_9247
+							goto *turn_end
 						}
 					}
 					if ( cdata(CDATA_SHIFT_FORM, tc) > SHIFT_FORM_NONE ) {
 						txt lang("変異殻使用中は進化できない。", "It cannot evolve during Form Shift.")
 						evmode = 0
-						goto *label_9247
+						goto *turn_end
 					}
 					txt lang("おや？" + cdatan(CDATAN_NAME, tc) + "の様子が…！？", "Oh? " + cdatan(CDATAN_NAME, tc) + "'s act strange ...")
 					if ( synccheck(tc, -1) ) {
@@ -15181,7 +15181,7 @@
 					else {
 						txt lang("あなたが声をかけると" + cdatan(CDATAN_NAME, tc) + "の変化は止まった…。", "Why? " + cdatan(CDATAN_NAME, tc) + "'s change stopped.")
 						evmode = 0
-						goto *label_9247
+						goto *turn_end
 					}
 					if ( evmode == 1 ) {
 						evname = lang("猫の王女", "EV")
@@ -17205,7 +17205,7 @@
 						txtef COLOR_GREEN
 						txt lang("おめでとう！" + cdatan(CDATAN_NAME, tc) + "は" + evname + "に進化した！", "Congratulations! Your friend has evolved!")
 					}
-					gosub *label_6338
+					gosub *effect_elixer
 					r1 = tc
 					gosub *charaRefresh
 					if ( cdata(CDATA_POWER_GAUGE, tc) < 200 ) {
@@ -17218,11 +17218,11 @@
 					cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
 					cdata(CDATA_EVOLUTION_STAGE, tc) += 1
 					evmode = 0
-					goto *label_9247
+					goto *turn_end
 				}
 				txt lang("組み合わせが違うようだ。", "Seems to have no effect using.")
 				evmode = 0
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 		if ( f == 0 ) {
@@ -17230,7 +17230,7 @@
 		}
 		txt lang("仲間にしか使えない。", "Seems to have no effect using.")
 		evmode = 0
-		goto *label_9247
+		goto *turn_end
 		goto *act_use_SWEND1
 		_switch_sw++
 	}
@@ -17281,7 +17281,7 @@
 		val = promptx, prompty, 160, 1
 		gosub *prompt_key
 		if ( rtval != 0 ) {
-			goto *label_9247
+			goto *turn_end
 		}
 		dmghp CHARA_PLAYER, 99999, DAMAGE_FROM_HANGING
 		goto *act_use_SWEND1
@@ -17301,7 +17301,7 @@
 		val = promptx, prompty, 160, 1
 		gosub *prompt_key
 		if ( rtval != 0 ) {
-			goto *label_9247
+			goto *turn_end
 		}
 		txtef COLOR_RED2
 		txt lang("あなたはこの場をおさめるために腹を切った！", "You cut your belly for an apology!")
@@ -17516,7 +17516,7 @@
 		}
 		if ( feat == tile_plant + 3 ) {
 			feat = tile_plant + 1
-			gosub *label_6526
+			gosub *item_seedNextGrowth
 			txt lang("枯れた植物に生命が宿った。", "The plant revives.")
 		}
 		else {
@@ -17537,7 +17537,7 @@
 		allyctrl = 5
 		gosub *com_ally
 		if ( stat == (-1) ) {
-			goto *label_9247
+			goto *turn_end
 		}
 		rc = stat
 		txtnew
@@ -17546,13 +17546,13 @@
 		allyctrl = 5
 		gosub *com_ally
 		if ( stat == (-1) ) {
-			goto *label_9247
+			goto *turn_end
 		}
 		tc = stat
 		if ( cdata(CDATA_PRAY, tc) != 0 ) {
 			snd SOUNDLIST_FAIL1
 			txt lang(cdatan(CDATAN_NAME, tc) + "はあなたの大事な仲間だ。", "It's precious your ally.")
-			goto *label_9247
+			goto *turn_end
 		}
 		gosub *screen_draw
 		txtnew
@@ -17563,7 +17563,7 @@
 		val = promptx, prompty, 160, 1
 		gosub *prompt_key
 		if ( rtval != 0 ) {
-			goto *label_9247
+			goto *turn_end
 		}
 		txtnew
 		txtef COLOR_YELLOW
@@ -17577,7 +17577,7 @@
 			txtef COLOR_GREEN
 			txt lang(cdatan(CDATAN_NAME, rc) + "は新しい" + bodyn(rtval) + "を得た！", cdatan(CDATAN_NAME, rc) + " gains new " + bodyn(rtval) + "!")
 			r1 = rc
-			gosub *label_3962
+			gosub *calcBodyFix
 		}
 		gosub *gene_skill
 		if ( stat != 0 ) {
@@ -17596,7 +17596,7 @@
 				repeat lv
 					r1 = rc
 					r2 = 1
-					gosub *label_3967
+					gosub *calcLevelUp
 				loop
 				txtef COLOR_GREEN
 				txt lang(cdatan(CDATAN_NAME, rc) + "はレベル" + cdata(CDATA_LEVEL, rc) + "になった！", cdatan(CDATAN_NAME, rc) + " is now level " + cdata(CDATA_LEVEL, rc) + "!")
@@ -17680,7 +17680,7 @@
 			gdata(GDATA_QUICK_USE) = 0
 		}
 		tcgdeck
-		gosub *label_4912
+		gosub *map_prepareTile
 		gosub *screen_refreshFull
 		txtnew
 		txt lang("デッキをしまった。", "You put away the deck.")
@@ -17704,8 +17704,8 @@
 	}
 
 *act_use_SWEND1
-	gosub *label_4102
-	goto *label_9247
+	gosub *calcBurdenPc
+	goto *turn_end
 
 *gene_skill
 	if ( cdata(CDATA_ID, tc) == CREATURE_ID_USER ) {
@@ -17847,7 +17847,7 @@
 		val = 0
 	}
 	feat = tile_plant, 29, inv(INV_ITEM_MATERIAL, ci)
-	gosub *label_6526
+	gosub *item_seedNextGrowth
 	if ( val ) {
 		s = "畑に"
 	}
@@ -17862,9 +17862,9 @@
 	if ( dbg_plant ) {
 		cell_featset cdata(CDATA_X, cc), cdata(CDATA_Y, cc), tile_plant + 1, CELL_FEATURE_PLANTED_SEED, inv(INV_ITEM_MATERIAL, ci), feat(FEAT_CELL_PARAM_1)
 	}
-	goto *label_9247
+	goto *turn_end
 
-*label_6525
+*item_seedGrowth
 	if ( feat == tile_plant + 6 ) {
 		return
 	}
@@ -17875,12 +17875,12 @@
 		}
 		else {
 			feat++
-			gosub *label_6526
+			gosub *item_seedNextGrowth
 		}
 	}
 	return
 
-*label_6526
+*item_seedNextGrowth
 	if ( feat == tile_plant + 6 ) {
 		return
 	}
@@ -17974,7 +17974,7 @@
 	if ( feat(FEAT_CELL_SUB_FEATURE_ID) \ 10 == 2 ) {
 		feat(FEAT_CELL_SUB_FEATURE_ID) = CELL_SUB_FEATURE_SEED_MAGIC
 	}
-	gosub *label_6526
+	gosub *item_seedNextGrowth
 	cell_featset cdata(CDATA_X, cc), cdata(CDATA_Y, cc), feat, feat(FEAT_CELL_FEATURE_ID), feat(FEAT_CELL_SUB_FEATURE_ID), feat(FEAT_CELL_PARAM_1)
 	txtef COLOR_GREEN
 	txt lang("新しい芽が息吹いている！", "A new plant grows!")
@@ -18409,9 +18409,9 @@
 	item_stack CHARA_PLAYER, ci, 1
 	return
 
-*label_6529
+*act_pickpocket
 	gdata(GDATA_ROW_ACT) = ACTION_STEAL
-	gosub *label_6023
+	gosub *generalAct
 	return
 	goto *chat_refresh
 

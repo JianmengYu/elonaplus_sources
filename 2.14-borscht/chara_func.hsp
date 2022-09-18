@@ -146,7 +146,7 @@
 		if ( rc != CHARA_PLAYER ) {
 			if ( characreate_x != (-1) ) {
 				if ( hitugi != 100 ) {
-					gosub *label_4125
+					gosub *place_chara
 				}
 				else {
 					gosub *place_necro
@@ -1099,8 +1099,8 @@
 	if ( cdata(CDATA_BURDEN, CHARA_PLAYER) == 1 ) {
 		cdata(CDATA_SPEED_FIX, CHARA_PLAYER) -= 10
 	}
-	if ( gdata(250 + 442) < gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND) ) {
-		gdata(250 + 442) = gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND)
+	if ( gdata(GDATA_FLAG_MOST_EXPENSIVE_WORLD_MAP_VEHICLE_THIS_MONTH) < gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND) ) {
+		gdata(GDATA_FLAG_MOST_EXPENSIVE_WORLD_MAP_VEHICLE_THIS_MONTH) = gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND)
 	}
 	if ( gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND) == 0 ) {
 		if ( mdata(MDATA_TYPE) == MAP_TYPE_WORLD | mdata(MDATA_TYPE) == MAP_TYPE_LOCAL ) {
@@ -1471,7 +1471,7 @@
 			cdata(CDATA_EXIST, locvar_relocate_chara_tc) = CHAR_STATE_ALIVE
 			cxinit = cdata(CDATA_X, CHARA_PLAYER)
 			cyinit = cdata(CDATA_Y, CHARA_PLAYER)
-			gosub *label_4125
+			gosub *place_chara
 		}
 		cdata(CDATA_TARGET, locvar_relocate_chara_tc) = 0
 		cdata(CDATA_AI_AGGRO, locvar_relocate_chara_tc) = 0
@@ -1492,7 +1492,7 @@
 	}
 	gdata(GDATA_TEMPORARY_FLAGS2) = 0
 	rc = locvar_relocate_chara_tc
-	gosub *label_8919
+	gosub *chara_equipFull
 	r1 = locvar_relocate_chara_tc
 	gosub *charaRefresh
 	return relocate_chara_arg1
@@ -1552,7 +1552,7 @@
 		else {
 			if ( gdata(GDATA_TEMPORARY_FLAGS2) < 1000 ) {
 				customtalk hostileaction_source, DBMODE_FLAVOR_ANGERED
-				gosub *label_0416
+				gosub *convert_word
 			}
 		}
 	}
@@ -4314,7 +4314,7 @@
 			}
 		}
 	loop
-	gosub *label_4102
+	gosub *calcBurdenPc
 	return locvar_item_fire_f
 
 #deffunc mapitem_fire int mapitem_fire_arg1, int mapitem_fire_arg2
@@ -4427,7 +4427,7 @@
 			}
 		}
 	loop
-	gosub *label_4102
+	gosub *calcBurdenPc
 	return locvar_item_fire_f
 
 #deffunc mapitem_cold int mapitem_cold_arg1, int mapitem_cold_arg2
@@ -6783,7 +6783,7 @@
 		if ( dmghp_source >= (0 /*!!!@[CHARA_PLAYER @@@ DAMAGE_FROM_CHARA]@!!! */) ) {
 			cdata(CDATA_TARGET, dmghp_source) = 0
 			customtalk dmghp_source, DBMODE_FLAVOR_KILL
-			gosub *label_0416
+			gosub *convert_word
 			locvar_dmghp_exp = limit(cdata(CDATA_LEVEL, dmghp_charid), 1, 400) * limit(cdata(CDATA_LEVEL, dmghp_charid) + 1, 1, 400) * limit(cdata(CDATA_LEVEL, dmghp_charid) + 2, 1, 400) / 10 + 10
 			if ( dmghp_source == (0 /*!!!@[CHARA_PLAYER @@@ DAMAGE_FROM_CHARA]@!!! */) ) {
 				if ( cdata(CDATA_LEVEL, dmghp_charid) < cdata(CDATA_LEVEL, dmghp_source) ) {
@@ -7382,7 +7382,7 @@
 			}
 			if ( dmghp_source != DAMAGE_FROM_PERSUASION_HIGH & dmghp_source != DAMAGE_FROM_PERSUASION_LOW ) {
 				customtalk dmghp_charid, DBMODE_FLAVOR_DEATH
-				gosub *label_0416
+				gosub *convert_word
 			}
 			if ( dmghp_charid < MAX_CHARA_FOLLOWER ) {
 				txt lang("あなたは悲しくなった。", "You feel sad for a moment.")
@@ -7442,7 +7442,7 @@
 			gdata(GDATA_FLAG_TALKING_USED) = 100
 		}
 		rc = dmghp_charid
-		gosub *label_4225
+		gosub *item_loot
 		gdata(GDATA_FLAG_TALKING_USED) = 0
 		if ( gdata(GDATA_AREA) == AREA_PET_ARENA ) {
 			if ( rnd(5) == 0 ) {
@@ -7512,7 +7512,7 @@
 	}
 	if ( cdata(CDATA_MP, dmgmp_charid) < 0 ) {
 		r1 = dmgmp_charid
-		gosub *label_3999
+		gosub *expMagicCapacity
 		locvar_dmgmp_d = -cdata(CDATA_MP, dmgmp_charid) * 400 / (100 + sdata(SKILL_NORMAL_MAGIC_CAPACITY, dmgmp_charid) * 10)
 		if ( dmgmp_charid == CHARA_PLAYER ) {
 			if ( trait(TRAIT_RACE_MAGIC_REACTION) == 1 ) {
@@ -7821,88 +7821,88 @@
 	cdata(CDATA_THIRST, chara_morasi_arg1) = 5000
 	return
 
-#deffunc gain_iden int gain_iden_prm0, int gain_iden_prm1, int gain_iden_prm2
-	if ( cdata(CDATA_SP_EARNED, gain_iden_prm1) <= (-1000000) & cdata(CDATA_SP_EARNED, gain_iden_prm1) > (-2000000) ) {
+#deffunc gain_iden int gain_iden_charaid1, int gain_iden_charaid2, int gain_iden_amount
+	if ( cdata(CDATA_SP_EARNED, gain_iden_charaid2) <= (-1000000) & cdata(CDATA_SP_EARNED, gain_iden_charaid2) > (-2000000) ) {
 		snd SOUNDLIST_OFFER2
-		locvar_chara_morasi_generes = 0
-		locvar_chara_morasi_bvar = sorg(SKILL_RES_MAGIC, gain_iden_prm0)
-		locvar_chara_morasi_generes = 60
-		if ( sorg(SKILL_RES_FIRE, gain_iden_prm0) > locvar_chara_morasi_bvar ) {
-			locvar_chara_morasi_bvar = sorg(SKILL_RES_FIRE, gain_iden_prm0)
-			locvar_chara_morasi_generes = 50
+		locvar_gain_iden_generes = 0
+		locvar_gain_iden_bvar = sorg(SKILL_RES_MAGIC, gain_iden_charaid1)
+		locvar_gain_iden_generes = 60
+		if ( sorg(SKILL_RES_FIRE, gain_iden_charaid1) > locvar_gain_iden_bvar ) {
+			locvar_gain_iden_bvar = sorg(SKILL_RES_FIRE, gain_iden_charaid1)
+			locvar_gain_iden_generes = 50
 		}
-		if ( sorg(SKILL_RES_COLD, gain_iden_prm0) > locvar_chara_morasi_bvar ) {
-			locvar_chara_morasi_bvar = sorg(SKILL_RES_COLD, gain_iden_prm0)
-			locvar_chara_morasi_generes = 51
+		if ( sorg(SKILL_RES_COLD, gain_iden_charaid1) > locvar_gain_iden_bvar ) {
+			locvar_gain_iden_bvar = sorg(SKILL_RES_COLD, gain_iden_charaid1)
+			locvar_gain_iden_generes = 51
 		}
-		if ( sorg(SKILL_RES_LIGHTNING, gain_iden_prm0) > locvar_chara_morasi_bvar ) {
-			locvar_chara_morasi_bvar = sorg(SKILL_RES_LIGHTNING, gain_iden_prm0)
-			locvar_chara_morasi_generes = 52
+		if ( sorg(SKILL_RES_LIGHTNING, gain_iden_charaid1) > locvar_gain_iden_bvar ) {
+			locvar_gain_iden_bvar = sorg(SKILL_RES_LIGHTNING, gain_iden_charaid1)
+			locvar_gain_iden_generes = 52
 		}
-		if ( sorg(SKILL_RES_DARKNESS, gain_iden_prm0) > locvar_chara_morasi_bvar ) {
-			locvar_chara_morasi_bvar = sorg(SKILL_RES_DARKNESS, gain_iden_prm0)
-			locvar_chara_morasi_generes = 53
+		if ( sorg(SKILL_RES_DARKNESS, gain_iden_charaid1) > locvar_gain_iden_bvar ) {
+			locvar_gain_iden_bvar = sorg(SKILL_RES_DARKNESS, gain_iden_charaid1)
+			locvar_gain_iden_generes = 53
 		}
-		if ( sorg(SKILL_RES_MIND, gain_iden_prm0) > locvar_chara_morasi_bvar ) {
-			locvar_chara_morasi_bvar = sorg(SKILL_RES_MIND, gain_iden_prm0)
-			locvar_chara_morasi_generes = 54
+		if ( sorg(SKILL_RES_MIND, gain_iden_charaid1) > locvar_gain_iden_bvar ) {
+			locvar_gain_iden_bvar = sorg(SKILL_RES_MIND, gain_iden_charaid1)
+			locvar_gain_iden_generes = 54
 		}
-		if ( sorg(SKILL_RES_POISON, gain_iden_prm0) > locvar_chara_morasi_bvar ) {
-			locvar_chara_morasi_bvar = sorg(SKILL_RES_POISON, gain_iden_prm0)
-			locvar_chara_morasi_generes = 55
+		if ( sorg(SKILL_RES_POISON, gain_iden_charaid1) > locvar_gain_iden_bvar ) {
+			locvar_gain_iden_bvar = sorg(SKILL_RES_POISON, gain_iden_charaid1)
+			locvar_gain_iden_generes = 55
 		}
-		if ( sorg(SKILL_RES_NETHER, gain_iden_prm0) > locvar_chara_morasi_bvar ) {
-			locvar_chara_morasi_bvar = sorg(SKILL_RES_NETHER, gain_iden_prm0)
-			locvar_chara_morasi_generes = 56
+		if ( sorg(SKILL_RES_NETHER, gain_iden_charaid1) > locvar_gain_iden_bvar ) {
+			locvar_gain_iden_bvar = sorg(SKILL_RES_NETHER, gain_iden_charaid1)
+			locvar_gain_iden_generes = 56
 		}
-		if ( sorg(SKILL_RES_SOUND, gain_iden_prm0) > locvar_chara_morasi_bvar ) {
-			locvar_chara_morasi_bvar = sorg(SKILL_RES_SOUND, gain_iden_prm0)
-			locvar_chara_morasi_generes = 57
+		if ( sorg(SKILL_RES_SOUND, gain_iden_charaid1) > locvar_gain_iden_bvar ) {
+			locvar_gain_iden_bvar = sorg(SKILL_RES_SOUND, gain_iden_charaid1)
+			locvar_gain_iden_generes = 57
 		}
-		if ( sorg(SKILL_RES_NERVE, gain_iden_prm0) > locvar_chara_morasi_bvar ) {
-			locvar_chara_morasi_bvar = sorg(SKILL_RES_NERVE, gain_iden_prm0)
-			locvar_chara_morasi_generes = 58
+		if ( sorg(SKILL_RES_NERVE, gain_iden_charaid1) > locvar_gain_iden_bvar ) {
+			locvar_gain_iden_bvar = sorg(SKILL_RES_NERVE, gain_iden_charaid1)
+			locvar_gain_iden_generes = 58
 		}
-		if ( sorg(SKILL_RES_CHAOS, gain_iden_prm0) > locvar_chara_morasi_bvar ) {
-			locvar_chara_morasi_bvar = sorg(SKILL_RES_CHAOS, gain_iden_prm0)
-			locvar_chara_morasi_generes = 59
+		if ( sorg(SKILL_RES_CHAOS, gain_iden_charaid1) > locvar_gain_iden_bvar ) {
+			locvar_gain_iden_bvar = sorg(SKILL_RES_CHAOS, gain_iden_charaid1)
+			locvar_gain_iden_generes = 59
 		}
-		if ( sorg(SKILL_RES_MAGIC, gain_iden_prm0) >= locvar_chara_morasi_bvar ) {
-			locvar_chara_morasi_bvar = sorg(SKILL_RES_MAGIC, gain_iden_prm0)
-			locvar_chara_morasi_generes = 60
+		if ( sorg(SKILL_RES_MAGIC, gain_iden_charaid1) >= locvar_gain_iden_bvar ) {
+			locvar_gain_iden_bvar = sorg(SKILL_RES_MAGIC, gain_iden_charaid1)
+			locvar_gain_iden_generes = 60
 		}
-		cdata(CDATA_SP_EARNED, gain_iden_prm1) -= limit(locvar_chara_morasi_bvar / 100 + gain_iden_prm2, 5, 20) * 10000
-		if ( cdata(CDATA_SP_EARNED, gain_iden_prm1) \ EXT_EQUIP_SLOTS == 0 ) {
-			cdata(CDATA_SP_EARNED, gain_iden_prm1) -= locvar_chara_morasi_generes * 100
+		cdata(CDATA_SP_EARNED, gain_iden_charaid2) -= limit(locvar_gain_iden_bvar / 100 + gain_iden_amount, 5, 20) * 10000
+		if ( cdata(CDATA_SP_EARNED, gain_iden_charaid2) \ EXT_EQUIP_SLOTS == 0 ) {
+			cdata(CDATA_SP_EARNED, gain_iden_charaid2) -= locvar_gain_iden_generes * 100
 		}
 		else {
-			if ( cdata(CDATA_SP_EARNED, gain_iden_prm1) \ 100 == 0 ) {
-				cdata(CDATA_SP_EARNED, gain_iden_prm1) -= locvar_chara_morasi_generes
+			if ( cdata(CDATA_SP_EARNED, gain_iden_charaid2) \ 100 == 0 ) {
+				cdata(CDATA_SP_EARNED, gain_iden_charaid2) -= locvar_gain_iden_generes
 			}
 		}
-		if ( gain_iden_prm0 != 0 ) {
-			cdata(CDATA_INFANT, gain_iden_prm1) = cdata(CDATA_ID, gain_iden_prm0)
+		if ( gain_iden_charaid1 != CREATURE_ID_BUG ) {
+			cdata(CDATA_INFANT, gain_iden_charaid2) = cdata(CDATA_ID, gain_iden_charaid1)
 		}
 		txtef COLOR_YELLOW
-		txt lang(name(gain_iden_prm1) + "の生命核は" + name(gain_iden_prm0) + "の遺伝子を獲得した。", name(gain_iden_prm1) + " get genes of " + _s(gain_iden_prm0) + ".")
-		locvar_chara_morasi_sintyoku = (cdata(CDATA_SP_EARNED, gain_iden_prm1) + 1000000) * (-1) / 10000
-		locvar_chara_morasi_sintyoku += 50
-		if ( cdata(CDATA_SP_EARNED, gain_iden_prm1) > (-1500000) ) {
+		txt lang(name(gain_iden_charaid2) + "の生命核は" + name(gain_iden_charaid1) + "の遺伝子を獲得した。", name(gain_iden_charaid2) + " get genes of " + _s(gain_iden_charaid1) + ".")
+		locvar_gain_iden_sintyoku = (cdata(CDATA_SP_EARNED, gain_iden_charaid2) + 1000000) * (-1) / 10000
+		locvar_gain_iden_sintyoku += 50
+		if ( cdata(CDATA_SP_EARNED, gain_iden_charaid2) > (-1500000) ) {
 			txtef COLOR_YELLOW
-			txt lang("[フェイズ1進捗率：" + locvar_chara_morasi_sintyoku + "％]", "[Phase 1 progress " + locvar_chara_morasi_sintyoku + " %]")
+			txt lang("[フェイズ1進捗率：" + locvar_gain_iden_sintyoku + "％]", "[Phase 1 progress " + locvar_gain_iden_sintyoku + " %]")
 		}
-		if ( cdata(CDATA_SP_EARNED, gain_iden_prm1) <= (-1500000) ) {
-			cdata(CDATA_SP_EARNED, gain_iden_prm1) -= 500000
+		if ( cdata(CDATA_SP_EARNED, gain_iden_charaid2) <= (-1500000) ) {
+			cdata(CDATA_SP_EARNED, gain_iden_charaid2) -= 500000
 			snd SOUNDLIST_DING1
 			txtef COLOR_GREEN
 			txt lang("[SURVIVABILITY EXTENSION！]　フェイズ1が完了した。これからは、食事の栄養で成長させる必要がある。", "[SURVIVABILITY EXTENSION !] Phase 1 completed. From now on, it need to grow with the nutrition of foods.")
 		}
 		if ( 0 ) {
-			txt lang("耐性" + locvar_chara_morasi_generes + "でステージ" + cdata(CDATA_SP_EARNED, gain_iden_prm1) + "。", name(gain_iden_prm1) + " get genes of " + _s(gain_iden_prm0) + ".")
+			txt lang("耐性" + locvar_gain_iden_generes + "でステージ" + cdata(CDATA_SP_EARNED, gain_iden_charaid2) + "。", name(gain_iden_charaid2) + " get genes of " + _s(gain_iden_charaid1) + ".")
 		}
-		locvar_chara_morasi_generes = 0
-		locvar_chara_morasi_bvar = 0
-		locvar_chara_morasi_sintyoku = 0
+		locvar_gain_iden_generes = 0
+		locvar_gain_iden_bvar = 0
+		locvar_gain_iden_sintyoku = 0
 	}
 	return
 

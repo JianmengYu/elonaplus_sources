@@ -1,5 +1,5 @@
 --- ../2.13-borscht/db_item.hsp	2022-06-26 12:14:16.184769500 -0700
-+++ ../2.14-borscht/db_item.hsp	2022-09-18 12:37:01.064392900 -0700
++++ ../2.14-borscht/db_item.hsp	2022-09-18 13:09:24.873063100 -0700
 @@ -1,19 +1,19 @@
  *db_item
  	if ( dbmode != DBMODE_FIND ) {
@@ -30,7 +30,7 @@
  		dbtmp = 1
  		repeat filtermax
 -			if ( instr(filter_item(ITEM_ID_CORK_PACK), 0, filtern(cnt)) == (-1) ) {
-+			if ( instr(filter_item(1264), 0, filtern(cnt)) == (-1) ) {
++			if ( instr(filter_item(ITEM_ID_DERNEFIA), 0, filtern(cnt)) == (-1) ) {
  				dbtmp = 0
  				break
  			}
@@ -69,7 +69,7 @@
  		dbtmp = 1
  		repeat filtermax
 -			if ( instr(filter_item(ITEM_ID_LASER_BAZOOKA), 0, filtern(cnt)) == (-1) ) {
-+			if ( instr(filter_item(1263), 0, filtern(cnt)) == (-1) ) {
++			if ( instr(filter_item(ITEM_ID_BOTTLE_CAP), 0, filtern(cnt)) == (-1) ) {
  				dbtmp = 0
  				break
  			}
@@ -108,7 +108,7 @@
  		dbtmp = 1
  		repeat filtermax
 -			if ( instr(filter_item(ITEM_ID_MASTER_OF_DIAMOND), 0, filtern(cnt)) == (-1) ) {
-+			if ( instr(filter_item(1262), 0, filtern(cnt)) == (-1) ) {
++			if ( instr(filter_item(ITEM_ID_B_DAMA), 0, filtern(cnt)) == (-1) ) {
  				dbtmp = 0
  				break
  			}
@@ -45149,7 +45149,7 @@
 +			inv(INV_ITEM_WEIGHT, ci) = 300
 +		}
 +		if ( dbmode == DBMODE_SET ) {
-+			inv(INV_ITEM_ID, ci) = 1264
++			inv(INV_ITEM_ID, ci) = ITEM_ID_DERNEFIA
 +			inv(INV_ITEM_PIC, ci) = xy2pic(4, 37)
 +			reftype = FILTER_JUNK
 +			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
@@ -45218,7 +45218,7 @@
 +			inv(INV_ITEM_WEIGHT, ci) = 5
 +		}
 +		if ( dbmode == DBMODE_SET ) {
-+			inv(INV_ITEM_ID, ci) = 1263
++			inv(INV_ITEM_ID, ci) = ITEM_ID_BOTTLE_CAP
 +			inv(INV_ITEM_PIC, ci) = xy2pic(3, 37)
 +			reftype = FILTER_JUNK
 +			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
@@ -45279,7 +45279,7 @@
 +			inv(INV_ITEM_WEIGHT, ci) = 15
 +		}
 +		if ( dbmode == DBMODE_SET ) {
-+			inv(INV_ITEM_ID, ci) = 1262
++			inv(INV_ITEM_ID, ci) = ITEM_ID_B_DAMA
 +			inv(INV_ITEM_PIC, ci) = xy2pic(0, 37)
 +			reftype = FILTER_JUNK
 +			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
@@ -66799,12 +66799,12 @@
  	return -999
  
  *db_setFilterItem
-+	filter_item(1264) = ""
-+	rffilter_item(1264) = "/hana/"
-+	filter_item(1263) = ""
-+	rffilter_item(1263) = ""
-+	filter_item(1262) = ""
-+	rffilter_item(1262) = ""
++	filter_item(ITEM_ID_DERNEFIA) = ""
++	rffilter_item(ITEM_ID_DERNEFIA) = "/hana/"
++	filter_item(ITEM_ID_BOTTLE_CAP) = ""
++	rffilter_item(ITEM_ID_BOTTLE_CAP) = ""
++	filter_item(ITEM_ID_B_DAMA) = ""
++	rffilter_item(ITEM_ID_B_DAMA) = ""
  	filter_item(ITEM_ID_CORK_PACK) = ""
  	rffilter_item(ITEM_ID_CORK_PACK) = ""
  	filter_item(ITEM_ID_LASER_BAZOOKA) = ""
@@ -66816,45 +66816,45 @@
  	return
  
  *db_setItem
-+	ilight(1264) = LIGHT_TYPE_NONE
-+	ialphanameref(1264) = ""
-+	iorgweight(1264) = 300
++	ilight(ITEM_ID_DERNEFIA) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_DERNEFIA) = ""
++	iorgweight(ITEM_ID_DERNEFIA) = 300
 +	if ( jp ) {
-+		ioriginalnameref(1264) = "デルネフィアの花"
++		ioriginalnameref(ITEM_ID_DERNEFIA) = "デルネフィアの花"
 +	}
 +	else {
-+		ioriginalnameref(1264) = "dernefia"
-+		ioriginalnameref2(1264) = ""
++		ioriginalnameref(ITEM_ID_DERNEFIA) = "dernefia"
++		ioriginalnameref2(ITEM_ID_DERNEFIA) = ""
 +	}
-+	ipicref(1264) = xy2pic(4, 37)
-+	iknownnameref(1264) = ioriginalnameref(1264)
-+	icolref(1264) = COLOR_DEFAULT
-+	ilight(1263) = LIGHT_TYPE_NONE
-+	ialphanameref(1263) = ""
-+	iorgweight(1263) = 5
++	ipicref(ITEM_ID_DERNEFIA) = xy2pic(4, 37)
++	iknownnameref(ITEM_ID_DERNEFIA) = ioriginalnameref(ITEM_ID_DERNEFIA)
++	icolref(ITEM_ID_DERNEFIA) = COLOR_DEFAULT
++	ilight(ITEM_ID_BOTTLE_CAP) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_BOTTLE_CAP) = ""
++	iorgweight(ITEM_ID_BOTTLE_CAP) = 5
 +	if ( jp ) {
-+		ioriginalnameref(1263) = "ボトルキャップ"
++		ioriginalnameref(ITEM_ID_BOTTLE_CAP) = "ボトルキャップ"
 +	}
 +	else {
-+		ioriginalnameref(1263) = "bottle cap"
-+		ioriginalnameref2(1263) = ""
++		ioriginalnameref(ITEM_ID_BOTTLE_CAP) = "bottle cap"
++		ioriginalnameref2(ITEM_ID_BOTTLE_CAP) = ""
 +	}
-+	ipicref(1263) = xy2pic(3, 37)
-+	iknownnameref(1263) = ioriginalnameref(1263)
-+	icolref(1263) = COLOR_DEFAULT
-+	ilight(1262) = LIGHT_TYPE_NONE
-+	ialphanameref(1262) = ""
-+	iorgweight(1262) = 15
++	ipicref(ITEM_ID_BOTTLE_CAP) = xy2pic(3, 37)
++	iknownnameref(ITEM_ID_BOTTLE_CAP) = ioriginalnameref(ITEM_ID_BOTTLE_CAP)
++	icolref(ITEM_ID_BOTTLE_CAP) = COLOR_DEFAULT
++	ilight(ITEM_ID_B_DAMA) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_B_DAMA) = ""
++	iorgweight(ITEM_ID_B_DAMA) = 15
 +	if ( jp ) {
-+		ioriginalnameref(1262) = "ビーダマ"
++		ioriginalnameref(ITEM_ID_B_DAMA) = "ビーダマ"
 +	}
 +	else {
-+		ioriginalnameref(1262) = "b-dama"
-+		ioriginalnameref2(1262) = ""
++		ioriginalnameref(ITEM_ID_B_DAMA) = "b-dama"
++		ioriginalnameref2(ITEM_ID_B_DAMA) = ""
 +	}
-+	ipicref(1262) = xy2pic(0, 37)
-+	iknownnameref(1262) = ioriginalnameref(1262)
-+	icolref(1262) = COLOR_DEFAULT
++	ipicref(ITEM_ID_B_DAMA) = xy2pic(0, 37)
++	iknownnameref(ITEM_ID_B_DAMA) = ioriginalnameref(ITEM_ID_B_DAMA)
++	icolref(ITEM_ID_B_DAMA) = COLOR_DEFAULT
  	ilight(ITEM_ID_CORK_PACK) = LIGHT_TYPE_NONE
  	ialphanameref(ITEM_ID_CORK_PACK) = ""
  	iorgweight(ITEM_ID_CORK_PACK) = 1000

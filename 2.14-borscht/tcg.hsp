@@ -1016,14 +1016,14 @@
 		locvar_actionproc__switch_sw = 0
 		locvar_actionproc_deckmode = 1
 		locvar_actionproc_deckrefn = locvar_create_card_cardn(0, locvar_actionproc_ac)
-		gosub *label_5103
+		gosub *select_deck
 		goto *actionproc_SWEND1
 		locvar_actionproc__switch_sw++
 	}
 	if ( locvar_actionproc__switch_val == locvar_actionproc_cdsummon | locvar_actionproc__switch_sw ) {
 		locvar_actionproc__switch_sw = 0
 		locvar_actionproc_deckmode = 2
-		gosub *label_5103
+		gosub *select_deck
 		goto *actionproc_SWEND1
 	}
 
@@ -1315,7 +1315,7 @@
 		snd SOUNDLIST_WEAR
 		calcdecksize
 		locvar_actionproc_deckmode = 0, locvar_tcgdeck_rtval
-		gosub *label_5103
+		gosub *select_deck
 		goto *tcgDeck_loop
 	}
 	return
@@ -1786,7 +1786,7 @@
 	locvar_cslinedown_page = locvar_cslinedown_page - locvar_cslinedown_page \ 3
 	return
 
-*label_5103
+*select_deck
 	gsel BUFFER_BUF
 	pos 0, 0
 	picload exedir + "graphic\\bg_card.bmp", 1
@@ -2234,7 +2234,7 @@
 		if ( locvar_dbghit_a ) {
 			locvar_actionproc_deckmode = 0
 			locvar_actionproc_deckrefn = "slime"
-			gosub *label_5103
+			gosub *select_deck
 		}
 	}
 

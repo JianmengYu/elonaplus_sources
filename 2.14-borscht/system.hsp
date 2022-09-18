@@ -1,8 +1,8 @@
 *gene_itemfix
 	inv_getheader -1
 	repeat invrange, invhead
-		if ( iID(cnt) == ITEM_ID_CARD | iID(cnt) == ITEM_ID_FIGURINE ) {
-			iNum(cnt) = 0
+		if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_CARD | inv(INV_ITEM_ID, cnt) == ITEM_ID_FIGURINE ) {
+			inv(INV_ITEM_NUM, cnt) = 0
 		}
 	loop
 	return
@@ -11,26 +11,26 @@
 	procid = (procid + 1) \ 4
 	proclist(procid) = "fixOnMapEnter" + " ct:" + ct
 	repeat 245
-		if ( cExist(cnt) == CHAR_STATE_ALIVE ) {
-			if ( cX(cnt) < 0 | cX(cnt) >= mWidth | cY(cnt) < 0 | cY(cnt) >= mHeight ) {
-				cX(cnt) = 0
-				cY(cnt) = 0
+		if ( cdata(CDATA_EXIST, cnt) == CHAR_STATE_ALIVE ) {
+			if ( cdata(CDATA_X, cnt) < 0 | cdata(CDATA_X, cnt) >= mdata(MDATA_WIDTH) | cdata(CDATA_Y, cnt) < 0 | cdata(CDATA_Y, cnt) >= mdata(MDATA_HEIGHT) ) {
+				cdata(CDATA_X, cnt) = 0
+				cdata(CDATA_Y, cnt) = 0
 			}
 		}
 	loop
-	if ( mType != MAP_TYPE_HOME ) {
-		if ( mMaxInv != 0 ) {
-			mMaxInv = 0
+	if ( mdata(MDATA_TYPE) != MAP_TYPE_HOME ) {
+		if ( mdata(MDATA_MAX_INV) != 0 ) {
+			mdata(MDATA_MAX_INV) = 0
 		}
 	}
-	if ( gArea == AREA_HOME ) {
+	if ( gdata(GDATA_AREA) == AREA_HOME ) {
 		if ( gdata(GDATA_FLAG_INVITED_GOD) != 0 ) {
 			evadd EVENT_SPAWN_EVENT_NPCS
 		}
-		areaMinLevel(gArea) = 0
-		areaCanSave(gArea) = 10
-		areaIcon(gArea) = 1
-		mRestorePos = 1
+		adata(ADATA_MIN_LEVEL, gdata(GDATA_AREA)) = 0
+		adata(ADATA_MAX_LEVEL, gdata(GDATA_AREA)) = 10
+		adata(ADATA_RESTORE_POS, gdata(GDATA_AREA)) = 1
+		mdata(MDATA_RESTORE_POS) = 1
 		if ( gdata(GDATA_TEMPORARY_FLAGS2) == 0 ) {
 			evadd EVENT_WELCOME
 		}
@@ -40,16 +40,16 @@
 	return
 
 *fixSave
-	if ( gVersion != int(double("6.14") * 1000) ) {
-		dialog lang("Ver." + gVersion + "のセーブデータをアップデートします。", "Updating your save data from Ver." + gVersion + " now.")
+	if ( gdata(GDATA_VERSION) != int(double("6.14") * 1000) ) {
+		dialog lang("Ver." + gdata(GDATA_VERSION) + "のセーブデータをアップデートします。", "Updating your save data from Ver." + gdata(GDATA_VERSION) + " now.")
 	}
-	if ( gHeirDeed < 0 ) {
-		gHeirDeed = 1
+	if ( gdata(GDATA_HEIR_DEED) < 0 ) {
+		gdata(GDATA_HEIR_DEED) = 1
 	}
-	if ( gTravelTime == 0 ) {
-		gTravelTime = gHour + gDay * 24 + gMonth * 24 * 30 + gYear * 24 * 30 * 12
+	if ( gdata(GDATA_TRAVEL_TIME) == 0 ) {
+		gdata(GDATA_TRAVEL_TIME) = gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12
 	}
-	if ( gVersion == 940 ) {
+	if ( gdata(GDATA_VERSION) == 940 ) {
 		if ( gdata(STARTING_GDATA_RANK + 4) != 0 ) {
 			gdata(STARTING_GDATA_RANK + 2) = gdata(STARTING_GDATA_RANK + 4)
 		}
@@ -61,37 +61,37 @@
 	loop
 	itemmemory(2, ITEM_ID_SPELLBOOK_WISHING) = 0
 	itemmemory(2, ITEM_ID_SPELLBOOK_HARVEST) = 0
-	if ( gVersion < 950 ) {
+	if ( gdata(GDATA_VERSION) < 950 ) {
 		itemcreate CHARA_PLAYER, ITEM_ID_PLAYBACK_DISC, -1, -1, 0
 		itemcreate CHARA_PLAYER, ITEM_ID_FREEZER, -1, -1, 0
 		inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) = 6
 	}
-	if ( gVersion < 952 ) {
-		gWorldRenew = TRUE
+	if ( gdata(GDATA_VERSION) < 952 ) {
+		gdata(GDATA_WORLD_RENEW) = TRUE
 	}
-	if ( gVersion < 954 ) {
+	if ( gdata(GDATA_VERSION) < 954 ) {
 		repeat 16
-			if ( cnt == 0 | cExist(cnt) == CHAR_STATE_DEAD ) {
+			if ( cnt == 0 | cdata(CDATA_EXIST, cnt) == CHAR_STATE_DEAD ) {
 				continue
 			}
 			inv_getheader cnt
 			cnt2 = cnt
 			repeat invrange, invhead
-				if ( iNum(cnt) != 0 ) {
-					if ( iID(cnt) == ITEM_ID_GOLD_PIECE ) {
-						iWeight(cnt) = 0
+				if ( inv(INV_ITEM_NUM, cnt) != 0 ) {
+					if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_GOLD_PIECE ) {
+						inv(INV_ITEM_WEIGHT, cnt) = 0
 					}
 					item_stack cnt2, cnt
 				}
 			loop
 		loop
-		gLight = 90
+		gdata(GDATA_LIGHT) = 90
 	}
-	if ( gVersion < 960 ) {
-		flagHolyWell = 2
+	if ( gdata(GDATA_VERSION) < 960 ) {
+		gdata(GDATA_FLAG_HOLY_WELL) = 2
 	}
-	if ( gVersion < 973 ) {
-		gCorrupt = 0
+	if ( gdata(GDATA_VERSION) < 973 ) {
+		gdata(GDATA_CORRUPTION) = 0
 		repeat 228
 			if ( trait(cnt) != 0 ) {
 				if ( cnt > 37 ) {
@@ -101,55 +101,55 @@
 		loop
 		gosub *cm_putTrait
 	}
-	if ( gVersion < 975 ) {
+	if ( gdata(GDATA_VERSION) < 975 ) {
 		file = exedir + "tmp\\"
 		existwrapper file + "mdata_5_103.s2"
 		if ( strsize != (-1) ) {
 			deletewrapper file + "mdata_5_103.s2"
 		}
-		if ( gArea == AREA_VERNIS ) {
+		if ( gdata(GDATA_AREA) == AREA_VERNIS ) {
 			dialog "マップをアップデートするため、一度ヴェルニースに出入りしてください。"
 		}
 	}
-	if ( gVersion < 1010 ) {
-		gSisterKilled = 0
+	if ( gdata(GDATA_VERSION) < 1010 ) {
+		gdata(GDATA_SISTER_KILLED) = 0
 	}
-	if ( gVersion < 1060 ) {
+	if ( gdata(GDATA_VERSION) < 1060 ) {
 		repeat 57
-			cOrgRelation(cnt) = RELATION_ALLY
+			cdata(CDATA_RELATION_ORG, cnt) = RELATION_ALLY
 		loop
 	}
-	if ( gVersion < 1070 ) {
+	if ( gdata(GDATA_VERSION) < 1070 ) {
 		repeat 57
-			cLevelOrg(cnt) = cLevel(cnt)
+			cdata(CDATA_LEVEL_ORG, cnt) = cdata(CDATA_LEVEL, cnt)
 			if ( cnt >= 16 ) {
-				cRelation(cnt) = RELATION_NEUTRAL
-				cOrgRelation(cnt) = RELATION_NEUTRAL
+				cdata(CDATA_RELATION, cnt) = RELATION_NEUTRAL
+				cdata(CDATA_RELATION_ORG, cnt) = RELATION_NEUTRAL
 			}
 			else {
-				cRelation(cnt) = RELATION_ALLY
-				cOrgRelation(cnt) = RELATION_ALLY
+				cdata(CDATA_RELATION, cnt) = RELATION_ALLY
+				cdata(CDATA_RELATION_ORG, cnt) = RELATION_ALLY
 			}
 		loop
 	}
-	if ( gVersion < 1100 ) {
-		gWellWish = 0
+	if ( gdata(GDATA_VERSION) < 1100 ) {
+		gdata(GDATA_WELL_WISH) = 0
 		gosub *cm_putTrait
 	}
-	if ( gVersion < 1110 ) {
-		gGuest = 0
-		gWorldRenew = TRUE
+	if ( gdata(GDATA_VERSION) < 1110 ) {
+		gdata(GDATA_GUEST) = 0
+		gdata(GDATA_WORLD_RENEW) = TRUE
 		repeat 57
-			if ( cRole(cnt) == ROLE_ADVENTURER ) {
-				cAiInt(cnt) = 100
+			if ( cdata(CDATA_ROLE, cnt) == ROLE_ADVENTURER ) {
+				cdata(CDATA_AI_INT, cnt) = 100
 			}
 		loop
 	}
-	if ( gVersion < 1111 ) {
-		gWorldRenew = TRUE
+	if ( gdata(GDATA_VERSION) < 1111 ) {
+		gdata(GDATA_WORLD_RENEW) = TRUE
 		dialog lang("ユーザー物件の情報をアップデートするため、ゲーム開始後一度ワールドマップに出てください。", "Please exit the current area and enter the world map once to update game data.")
 	}
-	if ( gVersion < 1130 ) {
+	if ( gdata(GDATA_VERSION) < 1130 ) {
 		cfg_net = 1
 		valn = "net.", "1"
 		gosub *cfg_write
@@ -160,31 +160,31 @@
 		valn = "netChat.", "0"
 		gosub *cfg_write
 	}
-	if ( gVersion < 1140 ) {
+	if ( gdata(GDATA_VERSION) < 1140 ) {
 		cfg_exanime = 1
 		valn = "exAnime.", "1"
 		gosub *cfg_write
-		gWorldRenew = TRUE
+		gdata(GDATA_WORLD_RENEW) = TRUE
 		gosub *mapReset
 	}
-	if ( gVersion < 1150 ) {
-		if ( gPlayTime < 0 ) {
-			gPlayTime = 600 * 60 * 60
+	if ( gdata(GDATA_VERSION) < 1150 ) {
+		if ( gdata(GDATA_PLAY_TIME) < 0 ) {
+			gdata(GDATA_PLAY_TIME) = 600 * 60 * 60
 		}
 		else {
-			gPlayTime /= 1000
+			gdata(GDATA_PLAY_TIME) /= 1000
 		}
 	}
-	if ( gVersion < 1170 ) {
+	if ( gdata(GDATA_VERSION) < 1170 ) {
 		if ( 0 == 0 ) {
-			if ( areaType(gArea) != MAP_TYPE_TOWN ) {
+			if ( adata(ADATA_TYPE, gdata(GDATA_AREA)) != MAP_TYPE_TOWN ) {
 				dialog lang("アップデートを行うには、街中でセーブしたセーブデータが必要です。", "To update your game, please save your game in a town in the previous version then retry.")
 				goto *exit_game
 			}
 		}
 		dialog lang("次のプロセスの完了までには、しばらく時間がかかることがあります。", "The next updating process may take a while to complete.")
-		memcpy areaType(300), areaType(100), 40 * (150 - 100) * 4
-		memcpy areaType(450), areaType(150), 40 * (200 - 150) * 4
+		memcpy adata(ADATA_TYPE, 300), adata(ADATA_TYPE, 100), 40 * (150 - 100) * 4
+		memcpy adata(ADATA_TYPE, 450), adata(ADATA_TYPE, 150), 40 * (200 - 150) * 4
 		repeat 200 - 100, 100
 			p = cnt
 			sdim file_cnv
@@ -215,21 +215,21 @@
 			}
 		loop
 		repeat 500
-			if ( areaId(cnt) != AREA_NONE ) {
-				if ( areaParent(cnt) == AREA_NONE ) {
-					areaParent(cnt) = AREA_NORTH_TYRIS
+			if ( adata(ADATA_ID, cnt) != AREA_NONE ) {
+				if ( adata(ADATA_PARENT, cnt) == AREA_NONE ) {
+					adata(ADATA_PARENT, cnt) = AREA_NORTH_TYRIS
 				}
 			}
 		loop
-		gWorld = AREA_NORTH_TYRIS
+		gdata(GDATA_WORLD) = AREA_NORTH_TYRIS
 	}
-	if ( gVersion < 2130 ) {
-		if ( gQuest == QUEST_TYPE_THIEVES ) {
-			gQuest = QUEST_TYPE_NONE
+	if ( gdata(GDATA_VERSION) < 2130 ) {
+		if ( gdata(GDATA_QUEST) == QUEST_TYPE_THIEVES ) {
+			gdata(GDATA_QUEST) = QUEST_TYPE_NONE
 			dialog lang("盗賊団フラグ抹消。", "Death bug is corrected.")
 		}
 	}
-	if ( gVersion < 2160 ) {
+	if ( gdata(GDATA_VERSION) < 2160 ) {
 		repeat 57
 			aphantei = 0
 			if ( cbit(CHARA_BIT_AWAKE_DIM_ATTACKER, cnt) ) {
@@ -270,23 +270,23 @@
 			aphantei = 0
 		loop
 	}
-	if ( gVersion < 2180 ) {
+	if ( gdata(GDATA_VERSION) < 2180 ) {
 		repeat 57
-			if ( cId(cnt) == CREATURE_ID_GALACTICA_PHANTOM | cId(cnt) == CREATURE_ID_SHADOW | cId(cnt) == CREATURE_ID_VOL_PHANTOM | cId(cnt) == CREATURE_ID_LESSER_PHANTOM ) {
-				cnRace(cnt) = "ghost"
+			if ( cdata(CDATA_ID, cnt) == CREATURE_ID_GALACTICA_PHANTOM | cdata(CDATA_ID, cnt) == CREATURE_ID_SHADOW | cdata(CDATA_ID, cnt) == CREATURE_ID_VOL_PHANTOM | cdata(CDATA_ID, cnt) == CREATURE_ID_LESSER_PHANTOM ) {
+				cdatan(CDATAN_RACE, cnt) = "ghost"
 			}
-			if ( cId(cnt) == CREATURE_ID_HELL_CRAB | cId(cnt) == CREATURE_ID_FIRE_CRAB ) {
-				cnRace(cnt) = "shell"
+			if ( cdata(CDATA_ID, cnt) == CREATURE_ID_HELL_CRAB | cdata(CDATA_ID, cnt) == CREATURE_ID_FIRE_CRAB ) {
+				cdatan(CDATAN_RACE, cnt) = "shell"
 			}
-			if ( cId(cnt) == CREATURE_ID_BOMB_THROWER | cId(cnt) == CREATURE_ID_MAD_SCIENTIST | cId(cnt) == CREATURE_ID_WHOM_DWELL_IN_THE_VANITY | cId(cnt) == CREATURE_ID_LOYTER_THE_CRIMSON_OF_ZANAN | cId(cnt) == CREATURE_ID_NOBLE | cId(cnt) == CREATURE_ID_GANGSTER | cId(cnt) == CREATURE_ID_ROCK_THROWER | cId(cnt) == CREATURE_ID_PUBLIC_PERFORMER | cId(cnt) == CREATURE_ID_NURSE | cId(cnt) == CREATURE_ID_RICH_PERSON | cId(cnt) == CREATURE_ID_NOBLE_CHILD ) {
-				cnRace(cnt) = "zanan"
+			if ( cdata(CDATA_ID, cnt) == CREATURE_ID_BOMB_THROWER | cdata(CDATA_ID, cnt) == CREATURE_ID_MAD_SCIENTIST | cdata(CDATA_ID, cnt) == CREATURE_ID_WHOM_DWELL_IN_THE_VANITY | cdata(CDATA_ID, cnt) == CREATURE_ID_LOYTER_THE_CRIMSON_OF_ZANAN | cdata(CDATA_ID, cnt) == CREATURE_ID_NOBLE | cdata(CDATA_ID, cnt) == CREATURE_ID_GANGSTER | cdata(CDATA_ID, cnt) == CREATURE_ID_ROCK_THROWER | cdata(CDATA_ID, cnt) == CREATURE_ID_PUBLIC_PERFORMER | cdata(CDATA_ID, cnt) == CREATURE_ID_NURSE | cdata(CDATA_ID, cnt) == CREATURE_ID_RICH_PERSON | cdata(CDATA_ID, cnt) == CREATURE_ID_NOBLE_CHILD ) {
+				cdatan(CDATAN_RACE, cnt) = "zanan"
 			}
-			if ( cId(cnt) == CREATURE_ID_PART_TIME_WORKER2 | cId(cnt) == CREATURE_ID_TRAVELER | cId(cnt) == CREATURE_ID_SWIMMER | cId(cnt) == CREATURE_ID_KARAM_THE_LONELY_WOLF_OF_KARUNE | cId(cnt) == CREATURE_ID_MERCENARY | cId(cnt) == CREATURE_ID_FARMER | cId(cnt) == CREATURE_ID_MINER | cId(cnt) == CREATURE_ID_PART_TIME_WORKER | cId(cnt) == CREATURE_ID_PRISONER ) {
-				cnRace(cnt) = "karune"
+			if ( cdata(CDATA_ID, cnt) == CREATURE_ID_PART_TIME_WORKER2 | cdata(CDATA_ID, cnt) == CREATURE_ID_TRAVELER | cdata(CDATA_ID, cnt) == CREATURE_ID_SWIMMER | cdata(CDATA_ID, cnt) == CREATURE_ID_KARAM_THE_LONELY_WOLF_OF_KARUNE | cdata(CDATA_ID, cnt) == CREATURE_ID_MERCENARY | cdata(CDATA_ID, cnt) == CREATURE_ID_FARMER | cdata(CDATA_ID, cnt) == CREATURE_ID_MINER | cdata(CDATA_ID, cnt) == CREATURE_ID_PART_TIME_WORKER | cdata(CDATA_ID, cnt) == CREATURE_ID_PRISONER ) {
+				cdatan(CDATAN_RACE, cnt) = "karune"
 			}
 		loop
 	}
-	if ( gVersion == 2170 ) {
+	if ( gdata(GDATA_VERSION) == 2170 ) {
 		repeat 57
 			if ( cnt == 0 ) {
 				continue
@@ -372,20 +372,20 @@
 			}
 		loop
 	}
-	if ( gVersion == 2180 ) {
+	if ( gdata(GDATA_VERSION) == 2180 ) {
 		dialog lang("アップデートを行うには、1.1555以外のセーブデータが必要です。", "To update your game, please save not 1.1555 version then retry.")
 		goto *exit_game
 	}
-	if ( gVersion < 2210 ) {
+	if ( gdata(GDATA_VERSION) < 2210 ) {
 		repeat 5480
-			iParam4(cnt) = 0
+			inv(INV_ITEM_PARAM4, cnt) = 0
 		loop
 	}
-	if ( gVersion == 2220 ) {
+	if ( gdata(GDATA_VERSION) == 2220 ) {
 		dialog lang("1.18fix以外のセーブデータは使えません。", "To update your game, please save not 1.18fix version then retry.")
 		goto *exit_game
 	}
-	if ( gVersion < 2260 ) {
+	if ( gdata(GDATA_VERSION) < 2260 ) {
 		repeat 57
 			if ( cnt == 0 ) {
 				continue
@@ -395,12 +395,12 @@
 			}
 		loop
 	}
-	if ( gVersion < 2280 ) {
+	if ( gdata(GDATA_VERSION) < 2280 ) {
 		repeat 57
 			if ( cnt == 0 ) {
 				continue
 			}
-			if ( cSex(cnt) == 0 ) {
+			if ( cdata(CDATA_SEX, cnt) == 0 ) {
 				cdata(CDATA_TONE_SEX, cnt) = 1
 			}
 			else {
@@ -410,63 +410,63 @@
 		repeat 5480
 			saiseiseimode = 0
 			ci = cnt
-			if ( iAtk(ci) == 0 & iDmg(ci) == 0 & iDV(ci) == 0 & iPV(ci) == 0 ) {
+			if ( inv(INV_ITEM_ATTACK, ci) == 0 & inv(INV_ITEM_DAMAGE, ci) == 0 & inv(INV_ITEM_DV, ci) == 0 & inv(INV_ITEM_PV, ci) == 0 ) {
 				continue
 			}
-			oldcol = iCol(ci)
-			oldweight = iWeight(ci)
+			oldcol = inv(INV_ITEM_COL, ci)
+			oldweight = inv(INV_ITEM_WEIGHT, ci)
 			if ( inv(INV_ITEM_CHARA_PIC, ci) != xy2pic(0, 0) ) {
-				iPV(ci) = inv(INV_ITEM_CHARA_PIC, ci)
+				inv(INV_ITEM_PV, ci) = inv(INV_ITEM_CHARA_PIC, ci)
 			}
 			if ( inv(INV_ITEM_NEED_SLEEP, ci) != 0 ) {
-				iDV(ci) = inv(INV_ITEM_NEED_SLEEP, ci)
+				inv(INV_ITEM_DV, ci) = inv(INV_ITEM_NEED_SLEEP, ci)
 			}
 			if ( inv(INV_ITEM_AMUR_CAGE, ci) != 0 ) {
-				iDmg(ci) = inv(INV_ITEM_AMUR_CAGE, ci)
+				inv(INV_ITEM_DAMAGE, ci) = inv(INV_ITEM_AMUR_CAGE, ci)
 			}
 			if ( inv(INV_ITEM_SHOP_SAMPLE, ci) != 0 ) {
-				iAtk(ci) = inv(INV_ITEM_SHOP_SAMPLE, ci)
+				inv(INV_ITEM_ATTACK, ci) = inv(INV_ITEM_SHOP_SAMPLE, ci)
 			}
-			if ( iQuality(ci) == FIX_QUALITY_UNIQUE ) {
+			if ( inv(INV_ITEM_QUALITY, ci) == FIX_QUALITY_UNIQUE ) {
 				saiseiseimode = 50
 			}
 			else {
 				saiseiseimode = 100
 			}
-			fixmaterial = iMaterial(ci)
+			fixmaterial = inv(INV_ITEM_MATERIAL, ci)
 			gosub *remake_material
-			iWeight(ci) = oldweight
-			iCol(ci) = oldcol
+			inv(INV_ITEM_WEIGHT, ci) = oldweight
+			inv(INV_ITEM_COL, ci) = oldcol
 			if ( ci >= 5080 ) {
-				cell_refresh iX(ci), iY(ci)
+				cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
 			}
 		loop
 		saiseiseimode = 0
 	}
-	if ( gVersion < 2300 ) {
+	if ( gdata(GDATA_VERSION) < 2300 ) {
 		gdata(GDATA_FLAG_PROSTITUTION_COUNTER) = 0
 	}
-	if ( gVersion < 2310 ) {
+	if ( gdata(GDATA_VERSION) < 2310 ) {
 		gdata(GDATA_FLAG_HIGHEST_NORMAL_DAMAGE) = 0
 	}
-	if ( gVersion == 2310 ) {
+	if ( gdata(GDATA_VERSION) == 2310 ) {
 		dialog lang("アップデートを行うには、1.25以外のセーブデータが必要です。", "To update your game, please save not 1.25 version then retry.")
 		goto *exit_game
 	}
-	if ( gVersion <= 2390 ) {
+	if ( gdata(GDATA_VERSION) <= 2390 ) {
 		repeat 5
 			p = gdata(GDATA_QUEST_POOL + cnt)
-			qExist(p) = QUEST_TYPE_NONE
-			qStatus(p) = QUEST_STATE_NONE
+			qdata(QDATA_EXIST, p) = QUEST_TYPE_NONE
+			qdata(QDATA_STATE, p) = QUEST_STATE_NONE
 		loop
 		repeat 16
 			cdata(CDATA_ALLIED, cnt) = 100
 			if ( cnt != 0 ) {
 				if ( cbit(CHARA_BIT_BODYGUARD, cnt) == TRUE ) {
-					if ( qParam2(rq) == cId(cnt) ) {
+					if ( qdata(QDATA_PARAM2, rq) == cdata(CDATA_ID, cnt) ) {
 						tc = cnt
 						cbitmod CHARA_BIT_BODYGUARD, cnt, FALSE
-						if ( cExist(tc) == CHAR_STATE_ALIVE ) {
+						if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
 							s = lang("「おい、暗殺者が私の後ろにいるぞ」", cnvtalk("Hey, the assassins are killing me."))
 							p = -11
 							txtef COLOR_SKY_BLUE
@@ -474,60 +474,60 @@
 							txt s
 							dmghp tc, 999999, p
 						}
-						cExist(tc) = CHAR_STATE_DEAD
+						cdata(CDATA_EXIST, tc) = CHAR_STATE_DEAD
 						break
 					}
 				}
 			}
 		loop
 		repeat 500
-			qClient(cnt) = 0
-			qMap(cnt) = 0
-			gClient = 0
+			qdata(QDATA_CLIENT, cnt) = 0
+			qdata(QDATA_MAP, cnt) = 0
+			gdata(GDATA_CLIENT) = 0
 		loop
 	}
-	if ( gVersion < 2430 ) {
+	if ( gdata(GDATA_VERSION) < 2430 ) {
 		repeat 245
 			cdata(CDATA_CAN_REVIVE, cnt) = 1
 		loop
 	}
-	if ( gVersion < 2440 ) {
+	if ( gdata(GDATA_VERSION) < 2440 ) {
 		gdata(GDATA_FLAG_HIGHEST_NORMAL_DAMAGE) = 0
 	}
-	if ( gVersion < 2480 ) {
+	if ( gdata(GDATA_VERSION) < 2480 ) {
 		repeat 245
 			tc = cnt
-			if ( cId(tc) == CREATURE_ID_WASP | cId(tc) == CREATURE_ID_RED_WASP | cId(tc) == CREATURE_ID_BLACK_HORNET ) {
+			if ( cdata(CDATA_ID, tc) == CREATURE_ID_WASP | cdata(CDATA_ID, tc) == CREATURE_ID_RED_WASP | cdata(CDATA_ID, tc) == CREATURE_ID_BLACK_HORNET ) {
 				if ( cdata(CDATA_EVOLUTION_STAGE, tc) != 0 ) {
 					resistmod tc, SKILL_RES_MAGIC, 50 * 10
 				}
 			}
-			if ( cId(tc) == CREATURE_ID_RAT ) {
+			if ( cdata(CDATA_ID, tc) == CREATURE_ID_RAT ) {
 				if ( cdata(CDATA_EVOLUTION_STAGE, tc) != 0 ) {
 					resistmod tc, SKILL_RES_FIRE, 50 * 10
 				}
 			}
 		loop
 	}
-	if ( gVersion == 2500 ) {
+	if ( gdata(GDATA_VERSION) == 2500 ) {
 		dialog lang("1.38のセーブデータはアップデートできません。", "To update your game, please save not 1.38 version then retry.")
 		goto *exit_game
 	}
-	if ( gVersion < 2510 ) {
+	if ( gdata(GDATA_VERSION) < 2510 ) {
 		repeat 57
 			if ( cdata(CDATA_AP_CURRENT, cnt) > 2000 ) {
 				cdata(CDATA_AP_CURRENT, cnt) = 2000
 			}
 			cdata(CDATA_INIT_LIFEMANA, cnt) = limit(sorg(SKILL_ATTR_LIFE, cnt), 50, 200) * 2 + limit(sorg(SKILL_ATTR_MANA, cnt), 50, 200) / 2
 			if ( cnt != 0 ) {
-				cSkillPoint(cnt) = 0
+				cdata(CDATA_SKILLPOINT, cnt) = 0
 			}
 		loop
 	}
-	if ( gVersion < 2530 ) {
+	if ( gdata(GDATA_VERSION) < 2530 ) {
 		kamen = 100
 	}
-	if ( gVersion < 2540 ) {
+	if ( gdata(GDATA_VERSION) < 2540 ) {
 		if ( spact(SKILL_SPACT_GAUGE_RELEASE - STARTING_SKILL_SPACT) == 0 ) {
 			spact(SKILL_SPACT_GAUGE_RELEASE - STARTING_SKILL_SPACT) = 1
 			txtmore
@@ -539,11 +539,11 @@
 				cdata(CDATA_AP_CURRENT, cnt) += 500
 			}
 		loop
-		if ( gdata(GDATA_DEEPEST_LEVEL) > flagMain / 4 + 1 ) {
-			gdata(GDATA_DEEPEST_LEVEL) = flagMain / 4 + 1
+		if ( gdata(GDATA_DEEPEST_LEVEL) > gdata(GDATA_FLAG_MAIN) / 4 + 1 ) {
+			gdata(GDATA_DEEPEST_LEVEL) = gdata(GDATA_FLAG_MAIN) / 4 + 1
 		}
 	}
-	if ( gVersion <= 2550 & gVersion >= 2540 ) {
+	if ( gdata(GDATA_VERSION) <= 2550 & gdata(GDATA_VERSION) >= 2540 ) {
 		repeat 57
 			if ( cdata(CDATA_ALLIED, cnt) == 0 ) {
 				continue
@@ -558,7 +558,7 @@
 					continue
 				}
 				p--
-				iEquip(p) = 0
+				inv(INV_ITEM_EQUIP, p) = 0
 				cdata(cnt, tc) = cdata(cnt, tc) / EXT_EQUIP_SLOTS * 10000
 			loop
 			cdata(CDATA_EQUIP_SLOT_21, tc) = 0
@@ -569,7 +569,7 @@
 		loop
 		tuikabui = 100
 	}
-	if ( gVersion <= 2570 & gVersion >= 2540 ) {
+	if ( gdata(GDATA_VERSION) <= 2570 & gdata(GDATA_VERSION) >= 2540 ) {
 		repeat 30, 100
 			if ( cnt != 120 & cnt != 121 & cnt != 122 ) {
 				continue
@@ -579,7 +579,7 @@
 				continue
 			}
 			p--
-			iEquip(p) = 0
+			inv(INV_ITEM_EQUIP, p) = 0
 			cdata(cnt, CHARA_PLAYER) = cdata(cnt, CHARA_PLAYER) / EXT_EQUIP_SLOTS * 10000
 		loop
 		cdata(CDATA_EQUIP_SLOT_21, CHARA_PLAYER) = 0
@@ -589,46 +589,46 @@
 		gosub *charaRefresh
 		tuikabui = 100
 	}
-	if ( gVersion < 2620 ) {
+	if ( gdata(GDATA_VERSION) < 2620 ) {
 		kamen = 1000
 	}
-	if ( gVersion < 2670 ) {
+	if ( gdata(GDATA_VERSION) < 2670 ) {
 		gdata(GDATA_FLAG_SUB_THE_TRUE_APPEARANCE) = 0
 	}
-	if ( gVersion == 2710 ) {
+	if ( gdata(GDATA_VERSION) == 2710 ) {
 		if ( gdata(GDATA_FLAG_SUB_REGULUS_ZANAN) == 1002 ) {
 			gdata(GDATA_FLAG_SUB_REGULUS_ZANAN) = 1003
 		}
 	}
-	if ( gVersion < 2730 ) {
+	if ( gdata(GDATA_VERSION) < 2730 ) {
 		kamen2 = 100
 	}
-	if ( gVersion < 2750 ) {
-		gWorldRenew = TRUE
+	if ( gdata(GDATA_VERSION) < 2750 ) {
+		gdata(GDATA_WORLD_RENEW) = TRUE
 	}
-	if ( gVersion < 2760 ) {
-		areaEconomy(85) = 0
-		areaEconomy(79) = 0
-		areaEconomy(75) = 0
-		areaEconomy(74) = 0
-		areaEconomy(73) = 0
-		areaEconomy(72) = 0
-		areaEconomy(71) = 0
-		areaEconomy(80) = 0
-		areaEconomy(81) = 0
-		areaEconomy(80) = 0
+	if ( gdata(GDATA_VERSION) < 2760 ) {
+		adata(ADATA_ECONOMY, 85) = 0
+		adata(ADATA_ECONOMY, 79) = 0
+		adata(ADATA_ECONOMY, 75) = 0
+		adata(ADATA_ECONOMY, 74) = 0
+		adata(ADATA_ECONOMY, 73) = 0
+		adata(ADATA_ECONOMY, 72) = 0
+		adata(ADATA_ECONOMY, 71) = 0
+		adata(ADATA_ECONOMY, 80) = 0
+		adata(ADATA_ECONOMY, 81) = 0
+		adata(ADATA_ECONOMY, 80) = 0
 	}
-	if ( gVersion < 2880 ) {
+	if ( gdata(GDATA_VERSION) < 2880 ) {
 		gdata(GDATA_FLAG_BIRTHDAY_CURRENT_YEAR) = int(gettime(0))
 	}
-	if ( gVersion < 2990 ) {
+	if ( gdata(GDATA_VERSION) < 2990 ) {
 		if ( int(gettime(1)) == 12 ) {
 			if ( int(gettime(3)) <= 25 ) {
 				kamen3 = 100
 			}
 		}
 	}
-	if ( gVersion < 3050 ) {
+	if ( gdata(GDATA_VERSION) < 3050 ) {
 		repeat 57
 			if ( cnt == 0 ) {
 				cdata(CDATA_THIRST, cnt) = 9000
@@ -638,138 +638,138 @@
 			}
 		loop
 	}
-	if ( gVersion < 3060 ) {
+	if ( gdata(GDATA_VERSION) < 3060 ) {
 		repeat 450 - 300, 300
-			if ( areaId(cnt) != AREA_SHOP ) {
+			if ( adata(ADATA_ID, cnt) != AREA_SHOP ) {
 				continue
 			}
 			adata((37 /*!!!@[ADATA_RANCH_BREED_RESTRICTION @@@ ADATA_SHOP_SALE_RESTRICTION]@!!! */), cnt) = 0
 			adata((39 /*!!!@[ADATA_RANCH_PRODUCE_RESTRICTION @@@ ADATA_SHOP_TYPE_CHANGE_COOLDOWN]@!!! */), cnt) = 0
 		loop
 	}
-	if ( gVersion < 3080 ) {
+	if ( gdata(GDATA_VERSION) < 3080 ) {
 		if ( gdata(GDATA_FLAG_GAME_MODE) == 5 ) {
 			kamen4 = 100
 		}
 	}
-	if ( gVersion < 3120 ) {
+	if ( gdata(GDATA_VERSION) < 3120 ) {
 		repeat 40 - 1, 16
-			if ( cHireDate(cnt) != 0 ) {
-				cType(cnt) = gArea
-				cExist(cnt) = CHAR_STATE_ALIVE
+			if ( cdata(CDATA_HIRE_DATE, cnt) != 0 ) {
+				cdata(CDATA_AREA, cnt) = gdata(GDATA_AREA)
+				cdata(CDATA_EXIST, cnt) = CHAR_STATE_ALIVE
 			}
 		loop
 	}
-	if ( gVersion < 3140 ) {
-		if ( gDay > 31 ) {
-			gDay = 30
+	if ( gdata(GDATA_VERSION) < 3140 ) {
+		if ( gdata(GDATA_DAY) > 31 ) {
+			gdata(GDATA_DAY) = 30
 		}
 	}
-	if ( gVersion < 3170 ) {
+	if ( gdata(GDATA_VERSION) < 3170 ) {
 		kamen5 = 100
 	}
-	if ( gVersion < 3180 ) {
+	if ( gdata(GDATA_VERSION) < 3180 ) {
 		kamen6 = 100
 	}
-	if ( gVersion < 3930 ) {
+	if ( gdata(GDATA_VERSION) < 3930 ) {
 		repeat 245
 			cdata(CDATA_CUSTOM_TALK_LINE, cnt) = 0
 		loop
-		gdata(GDATA_FLAG_SCROLL_OF_WITCHCRAFT_TOTAL_SPELL_BONUS) = cLevel(CHARA_PLAYER) * 5
+		gdata(GDATA_FLAG_SCROLL_OF_WITCHCRAFT_TOTAL_SPELL_BONUS) = cdata(CDATA_LEVEL, CHARA_PLAYER) * 5
 		if ( gdata(GDATA_FLAG_GAME_MODE) == 5 ) {
 			gdata(GDATA_FLAG_SCROLL_OF_WITCHCRAFT_TOTAL_SPELL_BONUS) += 10000
 		}
 		txt lang("あなたはスペルボーナスを獲得した。", "You gain spellbonus points.")
 	}
-	if ( gVersion < 3990 ) {
+	if ( gdata(GDATA_VERSION) < 3990 ) {
 		repeat 245
 			if ( cdata(CDATA_EVOLUTION_STAGE, cnt) != 1 ) {
 				continue
 			}
-			if ( cId(cnt) == CREATURE_ID_FLOATING_EYE | cId(cnt) == CREATURE_ID_CHAOS_EYE | cId(cnt) == CREATURE_ID_MAD_GAZE | cId(cnt) == CREATURE_ID_DEATH_GAZE | cId(cnt) == CREATURE_ID_DEFORMED_EYE | cId(cnt) == CREATURE_ID_IMPURE_EYE ) {
+			if ( cdata(CDATA_ID, cnt) == CREATURE_ID_FLOATING_EYE | cdata(CDATA_ID, cnt) == CREATURE_ID_CHAOS_EYE | cdata(CDATA_ID, cnt) == CREATURE_ID_MAD_GAZE | cdata(CDATA_ID, cnt) == CREATURE_ID_DEATH_GAZE | cdata(CDATA_ID, cnt) == CREATURE_ID_DEFORMED_EYE | cdata(CDATA_ID, cnt) == CREATURE_ID_IMPURE_EYE ) {
 				cdata(CDATA_CHARA_PIC, cnt) = xy2pic(1, 0)
 				txt lang("目系進化体グラフィック修正。", "The graphic of the eye evolution character have been corrected.")
 			}
 		loop
-		gCargoLimit = gCargoLimit / 10000 * 10000
+		gdata(GDATA_CARGO_LIMIT) = gdata(GDATA_CARGO_LIMIT) / 10000 * 10000
 		if ( gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND) == 1 ) {
-			gCargoLimit += 10 * 1000
+			gdata(GDATA_CARGO_LIMIT) += 10 * 1000
 		}
 		if ( gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND) == 2 ) {
-			gCargoLimit += 20 * 1000
+			gdata(GDATA_CARGO_LIMIT) += 20 * 1000
 		}
 		if ( gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND) == 3 ) {
-			gCargoLimit += 30 * 1000
+			gdata(GDATA_CARGO_LIMIT) += 30 * 1000
 		}
 		if ( gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND) == 4 ) {
-			gCargoLimit += 100 * 1000
+			gdata(GDATA_CARGO_LIMIT) += 100 * 1000
 		}
 	}
-	if ( gVersion < 5980 ) {
-		gdata(GDATA_FLAG_PC_SKILL_BONUS_OBTAINED) = cSkillPoint(CHARA_PLAYER)
+	if ( gdata(GDATA_VERSION) < 5980 ) {
+		gdata(GDATA_FLAG_PC_SKILL_BONUS_OBTAINED) = cdata(CDATA_SKILLPOINT, CHARA_PLAYER)
 		gdata(GDATA_FLAG_SPELL_BONUS_OBTAINED) = gdata(GDATA_FLAG_SCROLL_OF_WITCHCRAFT_TOTAL_SPELL_BONUS)
-		if ( gdata(GDATA_FLAG_SCROLL_OF_WITCHCRAFT_TOTAL_SPELL_BONUS) >= 100 | cSkillPoint(CHARA_PLAYER) >= 100 | cPlat(CHARA_PLAYER) >= 100 ) {
+		if ( gdata(GDATA_FLAG_SCROLL_OF_WITCHCRAFT_TOTAL_SPELL_BONUS) >= 100 | cdata(CDATA_SKILLPOINT, CHARA_PLAYER) >= 100 | cdata(CDATA_PLATINUM, CHARA_PLAYER) >= 100 ) {
 			if ( gdata(GDATA_FLAG_GAME_MODE) != 2 & gdata(GDATA_FLAG_GAME_MODE) != 5 ) {
 				dialog lang("注意！スペルボーナス、スキルボーナス、プラチナ硬貨は100以上所持していると新たに獲得できない。", "Caution! While the spell bonus is 100 or more, you cannot get new.")
 			}
 		}
 	}
-	if ( gVersion < 6020 ) {
+	if ( gdata(GDATA_VERSION) < 6020 ) {
 		gdata(GDATA_FLAG_SUB_MISSION_FROM_GARZIEM) = 0
 	}
-	if ( gVersion < 6050 ) {
-		if ( flagMain >= 180 ) {
+	if ( gdata(GDATA_VERSION) < 6050 ) {
+		if ( gdata(GDATA_FLAG_MAIN) >= 180 ) {
 			kamen7 = 100
 		}
-		if ( flagMain >= 340 ) {
+		if ( gdata(GDATA_FLAG_MAIN) >= 340 ) {
 			kamen8 = 100
 		}
-		if ( flagMain >= 680 ) {
+		if ( gdata(GDATA_FLAG_MAIN) >= 680 ) {
 			kamen9 = 100
 		}
 	}
-	if ( gVersion < 6060 ) {
+	if ( gdata(GDATA_VERSION) < 6060 ) {
 		if ( gdata(GDATA_FLAG_SUB_AMURDAD) >= 10 ) {
 			gdata(GDATA_FLAG_SUB_AMURDAD) = 0
 		}
-		if ( cnRace(CHARA_PLAYER) == "slime" ) {
-			cPvFix(CHARA_PLAYER) = 200
+		if ( cdatan(CDATAN_RACE, CHARA_PLAYER) == "slime" ) {
+			cdata(CDATA_PV_FIX, CHARA_PLAYER) = 200
 		}
-		if ( cnRace(CHARA_PLAYER) == "sheep" ) {
-			cPvFix(CHARA_PLAYER) = 120
+		if ( cdatan(CDATAN_RACE, CHARA_PLAYER) == "sheep" ) {
+			cdata(CDATA_PV_FIX, CHARA_PLAYER) = 120
 		}
-		if ( cnRace(CHARA_PLAYER) == "zombie" ) {
-			cPvFix(CHARA_PLAYER) = 150
+		if ( cdatan(CDATAN_RACE, CHARA_PLAYER) == "zombie" ) {
+			cdata(CDATA_PV_FIX, CHARA_PLAYER) = 150
 		}
-		if ( cnRace(CHARA_PLAYER) == "ent" ) {
-			cPvFix(CHARA_PLAYER) = 140
+		if ( cdatan(CDATAN_RACE, CHARA_PLAYER) == "ent" ) {
+			cdata(CDATA_PV_FIX, CHARA_PLAYER) = 140
 		}
-		if ( cnRace(CHARA_PLAYER) == "armor" ) {
-			cPvFix(CHARA_PLAYER) = 200
+		if ( cdatan(CDATAN_RACE, CHARA_PLAYER) == "armor" ) {
+			cdata(CDATA_PV_FIX, CHARA_PLAYER) = 200
 		}
-		if ( cnRace(CHARA_PLAYER) == "skeleton" ) {
-			cPvFix(CHARA_PLAYER) = 120
+		if ( cdatan(CDATAN_RACE, CHARA_PLAYER) == "skeleton" ) {
+			cdata(CDATA_PV_FIX, CHARA_PLAYER) = 120
 		}
-		if ( cnRace(CHARA_PLAYER) == "wisp" ) {
-			cPvFix(CHARA_PLAYER) = 150
+		if ( cdatan(CDATAN_RACE, CHARA_PLAYER) == "wisp" ) {
+			cdata(CDATA_PV_FIX, CHARA_PLAYER) = 150
 		}
-		if ( cnRace(CHARA_PLAYER) == "rabbit" ) {
-			cDvFix(CHARA_PLAYER) = 120
+		if ( cdatan(CDATAN_RACE, CHARA_PLAYER) == "rabbit" ) {
+			cdata(CDATA_DV_FIX, CHARA_PLAYER) = 120
 		}
-		if ( cnRace(CHARA_PLAYER) == "cat" ) {
-			cDvFix(CHARA_PLAYER) = 200
+		if ( cdatan(CDATAN_RACE, CHARA_PLAYER) == "cat" ) {
+			cdata(CDATA_DV_FIX, CHARA_PLAYER) = 200
 		}
-		if ( cnRace(CHARA_PLAYER) == "dog" ) {
-			cDvFix(CHARA_PLAYER) = 200
+		if ( cdatan(CDATAN_RACE, CHARA_PLAYER) == "dog" ) {
+			cdata(CDATA_DV_FIX, CHARA_PLAYER) = 200
 		}
-		if ( cnRace(CHARA_PLAYER) == "rat" ) {
-			cDvFix(CHARA_PLAYER) = 250
+		if ( cdatan(CDATAN_RACE, CHARA_PLAYER) == "rat" ) {
+			cdata(CDATA_DV_FIX, CHARA_PLAYER) = 250
 		}
-		if ( cnRace(CHARA_PLAYER) == "catsister" ) {
-			cDvFix(CHARA_PLAYER) = 200
+		if ( cdatan(CDATAN_RACE, CHARA_PLAYER) == "catsister" ) {
+			cdata(CDATA_DV_FIX, CHARA_PLAYER) = 200
 		}
 	}
-	if ( gVersion < 6070 ) {
+	if ( gdata(GDATA_VERSION) < 6070 ) {
 		if ( trait(TRAIT_NORMAL_SKILL_CASTING) != 0 ) {
 			if ( spact(SKILL_SPACT_MAGNECOAT - STARTING_SKILL_SPACT) == 0 ) {
 				spact(SKILL_SPACT_MAGNECOAT - STARTING_SKILL_SPACT) = 1
@@ -792,53 +792,53 @@
 		if ( cnt == 0 ) {
 			continue
 		}
-		if ( gArea == AREA_ARENA ) {
+		if ( gdata(GDATA_AREA) == AREA_ARENA ) {
 			continue
 		}
-		if ( cExist(cnt) != CHAR_STATE_SUSPEND ) {
+		if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_SUSPEND ) {
 			continue
 		}
 		if ( cdata(CDATA_IN_TAGTEAM, cnt) != 0 ) {
-			mapChara(cX(cnt), cY(cnt)) = 0
-			cExist(cdata(CDATA_TAGTEAM_PARTNER, cnt)) = CHAR_STATE_SUSPEND
+			map(cdata(CDATA_X, cnt), cdata(CDATA_Y, cnt), MAP_CHARA_INDEX_PLUS_ONE) = 0
+			cdata(CDATA_EXIST, cdata(CDATA_TAGTEAM_PARTNER, cnt)) = CHAR_STATE_SUSPEND
 			hagureta = 100
 		}
 	loop
-	if ( gVersion < 6090 ) {
+	if ( gdata(GDATA_VERSION) < 6090 ) {
 		if ( trait(TRAIT_NORMAL_STAT_SPD) != 0 ) {
 			cdata(CDATA_MATERIAL2_COUNTER, CHARA_PLAYER) = 1
 		}
 	}
-	if ( gVersion < 6100 ) {
+	if ( gdata(GDATA_VERSION) < 6100 ) {
 		gdata(GDATA_FLAG_ABYSS_POWER) = gdata(GDATA_FLAG_ABYSS_POWER) * 20
 		if ( gdata(GDATA_FLAG_ABYSS_POWER) > 100000 ) {
 			gdata(GDATA_FLAG_ABYSS_POWER) = 100000
 		}
 	}
-	if ( gVersion < 6140 ) {
-		gdata(250 + 442) = gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND)
+	if ( gdata(GDATA_VERSION) < 6140 ) {
+		gdata(GDATA_FLAG_MOST_EXPENSIVE_WORLD_MAP_VEHICLE_THIS_MONTH) = gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND)
 		repeat 245
-			cSPearned(cnt) = 0
+			cdata(CDATA_SP_EARNED, cnt) = 0
 			if ( cdata(CDATA_TAMER_WHIP_PICKUP, cnt) != 0 ) {
 				cdata(CDATA_TAMER_WHIP_PICKUP, cnt) = 0
-				cbitmod 1032, cnt, TRUE
+				cbitmod CHARA_BIT_PROHIBIT_PICKING_UP_ITEMS, cnt, TRUE
 			}
 			if ( cdata(CDATA_TAMER_WHIP_EAT, cnt) != 0 ) {
 				cdata(CDATA_TAMER_WHIP_EAT, cnt) = 0
-				cbitmod 1033, cnt, TRUE
+				cbitmod CHARA_BIT_PROHIBIT_EATING_FROM_GROUND, cnt, TRUE
 			}
 		loop
 	}
-	if ( gVersion != int(double("6.14") * 1000) ) {
-		gWorldRenew = TRUE
+	if ( gdata(GDATA_VERSION) != int(double("6.14") * 1000) ) {
+		gdata(GDATA_WORLD_RENEW) = TRUE
 	}
 	del_chara 56
-	if ( gVersion > int(double("6.14") * 1000) ) {
+	if ( gdata(GDATA_VERSION) > int(double("6.14") * 1000) ) {
 		dialog "invalid version"
 		goto *exit_game
 	}
-	if ( gPlayTime < 0 ) {
-		gPlayTime = 0
+	if ( gdata(GDATA_PLAY_TIME) < 0 ) {
+		gdata(GDATA_PLAY_TIME) = 0
 	}
 	if ( gdata(GDATA_FLAG_GAME_MODE) == 3 ) {
 		if ( gdata(GDATA_GAMEMODE_PENALTY) == 4 ) {
@@ -878,8 +878,8 @@
 			modkarma 0, -100
 			skillmod SKILL_ATTR_LIFE, CHARA_PLAYER, -5000
 			skillmod SKILL_ATTR_MANA, CHARA_PLAYER, -5000
-			cGold(CHARA_PLAYER) = cGold(CHARA_PLAYER) / 2
-			cPlat(CHARA_PLAYER) = cPlat(CHARA_PLAYER) / 2
+			cdata(CDATA_GOLD, CHARA_PLAYER) = cdata(CDATA_GOLD, CHARA_PLAYER) / 2
+			cdata(CDATA_PLATINUM, CHARA_PLAYER) = cdata(CDATA_PLATINUM, CHARA_PLAYER) / 2
 			addbuff CHARA_PLAYER, BUFF_PUNISHMENT, 100000, 100
 		}
 		if ( gdata(GDATA_GAMEMODE_PENALTY) == 1 ) {
@@ -887,17 +887,17 @@
 			snd SOUNDLIST_ENC
 		}
 	}
-	gVersion = int(double("6.14") * 1000)
+	gdata(GDATA_VERSION) = int(double("6.14") * 1000)
 	cbitmod CHARA_BIT_PCC, CHARA_PLAYER, TRUE
 	gdata(GDATA_SPEEDSUM_RESET) = 1
 	gosub *initial_recipe
 	return
 
 *mapReset
-	gMapVersion++
+	gdata(GDATA_MAP_VERSION)++
 	dim qdata, 20, 500
 	sdim qname, 40, 500
-	gClient = 0
+	gdata(GDATA_CLIENT) = 0
 	gosub *setArea
 	return
 
@@ -923,9 +923,9 @@
 			ibigin = 40
 		}
 	}
-	cGold(CHARA_PLAYER) += goldbigin
-	cPlat(CHARA_PLAYER) += pbigin
-	cSkillPoint(CHARA_PLAYER) += ibigin
+	cdata(CDATA_GOLD, CHARA_PLAYER) += goldbigin
+	cdata(CDATA_PLATINUM, CHARA_PLAYER) += pbigin
+	cdata(CDATA_SKILLPOINT, CHARA_PLAYER) += ibigin
 	repeat 400
 		mat(cnt) = mat(cnt) / 3
 	loop
@@ -946,9 +946,9 @@
 			ibigin += sorg(cnt, CHARA_PLAYER)
 		}
 	loop
-	goldbigin += limit(cGold(CHARA_PLAYER) / 100, 1000, 100000)
+	goldbigin += limit(cdata(CDATA_GOLD, CHARA_PLAYER) / 100, 1000, 100000)
 	repeat 245
-		cExist(cnt) = CHAR_STATE_DEAD
+		cdata(CDATA_EXIST, cnt) = CHAR_STATE_DEAD
 	loop
 	repeat 1200
 		sdata(cnt, MAX_CHARA_NC) = sdata(cnt, CHARA_PLAYER)
@@ -960,32 +960,32 @@
 	loop
 	inv_getheader -1
 	repeat invrange, invhead
-		iNum(cnt) = 0
+		inv(INV_ITEM_NUM, cnt) = 0
 	loop
 	inv_getheader 0
 	repeat invrange, invhead
-		if ( iNum(cnt) == 0 ) {
+		if ( inv(INV_ITEM_NUM, cnt) == 0 ) {
 			continue
 		}
-		if ( iID(cnt) == ITEM_ID_SECRET_EXP_LOMIAS ) {
+		if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_SECRET_EXP_LOMIAS ) {
 			lomiaseaster = 1
 		}
-		if ( iID(cnt) == ITEM_ID_DEED_HEIRSHIP | refitem(iID(cnt), DBSPEC_TYPE_MINOR) == FILTER_ITEM_DEED ) {
+		if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_DEED_HEIRSHIP | refitem(inv(INV_ITEM_ID, cnt), DBSPEC_TYPE_MINOR) == FILTER_ITEM_DEED ) {
 			continue
 		}
-		if ( iID(cnt) == ITEM_ID_KITTY_BANK ) {
+		if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_KITTY_BANK ) {
 			continue
 		}
-		if ( iQuality(cnt) == FIX_QUALITY_UNIQUE ) {
+		if ( inv(INV_ITEM_QUALITY, cnt) == FIX_QUALITY_UNIQUE ) {
 			continue
 		}
 		if ( ibit(ITEM_BIT_PRECIOUS, cnt) ) {
 			continue
 		}
-		if ( refitem(iID(cnt), DBSPEC_TYPE) == FILTER_AMMO ) {
+		if ( refitem(inv(INV_ITEM_ID, cnt), DBSPEC_TYPE) == FILTER_AMMO ) {
 			inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), cnt) = -1
 		}
-		iEquip(cnt) = 0
+		inv(INV_ITEM_EQUIP, cnt) = 0
 		item_copy cnt, inv_getfreeid(-1)
 	loop
 	gdata(GDATA_FLAG_END_TAGTEAM) = 1000
@@ -993,7 +993,7 @@
 		del_chara cnt
 	loop
 	gdata(GDATA_FLAG_END_TAGTEAM) = 0
-	gPlayTime = genetemp(GDATA_PLAY_TIME)
+	gdata(GDATA_PLAY_TIME) = genetemp(GDATA_PLAY_TIME)
 	return
 
 *generate_gene
@@ -1129,24 +1129,24 @@
 
 *set_userNpc
 	if ( initunid ) {
-		cUNID(rc) = initunid - 1
+		cdata(CDATA_USERNPC_ID, rc) = initunid - 1
 		initunid = 0
 	}
-	cun = cUNID(rc)
-	cId(rc) = CREATURE_ID_USER
+	cun = cdata(CDATA_USERNPC_ID, rc)
+	cdata(CDATA_ID, rc) = CREATURE_ID_USER
 	if ( initlv != 0 ) {
-		cLevel(rc) = initlv
+		cdata(CDATA_LEVEL, rc) = initlv
 	}
 	else {
-		cLevel(rc) = limit(userdata(2, cun), 1, 350)
+		cdata(CDATA_LEVEL, rc) = limit(userdata(2, cun), 1, 350)
 	}
-	if ( cLevel(rc) > gdata(GDATA_DEEPEST_LEVEL) * 2 ) {
-		cLevel(rc) = limit(gdata(GDATA_DEEPEST_LEVEL) * 2, 1, 350)
+	if ( cdata(CDATA_LEVEL, rc) > gdata(GDATA_DEEPEST_LEVEL) * 2 ) {
+		cdata(CDATA_LEVEL, rc) = limit(gdata(GDATA_DEEPEST_LEVEL) * 2, 1, 350)
 	}
-	cPortrait(rc) = -1
+	cdata(CDATA_PORTRAIT, rc) = -1
 	creaturepack = FILTER_NOTHING
-	cActIndex(rc) = 55
-	cAiSub(rc) = unaiactsubfreq(cun)
+	cdata(CDATA_ACT_INDEX, rc) = 55
+	cdata(CDATA_AI_SUB, rc) = unaiactsubfreq(cun)
 	repeat 5
 		cdata(STARTING_CDATA_ACT_MAIN + cnt, rc) = userdata(15 + cnt, cun)
 		cdata(STARTING_CDATA_ACT_SUB + cnt, rc) = userdata(20 + cnt, cun)
@@ -1161,35 +1161,35 @@
 			sdata(int(unres(cnt * 2)), rc) += int(unres(cnt * 2 + 1)) * 50
 		loop
 	}
-	cTxt(rc) = 1
-	cAlignment(rc) = -10000
-	cnName(rc) = userdatan(1, cun)
-	cnUNTAG(rc) = userdatan(0, cun)
-	cRelation(rc) = limit(userdata(4, cun), -3, 10)
-	cAiCalm(rc) = limit(userdata(7, cun), 1, 4)
-	cAiMoveFreq(rc) = limit(userdata(8, cun), 0, 100)
-	cAiDistance(rc) = limit(userdata(9, cun), 1, 100)
+	cdata(CDATA_TXT, rc) = 1
+	cdata(CDATA_ALIGNMENT, rc) = -10000
+	cdatan(CDATAN_NAME, rc) = userdatan(1, cun)
+	cdatan(CDATAN_USER_NPC_TAG, rc) = userdatan(0, cun)
+	cdata(CDATA_RELATION, rc) = limit(userdata(4, cun), -3, 10)
+	cdata(CDATA_AI_CALM, rc) = limit(userdata(7, cun), 1, 4)
+	cdata(CDATA_AI_MOVE_FREQ, rc) = limit(userdata(8, cun), 0, 100)
+	cdata(CDATA_AI_DISTANCE, rc) = limit(userdata(9, cun), 1, 100)
 	if ( userdata(11, cun) ) {
 		cdata(CDATA_ELEMENT, rc) = limit(userdata(11, cun), SKILL_RES_FIRE * 100000, MAX_SKILL_RESDMG * 100000)
 	}
-	cActHeal(rc) = userdata(10, cun)
+	cdata(CDATA_ACT_HEAL, rc) = userdata(10, cun)
 	dbidn = userdatan(2, cun)
 	dbmode = DBMODE_SET
 	gosub *db_race
 	dbidn = userdatan(3, cun)
 	dbmode = DBMODE_SET
 	gosub *db_class
-	cSex(rc) = userdata(3, cun)
+	cdata(CDATA_SEX, rc) = userdata(3, cun)
 	if ( userdata(3, cun) != 0 ) {
 		if ( userdata(3, cun) != 1 ) {
-			cSex(rc) = rnd(2)
+			cdata(CDATA_SEX, rc) = rnd(2)
 		}
 	}
 	if ( userdata(5, cun) ) {
 		fixlv = limit(userdata(5, cun), 0, 6)
 	}
 	cspecialeq = 0
-	cOrgRelation(rc) = cRelation(rc)
+	cdata(CDATA_RELATION_ORG, rc) = cdata(CDATA_RELATION, rc)
 	fixaiact rc
 	setunid rc, cun
 	return
@@ -1207,7 +1207,7 @@
 	sdim userdatan, 40, 15, usernpcmax + 1
 	sdim usertxt, 80 * 100, usernpcmax + 1
 	sdim untaglist
-	unCount = 0
+	gdata(GDATA_USERNPC_COUNT) = 0
 	buffer BUFFER_CHR, 33 * 48, (34 + (usernpcmax / 33 + 1) * 2) * 48
 	pos 0, 0
 	picload exedir + "\\graphic\\character" + devfile + ".bmp", 1
@@ -1278,7 +1278,7 @@
 		}
 		untaglist += "/" + userdatan(0, tg) + "/"
 		if ( instr(s, 0, "_tmp_") != (-1) ) {
-			unCount++
+			gdata(GDATA_USERNPC_COUNT)++
 		}
 		procid = (procid + 1) \ 4
 		proclist(procid) = "userNpc_update:set info" + " ct:" + ct
@@ -1397,18 +1397,18 @@
 	return
 	inv_getheader rc
 	repeat invrange, invhead
-		iEquip(cnt) = 0
+		inv(INV_ITEM_EQUIP, cnt) = 0
 	loop
 	repeat 30, 100
 		cdata(cnt, rc) = cdata(cnt, rc) / EXT_EQUIP_SLOTS * 10000
 	loop
 	gosub *chara_equipFull
-	cAiItem(rc) = 0
+	cdata(CDATA_AI_ITEM, rc) = 0
 	rowactend rc
 	cbitmod CHARA_BIT_PCC, rc, FALSE
 	cbitmod CHARA_BIT_LEASHED, rc, FALSE
-	cHP(rc) = cMHP(rc)
-	cMP(rc) = cMMP(rc)
+	cdata(CDATA_HP, rc) = cdata(CDATA_MAX_HP, rc)
+	cdata(CDATA_MP, rc) = cdata(CDATA_MAX_MP, rc)
 	cbitmod CHARA_BIT_LIVESTOCK, rc, FALSE
 	return
 
@@ -1513,21 +1513,21 @@
 	gosub *userNpc_update
 	initunid = findunid(q)
 	txt lang("カスタムNPCを作成した！", "A custom NPC has been successfully generated!")
-	if ( cX(CHARA_PLAYER) > 1 ) {
-		sux = cX(CHARA_PLAYER) - 1
+	if ( cdata(CDATA_X, CHARA_PLAYER) > 1 ) {
+		sux = cdata(CDATA_X, CHARA_PLAYER) - 1
 	}
 	flt
-	characreate -1, CREATURE_ID_USER, sux, cY(CHARA_PLAYER)
+	characreate -1, CREATURE_ID_USER, sux, cdata(CDATA_Y, CHARA_PLAYER)
 	repeat 245
-		if ( cId(cnt) == CREATURE_ID_USER ) {
+		if ( cdata(CDATA_ID, cnt) == CREATURE_ID_USER ) {
 			getunid cnt
 		}
 	loop
 	if ( dbg_usernpc ) {
-		cRelation(rc) = RELATION_NEUTRAL
+		cdata(CDATA_RELATION, rc) = RELATION_NEUTRAL
 	}
 	else {
-		cRelation(rc) = RELATION_ENEMY
+		cdata(CDATA_RELATION, rc) = RELATION_ENEMY
 		txt lang(name(rc) + "は興奮して襲い掛かってきた。", name(rc) + " is excited and attacks you.")
 	}
 	folder = exedir + "user\\"
@@ -1539,7 +1539,7 @@
 	if ( timeGetTime() / 1000 - time_begin < 0 ) {
 		time_begin = timeGetTime() / 1000
 	}
-	gPlayTime = gPlayTime + timeGetTime() / 1000 - time_begin
+	gdata(GDATA_PLAY_TIME) = gdata(GDATA_PLAY_TIME) + timeGetTime() / 1000 - time_begin
 	time_begin = timeGetTime() / 1000
 	if ( fmode == 8 | fmode == 7 ) {
 		procid = (procid + 1) \ 4
@@ -1552,7 +1552,7 @@
 			fread = 1
 		}
 		if ( fmode == 8 ) {
-			playerheader = "" + cnName(CHARA_PLAYER) + " Lv:" + cLevel(CHARA_PLAYER) + " " + mdatan(0)
+			playerheader = "" + cdatan(CDATAN_NAME, CHARA_PLAYER) + " Lv:" + cdata(CDATA_LEVEL, CHARA_PLAYER) + " " + mdatan(0)
 			bsave folder + "header.txt", playerheader
 		}
 		repeat 16
@@ -1623,7 +1623,7 @@
 				file += "spells.s1"
 				fsize = 800
 			}
-			if ( cnt != 14 | gVersion >= 1200 ) {
+			if ( cnt != 14 | gdata(GDATA_VERSION) >= 1200 ) {
 				if ( fread == 1 ) {
 					exist file
 					if ( strsize == (-1) ) {
@@ -1645,7 +1645,7 @@
 			if ( fread == 0 ) {
 				zOpen hgz, file, 1, 3
 			}
-			if ( cnt != 14 | gVersion >= 1200 ) {
+			if ( cnt != 14 | gdata(GDATA_VERSION) >= 1200 ) {
 				if ( fread == 1 ) {
 					zOpen hgz, file, 0
 					if ( stat != 0 ) {
@@ -1778,7 +1778,7 @@
 					zWrite recipememory, hgz, fsize
 				}
 				if ( fread == 1 ) {
-					if ( gVersion >= 1200 ) {
+					if ( gdata(GDATA_VERSION) >= 1200 ) {
 						zRead recipememory, hgz, fsize
 					}
 				}
@@ -1863,7 +1863,7 @@
 			folder = exedir + "save\\" + geneuse + "\\"
 		}
 		if ( fmode == 14 ) {
-			playerheader = "" + cnName(CHARA_PLAYER) + "(Lv" + cLevel(CHARA_PLAYER) + ")の遺伝子"
+			playerheader = "" + cdatan(CDATAN_NAME, CHARA_PLAYER) + "(Lv" + cdata(CDATA_LEVEL, CHARA_PLAYER) + ")の遺伝子"
 			file = folder + "gene_header.txt"
 			bsave file, playerheader
 			fileadd file
@@ -2006,12 +2006,12 @@
 			}
 			if ( cnt == 1 ) {
 				if ( fread == 1 ) {
-					dim map, mWidth, mHeight, 10
-					dim mapsync, mWidth, mHeight
+					dim map, mdata(MDATA_WIDTH), mdata(MDATA_HEIGHT), 10
+					dim mapsync, mdata(MDATA_WIDTH), mdata(MDATA_HEIGHT)
 					dim mef, 9, 200
 				}
 				file += "map_" + mid + ".s2"
-				fsize = mWidth * mHeight * 10 * 4
+				fsize = mdata(MDATA_WIDTH) * mdata(MDATA_HEIGHT) * 10 * 4
 			}
 			if ( cnt == 2 ) {
 				file += "cdata_" + mid + ".s2"
@@ -2023,14 +2023,14 @@
 			}
 			if ( cnt == 4 ) {
 				if ( fread ) {
-					if ( mVersionFix1 == 0 ) {
-						repeat mHeight
+					if ( mdata(MDATA_VERSION_FIX1) == 0 ) {
+						repeat mdata(MDATA_HEIGHT)
 							cnt2 = cnt
-							repeat mWidth
-								mapMef(cnt, cnt2) = 0
+							repeat mdata(MDATA_WIDTH)
+								map(cnt, cnt2, MAP_MEF_INDEX_PLUS_ONE) = 0
 							loop
 						loop
-						mVersionFix1 = 1
+						mdata(MDATA_VERSION_FIX1) = 1
 						continue
 					}
 				}
@@ -2062,10 +2062,10 @@
 			}
 			if ( cnt == 2 ) {
 				if ( fread == 0 ) {
-					zWrite cExist(MAX_CHARA_SAVE), hgz, fsize
+					zWrite cdata(CDATA_EXIST, MAX_CHARA_SAVE), hgz, fsize
 				}
 				if ( fread == 1 ) {
-					zRead cExist(MAX_CHARA_SAVE), hgz, fsize
+					zRead cdata(CDATA_EXIST, MAX_CHARA_SAVE), hgz, fsize
 				}
 			}
 			if ( cnt == 3 ) {
@@ -2111,12 +2111,12 @@
 			}
 			if ( cnt == 1 ) {
 				if ( fread == 1 ) {
-					dim map, mWidth, mHeight, 10
-					dim mapsync, mWidth, mHeight
+					dim map, mdata(MDATA_WIDTH), mdata(MDATA_HEIGHT), 10
+					dim mapsync, mdata(MDATA_WIDTH), mdata(MDATA_HEIGHT)
 					dim mef, 9, 200
 				}
 				file += "m2_" + id + ".t"
-				fsize = mWidth * mHeight * 10 * 4
+				fsize = mdata(MDATA_WIDTH) * mdata(MDATA_HEIGHT) * 10 * 4
 			}
 			if ( cnt == 2 ) {
 				file += "m3_" + id + ".t"
@@ -2146,10 +2146,10 @@
 			}
 			if ( cnt == 2 ) {
 				if ( fread == 0 ) {
-					zWrite iNum(1320), hgz, fsize
+					zWrite inv(INV_ITEM_NUM, 1320), hgz, fsize
 				}
 				if ( fread == 1 ) {
-					zRead iNum(1320), hgz, fsize
+					zRead inv(INV_ITEM_NUM, 1320), hgz, fsize
 				}
 			}
 			zClose hgz
@@ -2178,7 +2178,7 @@
 			tg = 0
 		}
 		enemyteam = -1
-		unCount = 0
+		gdata(GDATA_USERNPC_COUNT) = 0
 		sdim untaglist
 		repeat 245
 			if ( fread == 0 ) {
@@ -2194,7 +2194,7 @@
 				}
 				tg = 0
 				repeat 245 - 57, 57
-					if ( cExist(cnt) == CHAR_STATE_DEAD ) {
+					if ( cdata(CDATA_EXIST, cnt) == CHAR_STATE_DEAD ) {
 						tg = cnt
 						break
 					}
@@ -2226,10 +2226,10 @@
 				}
 				if ( cnt == 0 ) {
 					if ( fread == 0 ) {
-						zWrite cExist(tg), hgz, fsize
+						zWrite cdata(CDATA_EXIST, tg), hgz, fsize
 					}
 					if ( fread == 1 ) {
-						zRead cExist(tg), hgz, fsize
+						zRead cdata(CDATA_EXIST, tg), hgz, fsize
 					}
 				}
 				if ( cnt == 1 ) {
@@ -2242,10 +2242,10 @@
 				}
 				if ( cnt == 2 ) {
 					if ( fread == 0 ) {
-						zWrite iNum(invhead), hgz, fsize
+						zWrite inv(INV_ITEM_NUM, invhead), hgz, fsize
 					}
 					if ( fread == 1 ) {
-						zRead iNum(invhead), hgz, fsize
+						zRead inv(INV_ITEM_NUM, invhead), hgz, fsize
 					}
 				}
 				zClose hgz
@@ -2259,16 +2259,16 @@
 				zipadd "c2_" + id + ".t"
 				zipadd "c3_" + id + ".t"
 				zipadd "c4_" + id + ".t"
-				if ( cId(tg) == CREATURE_ID_USER ) {
-					exist folder + userdatan(6, cUNID(tg))
+				if ( cdata(CDATA_ID, tg) == CREATURE_ID_USER ) {
+					exist folder + userdatan(6, cdata(CDATA_USERNPC_ID, tg))
 					if ( strsize != (-1) ) {
-						if ( cUNID(tg) != usernpcmax ) {
-							if ( instr(untaglist, 0, "/" + userdatan(0, cUNID(tg)) + "/") == (-1) ) {
-								if ( unCount < 10 ) {
-									bcopy folder + userdatan(6, cUNID(tg)), folder + "_tmp_" + unCount + ".npc"
-									zipadd "_tmp_" + unCount + ".npc"
-									untaglist += "/" + userdatan(0, cUNID(tg)) + "/"
-									unCount++
+						if ( cdata(CDATA_USERNPC_ID, tg) != usernpcmax ) {
+							if ( instr(untaglist, 0, "/" + userdatan(0, cdata(CDATA_USERNPC_ID, tg)) + "/") == (-1) ) {
+								if ( gdata(GDATA_USERNPC_COUNT) < 10 ) {
+									bcopy folder + userdatan(6, cdata(CDATA_USERNPC_ID, tg)), folder + "_tmp_" + gdata(GDATA_USERNPC_COUNT) + ".npc"
+									zipadd "_tmp_" + gdata(GDATA_USERNPC_COUNT) + ".npc"
+									untaglist += "/" + userdatan(0, cdata(CDATA_USERNPC_ID, tg)) + "/"
+									gdata(GDATA_USERNPC_COUNT)++
 								}
 							}
 						}
@@ -2278,44 +2278,44 @@
 			else {
 				inv_getheader tg
 				repeat invrange, invhead
-					iEquip(cnt) = 0
+					inv(INV_ITEM_EQUIP, cnt) = 0
 				loop
 				repeat 30, 100
 					cdata(cnt, tg) = cdata(cnt, tg) / EXT_EQUIP_SLOTS * 10000
 				loop
 				rc = tg
 				gosub *chara_equipFull
-				cAiItem(rc) = 0
+				cdata(CDATA_AI_ITEM, rc) = 0
 				rowactend rc
 				cbitmod CHARA_BIT_PCC, rc, FALSE
 				cbitmod CHARA_BIT_LEASHED, rc, FALSE
-				cHP(rc) = cMHP(rc)
-				cMP(rc) = cMMP(rc)
+				cdata(CDATA_HP, rc) = cdata(CDATA_MAX_HP, rc)
+				cdata(CDATA_MP, rc) = cdata(CDATA_MAX_MP, rc)
 				cbitmod CHARA_BIT_LIVESTOCK, rc, FALSE
 				cbitmod CHARA_BIT_MSG_FILE, rc, FALSE
 				if ( importmode == 0 ) {
-					cRole(tg) = ROLE_USER
-					cGold(tg) = 0
-					if ( cRelation(tg) >= RELATION_ALLY ) {
+					cdata(CDATA_ROLE, tg) = ROLE_USER
+					cdata(CDATA_GOLD, tg) = 0
+					if ( cdata(CDATA_RELATION, tg) >= RELATION_ALLY ) {
 						if ( userrelation == 0 ) {
-							cRelation(tg) = RELATION_NEUTRAL
-							cOrgRelation(tg) = RELATION_NEUTRAL
+							cdata(CDATA_RELATION, tg) = RELATION_NEUTRAL
+							cdata(CDATA_RELATION_ORG, tg) = RELATION_NEUTRAL
 						}
 						else {
-							cRelation(tg) = RELATION_ENEMY
-							cOrgRelation(tg) = RELATION_ENEMY
+							cdata(CDATA_RELATION, tg) = RELATION_ENEMY
+							cdata(CDATA_RELATION_ORG, tg) = RELATION_ENEMY
 						}
 					}
-					cxinit = cX(tg)
-					cyinit = cY(tg)
+					cxinit = cdata(CDATA_X, tg)
+					cyinit = cdata(CDATA_Y, tg)
 					gosub *place_chara
 				}
 				if ( importmode == 1 ) {
 					if ( enemyteam == (-1) ) {
 						enemyteam = rc
 					}
-					cRelation(rc) = RELATION_ENEMY
-					cOrgRelation(rc) = RELATION_ENEMY
+					cdata(CDATA_RELATION, rc) = RELATION_ENEMY
+					cdata(CDATA_RELATION_ORG, rc) = RELATION_ENEMY
 					map_placearena rc, 1
 				}
 			}
@@ -2329,7 +2329,7 @@
 		repeat 2
 			if ( cnt == 0 ) {
 				file = fmapfile + ".map"
-				fsize = mWidth * mHeight * 3 * 4
+				fsize = mdata(MDATA_WIDTH) * mdata(MDATA_HEIGHT) * 3 * 4
 			}
 			if ( cnt == 1 ) {
 				file = fmapfile + ".obj"
@@ -2366,12 +2366,12 @@
 			}
 			if ( cnt == 1 ) {
 				if ( fread == 1 ) {
-					dim map, mWidth, mHeight, 10
-					dim mapsync, mWidth, mHeight
+					dim map, mdata(MDATA_WIDTH), mdata(MDATA_HEIGHT), 10
+					dim mapsync, mdata(MDATA_WIDTH), mdata(MDATA_HEIGHT)
 					dim mef, 9, 200
 				}
 				file = fmapfile + ".map"
-				fsize = mWidth * mHeight * 10 * 4
+				fsize = mdata(MDATA_WIDTH) * mdata(MDATA_HEIGHT) * 10 * 4
 			}
 			if ( cnt == 2 ) {
 				file = fmapfile + ".obj"
@@ -2439,10 +2439,10 @@
 			zopenwrapper hgz, file, 0
 		}
 		if ( fread == 0 ) {
-			zWrite iNum(1320), hgz, fsize
+			zWrite inv(INV_ITEM_NUM, 1320), hgz, fsize
 		}
 		if ( fread == 1 ) {
-			zRead iNum(1320), hgz, fsize
+			zRead inv(INV_ITEM_NUM, 1320), hgz, fsize
 		}
 		zClose hgz
 	}
@@ -2504,10 +2504,10 @@
 			}
 			if ( cnt == 0 ) {
 				if ( fread == 0 ) {
-					zWrite cExist(MAX_CHARA_SAVE), hgz, fsize
+					zWrite cdata(CDATA_EXIST, MAX_CHARA_SAVE), hgz, fsize
 				}
 				if ( fread == 1 ) {
-					zRead cExist(MAX_CHARA_SAVE), hgz, fsize
+					zRead cdata(CDATA_EXIST, MAX_CHARA_SAVE), hgz, fsize
 				}
 			}
 			if ( cnt == 1 ) {
@@ -2620,7 +2620,7 @@
 	else {
 		headtemp = "[＋製]【" + mdatan(0) + "】\n"
 	}
-	headtemp += "" + cnAka(CHARA_PLAYER) + cnName(CHARA_PLAYER) + "\n"
+	headtemp += "" + cdatan(CDATAN_AKA, CHARA_PLAYER) + cdatan(CDATAN_NAME, CHARA_PLAYER) + "\n"
 	headtemp += "\n"
 	headtemp += "\n"
 	headtemp += "" + 100002 + "\n"
@@ -2633,8 +2633,8 @@
 		list(0, cnt) = 0
 		if ( cnt != 0 ) {
 			if ( cdata(CDATA_IN_TAGTEAM, cnt) != 1 ) {
-				if ( cRole(cnt) != ROLE_ADVENTURER ) {
-					if ( cExist(cnt) == CHAR_STATE_ALIVE ) {
+				if ( cdata(CDATA_ROLE, cnt) != ROLE_ADVENTURER ) {
+					if ( cdata(CDATA_EXIST, cnt) == CHAR_STATE_ALIVE ) {
 						if ( cbit(CHARA_BIT_RIDE, cnt) == FALSE ) {
 							list(0, cnt) = 1
 						}
@@ -2654,8 +2654,8 @@
 	id = 0
 	lensum = 1024
 	sdim filebuff, lensum
-	headtemp = "【" + gnTeam1 + "】(" + n + "体) Lv" + lv + "\n"
-	headtemp += "" + cnAka(CHARA_PLAYER) + cnName(CHARA_PLAYER) + "\n"
+	headtemp = "【" + gdatan(GDATAN_TEAM1) + "】(" + n + "体) Lv" + lv + "\n"
+	headtemp += "" + cdatan(CDATAN_AKA, CHARA_PLAYER) + cdatan(CDATAN_NAME, CHARA_PLAYER) + "\n"
 	headtemp += "\n"
 	headtemp += "\n"
 	headtemp += "" + 100002 + "\n"
@@ -2695,22 +2695,22 @@
 		delete exedir + "user\\" + file
 	loop
 	return
-	arenaop = 1, 2, (100 - gRankPetArena / 100) / 2 + 1
+	arenaop = 1, 2, (100 - gdata(GDATA_RANK_PET_ARENA) / 100) / 2 + 1
 	arenaop(1) = rnd(9 - 1) + 2
 	dim followerexist, 16
 	repeat 16
-		followerexist(cnt) = cExist(cnt)
-		if ( cExist(cnt) == CHAR_STATE_ALIVE ) {
+		followerexist(cnt) = cdata(CDATA_EXIST, cnt)
+		if ( cdata(CDATA_EXIST, cnt) == CHAR_STATE_ALIVE ) {
 			followerin(cnt) = 1
 		}
 		else {
 			followerin(cnt) = 0
 		}
 	loop
-	gQuest = QUEST_SUBTYPE_DELIVER, 0, 0, 1
-	gReturnArea = gArea, gLevel, cX(CHARA_PLAYER), cY(CHARA_PLAYER)
-	gTeleportArea = AREA_PET_ARENA
-	gTeleportLevel = 1
+	gdata(GDATA_QUEST) = QUEST_SUBTYPE_DELIVER, 0, 0, 1
+	gdata(GDATA_RETURN_AREA) = gdata(GDATA_AREA), gdata(GDATA_LEVEL), cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER)
+	gdata(GDATA_TELEPORT_AREA) = AREA_PET_ARENA
+	gdata(GDATA_TELEPORT_LEVEL) = 1
 	levelexitby = MAP_EXIT_TELEPORT
 	arenaimport = 1
 	goto *map_exit
@@ -2733,8 +2733,8 @@
 			create_pcpic cnt, 1
 		}
 	loop
-	if ( gWizard == 1 ) {
-		cnAka(CHARA_PLAYER) = "*Debug*"
+	if ( gdata(GDATA_WIZARD) == 1 ) {
+		cdatan(CDATAN_AKA, CHARA_PLAYER) = "*Debug*"
 	}
 	refreshspeed 0
 	time_begin = timeGetTime() / 1000
@@ -2757,7 +2757,7 @@
 	}
 	else {
 	}
-	diaryhead = "<HTML><TITLE>" + cnAka(CHARA_PLAYER) + cnName(CHARA_PLAYER) + "の冒険日誌</TITLE>"
+	diaryhead = "<HTML><TITLE>" + cdatan(CDATAN_AKA, CHARA_PLAYER) + cdatan(CDATAN_NAME, CHARA_PLAYER) + "の冒険日誌</TITLE>"
 	diarystat = ""
 	diarylog = ""
 	diaryfoot = "</HTML>"
@@ -2767,7 +2767,7 @@
 	return
 
 *game_save
-	if ( gArea == AREA_SHOW_HOUSE | (gArea == AREA_CHAOS_CRADLE & gLevel == 179) | (gArea == AREA_AMUR_CAGE & gLevel >= 10) ) {
+	if ( gdata(GDATA_AREA) == AREA_SHOW_HOUSE | (gdata(GDATA_AREA) == AREA_CHAOS_CRADLE & gdata(GDATA_LEVEL) == 179) | (gdata(GDATA_AREA) == AREA_AMUR_CAGE & gdata(GDATA_LEVEL) >= 10) ) {
 		txtef COLOR_RED
 		txt lang("ここではセーブされない。", "The game is not saved in this map.")
 		gosub *screen_draw
@@ -2824,9 +2824,9 @@
 
 *extract_map
 	snd SOUNDLIST_EXITMAP1
-	gReturnArea = gArea, gLevel, cX(CHARA_PLAYER), cY(CHARA_PLAYER)
-	gTeleportArea = AREA_SHOW_HOUSE
-	gTeleportLevel = 1
+	gdata(GDATA_RETURN_AREA) = gdata(GDATA_AREA), gdata(GDATA_LEVEL), cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER)
+	gdata(GDATA_TELEPORT_AREA) = AREA_SHOW_HOUSE
+	gdata(GDATA_TELEPORT_LEVEL) = 1
 	levelexitby = MAP_EXIT_TELEPORT
 	goto *map_exit
 
@@ -3225,11 +3225,11 @@
 *define_los
 	dim fovlist, 2, 17
 	dim fovmap, 17 * 2 + 4, 17 * 2
-	if ( cFov(CHARA_PLAYER) < 1 ) {
-		cFov(CHARA_PLAYER) = 1
+	if ( cdata(CDATA_FOV, CHARA_PLAYER) < 1 ) {
+		cdata(CDATA_FOV, CHARA_PLAYER) = 1
 	}
-	if ( cFov(CHARA_PLAYER) >= 17 ) {
-		cFov(CHARA_PLAYER) = 17 - 1
+	if ( cdata(CDATA_FOV, CHARA_PLAYER) >= 17 ) {
+		cdata(CDATA_FOV, CHARA_PLAYER) = 17 - 1
 	}
 	repeat 17
 		y = cnt
@@ -3470,8 +3470,8 @@
 	snd SOUNDLIST_POP2
 	redraw 0
 	gsel BUFFER_BUF
-	x = (cX(CHARA_PLAYER) - scx) * inf_tiles + inf_screenx - 48
-	y = (cY(CHARA_PLAYER) - scy) * inf_tiles + inf_screeny - 48
+	x = (cdata(CDATA_X, CHARA_PLAYER) - scx) * inf_tiles + inf_screenx - 48
+	y = (cdata(CDATA_Y, CHARA_PLAYER) - scy) * inf_tiles + inf_screeny - 48
 	gmode 0
 	pos 0, 0
 	gcopy BUFFER_SCREEN, x, y, 48 * 3, 48 * 3
@@ -3485,8 +3485,8 @@
 	t++
 	gmode 4, 28, 28, 200 - t / 2 \ 20 * (t / 2 \ 20)
 	color 0, 0, 0
-	x = (cX(CHARA_PLAYER) - scx) * inf_tiles + inf_screenx + 24
-	y = (cY(CHARA_PLAYER) - scy) * inf_tiles + inf_screeny + 24
+	x = (cdata(CDATA_X, CHARA_PLAYER) - scx) * inf_tiles + inf_screenx + 24
+	y = (cdata(CDATA_Y, CHARA_PLAYER) - scy) * inf_tiles + inf_screeny + 24
 	if ( key_alt == 0 ) {
 		pos x, y - 48
 		grotate BUFFER_INF, 212, 432, 0, 28, 28
@@ -3513,8 +3513,8 @@
 	gmode 2
 	await 30
 	key_check 1
-	x = cX(CHARA_PLAYER)
-	y = cY(CHARA_PLAYER)
+	x = cdata(CDATA_X, CHARA_PLAYER)
+	y = cdata(CDATA_Y, CHARA_PLAYER)
 	if ( key == key_alter ) {
 		goto *prompt_direction_WHILE1_CONTINUE
 	}
@@ -3573,13 +3573,13 @@
 		y += 1
 	}
 	if ( key != "" ) {
-		if ( x < 0 | y < 0 | x >= mWidth | y >= mHeight ) {
-			x = cX(CHARA_PLAYER)
-			y = cY(CHARA_PLAYER)
+		if ( x < 0 | y < 0 | x >= mdata(MDATA_WIDTH) | y >= mdata(MDATA_HEIGHT) ) {
+			x = cdata(CDATA_X, CHARA_PLAYER)
+			y = cdata(CDATA_Y, CHARA_PLAYER)
 			keyhalt = 1
 			return 0
 		}
-		if ( x == cX(CHARA_PLAYER) & y == cY(CHARA_PLAYER) ) {
+		if ( x == cdata(CDATA_X, CHARA_PLAYER) & y == cdata(CDATA_Y, CHARA_PLAYER) ) {
 			return 0
 		}
 		tlocx = x
@@ -3787,7 +3787,7 @@
 	}
 	if ( int(buff) == 1 ) {
 		repeat 245
-			noteadd "" + cnt + "\t" + cnName(cnt) + "\tExist:" + cExist(cnt) + "\tRespawn:" + cRespawn(cnt) + "\tRole:" + cRole(cnt)
+			noteadd "" + cnt + "\t" + cdatan(CDATAN_NAME, cnt) + "\tExist:" + cdata(CDATA_EXIST, cnt) + "\tRespawn:" + cdata(CDATA_RESPAWN, cnt) + "\tRole:" + cdata(CDATA_ROLE, cnt)
 		loop
 		goto *console_write
 	}
@@ -3912,7 +3912,7 @@
 		goto *console_write
 	}
 	if ( instr(buff, 0, "exitroom") != (-1) ) {
-		if ( gArea == AREA_SHOW_HOUSE ) {
+		if ( gdata(GDATA_AREA) == AREA_SHOW_HOUSE ) {
 			dbg_exitshowroom = 1
 			noteadd "Done."
 		}
@@ -3922,10 +3922,10 @@
 		goto *console_write
 	}
 	if ( instr(buff, 0, "removequest") != (-1) ) {
-		repeat gClient
-			if ( qStatus(cnt) != QUEST_STATE_NONE ) {
-				if ( qDeadline(cnt) == (-1) ) {
-					qStatus(cnt) = QUEST_STATE_NONE
+		repeat gdata(GDATA_CLIENT)
+			if ( qdata(QDATA_STATE, cnt) != QUEST_STATE_NONE ) {
+				if ( qdata(QDATA_DEADLINE, cnt) == (-1) ) {
+					qdata(QDATA_STATE, cnt) = QUEST_STATE_NONE
 				}
 			}
 		loop
@@ -3934,21 +3934,21 @@
 	}
 	if ( instr(buff, 0, "fixmap") != (-1) ) {
 		repeat 245
-			if ( cExist(cnt) != CHAR_STATE_ALIVE ) {
+			if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
 				continue
 			}
-			if ( cX(cnt) < 0 | cX(cnt) >= mWidth | cY(cnt) < 0 | cY(cnt) >= mHeight ) {
-				cX(cnt) = 0
-				cY(cnt) = 0
+			if ( cdata(CDATA_X, cnt) < 0 | cdata(CDATA_X, cnt) >= mdata(MDATA_WIDTH) | cdata(CDATA_Y, cnt) < 0 | cdata(CDATA_Y, cnt) >= mdata(MDATA_HEIGHT) ) {
+				cdata(CDATA_X, cnt) = 0
+				cdata(CDATA_Y, cnt) = 0
 			}
 		loop
 		repeat 400, 5080
-			if ( iNum(cnt) <= 0 ) {
+			if ( inv(INV_ITEM_NUM, cnt) <= 0 ) {
 				continue
 			}
-			if ( iX(cnt) < 0 | iX(cnt) >= mWidth | iY(cnt) < 0 | iY(cnt) >= mHeight ) {
-				iX(cnt) = 0
-				iY(cnt) = 0
+			if ( inv(INV_ITEM_X, cnt) < 0 | inv(INV_ITEM_X, cnt) >= mdata(MDATA_WIDTH) | inv(INV_ITEM_Y, cnt) < 0 | inv(INV_ITEM_Y, cnt) >= mdata(MDATA_HEIGHT) ) {
+				inv(INV_ITEM_X, cnt) = 0
+				inv(INV_ITEM_Y, cnt) = 0
 			}
 		loop
 		cell_refresh 0, 0
@@ -3978,20 +3978,20 @@
 			inv_getheader rc
 			repeat invrange, invhead
 				cnt2 = cnt
-				if ( iID(cnt) >= MAX_ITEM_DBID | iID(cnt) <= ITEM_ID_DUMMY | iNum(cnt) <= 0 ) {
+				if ( inv(INV_ITEM_ID, cnt) >= MAX_ITEM_DBID | inv(INV_ITEM_ID, cnt) <= ITEM_ID_DUMMY | inv(INV_ITEM_NUM, cnt) <= 0 ) {
 					repeat 70
 						inv(cnt, cnt2) = 0
 					loop
 				}
-				if ( iEquip(cnt) != 0 ) {
-					iEquip(cnt) = 0
+				if ( inv(INV_ITEM_EQUIP, cnt) != 0 ) {
+					inv(INV_ITEM_EQUIP, cnt) = 0
 				}
 			loop
 			repeat 30, 100
 				cdata(cnt, rc) = cdata(cnt, rc) / EXT_EQUIP_SLOTS * 10000
 			loop
 			if ( cnt >= 16 ) {
-				cExist(cnt) = CHAR_STATE_ADV_DEAD
+				cdata(CDATA_EXIST, cnt) = CHAR_STATE_ADV_DEAD
 				gosub *adv_generate
 			}
 		loop
@@ -4001,12 +4001,12 @@
 	if ( instr(buff, 0, "client") != (-1) ) {
 		dim mapclient, 1000
 		repeat 500
-			if ( qClient(cnt) == 0 ) {
+			if ( qdata(QDATA_CLIENT, cnt) == 0 ) {
 				i = cnt
 				continue
 			}
-			noteadd "id:" + cnt + " name:" + qname(cnt) + " map:" + mapname(qMap(cnt))
-			mapclient(qMap(cnt))++
+			noteadd "id:" + cnt + " name:" + qname(cnt) + " map:" + mapname(qdata(QDATA_MAP, cnt))
+			mapclient(qdata(QDATA_MAP, cnt))++
 		loop
 		repeat 1000
 			if ( mapclient(cnt) != 0 ) {
@@ -4020,9 +4020,9 @@
 			if ( cnt < 57 ) {
 				continue
 			}
-			if ( cExist(cnt) == CHAR_STATE_ALIVE ) {
-				cRelation(cnt) = RELATION_ENEMY
-				cOrgRelation(cnt) = RELATION_ENEMY
+			if ( cdata(CDATA_EXIST, cnt) == CHAR_STATE_ALIVE ) {
+				cdata(CDATA_RELATION, cnt) = RELATION_ENEMY
+				cdata(CDATA_RELATION_ORG, cnt) = RELATION_ENEMY
 			}
 		loop
 		noteadd "Done."
@@ -4030,41 +4030,41 @@
 	}
 	if ( instr(buff, 0, "test") != (-1) ) {
 		repeat 500
-			noteadd "" + cnt + ":" + mapname(cnt) + "/" + areaId(cnt)
+			noteadd "" + cnt + ":" + mapname(cnt) + "/" + adata(ADATA_ID, cnt)
 		loop
 		noteadd "Done."
 		goto *console_write
 	}
 	if ( instr(buff, 0, "mapinfo") != (-1) ) {
-		noteadd "gArea\t\t:" + gArea
-		noteadd "gLevel\t\t:" + gLevel
+		noteadd "gArea\t\t:" + gdata(GDATA_AREA)
+		noteadd "gLevel\t\t:" + gdata(GDATA_LEVEL)
 		noteadd "file\t\t:" + "mdata_" + mid + ".s2"
-		noteadd "pc x/y\t\t:" + cX(CHARA_PLAYER) + "/" + cY(CHARA_PLAYER)
-		noteadd "map max w/h\t:" + mWidth + "/" + mHeight
+		noteadd "pc x/y\t\t:" + cdata(CDATA_X, CHARA_PLAYER) + "/" + cdata(CDATA_Y, CHARA_PLAYER)
+		noteadd "map max w/h\t:" + mdata(MDATA_WIDTH) + "/" + mdata(MDATA_HEIGHT)
 		noteadd "Done."
 		goto *console_write
 	}
 	if ( instr(buff, 0, "quest") != (-1) ) {
-		noteadd "gQuest:" + gQuest + " gQuestRef:" + gQuestRef + " gQuestStatus:" + gQuestStatus + " rq:" + rq
+		noteadd "gQuest:" + gdata(GDATA_QUEST) + " gQuestRef:" + gdata(GDATA_QUEST_REF) + " gQuestStatus:" + gdata(GDATA_QUEST_STATE) + " rq:" + rq
 		repeat 5
 			p = gdata(GDATA_QUEST_POOL + cnt)
-			noteadd "quest" + cnt + " " + p + " exist" + qExist(p) + " status" + qStatus(p) + " var" + qVar(p) + " encount" + qdata((10 /*!!!@[QDATA_DEST_CLIENT @@@ QDATA_ENCOUNTER]@!!! */), p)
+			noteadd "quest" + cnt + " " + p + " exist" + qdata(QDATA_EXIST, p) + " status" + qdata(QDATA_STATE, p) + " var" + qdata(QDATA_VAR, p) + " encount" + qdata((10 /*!!!@[QDATA_DEST_CLIENT @@@ QDATA_ENCOUNTER]@!!! */), p)
 		loop
-		repeat gClient
-			noteadd "" + cnt + " " + qClient(cnt) + "/" + qMap(cnt)
+		repeat gdata(GDATA_CLIENT)
+			noteadd "" + cnt + " " + qdata(QDATA_CLIENT, cnt) + "/" + qdata(QDATA_MAP, cnt)
 		loop
 		goto *console_write
 	}
 	if ( instr(buff, 0, "wizard") != (-1) ) {
-		gWizard = 1
-		cnAka(CHARA_PLAYER) = "*Debug*"
+		gdata(GDATA_WIZARD) = 1
+		cdatan(CDATAN_AKA, CHARA_PLAYER) = "*Debug*"
 		noteadd "Wizard mode activated."
 		goto *console_write
 	}
-	if ( gWizard | 0 ) {
+	if ( gdata(GDATA_WIZARD) | 0 ) {
 		if ( instr(buff, 0, "gain_spell") != (-1) ) {
 			repeat 492 - 400, 400
-				skillgain CHARA_PLAYER, cnt, cLevel(r1), 100 * 100
+				skillgain CHARA_PLAYER, cnt, cdata(CDATA_LEVEL, r1), 100 * 100
 			loop
 			noteadd "Done."
 			goto *console_write
@@ -4081,14 +4081,14 @@
 				if ( cnt < 5080 ) {
 					if ( cnt >= 200 ) {
 						if ( (cnt - 200) \ 20 == 0 ) {
-							noteadd "-----------" + cnName((cnt - 200) / 20 + 1)
+							noteadd "-----------" + cdatan(CDATAN_NAME, (cnt - 200) / 20 + 1)
 						}
 					}
 				}
 				if ( cnt == 5080 ) {
 					noteadd "-----------------------MAP INV"
 				}
-				noteadd "" + cnt + "\t" + iNum(cnt) + "\t" + itemname(cnt) + " it:" + iTurn(cnt)
+				noteadd "" + cnt + "\t" + inv(INV_ITEM_NUM, cnt) + "\t" + itemname(cnt) + " it:" + inv(INV_ITEM_TURN, cnt)
 			loop
 			goto *console_write
 		}
@@ -4097,14 +4097,14 @@
 				if ( cnt == 5080 ) {
 					noteadd "-----------------------MAP INV"
 				}
-				if ( iNum(cnt) != 0 ) {
-					noteadd "" + cnt + "\t" + iNum(cnt) + "\t" + itemname(cnt) + " it:" + iTurn(cnt)
+				if ( inv(INV_ITEM_NUM, cnt) != 0 ) {
+					noteadd "" + cnt + "\t" + inv(INV_ITEM_NUM, cnt) + "\t" + itemname(cnt) + " it:" + inv(INV_ITEM_TURN, cnt)
 				}
 			loop
 			goto *console_write
 		}
 		if ( instr(buff, 0, "gain_exp") != (-1) ) {
-			cExp(CHARA_PLAYER) += 1000000000
+			cdata(CDATA_EXP, CHARA_PLAYER) += 1000000000
 			r1 = 0
 			r2 = 0
 			gosub *calcLevelUp
@@ -4112,7 +4112,7 @@
 			goto *console_write
 		}
 		if ( instr(buff, 0, "gain_fame") != (-1) ) {
-			cFame(CHARA_PLAYER) += 10000
+			cdata(CDATA_FAME, CHARA_PLAYER) += 10000
 			noteadd "Done."
 			goto *console_write
 		}

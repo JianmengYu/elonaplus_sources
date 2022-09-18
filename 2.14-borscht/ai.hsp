@@ -235,18 +235,18 @@
 					snd SOUNDLIST_ENC
 					animeload 40, cc
 					evadd EVENT_CHAOS_CRADLE_SPAWN_YAYAUHQUI
-					goto *label_9247
+					goto *turn_end
 				}
 			}
 			if ( gdata(GDATA_FLAG_MAIN) == 880 ) {
 				healhp cc, cdata(CDATA_MAX_HP, cc) / 4
 				evadd EVENT_CHAOS_CRADLE_CHAT_JALDABAOTH
-				goto *label_9247
+				goto *turn_end
 			}
 			if ( gdata(GDATA_FLAG_MAIN) == 890 ) {
 				healhp cc, cdata(CDATA_MAX_HP, cc) / 4
 				evadd EVENT_CHAOS_CRADLE_CHAT_JALDABAOTH
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 	}
@@ -260,13 +260,13 @@
 				}
 				if ( cdata(CDATA_HP, cc) >= cdata(CDATA_MAX_HP, cc) / 2 ) {
 					if ( rnd(tekagen + 1) != 0 ) {
-						goto *label_9247
+						goto *turn_end
 					}
 				}
 				if ( dist(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), cdata(CDATA_X, cc), cdata(CDATA_Y, cc)) <= 1 ) {
 					if ( cdata(CDATA_HP, cc) >= cdata(CDATA_MAX_HP, cc) / 2 ) {
 						if ( rnd(tekagen + 1) != 0 ) {
-							goto *label_9247
+							goto *turn_end
 						}
 					}
 				}
@@ -311,7 +311,7 @@
 						txt lang(name(cc) + "は全てを忘れ、完全に動きを止めた…。", name(tc) + " forgot everything and completely stopped moving....")
 						gdata(GDATA_FLAG_MAIN) = 755
 						evadd EVENT_NAGAREW
-						goto *label_9247
+						goto *turn_end
 					}
 				}
 				if ( gdata(GDATA_FLAG_MAIN) == 740 ) {
@@ -320,7 +320,7 @@
 						gdata(GDATA_FLAG_CHAOS_CHILD_FORGET) = 200
 						gdata(GDATA_FLAG_MAIN) = 745
 						evadd EVENT_NAGAREW
-						goto *label_9247
+						goto *turn_end
 					}
 				}
 				if ( gdata(GDATA_FLAG_MAIN) == 730 ) {
@@ -334,7 +334,7 @@
 						gosub *anime
 						cdata(CDATA_CONDITION_BIND, cc) = 999
 						evadd EVENT_NAGAREW
-						goto *label_9247
+						goto *turn_end
 					}
 				}
 				if ( gdata(GDATA_FLAG_MAIN) == 720 ) {
@@ -343,29 +343,29 @@
 						gdata(GDATA_FLAG_CHAOS_CHILD_FORGET) = 100
 						gdata(GDATA_FLAG_MAIN) = 725
 						evadd EVENT_NAGAREW
-						goto *label_9247
+						goto *turn_end
 					}
 				}
 			}
 			if ( gdata(GDATA_FLAG_MAIN) >= 845 ) {
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 	}
 	if ( cbit(CHARA_BIT_BRUSHED, cc) & cbit(CHARA_BIT_LIVESTOCK, cc) == TRUE ) {
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( cdata(CDATA_ID, cc) == CREATURE_ID_RAIZEL_THE_OLD_WIZARD ) {
 		if ( cdata(CDATA_ALLIED, cc) == 0 ) {
 			if ( gdata(GDATA_FLAG_MAIN) >= 760 ) {
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 	}
 	if ( cdata(CDATA_ID, cc) == CREATURE_ID_JALDABAOTH_THE_CHAOS_CHILD ) {
 		if ( cdata(CDATA_ALLIED, cc) == 0 ) {
 			if ( gdata(GDATA_FLAG_MAIN) >= 875 & gdata(GDATA_FLAG_MAIN) < 900 ) {
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 	}
@@ -377,10 +377,10 @@
 			}
 		}
 		cdata(CDATA_AI_AGGRO, cc) = 0
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( cbit(CHARA_BIT_LIVESTOCK, cc) ) {
-		goto *label_8978
+		goto *ai_calmMove
 	}
 	if ( cbit(CHARA_BIT_NECRO, cc) ) {
 		if ( synccheck(cc, -1) == 0 ) {
@@ -390,7 +390,7 @@
 						tc = CHARA_PLAYER
 						efid = SKILL_SPACT_SHADOW_STEP
 						gosub *effect
-						goto *label_9247
+						goto *turn_end
 					}
 				}
 			}
@@ -420,7 +420,7 @@
 							tc = CHARA_PLAYER
 							efid = SKILL_SPACT_SHADOW_STEP
 							gosub *effect
-							goto *label_9247
+							goto *turn_end
 						}
 					}
 				}
@@ -432,7 +432,7 @@
 		tlocy = cdata(CDATA_Y, cc)
 		efid = SKILL_SPACT_SUICIDE_ATTACK
 		gosub *effect
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( cc < MAX_CHARA_FOLLOWER ) {
 		if ( gdata(GDATA_FLAG_GAME_MODE) == 1 & cdata(CDATA_RELATION, cc) == RELATION_DISLIKE & cdata(CDATA_IMPRESSION, cc) > 0 ) {
@@ -463,7 +463,7 @@
 			if ( cdata(CDATA_TARGET, cc) == 0 ) {
 				if ( cc < MAX_CHARA_FOLLOWER | cdata(CDATA_ALLIED, cc) == 100 ) {
 					if ( cdata(CDATA_DIRECTIVE_MODE, cc) != DIRECTIVE_MODE_DEFENSIVE & cdata(CDATA_DIRECTIVE_MODE, cc) != DIRECTIVE_MODE_TALKING ) {
-						gosub *label_5740
+						gosub *findTarget
 					}
 				}
 			}
@@ -515,7 +515,7 @@
 					txtmore
 					txt lang("「いいぞ！」", cnvtalk("Come on!")), lang("「もっとやれー」", cnvtalk("More blood!")), lang("「血をみせろー」", cnvtalk("Beat'em!")), lang("「頑張って！」", cnvtalk("Use your brain!")), lang("「うぉぉぉぉ！」", cnvtalk("Wooooo!")), lang("「行けぇ！」", cnvtalk("Go go!")), lang("「頭を使えよ」", cnvtalk("Good fighting.")), lang("「きゃー」", cnvtalk("Yeeee!"))
 				}
-				goto *label_8978
+				goto *ai_calmMove
 			}
 		}
 		if ( cbit(CHARA_BIT_SUMMONED, cc) == TRUE ) {
@@ -526,7 +526,7 @@
 					txtmore
 					txt lang("「面白そう！」", cnvtalk("Come on!")), lang("「どっちもがんばれー」", cnvtalk("More blood!"))
 				}
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 		cdata(CDATA_AI_AGGRO, cc) = 100
@@ -571,7 +571,7 @@
 				else {
 					petarenawin = 2
 				}
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 	}
@@ -629,12 +629,12 @@
 							if ( cdata(CDATA_ROW_ACT, CHARA_PLAYER) != ACTION_PERFORM ) {
 								if ( cdata(CDATA_AI_AGGRO, cc) <= 0 ) {
 									customtalk cc, DBMODE_FLAVOR_PASSIVE
-									gosub *label_0416
+									gosub *convert_word
 								}
 								if ( findbuff(cc, BUFF_RUN_WILDLY) == (-1) ) {
 									if ( cdata(CDATA_AI_AGGRO, cc) > 0 ) {
 										customtalk cc, DBMODE_FLAVOR_ANGERED
-										gosub *label_0416
+										gosub *convert_word
 									}
 								}
 							}
@@ -685,7 +685,7 @@
 				if ( cdata(CDATA_CONDITION_BLEED, cc) != 0 ) {
 					cdata(CDATA_CONDITION_BLEED, cc) = cdata(CDATA_CONDITION_BLEED, cc) / 8 + 1
 				}
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 	}
@@ -703,14 +703,14 @@
 					npccostmp = 1
 					gosub *cast
 					if ( stat == 1 ) {
-						goto *label_9247
+						goto *turn_end
 					}
 				}
 				else {
 					if ( efid >= (600 /*!!!@[MAX_SKILL_RANGE @@@ STARTING_SKILL_SPACT]@!!! */) ) {
 						gosub *action
 						if ( stat == 1 ) {
-							goto *label_9247
+							goto *turn_end
 						}
 					}
 				}
@@ -735,16 +735,16 @@
 		if ( cdata(CDATA_RELATION, cc) == RELATION_ALLY & cdata(CDATA_HUNGER, cc) > 10000 ) {
 		}
 		else {
-			if ( cbit(1033, cc) == TRUE ) {
+			if ( cbit(CHARA_BIT_PROHIBIT_EATING_FROM_GROUND, cc) == TRUE ) {
 				txtef COLOR_BLUE
 				customtalk cc, DBMODE_FLAVOR_DISCIPLINE_EAT
-				gosub *label_0416
+				gosub *convert_word
 				if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 					txt lang(name(cc) + "はあなたの顔色をうかがいながら恐る恐る食べ物を手に取った。", name(cc) + " is drooling.")
 				}
 				goto *act_eat
 			}
-			if ( cbit(1033, cc) != TRUE ) {
+			if ( cbit(CHARA_BIT_PROHIBIT_EATING_FROM_GROUND, cc) != TRUE ) {
 				goto *act_eat
 			}
 		}
@@ -772,12 +772,12 @@
 		distance = dist(cdata(CDATA_X, tc), cdata(CDATA_Y, tc), cdata(CDATA_X, cc), cdata(CDATA_Y, cc))
 		if ( cdata(CDATA_CONDITION_BLIND, cc) != 0 ) {
 			if ( rnd(10) > 2 ) {
-				goto *label_8978
+				goto *ai_calmMove
 			}
 		}
 		if ( cdata(CDATA_CONDITION_CONFUSE, cc) != 0 ) {
 			if ( rnd(10) > 3 ) {
-				goto *label_8978
+				goto *ai_calmMove
 			}
 		}
 		if ( tc == CHARA_PLAYER ) {
@@ -816,15 +816,15 @@
 										}
 									}
 									else {
-										if ( cbit(1033, cc) != TRUE ) {
+										if ( cbit(CHARA_BIT_PROHIBIT_EATING_FROM_GROUND, cc) != TRUE ) {
 											if ( cdata(CDATA_RIDING, cc) == 0 ) {
 												if ( inv(INV_ITEM_ID, ci) != ITEM_ID_PUFF_PUFF_BREAD | cdata(CDATA_ID, cc) != CREATURE_ID_ALCHEMIST_NAPLUS ) {
 													if ( inv(INV_ITEM_STATUS, ci) >= ITEM_STATUS_NORMAL ) {
 														if ( adata(ADATA_ID, gdata(GDATA_AREA)) != AREA_RANCH & adata(ADATA_ID, gdata(GDATA_AREA)) != AREA_SHOP & gdata(GDATA_QUEST) != QUEST_TYPE_PARTY ) {
-															if ( cbit(1032, cc) != TRUE | cdata(CDATA_MASTER_SERVANT, cc) <= 0 ) {
+															if ( cbit(CHARA_BIT_PROHIBIT_PICKING_UP_ITEMS, cc) != TRUE | cdata(CDATA_MASTER_SERVANT, cc) <= 0 ) {
 																goto *act_eat
 															}
-															if ( cbit(1032, cc) == TRUE ) {
+															if ( cbit(CHARA_BIT_PROHIBIT_PICKING_UP_ITEMS, cc) == TRUE ) {
 																if ( cdata(CDATA_MASTER_SERVANT, cc) > 0 ) {
 																	if ( rnd(cdata(CDATA_MASTER_SERVANT, cc) + 1) == 0 ) {
 																		txtef COLOR_RED
@@ -839,7 +839,7 @@
 											}
 										}
 									}
-									if ( cbit(1033, cc) == TRUE ) {
+									if ( cbit(CHARA_BIT_PROHIBIT_EATING_FROM_GROUND, cc) == TRUE ) {
 										if ( cdata(CDATA_RIDING, cc) == 0 ) {
 											if ( inv(INV_ITEM_ID, ci) != ITEM_ID_PUFF_PUFF_BREAD | cdata(CDATA_ID, cc) != CREATURE_ID_ALCHEMIST_NAPLUS ) {
 												if ( inv(INV_ITEM_STATUS, ci) >= ITEM_STATUS_NORMAL ) {
@@ -859,17 +859,17 @@
 										if ( inv(INV_ITEM_PARAM1, ci) >= (-5) ) {
 											if ( inv(INV_ITEM_PARAM3, ci) < 20 ) {
 												if ( inv(INV_ITEM_ID, ci) != ITEM_ID_HOLY_WELL ) {
-													if ( cbit(1033, cc) == TRUE ) {
+													if ( cbit(CHARA_BIT_PROHIBIT_EATING_FROM_GROUND, cc) == TRUE ) {
 														if ( rnd(5) == 0 ) {
 															txtef COLOR_BLUE
 															txt lang(name(cc) + "は喉を潤そうとしたが、何かを思い出してびくりと震えた。", name(cc) + " could not endure.")
 														}
 													}
-													if ( cbit(1033, cc) != TRUE ) {
-														if ( cbit(1032, cc) != TRUE | cdata(CDATA_MASTER_SERVANT, cc) <= 0 ) {
+													if ( cbit(CHARA_BIT_PROHIBIT_EATING_FROM_GROUND, cc) != TRUE ) {
+														if ( cbit(CHARA_BIT_PROHIBIT_PICKING_UP_ITEMS, cc) != TRUE | cdata(CDATA_MASTER_SERVANT, cc) <= 0 ) {
 															goto *act_drink
 														}
-														if ( cbit(1032, cc) == TRUE ) {
+														if ( cbit(CHARA_BIT_PROHIBIT_PICKING_UP_ITEMS, cc) == TRUE ) {
 															if ( cdata(CDATA_MASTER_SERVANT, cc) > 0 ) {
 																if ( rnd(cdata(CDATA_MASTER_SERVANT, cc) * 2 + 1) == 0 ) {
 																	txtef COLOR_RED
@@ -891,11 +891,11 @@
 								if ( ibit(ITEM_BIT_PRECIOUS, ci) == FALSE ) {
 									if ( mdata(MDATA_TYPE) != MAP_TYPE_HOME ) {
 										in = inv(INV_ITEM_NUM, ci)
-										if ( cbit(1032, cc) != TRUE ) {
+										if ( cbit(CHARA_BIT_PROHIBIT_PICKING_UP_ITEMS, cc) != TRUE ) {
 											if ( gdata(GDATA_RIDER) != cc ) {
 												gosub *act_get
 												if ( stat == 1 ) {
-													goto *label_9247
+													goto *turn_end
 												}
 											}
 										}
@@ -907,7 +907,7 @@
 				}
 				if ( cdata(CDATA_AREA, cc) == gdata(GDATA_AREA) ) {
 					if ( cbit(CHARA_BIT_HIRED, cc) == FALSE ) {
-						goto *label_8978
+						goto *ai_calmMove
 					}
 				}
 				if ( distance > 2 | rnd(3) ) {
@@ -915,7 +915,7 @@
 					goto *ai_followMove
 				}
 				else {
-					goto *label_8978
+					goto *ai_calmMove
 				}
 			}
 		}
@@ -928,7 +928,7 @@
 		}
 		if ( cdata(CDATA_CONDITION_BLIND, cc) != 0 ) {
 			if ( rnd(3) ) {
-				goto *label_8978
+				goto *ai_calmMove
 			}
 		}
 		if ( distance != cdata(CDATA_AI_DISTANCE, cc) ) {
@@ -997,25 +997,25 @@
 	if ( tc == CHARA_PLAYER ) {
 		r1 = tc
 		r2 = cc
-		gosub *label_4095
+		gosub *calcStealth
 		if ( stat == 1 ) {
 			if ( cdata(CDATA_RELATION, cc) == RELATION_ENEMY ) {
 				cdata(CDATA_AI_AGGRO, cc) = 30
 			}
 		}
 	}
-	goto *label_8978
+	goto *ai_calmMove
 
-*label_8978
+*ai_calmMove
 	if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE ) {
 		if ( cdata(CDATA_TARGET, cc) != 0 | cdata(CDATA_TARGET, cc) == 0 ) {
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( cdata(CDATA_ID, cc) == CREATURE_ID_RAIZEL_THE_OLD_WIZARD ) {
 		if ( cdata(CDATA_ALLIED, cc) == 0 ) {
 			if ( gdata(GDATA_FLAG_MAIN) >= 760 ) {
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 	}
@@ -1026,11 +1026,11 @@
 	}
 	if ( cc > MAX_CHARA_FOLLOWER ) {
 		if ( rnd(5) != 0 ) {
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( adata(ADATA_TYPE, gdata(GDATA_AREA)) == MAP_TYPE_WORLD ) {
-		goto *label_9247
+		goto *turn_end
 	}
 
 	if ( cdata(CDATA_CONDITION_DRUNK, cc) != 0 ) {
@@ -1041,43 +1041,43 @@
 				}
 *label_8979
 				if ( 1 == 0 ) {
-					goto *label_8981
+					goto *ai_calmMove_WEND1
 				}
 				if ( jp ) {
 					if ( rnd(3) == 0 ) {
 						txt "「米さ米種だろ♪」", "「飲ま飲まイェイ！！」", "「飲ま飲ま飲まイェイ！！」"
-						goto *label_8981
+						goto *ai_calmMove_WEND1
 					}
 					if ( rnd(4) == 0 ) {
 						txt "「字ベロ♪指♪ラマ♪ｸﾏｰ!!して♪パンチラ♪」", "「アロー♪アーロン♪スゲェ♪ピカソ♪算段ビーフ♪」", "「キスすごい肉♪脱線してんの♪さらに肉♪」"
-						goto *label_8981
+						goto *ai_calmMove_WEND1
 					}
 					if ( rnd(4) == 0 ) {
 						txt "「キープダルシム♪アゴスタディーイェイ♪並フェイスで大きい筆入れ♪」", "「ハロー♪猿ー♪すげー♪うん入る♪」"
-						goto *label_8981
+						goto *ai_calmMove_WEND1
 					}
 					if ( rnd(4) == 0 ) {
 						txtef COLOR_BLUE
 						txt " *ﾋﾟﾛﾘ〜ﾋﾟﾛﾘ〜* "
-						goto *label_8981
+						goto *ai_calmMove_WEND1
 					}
 					txt "「マイアヒー♪」", "「マイアフゥー♪」", "「マイアホー♪」"
-					goto *label_8981
+					goto *ai_calmMove_WEND1
 				}
 				else {
 					if ( rnd(2) == 0 ) {
 						txt cnvtalk("Vrei sa pleci dar♪"), cnvtalk("Numa numa yay!!"), cnvtalk("Numa numa numa yay!!")
-						goto *label_8981
+						goto *ai_calmMove_WEND1
 					}
 					txt cnvtalk("Mai-Ya-Hi♪"), cnvtalk("Mai-Ya-Hoo♪"), cnvtalk("Mai-Ya-Ha Ma Mi A♪")
-					goto *label_8981
+					goto *ai_calmMove_WEND1
 				}
 				goto *label_8979
 			}
 		}
 	}
 
-*label_8981
+*ai_calmMove_WEND1
 	if ( cc > MAX_CHARA_FOLLOWER ) {
 		if ( cbit(CHARA_BIT_NECRO, cc) != TRUE ) {
 			if ( gdata(GDATA_AREA) != AREA_SEBI ) {
@@ -1161,7 +1161,7 @@
 									if ( stat == 1 ) {
 										snd SOUNDLIST_SNOW
 										txt lang(name(cc) + "は" + itemname(ci) + "を作った！", name(cc) + " make" + _s(cc) + " " + itemname(ci) + "!")
-										goto *label_9247
+										goto *turn_end
 									}
 								}
 							}
@@ -1249,28 +1249,28 @@
 				if ( rnd(10) == 0 ) {
 					efid = SKILL_NORMAL_PERFORMER
 					gosub *effect
-					goto *label_9247
+					goto *turn_end
 				}
 			}
 			if ( cdata(CDATA_AI_CALM, cc) == 7 ) {
 				if ( rnd(10) == 0 ) {
 					efid = SKILL_SPACT_PREACHING
 					gosub *effect
-					goto *label_9247
+					goto *turn_end
 				}
 			}
 			if ( cdata(CDATA_AI_CALM, cc) == 12 ) {
 				if ( rnd(10) == 0 ) {
 					efid = SKILL_SPACT_SERIOUS_BEGGING
 					gosub *effect
-					goto *label_9247
+					goto *turn_end
 				}
 			}
 			if ( cdata(CDATA_AI_CALM, cc) == 8 ) {
 				if ( rnd(10) == 0 ) {
 					efid = SKILL_SPACT_FASCINATION_DANCE
 					gosub *effect
-					goto *label_9247
+					goto *turn_end
 				}
 			}
 			if ( cdata(CDATA_AI_CALM, cc) == 9 ) {
@@ -1357,8 +1357,8 @@
 					if ( distance == 1 ) {
 						if ( cdata(CDATA_ROW_ACT, tc) == ACTION_NONE ) {
 							cdata(CDATA_TARGET, cc) = 0
-							gosub *label_6019
-							goto *label_9247
+							gosub *sexsex
+							goto *turn_end
 						}
 					}
 					if ( distance < 6 ) {
@@ -1396,7 +1396,7 @@
 			goto *act_move
 		}
 	}
-	goto *label_9247
+	goto *turn_end
 
 *ai_followMove
 	if ( mdata(MDATA_TYPE) == MAP_TYPE_TOWN ) {
@@ -1519,7 +1519,7 @@
 	}
 	if ( tc == cc ) {
 		cdata(CDATA_TARGET, cc) = 0
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( cdata(CDATA_MOVE_AROUND, cc) <= 0 ) {
 		cdata(CDATA_X_DEST, cc) = cdata(CDATA_X, tc)
@@ -1594,7 +1594,7 @@
 				}
 			}
 			ride = 0
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	ride = 0
@@ -1681,7 +1681,7 @@
 							}
 						}
 					}
-					goto *label_9247
+					goto *turn_end
 				}
 			}
 		}
@@ -1772,7 +1772,7 @@
 			cdata(CDATA_X_DEST, cc) = cdata(CDATA_X, tc)
 		}
 	}
-	goto *label_9247
+	goto *turn_end
 
 *ai_moveH
 	if ( cdata(CDATA_X_DEST, cc) > cdata(CDATA_X, cc) ) {
@@ -1853,38 +1853,38 @@
 			txt lang(" *BAN* ", " *BAN* ")
 			cdata(CDATA_HP, cc) = 0
 			dmghp cc, 99999, DAMAGE_FROM_UNSEEN
-			goto *label_9247
+			goto *turn_end
 		}
 	}
-	if ( cbit(1034, cc) == TRUE ) {
+	if ( cbit(CHARA_BIT_BIRTHED_CHILD, cc) == TRUE ) {
 		if ( cdata(CDATA_SPRITE_SIZE_MILK, cc) == (-5) ) {
 			if ( rnd(100) < 20 ) {
 				txt lang(cdatan(CDATAN_NAME, cc) + "は元気にはしゃいでいる！", cdatan(CDATAN_NAME, cc) + " is rolling fine!")
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 		if ( cdata(CDATA_SPRITE_SIZE_MILK, cc) == (-4) ) {
 			if ( rnd(100) < 15 ) {
 				txt lang(cdatan(CDATAN_NAME, cc) + "は飛び跳ねて遊んでいる！", cdatan(CDATAN_NAME, cc) + " is hopping and playing!")
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 		if ( cdata(CDATA_SPRITE_SIZE_MILK, cc) == (-3) ) {
 			if ( rnd(100) < 10 ) {
 				txt lang(cdatan(CDATAN_NAME, cc) + "は興味津々によそ見をしている！", cdatan(CDATAN_NAME, cc) + " is looking away with interest!")
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 		if ( cdata(CDATA_SPRITE_SIZE_MILK, cc) == (-2) ) {
 			if ( rnd(100) < 5 ) {
 				txt lang(cdatan(CDATAN_NAME, cc) + "は真剣な顔で考え事をしている！", cdatan(CDATAN_NAME, cc) + " is thinking with a serious face!")
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 		if ( cdata(CDATA_SPRITE_SIZE_MILK, cc) == (-1) ) {
 			if ( limit(cdata(CDATA_MASTER_SERVANT, cc), 1, 150) / 10 + 80 <= rnd(100) ) {
 				txt lang(cdatan(CDATAN_NAME, cc) + "は自分の在り方について悩んでいる！", cdatan(CDATAN_NAME, cc) + " has doubts about how lives!")
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 	}
@@ -1892,13 +1892,13 @@
 		if ( cdata(CDATA_NECRO_FORCE, cc) == 10 ) {
 			efid = SKILL_SPACT_CLOSE_SUICIDE
 			gosub *action
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE ) {
 		if ( cdata(CDATA_TARGET, cc) != 0 | cdata(CDATA_TARGET, cc) == 0 ) {
 			if ( cdata(CDATA_POWER_GAUGE, cc) < 2 | cdata(CDATA_POWER_GAUGE, tc) < 2 ) {
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 	}
@@ -1998,7 +1998,7 @@
 			cdata(CDATA_FORM_SHIFT_PIC, cc) = hikae
 			create_pcpic cc, 0
 			customtalk cc, DBMODE_FLAVOR_SHIFT
-			gosub *label_0416
+			gosub *convert_word
 			if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
 				if ( jp ) {
 					txt "「変身！」", "「フォームアップ！」", "「ドレスアップ！」", "「トランスフォーム！」"
@@ -2894,7 +2894,7 @@
 								if ( stat == 1 ) {
 									goto *act_throw
 								}
-								goto *label_9247
+								goto *turn_end
 							}
 						}
 					}
@@ -3550,7 +3550,7 @@
 							if ( stat == 1 ) {
 								goto *act_throw
 							}
-							goto *label_9247
+							goto *turn_end
 						}
 					}
 				}
@@ -3788,7 +3788,7 @@
 					efid = SKILL_SPACT_MYSTERIOUS_SONG
 					gosub *effect
 				}
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 	}
@@ -3803,7 +3803,7 @@
 	}
 	if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE ) {
 		if ( act != SKILL_SPACT_DISTURBANCE ) {
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( cdata(CDATA_ID, cc) == CREATURE_ID_USER ) {
@@ -3819,7 +3819,7 @@
 			goto *act_move
 		}
 		else {
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( act >= SKILL_SPELL_HEAL_LIGHT ) {
@@ -3829,13 +3829,13 @@
 				if ( cdata(CDATA_MP, cc) < cdata(CDATA_MAX_MP, cc) / 7 ) {
 					if ( rnd(3) | cc < MAX_CHARA_FOLLOWER | cdata(CDATA_QUALITY, cc) >= FIX_QUALITY_MIRACLE | cbit(CHARA_BIT_AI_SAVE_MANA, cc) ) {
 						cdata(CDATA_MP, cc) += cdata(CDATA_LEVEL, cc) / 4 + 5
-						goto *label_9247
+						goto *turn_end
 					}
 				}
 				npccostmp = 1
 				gosub *cast
 				if ( stat == 1 ) {
-					goto *label_9247
+					goto *turn_end
 				}
 			}
 		}
@@ -3845,13 +3845,13 @@
 			efid = act
 			gosub *action
 			if ( stat == 1 ) {
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 	}
 	if ( act == ACTION_WAIT_MELEE ) {
 		if ( distance == 1 ) {
-			gosub *label_6394
+			gosub *act_melee
 		}
 		if ( rnd(3) == 0 | cc < MAX_CHARA_FOLLOWER | cdata(CDATA_ALLIED, cc) == 100 ) {
 			if ( distance < 6 ) {
@@ -3859,12 +3859,12 @@
 					gosub *FindRangeWeapon
 					if ( stat == 1 ) {
 						gosub *act_fire
-						goto *label_9247
+						goto *turn_end
 					}
 				}
 			}
 		}
-		goto *label_9247
+		goto *turn_end
 	}
 	if ( cbit(CHARA_BIT_AWAKE_PROXIMITY_ATTACK, cc) ) {
 		act = ACTION_MELEE
@@ -3886,7 +3886,7 @@
 					gosub *FindRangeWeapon
 					if ( stat == 1 ) {
 						gosub *act_fire
-						goto *label_9247
+						goto *turn_end
 					}
 				}
 			}
@@ -3894,8 +3894,8 @@
 	}
 	if ( cdata(CDATA_DIRECTIVE_MODE, cc) != DIRECTIVE_MODE_DEFENSIVE & cdata(CDATA_DIRECTIVE_MODE, cc) != DIRECTIVE_MODE_TALKING ) {
 		if ( distance == 1 ) {
-			gosub *label_6394
-			goto *label_9247
+			gosub *act_melee
+			goto *turn_end
 		}
 	}
 	if ( cdata(CDATA_DIRECTIVE_MODE, cc) != DIRECTIVE_MODE_DEFENSIVE & cdata(CDATA_DIRECTIVE_MODE, cc) != DIRECTIVE_MODE_TALKING ) {
@@ -3904,7 +3904,7 @@
 				gosub *FindRangeWeapon
 				if ( stat == 1 ) {
 					gosub *act_fire
-					goto *label_9247
+					goto *turn_end
 				}
 			}
 		}
@@ -3922,7 +3922,7 @@
 						cdata(CDATA_POWER_GAUGE, cc) += 16
 					}
 				}
-				goto *label_9247
+				goto *turn_end
 			}
 		}
 	}
@@ -3931,7 +3931,7 @@
 	}
 	if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE ) {
 		if ( cdata(CDATA_TARGET, cc) != 0 | cdata(CDATA_TARGET, cc) == 0 ) {
-			goto *label_9247
+			goto *turn_end
 		}
 	}
 	if ( rnd(100) < cdata(CDATA_AI_MOVE_FREQ, cc) ) {
@@ -3948,7 +3948,7 @@
 				cdata(CDATA_POWER_GAUGE, cc) += 16
 			}
 		}
-		goto *label_9247
+		goto *turn_end
 	}
 
 
