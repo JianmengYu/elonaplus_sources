@@ -1,0 +1,2020 @@
+--- 2.12-borscht/db_item.clean.hsp	2022-06-26 11:53:02.193919200 -0700
++++ 2.13-borscht/db_item.clean.hsp	2022-06-26 11:52:47.109937900 -0700
+@@ -5,10 +5,340 @@
+ 	dbmax = 0
+ 	dbsum = 0
+ 	if ( 1 > objlv ) {
+ 		goto *label_
+ 	}
++	if ( fltselect != 0 ) {
++		goto *label_
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *label_
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *label_
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_CORK_PACK), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *label_
++		}
++	}
++	dbsum += 150000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1261, dbsum
++	dbmax++
++
++*label_
++	if ( 40 > objlv ) {
++		goto *label_
++	}
++	if ( fltselect != 0 ) {
++		goto *label_
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *label_
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *label_
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_LASER_BAZOOKA), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *label_
++		}
++	}
++	dbsum += 200000 / (1000 + abs(objlv - 40) * 10) + 1
++	dblist(0, dbmax) = 1260, dbsum
++	dbmax++
++
++*label_
++	if ( 20 > objlv ) {
++		goto *label_
++	}
++	if ( fltselect != 3 ) {
++		goto *label_
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *label_
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *label_
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_MASTER_OF_DIAMOND), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *label_
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 20) * 10) + 1
++	dblist(0, dbmax) = 1259, dbsum
++	dbmax++
++
++*label_
++	if ( 20 > objlv ) {
++		goto *label_
++	}
++	if ( fltselect != 3 ) {
++		goto *label_
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *label_
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *label_
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_MASTER_OF_HEART), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *label_
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 20) * 10) + 1
++	dblist(0, dbmax) = 1258, dbsum
++	dbmax++
++
++*label_
++	if ( 20 > objlv ) {
++		goto *label_
++	}
++	if ( fltselect != 3 ) {
++		goto *label_
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *label_
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *label_
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_MASTER_OF_CLUB), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *label_
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 20) * 10) + 1
++	dblist(0, dbmax) = 1257, dbsum
++	dbmax++
++
++*label_
++	if ( 20 > objlv ) {
++		goto *label_
++	}
++	if ( fltselect != 3 ) {
++		goto *label_
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *label_
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *label_
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_MASTER_OF_SPADE), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *label_
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 20) * 10) + 1
++	dblist(0, dbmax) = 1256, dbsum
++	dbmax++
++
++*label_
++	if ( 1 > objlv ) {
++		goto *label_
++	}
++	if ( fltselect != 1 ) {
++		goto *label_
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *label_
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *label_
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_SPIRITIUM), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *label_
++		}
++	}
++	dbsum += 50000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1255, dbsum
++	dbmax++
++
++*label_
++	if ( 80 > objlv ) {
++		goto *label_
++	}
++	if ( fltselect != 0 ) {
++		goto *label_
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *label_
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *label_
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_SURVIVABILITY_EXTENDER_X), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *label_
++		}
++	}
++	dbsum += 120000 / (1000 + abs(objlv - 80) * 0) + 1
++	dblist(0, dbmax) = 1254, dbsum
++	dbmax++
++
++*label_
++	if ( 80 > objlv ) {
++		goto *label_
++	}
++	if ( fltselect != 0 ) {
++		goto *label_
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *label_
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *label_
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_SURVIVABILITY_EXTENDER_Y), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *label_
++		}
++	}
++	dbsum += 120000 / (1000 + abs(objlv - 80) * 0) + 1
++	dblist(0, dbmax) = 1253, dbsum
++	dbmax++
++
++*label_
++	if ( 1 > objlv ) {
++		goto *label_
++	}
++	if ( fltselect != 1 ) {
++		goto *label_
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *label_
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *label_
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_STARFIBER), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *label_
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1252, dbsum
++	dbmax++
++
++*label_
++	if ( 1 > objlv ) {
++		goto *label_
++	}
+ 	if ( fltselect != 1 ) {
+ 		goto *label_
+ 	}
+ 	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
+ 		if ( flttypemajor != FILTER_ITEM_TOOL ) {
+@@ -6300,11 +6630,11 @@
+ 		loop
+ 		if ( dbtmp == 0 ) {
+ 			goto *label_
+ 		}
+ 	}
+-	dbsum += 800000 / (1000 + abs(objlv - 1) * 10) + 1
++	dbsum += 1100000 / (1000 + abs(objlv - 1) * 10) + 1
+ 	dblist(0, dbmax) = 1061, dbsum
+ 	dbmax++
+ 
+ *label_
+ 	if ( 30 > objlv ) {
+@@ -41333,10 +41663,679 @@
+ 		dbid = 25
+ 	}
+ 	return
+ 
+ *label_
++	if ( dbid == 1261 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 1000
++			inv(INV_ITEM_WEIGHT, ci) = 1000
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_CORK_PACK
++			inv(INV_ITEM_PIC, ci) = xy2pic(0, 36)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_CORK_PACK
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 1000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 150
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "\t\tポーションなどの瓶に用いられる、コルク栓の詰め合わせ。栓だけを欲しがる客がなぜか一定数いたため、廃棄品をリサイクルした商品が誕生。ひとつひとつの見た目や規格はほぼ同じだが、製作した錬金術師や工場が独自の記号を入れていたり素材の違いがあるため、マニアなら全部見分けられるらしい。\n#～ゴミの山に光るもの～\n"
++				description(1) = "\t\t「全部同じじゃないですか！？」\n#～困惑する素人の言葉～\n"
++				description(2) = "\t\t「これだからしろうとはダメだ！もっとよく見ろ！」\n#～解説中のマニアの言葉～\n"
++				description(3) = "\t\t大量の栓を獲得できる道具だ。使用することができる（使い捨て）。\n#～鑑定報告書：＜器具＞カテゴリ～\n"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1260 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 16000
++			inv(INV_ITEM_WEIGHT, ci) = 20500
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_LASER_BAZOOKA
++			inv(INV_ITEM_PIC, ci) = xy2pic(2, 36)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_LASER_BAZOOKA
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) = 2 + rnd(2) - rnd(2)
++			ibitmod ITEM_BIT_CHARGE_ITEM, ci, TRUE
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 2
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 16000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 40
++			}
++			if ( dbspec == 8 ) {
++				return 200
++			}
++			if ( dbspec == 12 ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_MANI ) {
++					return 1
++				}
++				else {
++					return 0
++				}
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "\t\t大口径化された光子銃。なのでバズーカという名でありながらロケット弾を発射しないし構造的にも無反動砲に分類される。だがロケットランチャーのほうのバズーカも元は楽器のバズーカに形状が似ていたことに由来する通称なので、形状がそれっぽいのなら構造に関わらずバズーカと呼んでやるのが公平なのかもしれない。\n#～君にも使える！発掘兵器～\n"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "\t\t狙った対象のガードを崩す兵器だ。何度か使用することができる。\n#～鑑定報告書：＜特殊兵器＞カテゴリ～\n"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1259 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 10000
++			inv(INV_ITEM_WEIGHT, ci) = 100
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_MASTER_OF_DIAMOND
++			inv(INV_ITEM_PIC, ci) = xy2pic(6, 36)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_MASTER_OF
++			inv(INV_ITEM_PARAM1, ci) = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			fixlv = FIX_QUALITY_UNIQUE
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 10000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 20
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "\t\t（未実装）特殊な魔力が込められたカード。使用することで対応したカードの精霊を召喚する。カードの精霊は条件を満たすことでランクアップし、能力や姿名前が変化する。カードの精霊はフィールド上に合計５体までしか存在できず、同一種の精霊は１体しか存在できない。プレイヤーがフィールドを離れた場合、この効果で召喚された精霊を全て除外する。\n#～イルヴァ幻想辞典～\n"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "\t\t精霊を召喚する道具だ。何度でも使用することができる。\n#～鑑定報告書：＜器具＞カテゴリ～\n"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1258 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 10000
++			inv(INV_ITEM_WEIGHT, ci) = 100
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_MASTER_OF_HEART
++			inv(INV_ITEM_PIC, ci) = xy2pic(5, 36)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_MASTER_OF
++			inv(INV_ITEM_PARAM1, ci) = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			fixlv = FIX_QUALITY_UNIQUE
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 10000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 20
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "\t\t（未実装）特殊な魔力が込められたカード。使用することで対応したカードの精霊を召喚する。カードの精霊は条件を満たすことでランクアップし、能力や姿名前が変化する。カードの精霊はフィールド上に合計５体までしか存在できず、同一種の精霊は１体しか存在できない。プレイヤーがフィールドを離れた場合、この効果で召喚された精霊を全て除外する。\n#～イルヴァ幻想辞典～\n"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "\t\t精霊を召喚する道具だ。何度でも使用することができる。\n#～鑑定報告書：＜器具＞カテゴリ～\n"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1257 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 10000
++			inv(INV_ITEM_WEIGHT, ci) = 100
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_MASTER_OF_CLUB
++			inv(INV_ITEM_PIC, ci) = xy2pic(4, 36)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_MASTER_OF
++			inv(INV_ITEM_PARAM1, ci) = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			fixlv = FIX_QUALITY_UNIQUE
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 10000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 20
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "\t\t（未実装）特殊な魔力が込められたカード。使用することで対応したカードの精霊を召喚する。カードの精霊は条件を満たすことでランクアップし、能力や姿名前が変化する。カードの精霊はフィールド上に合計５体までしか存在できず、同一種の精霊は１体しか存在できない。プレイヤーがフィールドを離れた場合、この効果で召喚された精霊を全て除外する。\n#～イルヴァ幻想辞典～\n"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "\t\t精霊を召喚する道具だ。何度でも使用することができる。\n#～鑑定報告書：＜器具＞カテゴリ～\n"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1256 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 10000
++			inv(INV_ITEM_WEIGHT, ci) = 100
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_MASTER_OF_SPADE
++			inv(INV_ITEM_PIC, ci) = xy2pic(3, 36)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_MASTER_OF
++			inv(INV_ITEM_PARAM1, ci) = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			fixlv = FIX_QUALITY_UNIQUE
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 10000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 20
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "\t\t（未実装）特殊な魔力が込められたカード。使用することで対応したカードの精霊を召喚する。カードの精霊は条件を満たすことでランクアップし、能力や姿名前が変化する。カードの精霊はフィールド上に合計５体までしか存在できず、同一種の精霊は１体しか存在できない。プレイヤーがフィールドを離れた場合、この効果で召喚された精霊を全て除外する。\n#～イルヴァ幻想辞典～\n"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "\t\t精霊を召喚する道具だ。何度でも使用することができる。\n#～鑑定報告書：＜器具＞カテゴリ～\n"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1255 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 6000
++			inv(INV_ITEM_WEIGHT, ci) = 600
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_SPIRITIUM
++			inv(INV_ITEM_PIC, ci) = xy2pic(7, 36)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_SPIRITIUM
++			inv(INV_ITEM_PARAM1, ci) = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 6000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 50
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "\t\t宇宙から飛来したという謎の金属体。綺麗で珍しいため、金持ちからは貴金属扱いされている。微弱な精神波を放っているため頭に押しつけると人格が変わってしまうという都市伝説がある。暇つぶしで知人に試してみたが、残念ながら自分の性格を改めて自覚する程度であった。思い込みの激しい人だと自己催眠にかかってしまう可能性は否定しないでおく。\n#～進め！オカルト探検隊～\n"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "\t\t性格の一部を自覚させる道具だ。何度でも使用することができる。\n#～鑑定報告書：＜器具＞カテゴリ～\n"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1254 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 30000
++			inv(INV_ITEM_WEIGHT, ci) = 200
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_SURVIVABILITY_EXTENDER_X
++			inv(INV_ITEM_PIC, ci) = xy2pic(8, 36)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_SURVIVABILITY_EXTENDER_X
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 30000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 80
++			}
++			if ( dbspec == 8 ) {
++				return 120
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "\t\t（未実装）機械文明中期…環境の悪化によって世代を重ねるごとに人体の脆弱化が進行。絶滅の危機にまで瀕したが、ヒトの生存能力を拡張する技術が開発され難を逃れた。有機物無機物問わず生存に有利な特徴を記録・再生し、子の細胞に同化して書き換えるナノマシン…それがサバイバビリティーエクステンダーである。機能こそ低下しているが同様のナノマシンがほとんどの現代生物の細胞に残留している。これこそが、種族を超えて遺伝子を残せる現象に大きく関わっているのだ。\n#～イルヴァ幻想辞典～\n"
++				description(1) = "\t\t「原初生命の細胞はミトコンドリアもナノマシンも魔導体も備えていなかったという。細胞レベルで有利になる物を取り入れて生命は進化してきたんだな」\n#～ザナン研究員の言葉～\n"
++				description(2) = "\t\t「機械生命体には、このナノマシンによってヒトとの間に産まれたものも多い。もちろん全く別系統の技術で誕生したものもいるが…食事や睡眠をして治癒能力を持ち、繁殖できるタイプだけが結局生き残った。収斂進化というやつかもしれん」\n#～開発主任『ガベラ』の言葉～\n"
++				description(3) = "\t\t強い女児を授かるための道具だ。使用することができる（使い捨て）。\n#～鑑定報告書：＜器具＞カテゴリ～\n"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1253 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 30000
++			inv(INV_ITEM_WEIGHT, ci) = 200
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_SURVIVABILITY_EXTENDER_Y
++			inv(INV_ITEM_PIC, ci) = xy2pic(9, 36)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_SURVIVABILITY_EXTENDER_Y
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 30000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 80
++			}
++			if ( dbspec == 8 ) {
++				return 120
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "\t\t（未実装）機械文明中期…環境の悪化によって世代を重ねるごとに人体の脆弱化が進行。絶滅の危機にまで瀕したが、ヒトの生存能力を拡張する技術が開発され難を逃れた。有機物無機物問わず生存に有利な特徴を記録・再生し、子の細胞に同化して書き換えるナノマシン…それがサバイバビリティーエクステンダーである。機能こそ低下しているが同様のナノマシンがほとんどの現代生物の細胞に残留している。これこそが、種族を超えて遺伝子を残せる現象に大きく関わっているのだ。\n#～イルヴァ幻想辞典～\n"
++				description(1) = "\t\t「ひっひっひっ…この道具で多数の生物を掛け合わせた合成獣を生み出したはいいけれど育てるのが大変すぎて無理だったからやっぱり地道に合成魔法で頑張ってくれるわ！」\n#～邪悪な魔法使いの言葉～\n"
++				description(2) = "\t\t「獣の特徴を得て産まれた子が、野性を抑えられずに人里を離れたという伝承を聞いたことがあるわい。現代の獣人には、そういうのをルーツとする種族もいるのじゃろうな」\n#～生化学者『イコール』の言葉～\n"
++				description(3) = "\t\t強い男児を授かるための道具だ。使用することができる（使い捨て）。\n#～鑑定報告書：＜器具＞カテゴリ～\n"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1252 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 6300
++			inv(INV_ITEM_WEIGHT, ci) = 300
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_STARFIBER
++			inv(INV_ITEM_PIC, ci) = xy2pic(10, 36)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_STARFIBER
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 6300
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "\t\t奇跡の力を宿した繊維状の物質。これだけでは何の役にも立たない。だが、もしもこれを取り込むことのできる武器があるのなら、その成長に役立つだろう。\n#～職人が教える武器の歴史～\n"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "\t\t生きている武器の経験値になる繊維だ。使用することができる（使い捨て）。\n#～鑑定報告書：＜器具＞カテゴリ～\n"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
+ 	if ( dbid == 1251 ) {
+ 		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_VALUE, ci) = 120
+ 			inv(INV_ITEM_WEIGHT, ci) = 20
+ 		}
+@@ -43072,11 +44071,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -43141,11 +44140,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -43210,11 +44209,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -43279,11 +44278,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -43348,11 +44347,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -43417,11 +44416,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -43486,11 +44485,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -43555,11 +44554,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -43624,11 +44623,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -43693,11 +44692,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -43762,11 +44761,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -43831,11 +44830,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -46529,11 +47528,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 250
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -53832,10 +54831,18 @@
+ 				return 1
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1000
+ 			}
++			if ( dbspec == 12 ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE ) {
++					return 1
++				}
++				else {
++					return 0
++				}
++			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t切り花を一つにまとめて装飾を施した贈り物。しかし、本気が伝わりすぎてむしろ重い。あまり仲のよくない相手に贈るとドン引きされるので、渡す相手はよく考えよう。\n#～選ぼう、大切な人への贈り物～\n"
+@@ -54087,11 +55094,19 @@
+ 			}
+ 			if ( dbspec == 7 ) {
+ 				return 1
+ 			}
+ 			if ( dbspec == 8 ) {
+-				return 800
++				return 1100
++			}
++			if ( dbspec == 12 ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE ) {
++					return 1
++				}
++				else {
++					return 0
++				}
+ 			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+@@ -54605,11 +55620,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t料理の善し悪しを決定づける基本的調味料の一つ。独特の香りのある、赤褐色の液体。塩辛さの中に濃厚な旨味と甘味を持つ。\n#～移り変わりゆくティリスの食～\n"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "\t\t調味料だ。使うことができる。\n#～鑑定報告書：＜調味料＞カテゴリ～\n"
++				description(3) = "\t\t調味料だ。使用することができる（使い捨て）。\n#～鑑定報告書：＜調味料＞カテゴリ～\n"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -54671,11 +55686,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t料理の善し悪しを決定づける調味料の一つであり、代表的なスパイス。かつては食料の長期保存に重宝され、高額で取引されていた時代もあった。肉との相性がよい。\n#～移り変わりゆくティリスの食～\n"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "\t\t調味料だ。使うことができる。\n#～鑑定報告書：＜調味料＞カテゴリ～\n"
++				description(3) = "\t\t調味料だ。使用することができる（使い捨て）。\n#～鑑定報告書：＜調味料＞カテゴリ～\n"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -60835,11 +61850,11 @@
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t心に浮かんだ音色を奏でると言われる短剣。もっとも、ノイズの混ざらない旋律にするためには高い集中力を要するため、楽器として使うにはかなり難易度が高い。刃物としての殺傷力はさほど高くないが、使い手によっては催眠音波から爆音まで自在に出せるため凄まじい武器となる。\n#～イルヴァ幻想辞典～\n"
+-				description(1) = ""
++				description(1) = "＜ランク0～6楽器＞"
+ 				description(2) = ""
+ 				description(3) = "\t\t音の出る短剣だ。一応、楽器としても使える。\n#～鑑定報告書：＜秘宝＞カテゴリ～\n"
+ 			}
+ 			else {
+ 				description(0) = ""
+@@ -62813,11 +63828,11 @@
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t陶器で作られた涙滴状の楽器。形状や穴の数などは決まっていない。リコーダーとほぼ同じ構造の歌口を持ち、音を出しやすい。\n#～玲瓏たるイルヴァの調べ～\n"
+-				description(1) = ""
++				description(1) = "＜ランク1楽器＞"
+ 				description(2) = ""
+ 				description(3) = "\t\t演奏用の道具。何度でも使用することができる。\n#～鑑定報告書：＜楽器＞カテゴリ～\n"
+ 			}
+ 			else {
+ 				description(0) = ""
+@@ -62877,11 +63892,11 @@
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t記録するもの、の名を持つ縦笛。フィップルという特殊構造により空気の束が安定し、容易な吹奏を可能としている。一方で音量が小さく音色にも表情がつけにくいため、初心者用の楽器として位置づけられている。\n#～玲瓏たるイルヴァの調べ～\n"
+-				description(1) = ""
++				description(1) = "＜ランク2楽器＞"
+ 				description(2) = ""
+ 				description(3) = "\t\t演奏用の道具。何度でも使用することができる。\n#～鑑定報告書：＜楽器＞カテゴリ～\n"
+ 			}
+ 			else {
+ 				description(0) = ""
+@@ -62941,11 +63956,11 @@
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\tとても太くて長くて、黒光りしている金管楽器。主に音量の補強に用いられるが、実際に使われることは少なく今や絶滅危惧楽器である。\n#～玲瓏たるイルヴァの調べ～\n"
+-				description(1) = ""
++				description(1) = "＜ランク3楽器＞"
+ 				description(2) = ""
+ 				description(3) = "\t\t演奏用の道具。何度でも使用することができる。\n#～鑑定報告書：＜楽器＞カテゴリ～\n"
+ 			}
+ 			else {
+ 				description(0) = ""
+@@ -62998,11 +64013,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -63067,11 +64082,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -63136,11 +64151,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -68449,11 +69464,11 @@
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t木でできた胴に皮を張って作った打楽器。一般的に残響が非常に良く響き、余韻が残るのが特徴。\n#～玲瓏たるイルヴァの調べ～\n"
+-				description(1) = ""
++				description(1) = "＜ランク4楽器＞"
+ 				description(2) = ""
+ 				description(3) = "\t\t演奏用の道具。何度でも使用することができる。\n#～鑑定報告書：＜楽器＞カテゴリ～\n"
+ 			}
+ 			else {
+ 				description(0) = ""
+@@ -72353,11 +73368,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t料理の善し悪しを決定づける基本的調味料の一つ。甘味を加えることは勿論、少量を用いることで食材の持つ旨味と塩味を引き出す効果を持つ優れた調味料だ。\n#～移り変わりゆくティリスの食～\n"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "\t\t調味料だ。使うことができる。\n#～鑑定報告書：＜調味料＞カテゴリ～\n"
++				description(3) = "\t\t調味料だ。使用することができる（使い捨て）。\n#～鑑定報告書：＜調味料＞カテゴリ～\n"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -72419,11 +73434,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t料理の善し悪しを決定づける基本的調味料の一つ。塩味を加えることは勿論、少量を用いることで食材の持つ旨味と甘味を引き出す効果を持つ優れた調味料だ。\n#～移り変わりゆくティリスの食～\n"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "\t\t調味料だ。使うことができる。\n#～鑑定報告書：＜調味料＞カテゴリ～\n"
++				description(3) = "\t\t調味料だ。使用することができる（使い捨て）。\n#～鑑定報告書：＜調味料＞カテゴリ～\n"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -73867,10 +74882,18 @@
+ 				return 25
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 5
+ 			}
++			if ( dbspec == 12 ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE ) {
++					return 1
++				}
++				else {
++					return 0
++				}
++			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t祝い事の為に特別に作られた飾り。各々が思い思いの花で編み上げているので、その形は多様に富んでいる。\n#～ノースティリス紀行・冬版～\n"
+@@ -73938,11 +74961,11 @@
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t孤高の天才作曲家の愛用していたピアノ。既存の曲を独自に解釈した彼の作風をこのピアノは潜在的に受け継いでおり、演奏する際それが音色となって現れるようだ。\n#～イルヴァ幻想辞典～\n"
+-				description(1) = ""
++				description(1) = "＜ランク5楽器＞"
+ 				description(2) = ""
+ 				description(3) = "\t\t聴衆を酔わす演奏用の道具。何度でも使用することができる。\n#～鑑定報告書：＜楽器＞カテゴリ～\n"
+ 			}
+ 			else {
+ 				description(0) = ""
+@@ -77499,11 +78522,11 @@
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t演奏の名手の元に訪れるという伝説のヴァイオリン。その音色は聴衆の心に大きく響き、奏者へ感謝の贈り物をする者が後を絶たないという。\n#～イルヴァ幻想辞典～\n"
+-				description(1) = ""
++				description(1) = "＜ランク4楽器＞"
+ 				description(2) = ""
+ 				description(3) = "\t\tおひねりの質が上がる演奏用の道具。何度でも使用することができる。\n#～鑑定報告書：＜美術品＞カテゴリ～\n"
+ 			}
+ 			else {
+ 				description(0) = ""
+@@ -78430,11 +79453,11 @@
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t両手で持ち弦を弾いて音を出す弦楽器。持ち運びには適さないが、そのゆったりとした音は聴衆を優雅な気分にさせることだろう。\n#～玲瓏たるイルヴァの調べ～\n"
+-				description(1) = ""
++				description(1) = "＜ランク4楽器＞"
+ 				description(2) = ""
+ 				description(3) = "\t\t演奏用の道具。何度でも使用することができる。\n#～鑑定報告書：＜楽器＞カテゴリ～\n"
+ 			}
+ 			else {
+ 				description(0) = ""
+@@ -78494,11 +79517,11 @@
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t軽い音で旋律を奏でる特殊な楽器。小さな体から発せられる楽しげな音は、聞いている方まで楽しくさせるという。\n#～玲瓏たるイルヴァの調べ～\n"
+-				description(1) = ""
++				description(1) = "＜ランク1楽器＞"
+ 				description(2) = ""
+ 				description(3) = "\t\t演奏用の道具。何度でも使用することができる。\n#～鑑定報告書：＜楽器＞カテゴリ～\n"
+ 			}
+ 			else {
+ 				description(0) = ""
+@@ -78558,11 +79581,11 @@
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t掻き鳴らすことで音を発す弦楽器。卵を縦半分に切ったような特異な形状は、内部に音を反響させ、音色に深みを与えることに一役買っている。\n#～玲瓏たるイルヴァの調べ～\n"
+-				description(1) = ""
++				description(1) = "＜ランク3楽器＞"
+ 				description(2) = ""
+ 				description(3) = "\t\t演奏用の道具。何度でも使用することができる。\n#～鑑定報告書：＜楽器＞カテゴリ～\n"
+ 			}
+ 			else {
+ 				description(0) = ""
+@@ -78622,11 +79645,11 @@
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t幾つかの管を重ねた管楽器。音程が安定しにくく、これを扱う演奏家は絶えず調律する必要があるという。\n#～玲瓏たるイルヴァの調べ～\n"
+-				description(1) = ""
++				description(1) = "＜ランク3楽器＞"
+ 				description(2) = ""
+ 				description(3) = "\t\t演奏用の道具。何度でも使用することができる。\n#～鑑定報告書：＜楽器＞カテゴリ～\n"
+ 			}
+ 			else {
+ 				description(0) = ""
+@@ -81308,10 +82331,18 @@
+ 				return 10
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 500
+ 			}
++			if ( dbspec == 12 ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE ) {
++					return 1
++				}
++				else {
++					return 0
++				}
++			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t小さな花達を守る為、簡易な塀が取り付けられている花壇だ。\n#～ノースティリス大家具事典～\n"
+@@ -102683,11 +103714,11 @@
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t長方形の黒い箱のような鍵盤楽器。グランドピアノより軽くはあるが、それでもなお余りある重量を誇るので長旅には適さないだろう。\n#～玲瓏たるイルヴァの調べ～\n"
+-				description(1) = ""
++				description(1) = "＜ランク3楽器＞"
+ 				description(2) = ""
+ 				description(3) = "\t\t演奏用の道具。何度でも使用することができる。\n#～鑑定報告書：＜楽器＞カテゴリ～\n"
+ 			}
+ 			else {
+ 				description(0) = ""
+@@ -104371,10 +105402,18 @@
+ 				return 1
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1000
+ 			}
++			if ( dbspec == 12 ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE ) {
++					return 1
++				}
++				else {
++					return 0
++				}
++			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t切り花を一つにまとめた雑貨。しばしば気持ちのこもった贈り物として用いられる。\n#～貰って嬉しい贈り物あれこれ～\n"
+@@ -104555,10 +105594,18 @@
+ 				return 7
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 500
+ 			}
++			if ( dbspec == 12 ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE ) {
++					return 1
++				}
++				else {
++					return 0
++				}
++			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\tいかにも高そうな素材で焼き上げられた花瓶。その表面は輝く程につやつやしている。\n#～ルミエスト美術目録～\n"
+@@ -107464,11 +108511,11 @@
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t高らかな音を鳴らす角笛。基本的に単音しか出せないが、その雄々しい音色は人々の心を十分に揺さぶるだろう。\n#～玲瓏たるイルヴァの調べ～\n"
+-				description(1) = ""
++				description(1) = "＜ランク2楽器＞"
+ 				description(2) = ""
+ 				description(3) = "\t\t演奏用の道具。何度でも使用することができる。\n#～鑑定報告書：＜楽器＞カテゴリ～\n"
+ 			}
+ 			else {
+ 				description(0) = ""
+@@ -115156,10 +116203,18 @@
+ 				return 1
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1000
+ 			}
++			if ( dbspec == 12 ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE ) {
++					return 1
++				}
++				else {
++					return 0
++				}
++			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t慎ましやかな花を咲かせる鉢植え。その控えめな感じが謙虚さの証であるとして、記念日の贈り物として使われることがある。\n#～ティリス園芸図鑑～\n"
+@@ -115278,10 +116333,18 @@
+ 				return 1
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 500
+ 			}
++			if ( dbspec == 12 ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE ) {
++					return 1
++				}
++				else {
++					return 0
++				}
++			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t鮮やかな色の花を咲かせる鉢植え。その色は様々で、見る者をとても楽しませるという。\n#～ティリス園芸図鑑～\n"
+@@ -115339,10 +116402,18 @@
+ 				return 1
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1000
+ 			}
++			if ( dbspec == 12 ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE ) {
++					return 1
++				}
++				else {
++					return 0
++				}
++			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t育てるのに少しコツがいる鉢植え。別名花の宝石ともいわれるこの鉢植えは、まるで飴細工のような綺麗な色の花を咲かせるという。\n#～ティリス園芸図鑑～\n"
+@@ -115400,10 +116471,18 @@
+ 				return 1
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1000
+ 			}
++			if ( dbspec == 12 ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE ) {
++					return 1
++				}
++				else {
++					return 0
++				}
++			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t目も覚めるような鮮やかな黄色の花を咲かせる鉢植え。まるでブローチと見紛う程の大きな花に成長するのもこの鉢植えの特徴だ。\n#～ティリス園芸図鑑～\n"
+@@ -115461,10 +116540,18 @@
+ 				return 1
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1000
+ 			}
++			if ( dbspec == 12 ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE ) {
++					return 1
++				}
++				else {
++					return 0
++				}
++			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t一本の茎から沢山の花を咲かせる鉢植え。甘い蜜を持っているとされるが、ノースティリスにおいてそれはしばしば猛毒に代わっているので、決して舐めたりしないように。\n#～ティリス園芸図鑑～\n"
+@@ -118303,11 +119390,11 @@
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "\t\t非常に重い鍵盤楽器。かつてこのピアノを背負って旅を続けた、一人の演奏家がいたという。\n#～玲瓏たるイルヴァの調べ～\n"
+-				description(1) = ""
++				description(1) = "＜ランク5楽器＞"
+ 				description(2) = ""
+ 				description(3) = "\t\t巨大でとても重い楽器。何度でも使用することができる。\n#～鑑定報告書：＜楽器＞カテゴリ～\n"
+ 			}
+ 			else {
+ 				description(0) = ""
+@@ -121174,11 +122261,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1000
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -121304,11 +122391,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 250
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -121373,11 +122460,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 400
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -121442,11 +122529,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1000
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -121511,11 +122598,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 500
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -121580,11 +122667,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 500
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -121649,11 +122736,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1000
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -121718,11 +122805,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1000
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -121787,11 +122874,11 @@
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return 1000
+ 			}
+ 			if ( dbspec == 12 ) {
+-				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_JURE | cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_OPATOS ) {
+ 					return 1
+ 				}
+ 				else {
+ 					return 0
+ 				}
+@@ -124229,10 +125316,30 @@
+ 		return 0
+ 	}
+ 	return -999
+ 
+ *db_setFilterItem
++	filter_item(ITEM_ID_CORK_PACK) = ""
++	rffilter_item(ITEM_ID_CORK_PACK) = ""
++	filter_item(ITEM_ID_LASER_BAZOOKA) = ""
++	rffilter_item(ITEM_ID_LASER_BAZOOKA) = ""
++	filter_item(ITEM_ID_MASTER_OF_DIAMOND) = ""
++	rffilter_item(ITEM_ID_MASTER_OF_DIAMOND) = ""
++	filter_item(ITEM_ID_MASTER_OF_HEART) = ""
++	rffilter_item(ITEM_ID_MASTER_OF_HEART) = ""
++	filter_item(ITEM_ID_MASTER_OF_CLUB) = ""
++	rffilter_item(ITEM_ID_MASTER_OF_CLUB) = ""
++	filter_item(ITEM_ID_MASTER_OF_SPADE) = ""
++	rffilter_item(ITEM_ID_MASTER_OF_SPADE) = ""
++	filter_item(ITEM_ID_SPIRITIUM) = ""
++	rffilter_item(ITEM_ID_SPIRITIUM) = ""
++	filter_item(ITEM_ID_SURVIVABILITY_EXTENDER_X) = ""
++	rffilter_item(ITEM_ID_SURVIVABILITY_EXTENDER_X) = ""
++	filter_item(ITEM_ID_SURVIVABILITY_EXTENDER_Y) = ""
++	rffilter_item(ITEM_ID_SURVIVABILITY_EXTENDER_Y) = ""
++	filter_item(ITEM_ID_STARFIBER) = ""
++	rffilter_item(ITEM_ID_STARFIBER) = ""
+ 	filter_item(ITEM_ID_ANERING) = ""
+ 	rffilter_item(ITEM_ID_ANERING) = ""
+ 	filter_item(ITEM_ID_COMMAND_WHISTLE) = ""
+ 	rffilter_item(ITEM_ID_COMMAND_WHISTLE) = ""
+ 	filter_item(ITEM_ID_AURTEHOM) = ""
+@@ -124676,11 +125783,11 @@
+ 	filter_item(ITEM_ID_M202_SPECIAL) = ""
+ 	rffilter_item(ITEM_ID_M202_SPECIAL) = ""
+ 	filter_item(ITEM_ID_PANZERFAUST_X) = ""
+ 	rffilter_item(ITEM_ID_PANZERFAUST_X) = ""
+ 	filter_item(ITEM_ID_PLEASANT_SLEEP_BLANKET) = ""
+-	rffilter_item(ITEM_ID_PLEASANT_SLEEP_BLANKET) = ""
++	rffilter_item(ITEM_ID_PLEASANT_SLEEP_BLANKET) = "/blanket/"
+ 	filter_item(ITEM_ID_ROD_MAGIC_LASER) = ""
+ 	rffilter_item(ITEM_ID_ROD_MAGIC_LASER) = ""
+ 	filter_item(ITEM_ID_ROD_POISON_BALL) = ""
+ 	rffilter_item(ITEM_ID_ROD_POISON_BALL) = ""
+ 	filter_item(ITEM_ID_AMULET_OF_YEKUB) = ""
+@@ -125596,13 +126703,13 @@
+ 	filter_item(ITEM_ID_ROD_FIRE_WALL) = ""
+ 	rffilter_item(ITEM_ID_ROD_FIRE_WALL) = ""
+ 	filter_item(ITEM_ID_SPELLBOOK_FIRE_WALL) = ""
+ 	rffilter_item(ITEM_ID_SPELLBOOK_FIRE_WALL) = ""
+ 	filter_item(ITEM_ID_COLDPROOF_BLANKET) = ""
+-	rffilter_item(ITEM_ID_COLDPROOF_BLANKET) = ""
++	rffilter_item(ITEM_ID_COLDPROOF_BLANKET) = "/blanket/"
+ 	filter_item(ITEM_ID_FIREPROOF_BLANKET) = ""
+-	rffilter_item(ITEM_ID_FIREPROOF_BLANKET) = ""
++	rffilter_item(ITEM_ID_FIREPROOF_BLANKET) = "/blanket/"
+ 	filter_item(ITEM_ID_ACIDPROOF_LIQUID) = "/nogive/"
+ 	rffilter_item(ITEM_ID_ACIDPROOF_LIQUID) = ""
+ 	filter_item(ITEM_ID_ROD_ACID_GROUND) = ""
+ 	rffilter_item(ITEM_ID_ROD_ACID_GROUND) = ""
+ 	filter_item(ITEM_ID_SPELLBOOK_ACID_GROUND) = ""
+@@ -126736,10 +127843,140 @@
+ 	filter_item(ITEM_ID_DUMMY) = ""
+ 	rffilter_item(ITEM_ID_DUMMY) = ""
+ 	return
+ 
+ *db_setItem
++	ilight(ITEM_ID_CORK_PACK) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_CORK_PACK) = ""
++	iorgweight(ITEM_ID_CORK_PACK) = 1000
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_CORK_PACK) = "コルクパック"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_CORK_PACK) = "cork pack"
++		ioriginalnameref2(ITEM_ID_CORK_PACK) = ""
++	}
++	ipicref(ITEM_ID_CORK_PACK) = xy2pic(0, 36)
++	iknownnameref(ITEM_ID_CORK_PACK) = ioriginalnameref(ITEM_ID_CORK_PACK)
++	icolref(ITEM_ID_CORK_PACK) = COLOR_DEFAULT
++	ilight(ITEM_ID_LASER_BAZOOKA) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_LASER_BAZOOKA) = ""
++	iorgweight(ITEM_ID_LASER_BAZOOKA) = 20500
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_LASER_BAZOOKA) = "光子バズーカ砲"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_LASER_BAZOOKA) = "laser bazooka"
++		ioriginalnameref2(ITEM_ID_LASER_BAZOOKA) = ""
++	}
++	ipicref(ITEM_ID_LASER_BAZOOKA) = xy2pic(2, 36)
++	iknownnameref(ITEM_ID_LASER_BAZOOKA) = ioriginalnameref(ITEM_ID_LASER_BAZOOKA)
++	icolref(ITEM_ID_LASER_BAZOOKA) = COLOR_DEFAULT
++	ilight(ITEM_ID_MASTER_OF_DIAMOND) = LIGHT_TYPE_ITEM
++	ialphanameref(ITEM_ID_MASTER_OF_DIAMOND) = ""
++	iorgweight(ITEM_ID_MASTER_OF_DIAMOND) = 100
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_MASTER_OF_DIAMOND) = "ダイヤの宝札"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_MASTER_OF_DIAMOND) = "master of diamond"
++		ioriginalnameref2(ITEM_ID_MASTER_OF_DIAMOND) = ""
++	}
++	ipicref(ITEM_ID_MASTER_OF_DIAMOND) = xy2pic(6, 36)
++	iknownnameref(ITEM_ID_MASTER_OF_DIAMOND) = ioriginalnameref(ITEM_ID_MASTER_OF_DIAMOND)
++	icolref(ITEM_ID_MASTER_OF_DIAMOND) = COLOR_DEFAULT
++	ilight(ITEM_ID_MASTER_OF_HEART) = LIGHT_TYPE_ITEM
++	ialphanameref(ITEM_ID_MASTER_OF_HEART) = ""
++	iorgweight(ITEM_ID_MASTER_OF_HEART) = 100
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_MASTER_OF_HEART) = "ハートの宝札"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_MASTER_OF_HEART) = "master of heart"
++		ioriginalnameref2(ITEM_ID_MASTER_OF_HEART) = ""
++	}
++	ipicref(ITEM_ID_MASTER_OF_HEART) = xy2pic(5, 36)
++	iknownnameref(ITEM_ID_MASTER_OF_HEART) = ioriginalnameref(ITEM_ID_MASTER_OF_HEART)
++	icolref(ITEM_ID_MASTER_OF_HEART) = COLOR_DEFAULT
++	ilight(ITEM_ID_MASTER_OF_CLUB) = LIGHT_TYPE_ITEM
++	ialphanameref(ITEM_ID_MASTER_OF_CLUB) = ""
++	iorgweight(ITEM_ID_MASTER_OF_CLUB) = 100
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_MASTER_OF_CLUB) = "クラブの宝札"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_MASTER_OF_CLUB) = "master of club"
++		ioriginalnameref2(ITEM_ID_MASTER_OF_CLUB) = ""
++	}
++	ipicref(ITEM_ID_MASTER_OF_CLUB) = xy2pic(4, 36)
++	iknownnameref(ITEM_ID_MASTER_OF_CLUB) = ioriginalnameref(ITEM_ID_MASTER_OF_CLUB)
++	icolref(ITEM_ID_MASTER_OF_CLUB) = COLOR_DEFAULT
++	ilight(ITEM_ID_MASTER_OF_SPADE) = LIGHT_TYPE_ITEM
++	ialphanameref(ITEM_ID_MASTER_OF_SPADE) = ""
++	iorgweight(ITEM_ID_MASTER_OF_SPADE) = 100
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_MASTER_OF_SPADE) = "スペードの宝札"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_MASTER_OF_SPADE) = "master of spade"
++		ioriginalnameref2(ITEM_ID_MASTER_OF_SPADE) = ""
++	}
++	ipicref(ITEM_ID_MASTER_OF_SPADE) = xy2pic(3, 36)
++	iknownnameref(ITEM_ID_MASTER_OF_SPADE) = ioriginalnameref(ITEM_ID_MASTER_OF_SPADE)
++	icolref(ITEM_ID_MASTER_OF_SPADE) = COLOR_DEFAULT
++	ilight(ITEM_ID_SPIRITIUM) = LIGHT_TYPE_ITEM
++	ialphanameref(ITEM_ID_SPIRITIUM) = ""
++	iorgweight(ITEM_ID_SPIRITIUM) = 600
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_SPIRITIUM) = "スピリチウム"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_SPIRITIUM) = "spiritium"
++		ioriginalnameref2(ITEM_ID_SPIRITIUM) = ""
++	}
++	ipicref(ITEM_ID_SPIRITIUM) = xy2pic(7, 36)
++	iknownnameref(ITEM_ID_SPIRITIUM) = ioriginalnameref(ITEM_ID_SPIRITIUM)
++	icolref(ITEM_ID_SPIRITIUM) = COLOR_DEFAULT
++	ilight(ITEM_ID_SURVIVABILITY_EXTENDER_X) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_SURVIVABILITY_EXTENDER_X) = ""
++	iorgweight(ITEM_ID_SURVIVABILITY_EXTENDER_X) = 200
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_SURVIVABILITY_EXTENDER_X) = "SuエクステンダーX"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_SURVIVABILITY_EXTENDER_X) = "SurvivabilityEXtenderX"
++		ioriginalnameref2(ITEM_ID_SURVIVABILITY_EXTENDER_X) = ""
++	}
++	ipicref(ITEM_ID_SURVIVABILITY_EXTENDER_X) = xy2pic(8, 36)
++	iknownnameref(ITEM_ID_SURVIVABILITY_EXTENDER_X) = ioriginalnameref(ITEM_ID_SURVIVABILITY_EXTENDER_X)
++	icolref(ITEM_ID_SURVIVABILITY_EXTENDER_X) = COLOR_DEFAULT
++	ilight(ITEM_ID_SURVIVABILITY_EXTENDER_Y) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_SURVIVABILITY_EXTENDER_Y) = ""
++	iorgweight(ITEM_ID_SURVIVABILITY_EXTENDER_Y) = 200
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_SURVIVABILITY_EXTENDER_Y) = "SuエクステンダーY"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_SURVIVABILITY_EXTENDER_Y) = "SurvivabilityEXtenderY"
++		ioriginalnameref2(ITEM_ID_SURVIVABILITY_EXTENDER_Y) = ""
++	}
++	ipicref(ITEM_ID_SURVIVABILITY_EXTENDER_Y) = xy2pic(9, 36)
++	iknownnameref(ITEM_ID_SURVIVABILITY_EXTENDER_Y) = ioriginalnameref(ITEM_ID_SURVIVABILITY_EXTENDER_Y)
++	icolref(ITEM_ID_SURVIVABILITY_EXTENDER_Y) = COLOR_DEFAULT
++	ilight(ITEM_ID_STARFIBER) = LIGHT_TYPE_ITEM
++	ialphanameref(ITEM_ID_STARFIBER) = ""
++	iorgweight(ITEM_ID_STARFIBER) = 300
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_STARFIBER) = "強化星維"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_STARFIBER) = "starfiber"
++		ioriginalnameref2(ITEM_ID_STARFIBER) = ""
++	}
++	ipicref(ITEM_ID_STARFIBER) = xy2pic(10, 36)
++	iknownnameref(ITEM_ID_STARFIBER) = ioriginalnameref(ITEM_ID_STARFIBER)
++	icolref(ITEM_ID_STARFIBER) = COLOR_LIGHT_BLUE2
+ 	ilight(ITEM_ID_ANERING) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ANERING) = ""
+ 	iorgweight(ITEM_ID_ANERING) = 20
+ 	if ( jp ) {
+ 		ioriginalnameref(ITEM_ID_ANERING) = "アネワッシャー"
+@@ -144674,11 +145911,11 @@
+ 		ioriginalnameref2(ITEM_ID_DUMMY) = ""
+ 	}
+ 	ipicref(ITEM_ID_DUMMY) = xy2pic(0, 1)
+ 	iknownnameref(ITEM_ID_DUMMY) = ioriginalnameref(ITEM_ID_DUMMY)
+ 	icolref(ITEM_ID_DUMMY) = COLOR_DEFAULT
+-	maxitemid = 1254
++	maxitemid = 1264
+ 	return
+ 	goto *recipe_ref
+ 
+ #deffunc calcweaponfix int calcweaponfix_itemid
+ 	pierce = 0

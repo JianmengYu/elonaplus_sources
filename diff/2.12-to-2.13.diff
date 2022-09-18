@@ -1,6 +1,6 @@
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/action.hsp ../2.13-borscht/action.hsp
 --- ../2.12-borscht/action.hsp	2022-04-25 14:21:59.625140000 -0700
-+++ ../2.13-borscht/action.hsp	2022-06-25 22:26:48.490308800 -0700
++++ ../2.13-borscht/action.hsp	2022-06-26 12:14:11.385344500 -0700
 @@ -1273,11 +1273,11 @@
  	}
  	goto *turn_end
@@ -554,7 +554,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  	if ( _switch_val == 112 | _switch_sw ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/ai.hsp ../2.13-borscht/ai.hsp
 --- ../2.12-borscht/ai.hsp	2022-04-25 14:21:59.689199500 -0700
-+++ ../2.13-borscht/ai.hsp	2022-06-25 22:26:48.552366700 -0700
++++ ../2.13-borscht/ai.hsp	2022-06-26 12:14:11.443397900 -0700
 @@ -756,10 +756,16 @@
  		goto *act_read
  	}
@@ -574,7 +574,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  	if ( cdata(CDATA_AI_AGGRO, cc) > 0 | cdata(CDATA_RELATION, cc) == RELATION_ALLY ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/blend.hsp ../2.13-borscht/blend.hsp
 --- ../2.12-borscht/blend.hsp	2022-04-25 14:21:59.723231200 -0700
-+++ ../2.13-borscht/blend.hsp	2022-06-25 22:26:48.585964900 -0700
++++ ../2.13-borscht/blend.hsp	2022-06-26 12:14:11.478430400 -0700
 @@ -629,11 +629,11 @@
  	loop
  	return
@@ -599,7 +599,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
 +	rpdatan(rpid) = lang("強化星維", "Starfiber")
 +	rpdata(RPDATA_ITEM, rpid) = ITEM_ID_STARFIBER, 15 + 1 * 10000
 +	rpdata(RPDATA_SKILL + 0 * 2, rpid) = SKILL_NORMAL_TAILORING, 15, SKILL_NORMAL_ALCHEMY, 32
-+	rpdata(RPDATA_MAT + 0, rpid) = (35 /*!!!@[FILTER_RACE_BAT @@@ ITEM_ID_EARTH_CRYSTAL]@!!! */), MAX_RF, ITEM_ID_BOTTLE_MILK
++	rpdata(RPDATA_MAT + 0, rpid) = (35 /*!!!@[FILTER_RACE_BAT @@@ ITEM_ID_EARTH_CRYSTAL]@!!! */), RF_BLANKET, ITEM_ID_BOTTLE_MILK
  	rpid = ITEM_ID_POTION_DISASTER + EXT_RP
  	rplistshop(length(rplistshop)) = 30 * EXT_RECIPES + rpid
  	rpdata(RPDATA_ITEM, rpid) = ITEM_ID_POTION_DISASTER, 60 + 3 * 10000
@@ -611,7 +611,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  	rfnameorg(RFNAMEORG_ID, RF_BAIT - EXT_RF) = "bait", lang("適当な釣り餌", "any bait")
  	rfnameorg(RFNAMEORG_ID, RF_BARREL - EXT_RF) = "taru", lang("適当なタル", "any bait")
  	rfnameorg(RFNAMEORG_ID, RF_LEAF - EXT_RF) = "kusuri", lang("薬草類", "any healthy leaf")
-+	rfnameorg(RFNAMEORG_ID, MAX_RF - EXT_RF) = "blanket", lang("ブランケット類", "any blanket")
++	rfnameorg(RFNAMEORG_ID, RF_BLANKET - EXT_RF) = "blanket", lang("ブランケット類", "any blanket")
  	return
  
  *com_blend
@@ -619,7 +619,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  	proclist(procid) = "com_blend" + " ct:" + ct
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/chara_func.hsp ../2.13-borscht/chara_func.hsp
 --- ../2.12-borscht/chara_func.hsp	2022-04-25 14:21:59.959454800 -0700
-+++ ../2.13-borscht/chara_func.hsp	2022-06-25 22:26:48.723092000 -0700
++++ ../2.13-borscht/chara_func.hsp	2022-06-26 12:14:11.626567400 -0700
 @@ -5208,13 +5208,15 @@
  			}
  		}
@@ -741,7 +741,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		}
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/chat.hsp ../2.13-borscht/chat.hsp
 --- ../2.12-borscht/chat.hsp	2022-04-25 14:22:00.423955800 -0700
-+++ ../2.13-borscht/chat.hsp	2022-06-25 22:26:49.150487500 -0700
++++ ../2.13-borscht/chat.hsp	2022-06-26 12:14:12.090995000 -0700
 @@ -163,10 +163,13 @@
  	if ( cdata(CDATA_ROLE, tc) >= (1000 /*!!!@[ROLE_SHOP_MIN @@@ ROLE_SHOP_WEAPON]@!!! */) & cdata(CDATA_ROLE, tc) < (2000 /*!!!@[ROLE_GUEST_BEGGAR @@@ ROLE_GUEST_MIN]@!!! */) | cdata(CDATA_ROLE, tc) == ROLE_GUEST_MERCHANT ) {
  		bkrestock = cdata(CDATA_ROLE_RESTOCK, tc)
@@ -840,7 +840,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		gosub *com_inventory
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/command.hsp ../2.13-borscht/command.hsp
 --- ../2.12-borscht/command.hsp	2022-04-25 14:22:00.555979200 -0700
-+++ ../2.13-borscht/command.hsp	2022-06-25 22:26:49.286613400 -0700
++++ ../2.13-borscht/command.hsp	2022-06-26 12:14:12.207102200 -0700
 @@ -2212,11 +2212,11 @@
  		listn(0, listmax) = lang("[bit]", "[bit]") + lang("あなたは乗馬に適さない", "You are too weak to carry you.")
  		listmax++
@@ -942,7 +942,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  	noteadd fixtxt("職業       : " + classname, 30) + fixtxt("所属      : " + guildname(), 32)
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/event.hsp ../2.13-borscht/event.hsp
 --- ../2.12-borscht/event.hsp	2022-04-25 14:22:02.510067500 -0700
-+++ ../2.13-borscht/event.hsp	2022-06-25 22:26:51.300692900 -0700
++++ ../2.13-borscht/event.hsp	2022-06-26 12:14:16.300876600 -0700
 @@ -1924,11 +1924,11 @@
  	}
  	if ( _switch_val == 2 | _switch_sw ) {
@@ -958,7 +958,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		efid = SKILL_EFFECT_GAIN_SPELL
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/god.hsp ../2.13-borscht/god.hsp
 --- ../2.12-borscht/god.hsp	2022-04-25 14:22:02.521077700 -0700
-+++ ../2.13-borscht/god.hsp	2022-06-25 22:26:51.311702900 -0700
++++ ../2.13-borscht/god.hsp	2022-06-26 12:14:16.314889500 -0700
 @@ -282,11 +282,11 @@
  		buff += lang("ボーナス: 筋力 / 耐久 / 盾 / 重量挙げ / 採掘 / 魔道具<p>", "Bonus   : STR/END/Shield/Weight Lifting/Mining/Magic Device<p>")
  		buff += lang("特殊能力: オパートスの甲殻(自動:あらゆる被ダメージを-10%)<p>", "Ability : Opatos' shell (Passive: Reduce any damage you<br>receive.)<p>")
@@ -974,7 +974,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		buff = lang("クミロミは収穫の神です。クミロミを信仰した者は、大地の恵みを収穫し、それを加工する術を知ります。<p><p>", "Kumiromi is a god of harvest. Those faithful to Kumiromi receive<br>the blessings of nature.<p><p>")
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/help.hsp ../2.13-borscht/help.hsp
 --- ../2.12-borscht/help.hsp	2022-04-25 14:22:02.594054700 -0700
-+++ ../2.13-borscht/help.hsp	2022-06-25 22:26:51.396781500 -0700
++++ ../2.13-borscht/help.hsp	2022-06-26 12:14:16.405973700 -0700
 @@ -5351,11 +5351,11 @@
  	}
  	if ( mode == MODELIST_QUICK_START ) {
@@ -1016,7 +1016,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  			ci = rnd(invrange) + invhead
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/init.hsp ../2.13-borscht/init.hsp
 --- ../2.12-borscht/init.hsp	2022-04-25 14:22:02.786142000 -0700
-+++ ../2.13-borscht/init.hsp	2022-06-25 22:26:51.559932700 -0700
++++ ../2.13-borscht/init.hsp	2022-06-26 12:14:16.572126700 -0700
 @@ -3290,17 +3290,17 @@
  	if ( 628 < 600 ) {
  		skillencdesc(SKILL_SPACT_CHANGE) = lang("", "")
@@ -1094,7 +1094,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		if ( ci >= 0 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/item.hsp ../2.13-borscht/item.hsp
 --- ../2.12-borscht/item.hsp	2022-04-25 14:22:02.867035900 -0700
-+++ ../2.13-borscht/item.hsp	2022-06-25 22:26:51.648013800 -0700
++++ ../2.13-borscht/item.hsp	2022-06-26 12:14:16.660207800 -0700
 @@ -2147,10 +2147,13 @@
  			if ( inv(INV_ITEM_COL, ci) == 29 ) {
  				inv(INV_ITEM_COL, ci) = 28
@@ -1111,7 +1111,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		if ( inv(INV_ITEM_PARAM1, ci) == 0 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/item_func.hsp ../2.13-borscht/item_func.hsp
 --- ../2.12-borscht/item_func.hsp	2022-04-25 14:22:02.931004000 -0700
-+++ ../2.13-borscht/item_func.hsp	2022-06-25 22:26:51.704065600 -0700
++++ ../2.13-borscht/item_func.hsp	2022-06-26 12:14:16.729271500 -0700
 @@ -880,10 +880,13 @@
  		}
  	}
@@ -1143,7 +1143,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  			inv(INV_ITEM_VALUE, remain_make_itemid) = limit((cdata(CDATA_LEVEL, remain_make_arg2) + 30) * 300, 3000, 90000)
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/main.hsp ../2.13-borscht/main.hsp
 --- ../2.12-borscht/main.hsp	2022-04-25 14:22:02.938010500 -0700
-+++ ../2.13-borscht/main.hsp	2022-06-25 22:26:51.712073000 -0700
++++ ../2.13-borscht/main.hsp	2022-06-26 12:14:16.736278000 -0700
 @@ -181,11 +181,11 @@
  	if ( dbg_randseed != 0 ) {
  		randseed = dbg_randseed
@@ -1159,7 +1159,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  	netrequest netload_filename
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/map.hsp ../2.13-borscht/map.hsp
 --- ../2.12-borscht/map.hsp	2022-04-25 14:22:03.039104400 -0700
-+++ ../2.13-borscht/map.hsp	2022-06-25 22:26:51.782137800 -0700
++++ ../2.13-borscht/map.hsp	2022-06-26 12:14:16.864396100 -0700
 @@ -521,17 +521,22 @@
  		cbitmod CHARA_BIT_MAGNETISM_N_POLE, cnt, FALSE
  		if ( gdata(GDATA_AREA) == AREA_WILDERNESS ) {
@@ -1212,7 +1212,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  					}
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/proc.hsp ../2.13-borscht/proc.hsp
 --- ../2.12-borscht/proc.hsp	2022-04-25 14:22:03.399927300 -0700
-+++ ../2.13-borscht/proc.hsp	2022-06-25 22:26:52.131460900 -0700
++++ ../2.13-borscht/proc.hsp	2022-06-26 12:14:17.234737600 -0700
 @@ -15487,11 +15487,13 @@
  						else {
  							txt lang(name(tc) + "に命中した。", "The sand hits " + name(tc) + ".")
@@ -1266,7 +1266,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  					if ( cnt != 0 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/screen.hsp ../2.13-borscht/screen.hsp
 --- ../2.12-borscht/screen.hsp	2022-04-25 14:22:03.639116900 -0700
-+++ ../2.13-borscht/screen.hsp	2022-06-25 22:26:52.876149900 -0700
++++ ../2.13-borscht/screen.hsp	2022-06-26 12:14:17.490973900 -0700
 @@ -1002,19 +1002,21 @@
  	if ( gdata(GDATA_WIZARD) == 1 ) {
  		pos inf_clockw + 6, inf_clocky + 65
@@ -1378,7 +1378,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  			if ( 1 == 528 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/system.hsp ../2.13-borscht/system.hsp
 --- ../2.12-borscht/system.hsp	2022-04-25 14:22:03.671146700 -0700
-+++ ../2.13-borscht/system.hsp	2022-06-25 22:26:52.907178600 -0700
++++ ../2.13-borscht/system.hsp	2022-06-26 12:14:17.515997100 -0700
 @@ -38,11 +38,11 @@
  	}
  	gdata(GDATA_TEMPORARY_FLAGS2) = 0
@@ -1464,7 +1464,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		end
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/txtadv.hsp ../2.13-borscht/txtadv.hsp
 --- ../2.12-borscht/txtadv.hsp	2022-04-25 14:22:03.727198700 -0700
-+++ ../2.13-borscht/txtadv.hsp	2022-06-25 22:26:52.968235200 -0700
++++ ../2.13-borscht/txtadv.hsp	2022-06-26 12:14:17.581056900 -0700
 @@ -340,10 +340,11 @@
  	atxid = 0
  	exittempinv

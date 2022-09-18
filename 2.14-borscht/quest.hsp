@@ -1,0 +1,879 @@
+*client_update
+	repeat 245 - 57, 57
+		if ( cExist(cnt) == CHAR_STATE_DEAD ) {
+			continue
+		}
+		if ( cRole(cnt) == ROLE_NONE ) {
+			continue
+		}
+		if ( cQuality(cnt) == FIX_QUALITY_UNIQUE ) {
+			continue
+		}
+		if ( cRole(cnt) == ROLE_SPECIAL ) {
+			continue
+		}
+		if ( cRelation(cnt) == RELATION_DISLIKE ) {
+			continue
+		}
+		if ( cnt == 0 ) {
+			continue
+		}
+		i = -1
+		repeat 500
+			if ( qClient(cnt) == 0 ) {
+				i = cnt
+				break
+			}
+		loop
+		cnt2 = cnt
+		repeat 500
+			if ( qClient(cnt) == cnt2 ) {
+				if ( qMap(cnt) == gArea ) {
+					i = -1
+					break
+				}
+			}
+		loop
+		if ( i == (-1) ) {
+			break
+		}
+		qClient(i) = cnt
+		qMap(i) = gArea
+		qname(i) = cnName(cnt)
+		cQuestNpc(cnt) = i + 1
+		if ( gClient <= i ) {
+			gClient = i + 1
+		}
+	loop
+	return
+
+*quest_reward
+	qReward(rq) = ((qLevel(rq) + 3) * 100 + rnd(qLevel(rq) * 30 + 200) + 400) * rewardfix / 100
+	qReward(rq) = qReward(rq) * 100 / (100 + qLevel(rq) * 2 / 3)
+	if ( qType(rq) == QUEST_SUBTYPE_SUPPLY | qType(rq) == QUEST_SUBTYPE_DELIVER ) {
+		return
+	}
+	if ( gdata(GDATA_DEEPEST_LEVEL) / 2 >= qLevel(rq) ) {
+	}
+	else {
+		qReward(rq) = qReward(rq) * (100 + limit((qLevel(rq) - gdata(GDATA_DEEPEST_LEVEL) / 2) / 5 * 25, 50, 200)) / 100
+	}
+	return
+
+*quest_update
+	repeat gClient
+		if ( qClient(cnt) == (-1) ) {
+			continue
+		}
+		if ( qClient(cnt) == 0 ) {
+			continue
+		}
+		if ( qMap(cnt) != gArea ) {
+			continue
+		}
+		rc = qClient(cnt)
+		if ( cOrgRelation(rc) != RELATION_NEUTRAL ) {
+			qClient(cnt) = 0
+			rq = cnt
+			gosub *quest_create
+		}
+		if ( cRole(rc) == ROLE_NONE ) {
+			continue
+		}
+		if ( cQuality(rc) == FIX_QUALITY_UNIQUE ) {
+			continue
+		}
+		if ( cRole(rc) == ROLE_SPECIAL ) {
+			continue
+		}
+		if ( cId(rc) == CREATURE_ID_ORPHE_THE_CHAOS_CHILD ) {
+			continue
+		}
+		if ( rc == CHARA_PLAYER ) {
+			continue
+		}
+		if ( qStatus(cnt) == QUEST_STATE_NONE ) {
+			if ( qRenew(cnt) < gHour + gDay * 24 + gMonth * 24 * 30 + gYear * 24 * 30 * 12 | adata(ADATA_QUEST_RENEW, gArea) != 4 ) {
+				rq = cnt
+				gosub *quest_create
+				gosub *quest_reward
+			}
+		}
+	loop
+	adata(ADATA_QUEST_RENEW, gArea) = 4
+	return
+	repeat gClient
+		if ( qClient(cnt) == 0 ) {
+			continue
+		}
+		if ( qMap(cnt) != gArea ) {
+			continue
+		}
+		rc = qClient(cnt)
+		if ( qStatus(cnt) == QUEST_STATE_NONE ) {
+			rq = cnt
+			gosub *quest_create
+			gosub *quest_reward
+		}
+	loop
+	return
+
+*quest_create
+	qExist(rq) = QUEST_TYPE_NONE
+	qType(rq) = QUEST_TYPE_NONE
+	qStatus(rq) = QUEST_STATE_NONE
+	qRenew(rq) = rnd(3 + 1) * 24 + (gHour + gDay * 24 + gMonth * 24 * 30 + gYear * 24 * 30 * 12)
+	qRewardItem(rq) = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING @@@ QUEST_REWARD_NONE]@!!! */)
+	if ( rnd(3) == 0 ) {
+		return
+	}
+	if ( qClient(rq) == 0 ) {
+		return
+	}
+	if ( rnd(14) == 0 & gArea != AREA_RUST_PLAZA ) {
+		i = -1
+		repeat 300
+			n = rnd(245 - 57) + 57
+			if ( n == qClient(rq) ) {
+				continue
+			}
+			if ( cExist(n) != CHAR_STATE_ALIVE ) {
+				continue
+			}
+			if ( cRelation(n) != RELATION_NEUTRAL | (cRole(n) != ROLE_CITIZEN & cRole(n) != ROLE_GUARD) ) {
+				continue
+			}
+			flt 40, FIX_QUALITY_GOOD
+			flttypemajor = fsetcollect(rnd(length(fsetcollect)))
+			itemcreate n, ITEM_ID_DUMMY, -1, -1, 0
+			if ( stat != 0 ) {
+				inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) = rq
+				i = n, iID(ci)
+				ibitmod ITEM_BIT_DROP, ci, TRUE
+				break
+			}
+			else {
+				i = -1
+				break
+			}
+		loop
+		if ( i != (-1) ) {
+			qdata((10 /*!!!@[QDATA_DEST_CLIENT @@@ QDATA_ENCOUNTER]@!!! */), rq) = i
+			qDestItem(rq) = i(1)
+			qMap(rq) = gArea
+			rewardfix = 60
+			qRewardItem(rq) = (5 /*!!!@[FILTER_RACE_KOBOLT @@@ QUEST_REWARD_SUPPLY]@!!! */)
+			qExist(rq) = QUEST_TYPE_COLLECT
+			qType(rq) = QUEST_SUBTYPE_SUPPLY
+			qVar(rq) = 0
+			qDeadline(rq) = rnd(3) + 2
+			qLevel(rq) = cLevel(i) / 3
+		}
+		return
+	}
+	if ( cFame(CHARA_PLAYER) >= 30000 ) {
+		if ( rnd(13) == 0 ) {
+			qLevel(rq) = rnd(gdata(GDATA_DEEPEST_LEVEL) / 2 + 10) + rnd(cFame(CHARA_PLAYER) / 2500 + 1)
+			qLevel(rq) = roundmargin(qLevel(rq), gdata(GDATA_DEEPEST_LEVEL) / 2)
+			minlevel = limit(qLevel(rq) / 7, 5, 30)
+			repeat 50
+				flt qLevel(rq), FIX_QUALITY_GOOD
+				characreate MAX_CHARA_NC, CREATURE_ID_BUG, -3, 0
+				if ( cmshade ) {
+					continue
+				}
+				if ( cLevel(rc) < minlevel ) {
+					continue
+				}
+				break
+			loop
+			qParam1(rq) = cId(MAX_CHARA_NC)
+			qRenew(rq) = (rnd(6) + 2) * 24 + (gHour + gDay * 24 + gMonth * 24 * 30 + gYear * 24 * 30 * 12)
+			qRewardItem(rq) = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING @@@ QUEST_REWARD_NONE]@!!! */)
+			qExist(rq) = QUEST_TYPE_HUNTEX
+			qType(rq) = QUEST_SUBTYPE_ELIMINATE
+			qVar(rq) = 0
+			qRewardItem(rq) = (5 /*!!!@[FILTER_RACE_KOBOLT @@@ QUEST_REWARD_SUPPLY]@!!! */)
+			qDeadline(rq) = -1
+			rewardfix = 140
+			return
+		}
+	}
+	if ( cFame(CHARA_PLAYER) >= 50000 ) {
+		if ( rnd(20) == 0 ) {
+			qLevel(rq) = rnd(gdata(GDATA_DEEPEST_LEVEL) / 2 + 10) + rnd(cFame(CHARA_PLAYER) / 2500 + 1)
+			qLevel(rq) = roundmargin(qLevel(rq), gdata(GDATA_DEEPEST_LEVEL) / 2)
+			minlevel = limit(qLevel(rq) / 4, 5, 30)
+			repeat 50
+				flt qLevel(rq), FIX_QUALITY_GOOD
+				characreate MAX_CHARA_NC, CREATURE_ID_BUG, -3, 0
+				if ( cmshade ) {
+					continue
+				}
+				if ( cLevel(rc) < minlevel ) {
+					continue
+				}
+				break
+			loop
+			qParam1(rq) = cId(MAX_CHARA_NC)
+			qRenew(rq) = (rnd(6) + 2) * 24 + (gHour + gDay * 24 + gMonth * 24 * 30 + gYear * 24 * 30 * 12)
+			qRewardItem(rq) = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING @@@ QUEST_REWARD_NONE]@!!! */)
+			qExist(rq) = QUEST_TYPE_CONQUER
+			qType(rq) = QUEST_SUBTYPE_CONQUER
+			qVar(rq) = 0
+			qRewardItem(rq) = (1 /*!!!@[FILTER_RACE_GOBLIN @@@ QUEST_REWARD_WEAR]@!!! */)
+			qDeadline(rq) = -1
+			rewardfix = 175
+			return
+		}
+	}
+	if ( rnd(11) == 0 & gArea != AREA_RUST_PLAZA & gArea != AREA_OL_DRAN ) {
+		qRenew(rq) = (rnd(6) + 2) * 24 + (gHour + gDay * 24 + gMonth * 24 * 30 + gYear * 24 * 30 * 12)
+		qExist(rq) = QUEST_TYPE_ESCORT
+		qType(rq) = QUEST_SUBTYPE_GUARD
+		qVar(rq) = rnd(3)
+		qdata((10 /*!!!@[QDATA_DEST_CLIENT @@@ QDATA_ENCOUNTER]@!!! */), rq) = 0
+		qRewardItem(rq) = (5 /*!!!@[FILTER_RACE_KOBOLT @@@ QUEST_REWARD_SUPPLY]@!!! */)
+		if ( gArea == AREA_EIREL | gArea == AREA_MELKAWN | gArea == AREA_KURUALM | gArea == AREA_VALM | gArea == AREA_MELUGAS | gArea == AREA_ARCBELC | gArea == AREA_LUDUS ) {
+			repeat
+				qParam1(rq) = asettowns(rnd(length(asettowns)))
+				if ( qParam1(rq) != gArea ) {
+					break
+				}
+			loop
+		}
+		if ( gArea == AREA_VERNIS | gArea == AREA_YOWYN | gArea == AREA_PALMIA | gArea == AREA_DERPHY | gArea == AREA_PORT_KAPUL | gArea == AREA_LUMIEST | gArea == AREA_NOYEL ) {
+			repeat
+				qParam1(rq) = asettownn(rnd(length(asettownn)))
+				if ( qParam1(rq) != gArea ) {
+					break
+				}
+			loop
+		}
+		p = qParam1(rq)
+		if ( qVar(rq) == 0 ) {
+			rewardfix = 140 + dist(areaX(gArea), areaY(gArea), areaX(p), areaY(p)) * 2
+			qDeadline(rq) = rnd(8) + 6
+			qLevel(rq) = limit(rnd(gdata(GDATA_DEEPEST_LEVEL) / 2 + 10) + rnd(cFame(CHARA_PLAYER) / 500 + 1) + 1, 1, 80)
+		}
+		if ( qVar(rq) == 1 ) {
+			rewardfix = 130 + dist(areaX(gArea), areaY(gArea), areaX(p), areaY(p)) * 2
+			qDeadline(rq) = rnd(5) + 2
+			qLevel(rq) = limit(rewardfix / 10 + 1, 1, 40)
+		}
+		if ( qVar(rq) == 2 ) {
+			rewardfix = 80 + dist(areaX(gArea), areaY(gArea), areaX(p), areaY(p)) * 2
+			qDeadline(rq) = rnd(8) + 6
+			qLevel(rq) = limit(rewardfix / 20 + 1, 1, 40)
+		}
+		if ( qParam1(rq) == 33 | gArea == AREA_NOYEL ) {
+			rewardfix = rewardfix * 180 / 100
+		}
+		if ( qParam1(rq) == 57 | gArea == AREA_LUDUS ) {
+			rewardfix = rewardfix * 120 / 100
+		}
+		return
+	}
+	if ( rnd(35) == 0 | (gArea == AREA_DERPHY & rnd(8) == 0) | (gArea == AREA_LUDUS & rnd(12) == 0) ) {
+		if ( gArea != AREA_RUST_PLAZA & gArea != AREA_OL_DRAN ) {
+			qLevel(rq) = limit(rnd(sDetection(CHARA_PLAYER) + sPER(CHARA_PLAYER) / 30 + 5), int(sqrt(sDetection(CHARA_PLAYER)) + 1) / 2 + 5, cFame(CHARA_PLAYER) / 2000 + 5)
+			if ( qLevel(rq) > 66 ) {
+				qLevel(rq) = 66
+			}
+			qRenew(rq) = (rnd(6) + 2) * 24 + (gHour + gDay * 24 + gMonth * 24 * 30 + gYear * 24 * 30 * 12)
+			qRewardItem(rq) = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING @@@ QUEST_REWARD_NONE]@!!! */)
+			qExist(rq) = QUEST_TYPE_MINEFIELD
+			qType(rq) = QUEST_SUBTYPE_TRAP
+			if ( cFame(CHARA_PLAYER) >= 15000 ) {
+				qVar(rq) = rnd(2)
+			}
+			else {
+				qVar(rq) = 0
+			}
+			qRewardItem(rq) = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING @@@ QUEST_REWARD_NONE]@!!! */)
+			qParam1(rq) = qLevel(rq) + rnd(5)
+			qParam2(rq) = 0
+			qDeadline(rq) = -1
+			rewardfix = 0
+			return
+		}
+	}
+	if ( rnd(23) == 0 | (gArea == AREA_PALMIA & rnd(8) == 0) | (gArea == AREA_ARCBELC & rnd(2) == 0) ) {
+		if ( gArea != AREA_RUST_PLAZA & gArea != AREA_OL_DRAN ) {
+			qLevel(rq) = limit(rnd(gdata(GDATA_DEEPEST_LEVEL) + sCHR(CHARA_PLAYER) / 10 + 10), int(1.5 * sqrt(gdata(GDATA_DEEPEST_LEVEL) + 4)) + 10, cFame(CHARA_PLAYER) / 1000 + 10)
+			qRenew(rq) = (rnd(6) + 2) * 24 + (gHour + gDay * 24 + gMonth * 24 * 30 + gYear * 24 * 30 * 12)
+			qRewardItem(rq) = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING @@@ QUEST_REWARD_NONE]@!!! */)
+			qExist(rq) = QUEST_TYPE_PARTY
+			qType(rq) = QUEST_SUBTYPE_PERFORM
+			qVar(rq) = 0
+			qRewardItem(rq) = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING @@@ QUEST_REWARD_NONE]@!!! */)
+			qParam1(rq) = qLevel(rq) * 10 + rnd(50)
+			qParam2(rq) = 0
+			qDeadline(rq) = -1
+			rewardfix = 0
+			return
+		}
+	}
+	if ( rnd(30) == 0 | (gArea == AREA_YOWYN & rnd(2) == 0) | (gArea == AREA_LUDUS & rnd(8) == 0) | (gArea == AREA_RUST_PLAZA & rnd(2) == 0) ) {
+		if ( gArea != AREA_OL_DRAN ) {
+			qLevel(rq) = limit(rnd(gdata(GDATA_DEEPEST_LEVEL) / 3 + 2), 2, 50)
+			qRenew(rq) = (rnd(6) + 2) * 24 + (gHour + gDay * 24 + gMonth * 24 * 30 + gYear * 24 * 30 * 12)
+			qExist(rq) = QUEST_TYPE_HARVEST
+			qType(rq) = QUEST_SUBTYPE_CARRY
+			qVar(rq) = 0
+			qRewardItem(rq) = (5 /*!!!@[FILTER_RACE_KOBOLT @@@ QUEST_REWARD_SUPPLY]@!!! */)
+			qDeadline(rq) = -1
+			qParam1(rq) = 15000 + qLevel(rq) * 2500
+			qParam2(rq) = 0
+			rewardfix = 60 + qLevel(rq) * 2
+			return
+		}
+	}
+	if ( rnd(8) == 0 ) {
+		qLevel(rq) = limit(rnd(gdata(GDATA_DEEPEST_LEVEL) / 2 + 10) + rnd(cFame(CHARA_PLAYER) / 500 + 1) + 1, 1, 80)
+		qLevel(rq) = roundmargin(qLevel(rq), gdata(GDATA_DEEPEST_LEVEL) / 2)
+		qRenew(rq) = (rnd(6) + 2) * 24 + (gHour + gDay * 24 + gMonth * 24 * 30 + gYear * 24 * 30 * 12)
+		qRewardItem(rq) = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING @@@ QUEST_REWARD_NONE]@!!! */)
+		qExist(rq) = QUEST_TYPE_HUNT
+		qType(rq) = QUEST_SUBTYPE_ELIMINATE
+		qVar(rq) = 0
+		qRewardItem(rq) = (1 /*!!!@[FILTER_RACE_GOBLIN @@@ QUEST_REWARD_WEAR]@!!! */)
+		qDeadline(rq) = -1
+		rewardfix = 135
+		return
+	}
+	if ( rnd(6) == 0 | gArea == AREA_RUST_PLAZA ) {
+		if ( gArea != AREA_OL_DRAN ) {
+			qExist(rq) = QUEST_TYPE_COOK
+			qType(rq) = QUEST_SUBTYPE_SUPPLY
+			qDeadline(rq) = rnd(6) + 2
+			qRewardItem(rq) = (5 /*!!!@[FILTER_RACE_KOBOLT @@@ QUEST_REWARD_SUPPLY]@!!! */)
+			qParam1(rq) = rnd(9 - 1) + 1
+			if ( qParam1(rq) == 4 ) {
+				qRewardItem(rq) = FILTER_ITEM_POTION
+			}
+			if ( qParam1(rq) == 6 ) {
+				qRewardItem(rq) = FILTER_AMMO
+			}
+			if ( qParam1(rq) == 1 ) {
+				qRewardItem(rq) = FILTER_AMMO
+			}
+			if ( qParam1(rq) == 5 ) {
+				qRewardItem(rq) = FILTER_ITEM_POTION
+			}
+			if ( qParam1(rq) == 7 ) {
+				qRewardItem(rq) = FILTER_ORE
+			}
+			if ( qParam1(rq) == 2 ) {
+				qRewardItem(rq) = FILTER_ITEM_ROD
+			}
+			if ( qParam1(rq) == 3 ) {
+				qRewardItem(rq) = FILTER_ITEM_SCROLL
+			}
+			qParam2(rq) = rnd(10 - 3) + 3
+			qLevel(rq) = qParam2(rq) * 3
+			rewardfix = 60 + qLevel(rq)
+			return
+		}
+	}
+	if ( rnd(5) == 0 | gArea == AREA_OL_DRAN ) {
+		qExist(rq) = QUEST_TYPE_SUPPLY
+		qType(rq) = QUEST_SUBTYPE_SUPPLY
+		qDeadline(rq) = rnd(6) + 2
+		flt
+		dbmode = DBMODE_FIND
+		flttypemajor = fsetsupply(rnd(length(fsetsupply)))
+		gosub *db_item
+		qRewardItem(rq) = (5 /*!!!@[FILTER_RACE_KOBOLT @@@ QUEST_REWARD_SUPPLY]@!!! */)
+		qDestItem(rq) = dbid
+		qLevel(rq) = limit(rnd(gdata(GDATA_DEEPEST_LEVEL) / 2 + 5) + 1, 1, 30)
+		rewardfix = 65 + qLevel(rq)
+		return
+	}
+	if ( rnd(6) == 0 | (gArea == AREA_KURUALM & rnd(2) == 0) ) {
+		i = -1
+		repeat gClient
+			p = rnd(gClient)
+			repeat gClient
+				if ( qExist(cnt) == QUEST_TYPE_DELIVER ) {
+					if ( qdata((10 /*!!!@[QDATA_DEST_CLIENT @@@ QDATA_ENCOUNTER]@!!! */), cnt) == p ) {
+						p = -1
+						break
+					}
+				}
+			loop
+			if ( p == (-1) ) {
+				continue
+			}
+			if ( gArea == AREA_EIREL | gArea == AREA_MELKAWN | gArea == AREA_KURUALM | gArea == AREA_VALM | gArea == AREA_MELUGAS | gArea == AREA_ARCBELC | gArea == AREA_LUDUS ) {
+				if ( qMap(p) != 50 & qMap(p) != 52 & qMap(p) != 53 & qMap(p) != 54 & qMap(p) != 55 & qMap(p) != 56 & qMap(p) != 57 ) {
+					continue
+				}
+			}
+			if ( gArea == AREA_VERNIS | gArea == AREA_YOWYN | gArea == AREA_PALMIA | gArea == AREA_DERPHY | gArea == AREA_PORT_KAPUL | gArea == AREA_LUMIEST | gArea == AREA_NOYEL ) {
+				if ( qMap(p) != 5 & qMap(p) != 12 & qMap(p) != 15 & qMap(p) != 14 & qMap(p) != 11 & qMap(p) != 36 & qMap(p) != 33 ) {
+					continue
+				}
+			}
+			if ( qClient(p) != 0 ) {
+				if ( qMap(p) != gArea ) {
+					i = p
+					break
+				}
+			}
+		loop
+		if ( i != (-1) ) {
+			p = qMap(i)
+			rewardfix = 70 + dist(areaX(gArea), areaY(gArea), areaX(p), areaY(p)) * 2
+			if ( p == 33 | gArea == AREA_NOYEL ) {
+				rewardfix = rewardfix * 175 / 100
+			}
+			qdata((10 /*!!!@[QDATA_DEST_CLIENT @@@ QDATA_ENCOUNTER]@!!! */), rq) = i
+			flt
+			dbmode = DBMODE_FIND
+			flttypemajor = fsetdeliver(rnd(length(fsetdeliver)))
+			gosub *db_item
+			qParam1(rq) = flttypemajor
+			qRewardItem(rq) = (5 /*!!!@[FILTER_RACE_KOBOLT @@@ QUEST_REWARD_SUPPLY]@!!! */)
+			if ( flttypemajor == FILTER_ITEM_SPELLBOOK ) {
+				qRewardItem(rq) = (2 /*!!!@[FILTER_RACE_ORC @@@ QUEST_REWARD_MAGIC]@!!! */)
+			}
+			if ( flttypemajor == FILTER_ORE ) {
+				qRewardItem(rq) = (3 /*!!!@[FILTER_RACE_SLIME @@@ QUEST_REWARD_ARMOR]@!!! */)
+			}
+			if ( flttypemajor == FILTER_JUNK ) {
+				qRewardItem(rq) = FILTER_ORE
+			}
+			if ( flttypemajor == FILTER_FURNITURE ) {
+				qRewardItem(rq) = FILTER_FURNITURE
+			}
+			qDestItem(rq) = dbid
+			qExist(rq) = QUEST_TYPE_DELIVER
+			qType(rq) = QUEST_SUBTYPE_DELIVER
+			qVar(rq) = 0
+			qDeadline(rq) = rnd(12) + 3
+			qLevel(rq) = limit(rewardfix / 20 + 1, 1, 25)
+		}
+		return
+	}
+	return 1
+
+*quest_check
+	repeat gClient
+		if ( qExist(cnt) == QUEST_TYPE_NONE ) {
+			continue
+		}
+		if ( qStatus(cnt) != QUEST_STATE_ONGOING ) {
+			continue
+		}
+		if ( qDeadline(cnt) < 0 ) {
+			continue
+		}
+		rq = cnt
+		qDeadline(rq)--
+		if ( qDeadline(rq) == 0 ) {
+			val = qExist(rq)
+			gosub *quest_fail
+		}
+	loop
+	return
+
+*quest_exit
+	if ( gQuest == QUEST_TYPE_HARVEST ) {
+		inv_getheader 0
+		repeat invrange, invhead
+			if ( iProperty(cnt) == PROP_QUEST ) {
+				iNum(cnt) = 0
+			}
+		loop
+		gosub *calcBurdenPc
+	}
+	if ( gQuestStatus != QUEST_STATE_SUCCESS ) {
+		if ( gQuest >= STARTING_QUEST_TYPE ) {
+			rq = gQuestRef
+		}
+		if ( gQuest == QUEST_TYPE_ESCORT ) {
+			if ( qStatus(rq) == QUEST_STATE_NONE ) {
+				gQuest = QUEST_TYPE_NONE, 0, 0, 0
+				return
+			}
+			else {
+				txtmore
+				txt lang("あなたはクライアントを置き去りにした。", "You left your client.")
+			}
+		}
+		val = gQuest
+		gosub *quest_fail
+		msg_halt
+	}
+	gQuest = QUEST_TYPE_NONE, 0, 0, 0
+	return
+
+*quest_death
+	rc = CHARA_PLAYER
+	gosub *chara_respawn
+	skillexp SKILL_ATTR_CHA, CHARA_PLAYER, -500
+	skillexp SKILL_ATTR_WIL, CHARA_PLAYER, -500
+	levelexitby = MAP_EXIT_NORMAL
+	gLevel = 0
+	goto *map_exit
+
+*quest_fail
+	if ( val == 1 ) {
+		txt lang("あなたは敗北した。", "You were defeated.")
+		modrank 0, -100
+	}
+	if ( val >= 1000 ) {
+		txt lang(qname(rq) + "から受けた依頼は失敗に終わった。", "You have failed the quest taken from " + qname(rq) + ".")
+		gdata(GDATA_FLAG_JOBS_FAILED)++
+		if ( qExist(rq) == QUEST_TYPE_DELIVER ) {
+			qQuestTarget(qdata((10 /*!!!@[QDATA_DEST_CLIENT @@@ QDATA_ENCOUNTER]@!!! */), rq))--
+			txtmore
+			txtef COLOR_PURPLE
+			txt lang("あなたは重大な罪を犯した!", "You comit a serious crime!")
+			modkarma 0, -20
+		}
+		if ( qExist(rq) == QUEST_TYPE_ESCORT ) {
+			txtmore
+			txtef COLOR_PURPLE
+			txt lang("あなたは護衛の任務を果たせなかった。", "You have failed to protect the client.")
+			repeat 16
+				if ( cnt != 0 ) {
+					if ( cbit(CHARA_BIT_BODYGUARD, cnt) == TRUE ) {
+						if ( qParam2(rq) == cId(cnt) ) {
+							tc = cnt
+							cbitmod CHARA_BIT_BODYGUARD, cnt, FALSE
+							if ( cExist(tc) == CHAR_STATE_ALIVE ) {
+								if ( qVar(rq) == 0 ) {
+									s = lang("「おい、暗殺者が私の後ろにいるぞ」", cnvtalk("Hey, the assassins are killing me."))
+									p = -11
+								}
+								if ( qVar(rq) == 1 ) {
+									s = lang("「毒が、毒がー！」", cnvtalk("Poison! P-P-Poison in my vein!!"))
+									p = -4
+								}
+								if ( qVar(rq) == 2 ) {
+									s = lang("「時間切れだ。こうなったら…」" + name(tc) + "は火をかぶった。", cnvtalk("I missed the deadline. I don't have a right to live anymore.") + " " + name(tc) + " pours a bottole of molotov cocktail over " + him(tc) + "self.")
+									addmef cX(CHARA_PLAYER), cY(CHARA_PLAYER), MEF_TYPE_FIRE, xy2pic(24, 0), rnd(15) + 25, efp, CHARA_PLAYER
+									mapitem_fire cX(tc), cY(tc)
+									p = -9
+								}
+								txtef COLOR_SKY_BLUE
+								txtmore
+								txt s
+								dmghp tc, 999999, p
+							}
+							cExist(tc) = CHAR_STATE_DEAD
+							break
+						}
+					}
+				}
+			loop
+			modkarma 0, -10
+		}
+		qExist(rq) = QUEST_TYPE_NONE
+		qStatus(rq) = QUEST_STATE_NONE
+	}
+	decfame CHARA_PLAYER, 40
+	p = stat
+	txtmore
+	txtef COLOR_RED
+	txt lang("名声値を" + p + "失った。", "You lose " + p + " fame.")
+	return
+
+*quest_petArenaWin
+	repeat 16
+		if ( cdata(CDATA_DIRECTIVE_MODE, cnt) == DIRECTIVE_MODE_TEMPORARY ) {
+			cdata(CDATA_DIRECTIVE_MODE, cnt) = cdata(CDATA_DIRECTIVE_MODE_ORG, cnt)
+		}
+		if ( followerin(cnt) == 0 ) {
+			continue
+		}
+		if ( cHP(cnt) < cMHP(cnt) / 2 ) {
+			cHP(cnt) = cMHP(cnt) / 2
+		}
+		cFame(cnt) += calcfame(cnt, (220 - gRankPetArena / 50) * (50 + limit(areaPetArenaWin(gReturnArea), 0, 50)) / 100 + 2) * 2
+	loop
+	snd SOUNDLIST_CHEER
+	if ( petarenawin == 1 ) {
+		txtef COLOR_GREEN
+		txt lang("あなたのチームは勝利した！", "Your team is victorious!")
+		txtef COLOR_GREEN
+		txtmore
+		txt lang("" + gQuestFame + "の名声値を手に入れた。", "You gain " + gQuestFame + " fame.")
+		if ( arenaimport == 1 ) {
+			gExBattleWin++
+			if ( enemylv > gExBattleMaxLv ) {
+				txt lang("EXバトルの撃破相手LVの記録を更新した(Lv" + gExBattleMaxLv + " → " + enemylv + " )", "You've made a new record. (Lv" + gExBattleMaxLv + " to " + enemylv + " )")
+				gExBattleMaxLv = enemylv
+			}
+		}
+		else {
+			cFame(CHARA_PLAYER) += gQuestFame
+			modrank 1, 100, 2
+			areaPetArenaWin(gReturnArea)++
+			gdata(GDATA_FLAG_HIGHEST_PET_ARENA_STREAK)++
+			if ( areaPetArenaWin(gReturnArea) \ 100 == 0 ) {
+				snd SOUNDLIST_DING3
+				txt lang("なんと…" + areaPetArenaWin(gReturnArea) + "勝を達成した！追加で30000の名声値を手に入れた。", "You gain 30000 fame!!")
+				await 2000
+				cFame(CHARA_PLAYER) += 30000
+				prenshyou = 100
+			}
+			else {
+				if ( areaPetArenaWin(gReturnArea) \ 3 == 0 ) {
+					prenshyou = 3
+				}
+				if ( areaPetArenaWin(gReturnArea) \ 10 == 0 ) {
+					prenshyou = 10
+				}
+				if ( areaPetArenaWin(gReturnArea) \ 30 == 0 ) {
+					prenshyou = 30
+				}
+				if ( areaPetArenaWin(gReturnArea) \ 50 == 0 ) {
+					prenshyou = 50
+				}
+				if ( areaPetArenaWin(gReturnArea) \ 20 == 0 ) {
+					matgetmain MATERIAL_500_YEN_COIN, 1
+				}
+				else {
+					if ( areaPetArenaWin(gReturnArea) \ 5 == 0 ) {
+						matgetmain MATERIAL_100_YEN_COIN, 1
+					}
+				}
+			}
+		}
+	}
+	else {
+		txtef COLOR_PURPLE
+		txt lang("あなたのチームは敗北した。", "Your team is defeated.")
+		modrank 1, -100
+		decfame CHARA_PLAYER, 60
+		p = stat
+		if ( arenaop == 0 ) {
+			txtmore
+			txtef COLOR_RED
+			txt lang("名声値を" + p + "失った。", "You loose " + p + " fame.")
+		}
+	}
+	return
+
+*quest_eliminate
+	music = MUSICLIST_MCFANFARE
+	musicloop = 1
+	gosub *music_play
+	gQuestStatus = QUEST_STATE_SUCCESS
+	if ( gQuest == QUEST_SUBTYPE_ELIMINATE ) {
+		snd SOUNDLIST_CHEER
+		txtef COLOR_GREEN
+		txt lang("あなたは勝利した！", "You are victorious!")
+		txtef COLOR_GREEN
+		txtmore
+		txt lang("" + gQuestFame + "の名声値を手に入れた。", "You gain " + gQuestFame + " fame.")
+		modrank 0, 100, 2
+		cFame(CHARA_PLAYER) += gQuestFame
+		txt lang("外への階段が現れた。", "Stairs appear.")
+		map_placeupstairs mWidth / 2, mHeight / 2
+		areaArenaWin(gReturnArea)++
+		gdata(GDATA_FLAG_HIGHEST_ARENA_STREAK)++
+		if ( areaArenaWin(gReturnArea) \ 100 == 0 ) {
+			snd SOUNDLIST_DING3
+			snd SOUNDLIST_DING1
+			txt lang("なんと…" + areaArenaWin(gReturnArea) + "勝を達成した！追加で30000の名声値を手に入れた。", "You gain 30000 fame!!")
+			cFame(CHARA_PLAYER) += 30000
+			renshyou = 100
+		}
+		else {
+			if ( areaArenaWin(gReturnArea) \ 3 == 0 ) {
+				renshyou = 3
+			}
+			if ( areaArenaWin(gReturnArea) \ 10 == 0 ) {
+				renshyou = 10
+			}
+			if ( areaArenaWin(gReturnArea) \ 30 == 0 ) {
+				renshyou = 30
+			}
+			if ( areaArenaWin(gReturnArea) \ 50 == 0 ) {
+				renshyou = 50
+			}
+			if ( areaArenaWin(gReturnArea) \ 20 == 0 ) {
+				matgetmain MATERIAL_500_YEN_COIN, 1
+			}
+			else {
+				if ( areaArenaWin(gReturnArea) \ 5 == 0 ) {
+					matgetmain MATERIAL_100_YEN_COIN, 1
+				}
+			}
+		}
+	}
+	if ( gQuest == QUEST_TYPE_HUNT | gQuest == QUEST_TYPE_HUNTEX ) {
+		qStatus(gQuestRef) = QUEST_STATE_SUCCESS
+		txtef COLOR_GREEN
+		txt lang("エリアを制圧した！", "The area is secured!")
+	}
+	if ( gQuest == QUEST_TYPE_ESCORT ) {
+		txtef COLOR_GREEN
+		txt lang("エリアを制圧した！", "The area is secured!")
+	}
+	if ( gQuest == QUEST_TYPE_THIEVES ) {
+		txtef COLOR_GREEN
+		txt lang("盗賊団を返り討ちにした！", "The area is secured!")
+		gdata(GDATA_FLAG_BANDITS_KILLED)++
+	}
+	if ( gQuest == QUEST_TYPE_CONQUER ) {
+		gTimelimit = 0
+		qStatus(gQuestRef) = QUEST_STATE_SUCCESS
+		txtef COLOR_GREEN
+		txt lang("討伐に成功した！", "You successfully slay the target.")
+	}
+	return
+
+*label_8955
+	snd SOUNDLIST_COMPLETE1
+	p = qReward(rq)
+	if ( qExist(rq) == QUEST_TYPE_HARVEST ) {
+		if ( qParam1(rq) != 0 ) {
+			if ( qParam1(rq) * 125 / 100 < qParam2(rq) ) {
+				p = limit(p * qParam2(rq) / qParam1(rq), p, p * 3)
+			}
+		}
+	}
+	if ( p != 0 ) {
+		flt
+		itemcreate -1, ITEM_ID_GOLD_PIECE, cX(CHARA_PLAYER), cY(CHARA_PLAYER), p
+	}
+	if ( qExist(rq) == QUEST_TYPE_PARTY ) {
+		p = 1
+	}
+	else {
+		p = limit(rnd(1 + cFame(CHARA_PLAYER) / EXT_EQUIP_SLOTS), 1, 3)
+	}
+	if ( qExist(rq) == QUEST_TYPE_CONQUER | qExist(rq) == QUEST_TYPE_HUNTEX ) {
+		p = limit(rnd(2 + cFame(CHARA_PLAYER) / 20000), 2, 6)
+	}
+	flt
+	itemcreate -1, ITEM_ID_PLATINUM_COIN, cX(CHARA_PLAYER), cY(CHARA_PLAYER), p
+	if ( qExist(rq) == QUEST_TYPE_PARTY ) {
+		if ( qParam1(rq) * 150 / 100 < qParam2(rq) ) {
+			flt
+			itemcreate -1, ITEM_ID_MUSIC_TICKET, cX(CHARA_PLAYER), cY(CHARA_PLAYER), 1 + qParam2(rq) / 10
+		}
+	}
+	if ( qExist(rq) == QUEST_TYPE_MINEFIELD ) {
+		flt
+		itemcreate -1, ITEM_ID_DEVIL_FRAGMENT, cX(CHARA_PLAYER), cY(CHARA_PLAYER), limit(1 + qParam2(rq) / 5, 1, 30)
+		iStatus(ci) = ITEM_STATUS_NORMAL
+		if ( qParam1(rq) * 125 / 100 <= qParam2(rq) | qVar(rq) == 1 ) {
+			flt
+			itemcreate -1, ITEM_ID_BRONZE_COIN, cX(cc), cY(cc), 1
+		}
+	}
+	if ( qExist(rq) == QUEST_TYPE_HARVEST ) {
+		if ( qParam1(rq) * 125 / 100 < qParam2(rq) ) {
+			flt
+			itemcreate -1, ITEM_ID_BRONZE_COIN, cX(cc), cY(cc), 1
+		}
+		seedp = rnd(limit(sGardening(CHARA_PLAYER) / 2, 0, 30) + 80)
+		if ( seedp >= 90 ) {
+			if ( rnd(2) == 0 ) {
+				itemcreate -1, ITEM_ID_HERB_SEED, cX(CHARA_PLAYER), cY(CHARA_PLAYER), 3
+			}
+			else {
+				itemcreate -1, ITEM_ID_HERB_SEED, cX(cc), cY(cc), 2
+			}
+		}
+		if ( seedp >= 70 & seedp < 90 ) {
+			if ( rnd(2) == 0 ) {
+				itemcreate -1, ITEM_ID_UNKNOWN_SEED, cX(CHARA_PLAYER), cY(CHARA_PLAYER), 3
+			}
+			else {
+				itemcreate -1, ITEM_ID_MAGICAL_SEED, cX(cc), cY(cc), 4
+			}
+		}
+		if ( seedp >= 50 & seedp < 70 ) {
+			itemcreate -1, ITEM_ID_GEM_SEED, cX(CHARA_PLAYER), cY(CHARA_PLAYER), 4
+		}
+		if ( seedp >= 0 & seedp < 50 ) {
+			if ( rnd(2) == 0 ) {
+				itemcreate -1, ITEM_ID_FRUIT_SEED, cX(CHARA_PLAYER), cY(CHARA_PLAYER), 5
+			}
+			else {
+				itemcreate -1, ITEM_ID_VEGETABLE_SEED, cX(cc), cY(cc), 5
+			}
+		}
+	}
+	if ( qRewardItem(rq) != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING @@@ QUEST_REWARD_NONE]@!!! */) ) {
+		p = rnd(rnd(4) + 1) + 1
+		if ( qExist(rq) == QUEST_TYPE_CONQUER | qExist(rq) == QUEST_TYPE_HUNTEX ) {
+			p += 2
+		}
+		repeat p
+			fixlv = FIX_QUALITY_GOOD
+			if ( rnd(2) ) {
+				fixlv = FIX_QUALITY_GREAT
+				if ( rnd(12) == 0 ) {
+					fixlv = FIX_QUALITY_MIRACLE
+				}
+			}
+			flt (qLevel(rq) + gdata(GDATA_DEEPEST_LEVEL) / 2) / 2 + 1, calcfixlv(fixlv)
+			if ( qRewardItem(rq) < FILTER_WEAPON ) {
+				if ( qRewardItem(rq) == (1 /*!!!@[FILTER_RACE_GOBLIN @@@ QUEST_REWARD_WEAR]@!!! */) ) {
+					flttypemajor = fsetwear(rnd(length(fsetwear)))
+				}
+				if ( qRewardItem(rq) == (2 /*!!!@[FILTER_RACE_ORC @@@ QUEST_REWARD_MAGIC]@!!! */) ) {
+					flttypemajor = fsetmagic(rnd(length(fsetmagic)))
+				}
+				if ( qRewardItem(rq) == (3 /*!!!@[FILTER_RACE_SLIME @@@ QUEST_REWARD_ARMOR]@!!! */) ) {
+					flttypemajor = fsetarmor(rnd(length(fsetarmor)))
+				}
+				if ( qRewardItem(rq) == (4 /*!!!@[FILTER_RACE_ELEA @@@ QUEST_REWARD_WEAPON]@!!! */) ) {
+					flttypemajor = fsetweapon(rnd(length(fsetweapon)))
+				}
+				if ( qRewardItem(rq) == (5 /*!!!@[FILTER_RACE_KOBOLT @@@ QUEST_REWARD_SUPPLY]@!!! */) ) {
+					flttypemajor = fsetrewardsupply(rnd(length(fsetrewardsupply)))
+				}
+			}
+			else {
+				flttypemajor = qRewardItem(rq)
+			}
+			itemcreate -1, ITEM_ID_DUMMY, cX(CHARA_PLAYER), cY(CHARA_PLAYER), 0
+		loop
+	}
+	modkarma 0, 1
+	gQuestFame = calcfame(CHARA_PLAYER, qLevel(rq) * 3 + 10)
+	txtef COLOR_GREEN
+	txt lang(qname(rq) + "から受けた依頼を完了した。", "You have completed the quest taken from " + qname(rq) + ".")
+	if ( gdata(GDATA_FLAG_ZISILION_SIDEQUEST) == 100 ) {
+		gdata(GDATA_FLAG_ZISILION_SIDEQUEST) = 300
+	}
+	hatugen = limit(sqrt(qLevel(rq) + 1), 3, 10) * 10
+	mdata(MDATA_CITY_AUTHORITY) += hatugen
+	if ( mdata(MDATA_CITY_ETHER_CORRUPTION) != 0 ) {
+		txtef COLOR_GREEN
+		txt lang("発言力を" + hatugen + "獲得（現在" + mdata(MDATA_CITY_AUTHORITY) + "）、", "You get " + hatugen + " praise.")
+	}
+	gdata(GDATA_FLAG_JOBS_COMPLETED)++
+	txtef COLOR_GREEN
+	txtmore
+	txt lang("" + gQuestFame + "の名声値を手に入れた。", "You gain " + gQuestFame + " fame.")
+	cFame(CHARA_PLAYER) += gQuestFame
+	txt lang("何かが足元に転がってきた。", "Something is put on the ground.")
+	if ( qExist(rq) == QUEST_TYPE_DELIVER ) {
+		qQuestTarget(qdata((10 /*!!!@[QDATA_DEST_CLIENT @@@ QDATA_ENCOUNTER]@!!! */), rq))--
+	}
+	qExist(rq) = QUEST_TYPE_NONE
+	qStatus(rq) = QUEST_STATE_NONE
+	autosave = 1 * (gArea != AREA_SHOW_HOUSE)
+	return
+
+
+
+
+
+
+
+
+
+
+
+

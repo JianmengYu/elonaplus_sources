@@ -25,8 +25,8 @@
 	}
 	return locvar_rpmatname_s
 
-*label_5260
-	goto *label_5262
+*label_5268
+	goto *label_5270
 
 #deffunc blendcheckext int blendcheckext_arg1, int blendcheckext_arg2
 	if ( rpdata(RPDATA_MAT_EXT + blendcheckext_arg2, rpid) >= 10000 ) {
@@ -43,8 +43,8 @@
 	}
 	return 0
 
-*label_5262
-	goto *label_5264
+*label_5270
+	goto *label_5272
 
 #defcfunc rpsuccessrate int rpsuccessrate_rate
 	if ( rpsuccessrate_rate == 100 ) {
@@ -76,8 +76,8 @@
 	}
 	return lang("絶対ムリ！", "Impossible!")
 
-*label_5264
-	goto *label_5269
+*label_5272
+	goto *label_5277
 
 #defcfunc rpdiff int rpdiff_arg0, int rpdiff_arg1, int rpdiff_arg2
 	locvar_rpdiff_p1 = 80
@@ -145,8 +145,8 @@
 	}
 	return locvar_rpdiff_p1
 
-*label_5269
-	goto *label_5274
+*label_5277
+	goto *label_5282
 
 #defcfunc blendcheckmat int blendcheckmat_arg1
 	rpid = blendcheckmat_arg1
@@ -231,8 +231,8 @@
 	loop
 	return locvar_blendcheckmat_f
 
-*label_5274
-	goto *label_5278
+*label_5282
+	goto *label_5286
 
 #deffunc blendmatnum int blendmatnum_arg1, int blendmatnum_arg2
 	locvar_blendmatnum_m = 0
@@ -300,8 +300,8 @@
 	loop
 	return locvar_blendmatnum_m
 
-*label_5278
-	goto *label_5284
+*label_5286
+	goto *label_5292
 
 #deffunc blendlist array blendlist_arg1, int blendlist_arg2
 	locvar_blendlist_id = rpdata(RPDATA_MAT + blendlist_arg2, rpid)
@@ -424,7 +424,7 @@
 	bmes lang("必要時間: ", "Time: ") + locvar_window_recipe2_s, 235, 235, 235
 	return
 
-*label_5284
+*label_5292
 	goto *initial_recipe
 
 #deffunc window_recipe array window_recipe_arg0, int window_recipe_itemid, int window_recipe_arg2, int window_recipe_arg3, int window_recipe_arg4, int window_recipe_arg5
@@ -591,13 +591,13 @@
 	if ( locvar_window_recipe_p > 0 ) {
 		repeat locvar_window_recipe_p
 			locvar_window_recipe_cnt2 = locvar_window_recipe_inhlist(cnt)
-			if ( inv(40 + locvar_window_recipe_cnt2 * 2, window_recipe_itemid) == 0 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + locvar_window_recipe_cnt2 * 2, window_recipe_itemid) == 0 ) {
 				break
 			}
-			val = inv(40 + locvar_window_recipe_cnt2 * 2, window_recipe_itemid), inv(40 + locvar_window_recipe_cnt2 * 2 + 1, window_recipe_itemid), 0, refitem(inv(INV_ITEM_ID, window_recipe_itemid), DBSPEC_TYPE)
+			val = inv(STARTING_INV_ITEM_ENCHANT + locvar_window_recipe_cnt2 * 2, window_recipe_itemid), inv(STARTING_INV_ITEM_ENCHANT + locvar_window_recipe_cnt2 * 2 + 1, window_recipe_itemid), 0, refitem(inv(INV_ITEM_ID, window_recipe_itemid), DBSPEC_TYPE)
 			gosub *item_encdetail
 			color 0, 0, 100
-			if ( inv(40 + locvar_window_recipe_cnt2 * 2 + 1, window_recipe_itemid) < 0 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + locvar_window_recipe_cnt2 * 2 + 1, window_recipe_itemid) < 0 ) {
 				color 180, 0, 0
 			}
 			pos locvar_window_recipe_dx, locvar_window_recipe_dy
@@ -779,7 +779,7 @@
 	rpid = STARTING_RPID + 23
 	rplistdef(length(rplistdef)) = 1 * EXT_RECIPES + rpid
 	rpdatan(rpid) = lang("ハーブ調合", "herb infusion")
-	rpdata(RPDATA_ITEM, rpid) = (10000 /*!!!@[RECIPE_BLEND_ACTION_HERBED_FOOD @@@ STARTING_RECIPE_BLEND_ACTION]@!!! */), 60, 1
+	rpdata(RPDATA_ITEM, rpid) = RECIPE_BLEND_ACTION_HERBED_FOOD, 60, 1
 	rpdata(RPDATA_SKILL + 0 * 2, rpid) = SKILL_NORMAL_GARDENING, 20, SKILL_NORMAL_COOKING, 30
 	rpdata(RPDATA_MAT + 0, rpid) = FILTER_ITEM_FOOD, ITEM_ID_STOMAFILLIA, ITEM_ID_CURARIA, RF_HERB
 	rpid = STARTING_RPID + 24
@@ -1151,7 +1151,7 @@
 				rpref(2) = rpdata(RPDATA_TIME, rpid)
 				rpref(3) = rpdiff(rpid, step, -1)
 				gosub *blend
-				goto *turn_end
+				goto *label_9247
 			}
 			if ( rtval == 2 ) {
 				step = -1
@@ -1383,7 +1383,7 @@
 
 *com_blend_material_loop_WHILE1_CONTINUE
 	if ( 1 == 0 ) {
-		goto *label_5313
+		goto *label_5321
 	}
 	cs_bk = -1
 	pagemax = (listmax - 1) / pagesize
@@ -1577,7 +1577,7 @@
 *com_blend_material_loop_WEND1
 	goto *com_blend_material_loop_WHILE1_CONTINUE
 
-*label_5313
+*label_5321
 	goto *pc_turn
 
 *blend_checkMat
@@ -1621,7 +1621,7 @@
 		}
 		cell_refresh inv(INV_ITEM_X, rpref(10 + cnt * 2)), inv(INV_ITEM_Y, rpref(10 + cnt * 2))
 	loop
-	gosub *calcBurdenPc
+	gosub *label_4102
 	return 1
 
 *blend_complete
@@ -1636,7 +1636,7 @@
 			ti = rpref(10 + 0 * 2)
 			inv(INV_ITEM_NUM, ti)++
 		}
-		if ( rpdata(RPDATA_ITEM, rpid) >= (10000 /*!!!@[RECIPE_BLEND_ACTION_HERBED_FOOD @@@ STARTING_RECIPE_BLEND_ACTION]@!!! */) ) {
+		if ( rpdata(RPDATA_ITEM, rpid) >= RECIPE_BLEND_ACTION_HERBED_FOOD ) {
 			gosub *blend_act
 		}
 		if ( rpdata(RPDATA_ITEM, rpid) == ITEM_ID_RICE_BALL ) {
@@ -2089,7 +2089,7 @@
 			inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_NORMAL
 			item_identify ci, ITEM_KNOWN_FULL
 		}
-		if ( rpdata(RPDATA_ITEM, rpid) < (10000 /*!!!@[RECIPE_BLEND_ACTION_HERBED_FOOD @@@ STARTING_RECIPE_BLEND_ACTION]@!!! */) ) {
+		if ( rpdata(RPDATA_ITEM, rpid) < RECIPE_BLEND_ACTION_HERBED_FOOD ) {
 			txtef COLOR_GREEN
 			txt lang(itemname(ci, 1) + "の作成に成功した！", "You successfully create " + itemname(ci, 1) + "!")
 		}
@@ -2132,7 +2132,7 @@
 		repeat
 			mode = MODELIST_RP
 			gdata(GDATA_HOUR)++
-			gosub *advance_hour
+			gosub *label_9228
 			redraw 0
 			gosub *screen_drawStatus
 			if ( cnt \ 5 == 0 ) {
@@ -3093,7 +3093,7 @@
 	r1 = 0
 	gosub *charaRefresh
 	return
-	goto *label_5327
+	goto *label_5335
 
 
 
