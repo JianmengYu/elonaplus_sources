@@ -7962,7 +7962,7 @@
 		sxfix = 0
 		syfix = 0
 		gosub *screen_setPos
-		gosub *los
+		gosub *label_3905
 		gosub *los_draw
 		p = windoww / 192
 		repeat p + 1

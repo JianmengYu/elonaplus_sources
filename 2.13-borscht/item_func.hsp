@@ -160,12 +160,12 @@
 		}
 		locvar_encfind_i = cdata(cnt, encfind_charid) \ EXT_EQUIP_SLOTS - 1
 		repeat 15
-			if ( inv(40 + cnt * 2, locvar_encfind_i) == 0 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, locvar_encfind_i) == 0 ) {
 				break
 			}
-			if ( inv(40 + cnt * 2, locvar_encfind_i) == encfind_encid ) {
-				if ( inv(40 + cnt * 2 + 1, locvar_encfind_i) > locvar_encfind_f ) {
-					locvar_encfind_f = inv(40 + cnt * 2 + 1, locvar_encfind_i)
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, locvar_encfind_i) == encfind_encid ) {
+				if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, locvar_encfind_i) > locvar_encfind_f ) {
+					locvar_encfind_f = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, locvar_encfind_i)
 					break
 				}
 			}
@@ -181,11 +181,11 @@
 		}
 		locvar_encfind_i = cdata(cnt, encfindpower_charid) \ EXT_EQUIP_SLOTS - 1
 		repeat 15
-			if ( inv(40 + cnt * 2, locvar_encfind_i) == 0 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, locvar_encfind_i) == 0 ) {
 				break
 			}
-			if ( inv(40 + cnt * 2, locvar_encfind_i) == encfindpower_encid ) {
-				locvar_encfind_f += inv(40 + cnt * 2 + 1, locvar_encfind_i)
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, locvar_encfind_i) == encfindpower_encid ) {
+				locvar_encfind_f += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, locvar_encfind_i)
 			}
 		loop
 	loop
@@ -194,10 +194,10 @@
 #defcfunc encfindspec int encfindspec_itemid, int encfindspec_encid
 	locvar_encfind_f = -1
 	repeat 15
-		if ( inv(40 + cnt * 2, encfindspec_itemid) == 0 ) {
+		if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, encfindspec_itemid) == 0 ) {
 			break
 		}
-		if ( inv(40 + cnt * 2, encfindspec_itemid) == encfindspec_encid ) {
+		if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, encfindspec_itemid) == encfindspec_encid ) {
 			locvar_encfind_f = 1
 			break
 		}
@@ -2113,7 +2113,7 @@
 		return
 	}
 	repeat 15
-		locvar_equipinfo_p = inv(40 + cnt * 2, equipinfo_arg1)
+		locvar_equipinfo_p = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, equipinfo_arg1)
 		if ( locvar_equipinfo_p == 0 ) {
 			break
 		}
@@ -2123,7 +2123,7 @@
 		}
 		locvar_colorres_i = locvar_equipinfo_p \ 10000
 		pos equipinfo_arg2 + (locvar_colorres_i - 50) * 20, equipinfo_arg3
-		locvar_equipinfo_p = abs(inv(40 + cnt * 2 + 1, equipinfo_arg1) / 2 / 50) + 1
+		locvar_equipinfo_p = abs(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, equipinfo_arg1) / 2 / 50) + 1
 		if ( locvar_equipinfo_p > 5 ) {
 			locvar_equipinfo_s = "+"
 		}
@@ -2132,7 +2132,7 @@
 		}
 		if ( jp ) {
 			colorres
-			if ( inv(40 + cnt * 2 + 1, equipinfo_arg1) >= 0 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, equipinfo_arg1) >= 0 ) {
 				mes "●"
 			}
 			else {

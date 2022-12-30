@@ -1,6 +1,6 @@
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/action.hsp ../2.13-borscht/action.hsp
 --- ../2.12-borscht/action.hsp	2022-04-25 14:21:59.625140000 -0700
-+++ ../2.13-borscht/action.hsp	2022-06-26 12:14:11.385344500 -0700
++++ ../2.13-borscht/action.hsp	2022-09-18 13:32:33.492164800 -0700
 @@ -1273,11 +1273,11 @@
  	}
  	goto *turn_end
@@ -29,6 +29,29 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		if ( rnd(2) == 0 ) {
  			f = 1
  		}
+@@ -3682,19 +3686,19 @@
+ 	ammox = cdata(CDATA_X, tc)
+ 	ammoy = cdata(CDATA_Y, tc)
+ 	attackitem = cw
+ 	if ( ammo != (-1) ) {
+ 		if ( inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ammo) != (-1) ) {
+-			if ( inv(40 + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ammo) * 2 + 1, ammo) \ 1000 <= 0 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ammo) * 2 + 1, ammo) \ 1000 <= 0 ) {
+ 				txt lang("通常弾を装填した。", "You load normal ammo.")
+ 				inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ammo) = -1
+ 			}
+ 			else {
+-				ammoproc = inv(40 + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ammo) * 2, ammo) \ 10000
++				ammoproc = inv(STARTING_INV_ITEM_ENCHANT + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ammo) * 2, ammo) \ 10000
+ 				if ( cc == CHARA_PLAYER ) {
+ 				}
+-				inv(40 + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ammo) * 2 + 1, ammo)--
++				inv(STARTING_INV_ITEM_ENCHANT + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ammo) * 2 + 1, ammo)--
+ 			}
+ 		}
+ 	}
+ 	if ( ammo != (-1) ) {
+ 		if ( cc >= MAX_CHARA_FOLLOWER & cdata(CDATA_ALLIED, cc) == 0 ) {
 @@ -4003,14 +4007,12 @@
  			cdata(CDATA_SP, cc)--
  		}
@@ -46,6 +69,213 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  				cdata(CDATA_POWER_GAUGE, cc) += 2
  			}
  		}
+@@ -4680,68 +4682,68 @@
+ 							cw4 = cdata(cnt, cc) - cdata(cnt, cc) / EXT_EQUIP_SLOTS * 10000 - 1
+ 							break
+ 						loop
+ 						if ( cw2 != (-1) ) {
+ 							repeat 15
+-								if ( inv(40 + cnt * 2, cw2) == 0 ) {
++								if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw2) == 0 ) {
+ 									break
+ 								}
+-								enc = inv(40 + cnt * 2, cw2)
++								enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw2)
+ 								if ( dist(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), cdata(CDATA_X, tc), cdata(CDATA_Y, tc)) <= 1 ) {
+ 									if ( enc == 66 ) {
+ 										cdata(CDATA_EXTRA_ATTACKS_TYPE, cc) = 1
+-										shootp = inv(40 + cnt * 2 + 1, cw2)
++										shootp = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw2)
+ 										break
+ 									}
+ 								}
+ 								if ( enc == 65 ) {
+ 									cdata(CDATA_EXTRA_ATTACKS_TYPE, cc) = 2
+-									shootp = inv(40 + cnt * 2 + 1, cw2)
++									shootp = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw2)
+ 									break
+ 								}
+ 							loop
+ 							if ( shootp == 0 ) {
+ 								if ( cw3 != (-1) ) {
+ 									cw2 = cw3
+ 									repeat 15
+-										if ( inv(40 + cnt * 2, cw2) == 0 ) {
++										if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw2) == 0 ) {
+ 											break
+ 										}
+-										enc = inv(40 + cnt * 2, cw2)
++										enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw2)
+ 										if ( dist(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), cdata(CDATA_X, tc), cdata(CDATA_Y, tc)) <= 1 ) {
+ 											if ( enc == 66 ) {
+ 												cdata(CDATA_EXTRA_ATTACKS_TYPE, cc) = 1
+-												shootp = inv(40 + cnt * 2 + 1, cw2)
++												shootp = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw2)
+ 												break
+ 											}
+ 										}
+ 										if ( enc == 65 ) {
+ 											cdata(CDATA_EXTRA_ATTACKS_TYPE, cc) = 2
+-											shootp = inv(40 + cnt * 2 + 1, cw2)
++											shootp = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw2)
+ 											break
+ 										}
+ 									loop
+ 								}
+ 							}
+ 							if ( shootp == 0 ) {
+ 								if ( cw4 != (-1) ) {
+ 									cw2 = cw4
+ 									repeat 15
+-										if ( inv(40 + cnt * 2, cw2) == 0 ) {
++										if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw2) == 0 ) {
+ 											break
+ 										}
+-										enc = inv(40 + cnt * 2, cw2)
++										enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw2)
+ 										if ( dist(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), cdata(CDATA_X, tc), cdata(CDATA_Y, tc)) <= 1 ) {
+ 											if ( enc == 66 ) {
+ 												cdata(CDATA_EXTRA_ATTACKS_TYPE, cc) = 1
+-												shootp = inv(40 + cnt * 2 + 1, cw2)
++												shootp = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw2)
+ 												break
+ 											}
+ 										}
+ 										if ( enc == 65 ) {
+ 											cdata(CDATA_EXTRA_ATTACKS_TYPE, cc) = 2
+-											shootp = inv(40 + cnt * 2 + 1, cw2)
++											shootp = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw2)
+ 											break
+ 										}
+ 									loop
+ 								}
+ 							}
+@@ -5544,16 +5546,16 @@
+ 	if ( gdata(GDATA_TEMPORARY_FLAGS3) >= 100 ) {
+ 		return
+ 	}
+ 	repeat 15
+ 		cw = attackitem
+-		if ( inv(40 + cnt * 2, cw) == 0 ) {
++		if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw) == 0 ) {
+ 			break
+ 		}
+-		enc = inv(40 + cnt * 2, cw)
++		enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw)
+ 		if ( enc == 36 ) {
+-			p = rnd(inv(40 + cnt * 2 + 1, cw) / 50 + 1) + 1
++			p = rnd(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw) / 50 + 1) + 1
+ 			if ( cdata(CDATA_SP, tc) > 0 ) {
+ 				healsp cc, rnd(2) + 1
+ 			}
+ 			if ( tc == CHARA_PLAYER ) {
+ 				dmgsp tc, p / 2
+@@ -5564,11 +5566,11 @@
+ 			dmgsp tc, p / 2
+ 			refreshspeed tc
+ 			continue
+ 		}
+ 		if ( enc == 38 ) {
+-			p = (rnd(inv(40 + cnt * 2 + 1, cw) / 100 + 1) + 20) * limit(orgdmg / 500, 1, 50) - cdata(CDATA_PV, tc)
++			p = (rnd(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw) / 100 + 1) + 20) * limit(orgdmg / 500, 1, 50) - cdata(CDATA_PV, tc)
+ 			if ( 0 ) {
+ 				txtef COLOR_SKY_BLUE
+ 				txt lang("マナダメ" + p + "オリダメ" + orgdmg + "。", name(cc) + " stop" + _s(cc) + " time.")
+ 			}
+ 			if ( p <= 0 ) {
+@@ -5592,11 +5594,11 @@
+ 				if ( rnd(25) == 0 ) {
+ 					snd SOUNDLIST_CHEST1
+ 					animeload 42, cc
+ 					txtef COLOR_SKY_BLUE
+ 					txt lang(name(cc) + "は時を止めた。", name(cc) + " stop" + _s(cc) + " time.")
+-					gdata(GDATA_TIME_STOP_TIME) = limit(inv(40 + cnt * 2 + 1, cw) / 100 + 1 + 1, 2, 6)
++					gdata(GDATA_TIME_STOP_TIME) = limit(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw) / 100 + 1 + 1, 2, 6)
+ 					await
+ 					snd SOUNDLIST_CHEST1
+ 				}
+ 				continue
+ 			}
+@@ -5617,45 +5619,45 @@
+ 		}
+ 		if ( enc == 57 ) {
+ 			s = refchara(cdata(CDATA_ID, tc), DBSPEC_CHARA_FILTER, 1)
+ 			if ( instr(s, 0, "/dragon/") != (-1) ) {
+ 				gdata(GDATA_DMG_TYPE) = 1
+-				dmghp tc, orgdmg / 30 * ((rnd(20) + limit(inv(40 + cnt * 2 + 1, cw), 1, 2000)) / 50) + 1, cc
++				dmghp tc, orgdmg / 30 * ((rnd(20) + limit(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw), 1, 2000)) / 50) + 1, cc
+ 				subdmg = 0
+ 			}
+ 			continue
+ 		}
+ 		if ( enc == 61 ) {
+ 			s = refchara(cdata(CDATA_ID, tc), DBSPEC_CHARA_FILTER, 1)
+ 			if ( instr(s, 0, "/god/") != (-1) ) {
+ 				gdata(GDATA_DMG_TYPE) = 1
+-				dmghp tc, orgdmg / 30 * ((rnd(20) + limit(inv(40 + cnt * 2 + 1, cw), 1, 2000)) / 50) + 1, cc
++				dmghp tc, orgdmg / 30 * ((rnd(20) + limit(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw), 1, 2000)) / 50) + 1, cc
+ 				subdmg = 0
+ 			}
+ 			continue
+ 		}
+ 		if ( enc == 58 ) {
+ 			s = refchara(cdata(CDATA_ID, tc), DBSPEC_CHARA_FILTER, 1)
+ 			if ( instr(s, 0, "/undead/") != (-1) ) {
+ 				gdata(GDATA_DMG_TYPE) = 1
+-				dmghp tc, orgdmg / 30 * ((rnd(20) + limit(inv(40 + cnt * 2 + 1, cw), 1, 2000)) / 50) + 1, cc
++				dmghp tc, orgdmg / 30 * ((rnd(20) + limit(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw), 1, 2000)) / 50) + 1, cc
+ 				subdmg = 0
+ 			}
+ 			continue
+ 		}
+ 		if ( enc == 76 ) {
+ 			if ( cbit(CHARA_BIT_FLOAT, tc) == TRUE ) {
+ 				gdata(GDATA_DMG_TYPE) = 1
+-				dmghp tc, orgdmg / 120 * ((rnd(10) + limit(inv(40 + cnt * 2 + 1, cw), 1, 2000)) / 50) + 1, cc
++				dmghp tc, orgdmg / 120 * ((rnd(10) + limit(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw), 1, 2000)) / 50) + 1, cc
+ 				subdmg = 0
+ 			}
+ 			continue
+ 		}
+ 		if ( enc == 84 ) {
+ 			if ( cbit(CHARA_BIT_METAL, tc) == TRUE ) {
+ 				gdata(GDATA_DMG_TYPE) = 1
+-				dmghp tc, orgdmg / 25 * ((rnd(100) + limit(inv(40 + cnt * 2 + 1, cw), 1, 2000)) / 50) + 100, cc
++				dmghp tc, orgdmg / 25 * ((rnd(100) + limit(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw), 1, 2000)) / 50) + 100, cc
+ 				subdmg = 0
+ 			}
+ 			continue
+ 		}
+ 		i = enc / 10000
+@@ -5669,11 +5671,11 @@
+ 				if ( cdata(CDATA_EXIST, tc) != CHAR_STATE_ALIVE ) {
+ 					continue
+ 					ele = SKILL_NONE
+ 				}
+ 				gdata(GDATA_DMG_TYPE) = 1
+-				dmghp tc, orgdmg / 10 * (rnd(100) + inv(40 + cnt * 2 + 1, cw)) / 100 + 1, cc, ele, inv(40 + cnt * 2 + 1, cw) / 2 + 100
++				dmghp tc, orgdmg / 10 * (rnd(100) + inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw)) / 100 + 1, cc, ele, inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw) / 2 + 100
+ 				subdmg = 0
+ 				continue
+ 			}
+ 			if ( i == 8 ) {
+ 				if ( cdata(CDATA_EXIST, tc) != CHAR_STATE_ALIVE ) {
+@@ -5698,13 +5700,13 @@
+ 				}
+ 				tlocx = cdata(CDATA_X, tc)
+ 				tlocy = cdata(CDATA_Y, tc)
+ 				if ( rnd(100) < p ) {
+ 					gdata(GDATA_ACTIVATE_PROC) = 100
+-					efpori = inv(40 + cnt * 2 + 1, cw) + sdata(attackskill, cc) * 10
++					efpori = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw) + sdata(attackskill, cc) * 10
+ 					efid = enc
+-					efp = inv(40 + cnt * 2 + 1, cw) + sdata(attackskill, cc) * 10
++					efp = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw) + sdata(attackskill, cc) * 10
+ 					gosub *effect
+ 				}
+ 				gdata(GDATA_ACTIVATE_PROC) = 0
+ 				tc = tcbk
+ 				continue
 @@ -6239,10 +6241,16 @@
  	}
  	txt lang("何もおきない… ", "Nothing happens...")
@@ -84,6 +314,37 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci)--
  	}
  	if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE_MINOR) == FILTER_ITEM_SEED ) {
+@@ -7305,11 +7315,11 @@
+ 					}
+ 				}
+ 				if ( list(0, rtval) == (-7) ) {
+ 					taiseip = taisei \ 9
+ 					if ( taiseip == 0 ) {
+-						encadd ci, ENCHANT_BANE_GOD, 80, 0, 1
++						encadd ci, ENCHANT_GOD_BANE, 80, 0, 1
+ 					}
+ 					if ( taiseip == 1 ) {
+ 						encadd ci, ENCHANT_BANE_UNDEAD, 130, 0, 1
+ 					}
+ 					if ( taiseip == 2 ) {
+@@ -7340,15 +7350,15 @@
+ 				exrand_randomize inv(INV_ITEM_SUB_NAME, ci)
+ 				if ( inv(INV_ITEM_PARAM1, ci) >= 10 ) {
+ 					txt lang("その力は次第に脅威になっている。", "Its power is becoming a threat.")
+ 					encadd ci, ENCHANT_SUCK_BLOOD, 50
+ 					if ( stat == 0 ) {
+-						inv(40 + (15 - 1) * 2, ci) = 0
++						inv(STARTING_INV_ITEM_ENCHANT + (15 - 1) * 2, ci) = 0
+ 						txt lang(itemname(ci) + "はエンチャントを消した。", itemname(ci) + " removes an enchantment.")
+ 						encadd ci, ENCHANT_SUCK_BLOOD, 50
+ 						if ( stat == 0 ) {
+-							inv(40 + (15 - 2) * 2, ci) = 0
++							inv(STARTING_INV_ITEM_ENCHANT + (15 - 2) * 2, ci) = 0
+ 							txt lang(itemname(ci) + "はさらにエンチャントを消した。", itemname(ci) + " removes an enchantment.")
+ 						}
+ 					}
+ 				}
+ 				inv(INV_ITEM_PARAM2, ci) = 0
 @@ -8356,10 +8366,104 @@
  		gosub *charaRefresh
  		gosub *calcBurdenPc
@@ -489,6 +750,36 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  	}
  	if ( _switch_val == 105 | _switch_sw ) {
  		_switch_sw = 0
+@@ -10004,24 +10268,24 @@
+ 					if ( refitem(inv(INV_ITEM_ID, cnt), DBSPEC_TYPE) != FILTER_AMMO ) {
+ 						continue
+ 					}
+ 					ci = cnt
+ 					repeat 15
+-						if ( inv(40 + cnt * 2, ci) == 0 ) {
++						if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 0 ) {
+ 							break
+ 						}
+-						enc = inv(40 + cnt * 2, ci)
++						enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci)
+ 						i = enc / 10000
+ 						if ( i != 0 ) {
+ 							enc = enc \ 10000
+ 							if ( i == 9 ) {
+-								i = inv(40 + cnt * 2 + 1, ci) \ 1000, inv(40 + cnt * 2 + 1, ci) / 1000
+-								if ( inv(40 + cnt * 2, ci) \ 10000 == 4 ) {
++								i = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) \ 1000, inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 1000
++								if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) \ 10000 == 4 ) {
+ 									continue
+ 								}
+ 								cost += (i(1) - i) * (50 + enc * enc * 10)
+-								inv(40 + cnt * 2 + 1, ci) = i(1) * 1000 + i(1)
++								inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) = i(1) * 1000 + i(1)
+ 							}
+ 						}
+ 					loop
+ 				loop
+ 				f = 1
 @@ -11754,10 +12018,44 @@
  		gosub *music_play
  		chop = 0
@@ -552,9 +843,74 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		_switch_sw++
  	}
  	if ( _switch_val == 112 | _switch_sw ) {
+@@ -13300,19 +13605,19 @@
+ 					if ( rtval == 10 ) {
+ 						amp = ENCHANT_AMMO_RAPID
+ 					}
+ 					change = 0
+ 					repeat 15
+-						if ( inv(40 + cnt * 2, ci) == 0 ) {
++						if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 0 ) {
+ 							break
+ 						}
+-						enc = inv(40 + cnt * 2, ci)
++						enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci)
+ 						i = enc / 10000
+ 						if ( i != 0 ) {
+ 							enc = enc \ 10000
+ 							if ( i == 9 ) {
+-								if ( inv(40 + cnt * 2, ci) \ 10000 == amp ) {
++								if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) \ 10000 == amp ) {
+ 									inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) = cnt
+ 									change = 1
+ 									break
+ 								}
+ 							}
+@@ -13322,11 +13627,11 @@
+ 						txt lang(cdatan(CDATAN_NAME, tc) + "の矢弾はその切替に対応していない。", itemname(ci) + " isn't capable of that ammos.")
+ 						continue
+ 					}
+ 					snd SOUNDLIST_AMMO
+ 					change = 0
+-					i = inv(40 + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) * 2 + 1, ci) \ 1000, inv(40 + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) * 2 + 1, ci) / 1000
++					i = inv(STARTING_INV_ITEM_ENCHANT + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) * 2 + 1, ci) \ 1000, inv(STARTING_INV_ITEM_ENCHANT + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) * 2 + 1, ci) / 1000
+ 					s = ammoname(amp), "" + i + "/" + i(1)
+ 					s = s + ":" + s(1)
+ 					txtef COLOR_GREEN
+ 					txt lang(cdatan(CDATAN_NAME, tc) + "は" + s + "に切り替えた。", "Current Ammo Type")
+ 				}
+@@ -17207,11 +17512,11 @@
+ 						txtmore
+ 					}
+ 				loop
+ 			}
+ 		}
+-		cdata(CDATA_AREA, tc) = AREA_NONE
++		cdata(CDATA_AREA, tc) = 0
+ 		chara_vanquish tc
+ 		skillexp SKILL_NORMAL_GENE_ENGINEER, CHARA_PLAYER, 1200
+ 		randomize
+ 		screenupdate = -1
+ 		gosub *screen_draw
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/adv.hsp ../2.13-borscht/adv.hsp
+--- ../2.12-borscht/adv.hsp	2022-04-25 14:21:59.638152200 -0700
++++ ../2.13-borscht/adv.hsp	2022-09-18 13:32:33.505177000 -0700
+@@ -314,11 +314,11 @@
+ 				}
+ 				break
+ 			loop
+ 			cdata(CDATA_AREA, rc) = p, 1
+ 		}
+-		if ( cdata(CDATA_AREA, rc) == AREA_NORTH_TYRIS ) {
++		if ( cdata(CDATA_AREA, rc) == 4 ) {
+ 			repeat 10
+ 				if ( rnd(4) == 0 ) {
+ 					p = rnd(500 - 450) + 450
+ 				}
+ 				else {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/ai.hsp ../2.13-borscht/ai.hsp
 --- ../2.12-borscht/ai.hsp	2022-04-25 14:21:59.689199500 -0700
-+++ ../2.13-borscht/ai.hsp	2022-06-26 12:14:11.443397900 -0700
++++ ../2.13-borscht/ai.hsp	2022-09-18 13:32:33.537206900 -0700
 @@ -756,10 +756,16 @@
  		goto *act_read
  	}
@@ -574,7 +930,28 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  	if ( cdata(CDATA_AI_AGGRO, cc) > 0 | cdata(CDATA_RELATION, cc) == RELATION_ALLY ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/blend.hsp ../2.13-borscht/blend.hsp
 --- ../2.12-borscht/blend.hsp	2022-04-25 14:21:59.723231200 -0700
-+++ ../2.13-borscht/blend.hsp	2022-06-26 12:14:11.478430400 -0700
++++ ../2.13-borscht/blend.hsp	2022-09-18 13:32:33.573240100 -0700
+@@ -589,17 +589,17 @@
+ 	return
+ 	getinheritance window_recipe_itemid, locvar_window_recipe_inhlist, locvar_window_recipe_p
+ 	if ( locvar_window_recipe_p > 0 ) {
+ 		repeat locvar_window_recipe_p
+ 			locvar_window_recipe_cnt2 = locvar_window_recipe_inhlist(cnt)
+-			if ( inv(40 + locvar_window_recipe_cnt2 * 2, window_recipe_itemid) == 0 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + locvar_window_recipe_cnt2 * 2, window_recipe_itemid) == 0 ) {
+ 				break
+ 			}
+-			val = inv(40 + locvar_window_recipe_cnt2 * 2, window_recipe_itemid), inv(40 + locvar_window_recipe_cnt2 * 2 + 1, window_recipe_itemid), 0, refitem(inv(INV_ITEM_ID, window_recipe_itemid), DBSPEC_TYPE)
++			val = inv(STARTING_INV_ITEM_ENCHANT + locvar_window_recipe_cnt2 * 2, window_recipe_itemid), inv(STARTING_INV_ITEM_ENCHANT + locvar_window_recipe_cnt2 * 2 + 1, window_recipe_itemid), 0, refitem(inv(INV_ITEM_ID, window_recipe_itemid), DBSPEC_TYPE)
+ 			gosub *item_encdetail
+ 			color 0, 0, 100
+-			if ( inv(40 + locvar_window_recipe_cnt2 * 2 + 1, window_recipe_itemid) < 0 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + locvar_window_recipe_cnt2 * 2 + 1, window_recipe_itemid) < 0 ) {
+ 				color 180, 0, 0
+ 			}
+ 			pos locvar_window_recipe_dx, locvar_window_recipe_dy
+ 			mes cnven(s)
+ 			locvar_window_recipe_dy += 16
 @@ -629,11 +629,11 @@
  	loop
  	return
@@ -588,6 +965,19 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  	rpid = 200
  	rpid = 200
  	rplistdef(length(rplistdef)) = 1 * EXT_RECIPES + rpid
+@@ -777,11 +777,11 @@
+ 	rpdata(RPDATA_SKILL + 0 * 2, rpid) = SKILL_NORMAL_GARDENING, 20
+ 	rpdata(RPDATA_MAT + 0, rpid) = FILTER_ITEM_FOOD, FILTER_ITEM_FOOD, RF_SEED, RF_SEED
+ 	rpid = STARTING_RPID + 23
+ 	rplistdef(length(rplistdef)) = 1 * EXT_RECIPES + rpid
+ 	rpdatan(rpid) = lang("ハーブ調合", "herb infusion")
+-	rpdata(RPDATA_ITEM, rpid) = (10000 /*!!!@[RECIPE_BLEND_ACTION_HERBED_FOOD @@@ STARTING_RECIPE_BLEND_ACTION]@!!! */), 60, 1
++	rpdata(RPDATA_ITEM, rpid) = RECIPE_BLEND_ACTION_HERBED_FOOD, 60, 1
+ 	rpdata(RPDATA_SKILL + 0 * 2, rpid) = SKILL_NORMAL_GARDENING, 20, SKILL_NORMAL_COOKING, 30
+ 	rpdata(RPDATA_MAT + 0, rpid) = FILTER_ITEM_FOOD, ITEM_ID_STOMAFILLIA, ITEM_ID_CURARIA, RF_HERB
+ 	rpid = STARTING_RPID + 24
+ 	rplistdef(length(rplistdef)) = 1 * EXT_RECIPES + rpid
+ 	rpdatan(rpid) = lang("進化の側枝", "another evolution")
 @@ -1032,10 +1032,16 @@
  	rplistdef(length(rplistdef)) = 1 * EXT_RECIPES + rpid
  	rpdatan(rpid) = lang("鋭武具の作成", "Sharp equip making")
@@ -617,9 +1007,147 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  *com_blend
  	procid = (procid + 1) \ 4
  	proclist(procid) = "com_blend" + " ct:" + ct
+@@ -1627,11 +1634,11 @@
+ 	else {
+ 		if ( rpdata(RPDATA_ITEM, rpid) == RECIPE_BLEND_ACTION_WOODCRAFT | rpdata(RPDATA_ITEM, rpid) == RECIPE_BLEND_ACTION_STONECRAFT | rpdata(RPDATA_ITEM, rpid) == RECIPE_BLEND_ACTION_POTTERY ) {
+ 			ti = rpref(10 + 0 * 2)
+ 			inv(INV_ITEM_NUM, ti)++
+ 		}
+-		if ( rpdata(RPDATA_ITEM, rpid) >= (10000 /*!!!@[RECIPE_BLEND_ACTION_HERBED_FOOD @@@ STARTING_RECIPE_BLEND_ACTION]@!!! */) ) {
++		if ( rpdata(RPDATA_ITEM, rpid) >= RECIPE_BLEND_ACTION_HERBED_FOOD ) {
+ 			gosub *blend_act
+ 		}
+ 		if ( rpdata(RPDATA_ITEM, rpid) == ITEM_ID_RICE_BALL ) {
+ 			picp = inv(INV_ITEM_LEVEL, rpref(10 + 0 * 2))
+ 			flt
+@@ -2080,11 +2087,11 @@
+ 			nostack = 1
+ 			itemcreate -1, rpdata(RPDATA_ITEM, rpid), cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), 0
+ 			inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_NORMAL
+ 			item_identify ci, ITEM_KNOWN_FULL
+ 		}
+-		if ( rpdata(RPDATA_ITEM, rpid) < (10000 /*!!!@[RECIPE_BLEND_ACTION_HERBED_FOOD @@@ STARTING_RECIPE_BLEND_ACTION]@!!! */) ) {
++		if ( rpdata(RPDATA_ITEM, rpid) < RECIPE_BLEND_ACTION_HERBED_FOOD ) {
+ 			txtef COLOR_GREEN
+ 			txt lang(itemname(ci, 1) + "の作成に成功した！", "You successfully create " + itemname(ci, 1) + "!")
+ 		}
+ 		snd SOUNDLIST_DRINK1
+ 	}
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/calculation.hsp ../2.13-borscht/calculation.hsp
+--- ../2.12-borscht/calculation.hsp	2022-04-25 14:21:59.841343200 -0700
++++ ../2.13-borscht/calculation.hsp	2022-09-18 13:32:33.591256900 -0700
+@@ -586,22 +586,22 @@
+ 		if ( refitem(inv(INV_ITEM_ID, cnt), DBSPEC_TYPE) != FILTER_AMMO ) {
+ 			continue
+ 		}
+ 		locvar_calccostreload_ci = cnt
+ 		repeat 15
+-			if ( inv(40 + cnt * 2, locvar_calccostreload_ci) == 0 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, locvar_calccostreload_ci) == 0 ) {
+ 				break
+ 			}
+-			locvar_calccostreload_enc = inv(40 + cnt * 2, locvar_calccostreload_ci)
++			locvar_calccostreload_enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, locvar_calccostreload_ci)
+ 			locvar_calccostreload_i = locvar_calccostreload_enc / 10000
+ 			if ( locvar_calccostreload_i != 0 ) {
+ 				locvar_calccostreload_enc = locvar_calccostreload_enc \ 10000
+ 				if ( locvar_calccostreload_i == 9 ) {
+-					locvar_calccostreload_i = inv(40 + cnt * 2 + 1, locvar_calccostreload_ci) \ 1000, inv(40 + cnt * 2 + 1, locvar_calccostreload_ci) / 1000
++					locvar_calccostreload_i = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, locvar_calccostreload_ci) \ 1000, inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, locvar_calccostreload_ci) / 1000
+ 					locvar_calccosthire_cost += (locvar_calccostreload_i(1) - locvar_calccostreload_i) * (50 + locvar_calccostreload_enc * locvar_calccostreload_enc * 10)
+ 					if ( calccostreload_arg2 == 1 ) {
+-						inv(40 + cnt * 2 + 1, locvar_calccostreload_ci) = locvar_calccostreload_i(1) * 1000 + locvar_calccostreload_i(1)
++						inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, locvar_calccostreload_ci) = locvar_calccostreload_i(1) * 1000 + locvar_calccostreload_i(1)
+ 					}
+ 				}
+ 			}
+ 		loop
+ 	loop
+@@ -621,22 +621,22 @@
+ 			if ( refitem(inv(INV_ITEM_ID, cnt), DBSPEC_TYPE) != FILTER_AMMO ) {
+ 				continue
+ 			}
+ 			locvar_calccostreload_ci = cnt
+ 			repeat 15
+-				if ( inv(40 + cnt * 2, locvar_calccostreload_ci) == 0 ) {
++				if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, locvar_calccostreload_ci) == 0 ) {
+ 					break
+ 				}
+-				locvar_calccostreload_enc = inv(40 + cnt * 2, locvar_calccostreload_ci)
++				locvar_calccostreload_enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, locvar_calccostreload_ci)
+ 				locvar_calccostreload_i = locvar_calccostreload_enc / 10000
+ 				if ( locvar_calccostreload_i != 0 ) {
+ 					locvar_calccostreload_enc = locvar_calccostreload_enc \ 10000
+ 					if ( locvar_calccostreload_i == 9 ) {
+-						locvar_calccostreload_i = inv(40 + cnt * 2 + 1, locvar_calccostreload_ci) \ 1000, inv(40 + cnt * 2 + 1, locvar_calccostreload_ci) / 1000
++						locvar_calccostreload_i = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, locvar_calccostreload_ci) \ 1000, inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, locvar_calccostreload_ci) / 1000
+ 						locvar_calccosthire_cost += (locvar_calccostreload_i(1) - locvar_calccostreload_i) * (50 + locvar_calccostreload_enc * locvar_calccostreload_enc * 10)
+ 						if ( calccostreload_arg2 == 1 ) {
+-							inv(40 + cnt * 2 + 1, locvar_calccostreload_ci) = locvar_calccostreload_i(1) * 1000 + locvar_calccostreload_i(1)
++							inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, locvar_calccostreload_ci) = locvar_calccostreload_i(1) * 1000 + locvar_calccostreload_i(1)
+ 						}
+ 					}
+ 				}
+ 			loop
+ 		loop
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/chara.hsp ../2.13-borscht/chara.hsp
+--- ../2.12-borscht/chara.hsp	2022-04-25 14:21:59.885384100 -0700
++++ ../2.13-borscht/chara.hsp	2022-09-18 13:32:33.634296900 -0700
+@@ -2500,11 +2500,11 @@
+ 		gosub *define_los
+ 		gdata(GDATA_CARGO_LIMIT_ORG) = 80000
+ 		gdata(GDATA_CARGO_LIMIT) = gdata(GDATA_CARGO_LIMIT_ORG)
+ 	}
+ 	if ( cbit(CHARA_BIT_LAY_HANDS, rc) | cdata(CDATA_ID, rc) == CREATURE_ID_GOOSE | cdata(CDATA_ID, rc) == CREATURE_ID_CUTE_FAIRY ) {
+-		cbitmod CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, rc, TRUE
++		cbitmod (974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), rc, TRUE
+ 	}
+ 	if ( cdata(CDATA_ID, rc) == CREATURE_ID_WEREWOLF & mdata(MDATA_TYPE) == MAP_TYPE_TOWN ) {
+ 		evname = lang("市民", "citizen")
+ 		evold = lang("人狼", "werewolf")
+ 		if ( strmid(cdatan(CDATAN_NAME, rc), 0, strlen(evold)) == evold ) {
+@@ -2766,11 +2766,11 @@
+ *resurrect_ally
+ 	gosub *resurrect
+ 	cxinit = cdata(CDATA_X, CHARA_PLAYER)
+ 	cyinit = cdata(CDATA_Y, CHARA_PLAYER)
+ 	gosub *place_chara
+-	cdata(CDATA_AREA, rc) = AREA_NONE
++	cdata(CDATA_AREA, rc) = 0
+ 	snd SOUNDLIST_PRAY1
+ 	txtef COLOR_YELLOW
+ 	txt cnven(cdatan(CDATAN_NAME, rc)) + lang("が現れた！", " " + have(rc) + " been resurrected!")
+ 	return
+ 
+@@ -2783,11 +2783,11 @@
+ 	cdata(CDATA_HP, rc) = cdata(CDATA_MAX_HP, rc) / 3
+ 	cdata(CDATA_MP, rc) = cdata(CDATA_MAX_MP, rc) / 3
+ 	cdata(CDATA_SP, rc) = cdata(CDATA_MAX_SP, rc) / 3
+ 	cdata(CDATA_SANITY, rc) = 0
+ 	cdata(CDATA_EXIST, rc) = CHAR_STATE_ALIVE
+-	cdata(CDATA_AREA, rc) = AREA_NONE
++	cdata(CDATA_AREA, rc) = 0
+ 	cdata(CDATA_RELATION, rc) = cdata(CDATA_RELATION_ORG, rc)
+ 	cdata(CDATA_HUNGER, rc) = 8000
+ 	cdata(CDATA_THIRST, rc) = 8000
+ 
+ *renewStatus
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/chara_func.hsp ../2.13-borscht/chara_func.hsp
 --- ../2.12-borscht/chara_func.hsp	2022-04-25 14:21:59.959454800 -0700
-+++ ../2.13-borscht/chara_func.hsp	2022-06-26 12:14:11.626567400 -0700
++++ ../2.13-borscht/chara_func.hsp	2022-09-18 13:32:33.711368400 -0700
+@@ -435,11 +435,11 @@
+ 	return locvar_findchara_p
+ 
+ #defcfunc findcharahome int findcharahome_charaid
+ 	locvar_findchara_p = 0
+ 	repeat 245 - 57, 57
+-		if ( cdata(CDATA_AREA, cnt) != AREA_HOME ) {
++		if ( cdata(CDATA_AREA, cnt) != 7 ) {
+ 			continue
+ 		}
+ 		if ( cdata(CDATA_ID, cnt) == findcharahome_charaid ) {
+ 			locvar_findchara_p = cnt
+ 			break
 @@ -5208,13 +5208,15 @@
  			}
  		}
@@ -739,16 +1267,46 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  				}
  			}
  		}
+@@ -5917,14 +5938,14 @@
+ 				continue
+ 			}
+ 			if ( cbit(CHARA_BIT_LAY_HANDS, cnt) == FALSE ) {
+ 				continue
+ 			}
+-			if ( cbit(CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, cnt) == FALSE ) {
++			if ( cbit((974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), cnt) == FALSE ) {
+ 				continue
+ 			}
+-			cbitmod CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, cnt, FALSE
++			cbitmod (974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), cnt, FALSE
+ 			txtef COLOR_SKY_BLUE
+ 			txt lang(name(cnt) + "は叫んだ。「この者にジュアの加護を。レイハンド！」", name(cnt) + " shout" + _s(cnt) + ", " + cnvtalk("Lay hand!"))
+ 			txtmore
+ 			txt lang(name(dmghp_charid) + "は回復した。", name(dmghp_charid) + " " + is(dmghp_charid) + " healed.")
+ 			cdata(CDATA_HP, dmghp_charid) = cdata(CDATA_MAX_HP, dmghp_charid) / 2
+@@ -6709,11 +6730,11 @@
+ 		}
+ 		if ( dmghp_charid != CHARA_PLAYER ) {
+ 			if ( dmghp_charid < MAX_CHARA_FOLLOWER ) {
+ 				modimp dmghp_charid, -10
+ 				cdata(CDATA_EXIST, dmghp_charid) = CHAR_STATE_ALLY_DEAD
+-				cdata(CDATA_AREA, dmghp_charid) = AREA_NONE
++				cdata(CDATA_AREA, dmghp_charid) = 0
+ 				if ( cbit(CHARA_BIT_BODYGUARD, dmghp_charid) == TRUE ) {
+ 					evadd EVENT_CLIENT_DEAD, cdata(CDATA_ID, dmghp_charid)
+ 					cdata(CDATA_EXIST, dmghp_charid) = CHAR_STATE_DEAD
+ 				}
+ 				if ( cbit(CHARA_BIT_GUARD_TEMP, dmghp_charid) == TRUE ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/chat.hsp ../2.13-borscht/chat.hsp
 --- ../2.12-borscht/chat.hsp	2022-04-25 14:22:00.423955800 -0700
-+++ ../2.13-borscht/chat.hsp	2022-06-26 12:14:12.090995000 -0700
++++ ../2.13-borscht/chat.hsp	2022-09-18 13:32:34.288441000 -0700
 @@ -163,10 +163,13 @@
  	if ( cdata(CDATA_ROLE, tc) >= (1000 /*!!!@[ROLE_SHOP_MIN @@@ ROLE_SHOP_WEAPON]@!!! */) & cdata(CDATA_ROLE, tc) < (2000 /*!!!@[ROLE_GUEST_BEGGAR @@@ ROLE_GUEST_MIN]@!!! */) | cdata(CDATA_ROLE, tc) == ROLE_GUEST_MERCHANT ) {
  		bkrestock = cdata(CDATA_ROLE_RESTOCK, tc)
  		invfile = cdata(CDATA_ROLE_FILE_ID, tc)
  		gosub *shop_init
  		if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= bkrestock ) {
-+			cbitmod CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, tc, TRUE
++			cbitmod (974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), tc, TRUE
 +		}
 +		if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= bkrestock ) {
  			if ( cdata(CDATA_ROLE, tc) != ROLE_SHOP_BOOK_RESERVE ) {
@@ -756,6 +1314,19 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  					if ( gdata(GDATA_AREA) != AREA_PET_ARENA & gdata(GDATA_AREA) != AREA_SHOW_HOUSE ) {
  						if ( cbit(CHARA_BIT_EVENT_TALK, tc) != TRUE ) {
  							gosub *game_save
+@@ -1468,11 +1471,11 @@
+ 				goto *chat_event_SWEND1
+ 			}
+ 		}
+ 		cbitmod CHARA_BIT_GUEST, tc, FALSE
+ 		cdata(CDATA_ROLE, tc) = ROLE_NONE
+-		cdata(CDATA_AREA, tc) = AREA_HOME
++		cdata(CDATA_AREA, tc) = 7
+ 		goto *chat_event_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 2003 | _switch_sw ) {
+ 		_switch_sw = 0
 @@ -10992,10 +10995,40 @@
  						if ( cnt == 931 ) {
  							if ( gdata(GDATA_FLAG_LEOLD_LOCATION_STATE) >= 6 ) {
@@ -797,6 +1368,154 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  								f = 1
  							}
  						}
+@@ -25117,24 +25150,24 @@
+ 					p = 0
+ 					if ( ibit(ITEM_BIT_ALIVE, ci) ) {
+ 						p += 10000
+ 					}
+ 					repeat 15
+-						if ( inv(40 + cnt * 2 + 1, ci) > 0 ) {
+-							if ( inv(40 + cnt * 2, ci) >= 10000 ) {
+-								if ( inv(40 + cnt * 2, ci) / 10000 == 6 ) {
++						if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) > 0 ) {
++							if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) >= 10000 ) {
++								if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) / 10000 == 6 ) {
+ 									p += 100
+ 									continue
+ 								}
+-								if ( inv(40 + cnt * 2, ci) / 10000 == 1 ) {
+-									p -= inv(40 + cnt * 2 + 1, ci) * 6 / 10
++								if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) / 10000 == 1 ) {
++									p -= inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) * 6 / 10
+ 								}
+-								if ( inv(40 + cnt * 2, ci) / 10000 == 3 ) {
+-									p -= inv(40 + cnt * 2 + 1, ci) / 2
++								if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) / 10000 == 3 ) {
++									p -= inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 2
+ 								}
+ 							}
+-							p += inv(40 + cnt * 2 + 1, ci)
++							p += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci)
+ 						}
+ 					loop
+ 					listmax = 0
+ 					buff = lang("ふむふむ…。こいつのエンチャントは" + p + "パワーってところだぜ。", "So you are also of the same genus as the others...")
+ 					tc = tc * (0 == 0) + (0 != 0) * 0
+@@ -25506,24 +25539,24 @@
+ 					p = 0
+ 					if ( ibit(ITEM_BIT_ALIVE, ci) ) {
+ 						p += 10000
+ 					}
+ 					repeat 15
+-						if ( inv(40 + cnt * 2 + 1, ci) > 0 ) {
+-							if ( inv(40 + cnt * 2, ci) >= 10000 ) {
+-								if ( inv(40 + cnt * 2, ci) / 10000 == 6 ) {
++						if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) > 0 ) {
++							if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) >= 10000 ) {
++								if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) / 10000 == 6 ) {
+ 									p += 100
+ 									continue
+ 								}
+-								if ( inv(40 + cnt * 2, ci) / 10000 == 1 ) {
+-									p -= inv(40 + cnt * 2 + 1, ci) * 6 / 10
++								if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) / 10000 == 1 ) {
++									p -= inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) * 6 / 10
+ 								}
+-								if ( inv(40 + cnt * 2, ci) / 10000 == 3 ) {
+-									p -= inv(40 + cnt * 2 + 1, ci) / 2
++								if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) / 10000 == 3 ) {
++									p -= inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 2
+ 								}
+ 							}
+-							p += inv(40 + cnt * 2 + 1, ci)
++							p += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci)
+ 						}
+ 					loop
+ 					if ( inv(INV_ITEM_QUALITY, ci) == FIX_QUALITY_MIRACLE ) {
+ 						p -= 500
+ 					}
+@@ -25555,11 +25588,11 @@
+ 					goto *chat_end
+ 				}
+ 				ii = -1
+ 				repeat 15
+ 					if ( ii == (-1) ) {
+-						if ( inv(40 + cnt * 2, ci) == 0 ) {
++						if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 0 ) {
+ 							ii = cnt
+ 						}
+ 					}
+ 				loop
+ 				if ( ii == (-1) ) {
+@@ -25589,11 +25622,11 @@
+ 					gosub *chat_select
+ 					if ( chatval != 2 & chatval != 1 ) {
+ 						goto *chat_end
+ 					}
+ 					if ( chatval == 2 ) {
+-						if ( inv(40 + (15 - 1) * 2, cibk) == 37 | inv(40 + (15 - 1) * 2, cibk) == 45 ) {
++						if ( inv(STARTING_INV_ITEM_ENCHANT + (15 - 1) * 2, cibk) == 37 | inv(STARTING_INV_ITEM_ENCHANT + (15 - 1) * 2, cibk) == 45 ) {
+ 							listmax = 0
+ 							buff = lang("消去とな？ふむ、このエンチャントだと…ちょっと無理じゃな…すまんのう。", "So you are also of the same genus as the others...")
+ 							tc = tc * (0 == 0) + (0 != 0) * 0
+ 							list(0, listmax) = 0
+ 							listn(0, listmax) = strmore
+@@ -25621,12 +25654,12 @@
+ 							}
+ 						}
+ 						snd SOUNDLIST_BUILD1
+ 						await 300
+ 						snd SOUNDLIST_BUILD1
+-						inv(40 + (15 - 1) * 2 + 1, cibk) = 0
+-						inv(40 + (15 - 1) * 2, cibk) = 0
++						inv(STARTING_INV_ITEM_ENCHANT + (15 - 1) * 2 + 1, cibk) = 0
++						inv(STARTING_INV_ITEM_ENCHANT + (15 - 1) * 2, cibk) = 0
+ 						txt lang(itemname(cibk) + "のエンチャントがひとつ消えた。", itemname(cibk) + " removes an enchantment.")
+ 					}
+ 				}
+ 				listmax = 0
+ 				buff = lang("それで、どのアイテムの力をアーティファクトに組み込めばよいのじゃ？", "So you are also of the same genus as the others...")
+@@ -30194,12 +30227,12 @@
+ 				inv(INV_ITEM_PARAM1, ci) = 1
+ 				if ( inv(INV_ITEM_LEVEL, ci) > 0 ) {
+ 					inv(INV_ITEM_LEVEL, ci) = 0
+ 				}
+ 				repeat 15
+-					inv(40 + cnt * 2 + 1, ci) = 0
+-					inv(40 + cnt * 2, ci) = 0
++					inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) = 0
++					inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) = 0
+ 				loop
+ 				r1 = 0
+ 				gosub *charaRefresh
+ 				listmax = 0
+ 				buff = lang("これで、またひとつ…。", "I was approached a little.")
+@@ -38255,11 +38288,11 @@
+ 						dmghp cnt, cdata(CDATA_MAX_HP, cnt), DAMAGE_FROM_JALDABAOTH
+ 						dmghp cnt, cdata(CDATA_MAX_HP, cnt), DAMAGE_FROM_JALDABAOTH
+ 					}
+ 				}
+ 				map(cdata(CDATA_X, cnt), cdata(CDATA_Y, cnt), MAP_CHARA_INDEX_PLUS_ONE) = 0
+-				cdata(CDATA_AREA, cnt) = AREA_NONE
++				cdata(CDATA_AREA, cnt) = 0
+ 			loop
+ 			tc = CHARA_PLAYER
+ 			repeat 200
+ 				p = -1, 1
+ 				cdata(CDATA_X_NEW, tc) = cdata(CDATA_X, tc) + (3 - cnt / 70 + rnd(5)) * p(rnd(2))
+@@ -42625,11 +42658,11 @@
+ 				dmghp cnt, cdata(CDATA_MAX_HP, cnt), DAMAGE_FROM_JALDABAOTH
+ 				dmghp cnt, cdata(CDATA_MAX_HP, cnt), DAMAGE_FROM_JALDABAOTH
+ 			}
+ 		}
+ 		map(cdata(CDATA_X, cnt), cdata(CDATA_Y, cnt), MAP_CHARA_INDEX_PLUS_ONE) = 0
+-		cdata(CDATA_AREA, cnt) = AREA_NONE
++		cdata(CDATA_AREA, cnt) = 0
+ 	loop
+ 	tc = CHARA_PLAYER
+ 	repeat 200
+ 		p = -1, 1
+ 		cdata(CDATA_X_NEW, tc) = cdata(CDATA_X, tc) + (3 - cnt / 70 + rnd(5)) * p(rnd(2))
 @@ -44679,10 +44712,15 @@
  			list(0, listmax) = 55
  			listn(0, listmax) = lang("魔法書の予約(要：解読経験)", "I want to reserve book that I have deciphered.")
@@ -813,6 +1532,32 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  			if ( tc >= MAX_CHARA_FOLLOWER ) {
  				if ( evid() == (-1) ) {
  					list(0, listmax) = 56
+@@ -46019,11 +46057,11 @@
+ 			cdata(CDATA_RIDING, gdata(GDATA_RIDER)) = 0
+ 			ride_end
+ 		}
+ 		map(cdata(CDATA_X, tc), cdata(CDATA_Y, tc), MAP_CHARA_INDEX_PLUS_ONE) = 0
+ 		cdata(CDATA_EXIST, tc) = CHAR_STATE_ALLY_WAIT
+-		cdata(CDATA_AREA, tc) = AREA_NONE
++		cdata(CDATA_AREA, tc) = 0
+ 		if ( cdata(CDATA_IN_TAGTEAM, tc) == (-1) ) {
+ 			ttc = cdata(CDATA_TAGTEAM_PARTNER, tc)
+ 			cell_setchara ttc, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
+ 			tag_end tc
+ 		}
+@@ -48705,11 +48743,11 @@
+ 				goto *chat_default
+ 			}
+ 			rc = tc
+ 			gosub *add_ally
+ 			cdata(CDATA_ROLE, rc) = ROLE_NONE
+-			cdata(CDATA_AREA, rc) = AREA_NONE
++			cdata(CDATA_AREA, rc) = 0
+ 			cdata(CDATA_IMPRESSION, tc) = 100
+ 			rc = oc
+ 			gosub *adv_generate
+ 			goto *chat_end
+ 		}
 @@ -49050,10 +49088,24 @@
  		else {
  			buff = lang("冷やかし" + _ka(1), "You kidding? ")
@@ -820,7 +1565,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		goto *chat_default
  	}
 +	if ( chatval == 113 ) {
-+		if ( cbit(CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, tc) == FALSE ) {
++		if ( cbit((974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), tc) == FALSE ) {
 +			buff = lang("今は余ってない" + _na(2), "It's not left over now.")
 +			goto *chat_default
 +		}
@@ -830,7 +1575,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
 +		gdata(GDATA_FLAG_TOTAL_POTION_PLUGS) += plug
 +		txtef COLOR_GREEN
 +		txt lang("ポーションの栓を" + plug + "個手に入れた。[残り" + gdata(GDATA_FLAG_TOTAL_POTION_PLUGS) + "個]", name(0) + " get " + plug + " potion plugs.[Remaining plug " + gdata(GDATA_FLAG_TOTAL_POTION_PLUGS) + "]")
-+		cbitmod CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, tc, FALSE
++		cbitmod (974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), tc, FALSE
 +		goto *chat_default
 +	}
  	if ( chatval == 64 ) {
@@ -840,7 +1585,46 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		gosub *com_inventory
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/command.hsp ../2.13-borscht/command.hsp
 --- ../2.12-borscht/command.hsp	2022-04-25 14:22:00.555979200 -0700
-+++ ../2.13-borscht/command.hsp	2022-06-26 12:14:12.207102200 -0700
++++ ../2.13-borscht/command.hsp	2022-09-18 13:32:34.404078700 -0700
+@@ -981,11 +981,11 @@
+ 		if ( allyctrl == 2 ) {
+ 			if ( cdata(CDATA_IN_TAGTEAM, cnt) != 0 ) {
+ 				continue
+ 			}
+ 		}
+-		if ( cdata(CDATA_AREA, cnt) != AREA_NONE ) {
++		if ( cdata(CDATA_AREA, cnt) != 0 ) {
+ 			if ( allyctrl == 1 | allyctrl == 2 ) {
+ 				continue
+ 			}
+ 		}
+ 		if ( allyctrl != 1 ) {
+@@ -1011,11 +1011,11 @@
+ 				continue
+ 			}
+ 			if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
+ 				continue
+ 			}
+-			if ( cdata(CDATA_AREA, cnt) != AREA_NONE ) {
++			if ( cdata(CDATA_AREA, cnt) != 0 ) {
+ 				continue
+ 			}
+ 		}
+ 		if ( cnt == 0 ) {
+ 			continue
+@@ -1182,11 +1182,11 @@
+ 			cs_list lang("決定", "Proceed"), wx + 84, wy + 66 + cnt * 19 - 1, 19
+ 			continue
+ 		}
+ 		if ( allyctrl == 0 | allyctrl == 2 | allyctrl == 3 | allyctrl == 4 | allyctrl == 5 | allyctrl == 6 | allyctrl == 7 | allyctrl == 8 ) {
+ 			s = "" + cdatan(CDATAN_AKA, i) + " " + cdatan(CDATAN_NAME, i)
+-			if ( cdata(CDATA_AREA, i) != AREA_NONE ) {
++			if ( cdata(CDATA_AREA, i) != 0 ) {
+ 				s = s + "(" + mapname(cdata(CDATA_AREA, i)) + ")"
+ 			}
+ 			if ( cbit(CHARA_BIT_RIDE, i) ) {
+ 				s += lang("(乗馬)", "(Riding")
+ 			}
 @@ -2212,11 +2212,11 @@
  		listn(0, listmax) = lang("[bit]", "[bit]") + lang("あなたは乗馬に適さない", "You are too weak to carry you.")
  		listmax++
@@ -875,6 +1659,23 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		return
  	}
  	xnotesel buff
+@@ -2430,14 +2440,14 @@
+ 		}
+ 		repeat 15
+ 			if ( kakunin == 100 ) {
+ 				break
+ 			}
+-			if ( inv(40 + cnt * 2, ci) == 0 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 0 ) {
+ 				break
+ 			}
+-			val = inv(40 + cnt * 2, ci), inv(40 + cnt * 2 + 1, ci), 1, 0
++			val = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci), inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci), 1, 0
+ 			gosub *item_encdetail
+ 			if ( s == "" ) {
+ 				continue
+ 			}
+ 			xnoteadd s
 @@ -5795,11 +5805,11 @@
  		if ( cdatan(CDATAN_RACE, tc) == "catsister" ) {
  			cdata(CDATA_DV_FIX, tc) = 200
@@ -888,6 +1689,45 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		if ( gdata(GDATA_FLAG_SUB_DOG) >= 1000 ) {
  			if ( cbit(CHARA_BIT_GUARD_TEMP, tc) ) {
  				cbitmod CHARA_BIT_GUARD_TEMP, tc, FALSE
+@@ -5900,11 +5910,11 @@
+ 		promptmax++
+ 	}
+ 	if ( cbit(CHARA_BIT_BODYGUARD, tc) == FALSE & cbit(CHARA_BIT_GUARD_TEMP, tc) == FALSE ) {
+ 		if ( tc < MAX_CHARA_FOLLOWER ) {
+ 			if ( cdata(CDATA_IN_TAGTEAM, tc) != 1 ) {
+-				if ( cdata(CDATA_AREA, tc) == AREA_NONE | tc == CHARA_PLAYER ) {
++				if ( cdata(CDATA_AREA, tc) == 0 | tc == CHARA_PLAYER ) {
+ 					if ( cdata(CDATA_IN_TAGTEAM, tc) == 0 ) {
+ 						promptl(0, promptmax) = lang("タッグ編成", "Tag organization."), "null", "" + 16
+ 						promptmax++
+ 					}
+ 					if ( cdata(CDATA_TAGTEAM_PARTNER, tc) > 0 ) {
+@@ -6006,11 +6016,11 @@
+ 			txt lang("仲間の最大数に達しているため連れ出せない。", "Your party is already full. You can't invite someone anymore.")
+ 			goto *pc_turn
+ 		}
+ 		rc = tc
+ 		gosub *add_ally
+-		cdata(CDATA_AREA, rc) = AREA_NONE
++		cdata(CDATA_AREA, rc) = 0
+ 		gosub *screen_draw
+ 		goto *turn_end
+ 	}
+ 	if ( p == 6 | p == 28 ) {
+ 		if ( 0 ) {
+@@ -6416,11 +6426,11 @@
+ 			if ( ttc == tc ) {
+ 				txt lang("何もおきない… ", "Nothing happens...")
+ 				goto *pc_turn
+ 			}
+ 			if ( tc != CHARA_PLAYER ) {
+-				if ( cdata(CDATA_AREA, ttc) != AREA_NONE | cdata(CDATA_AREA, tc) != AREA_NONE ) {
++				if ( cdata(CDATA_AREA, ttc) != 0 | cdata(CDATA_AREA, tc) != 0 ) {
+ 					txt lang("滞在中の仲間はタッグを組めない。", "The ally currently stays in this area.")
+ 					goto *pc_turn
+ 				}
+ 			}
+ 			if ( cbit(CHARA_BIT_GUARD_TEMP, ttc) == TRUE ) {
 @@ -11657,10 +11667,21 @@
  					}
  					if ( ibit(ITEM_BIT_PRECIOUS, cnt) ) {
@@ -927,6 +1767,23 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  				}
  				locationweap = 0
  				if ( iequiploc(ci) == 10 | iequiploc(ci) == 5 ) {
+@@ -14039,14 +14066,14 @@
+ 		listn(0, p) = lang("このアイテムに関する知識を得るには、鑑定する必要がある。", "You have to identify the item to gain knowledge.")
+ 		p++
+ 	}
+ 	if ( inv(INV_ITEM_KNOWN, ci) >= ITEM_KNOWN_FULL ) {
+ 		repeat 15
+-			if ( inv(40 + cnt * 2, ci) == 0 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 0 ) {
+ 				break
+ 			}
+-			val = inv(40 + cnt * 2, ci), inv(40 + cnt * 2 + 1, ci), 0, reftype
++			val = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci), inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci), 0, reftype
+ 			gosub *item_encdetail
+ 			listn(0, p) = lang("それは", "It ") + s
+ 			list(0, p) = rtval, rtval(1)
+ 			if ( inhmax > 0 ) {
+ 				cnt2 = cnt
 @@ -15127,11 +15154,11 @@
  	gosub *db_class
  	buff = ""
@@ -940,9 +1797,41 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  	noteadd ""
  	noteadd fixtxt("種族       : " + racename, 30) + fixtxt("信仰      : " + godname(cdata(CDATA_GOD, CHARA_PLAYER)), 32)
  	noteadd fixtxt("職業       : " + classname, 30) + fixtxt("所属      : " + guildname(), 32)
+@@ -15366,14 +15393,14 @@
+ 		goto *pc_turn
+ 	}
+ 	listmax = 0
+ 	cs = -1
+ 	repeat 15
+-		if ( inv(40 + cnt * 2, ci) == 0 ) {
++		if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 0 ) {
+ 			break
+ 		}
+-		enc = inv(40 + cnt * 2, ci)
++		enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci)
+ 		i = enc / 10000
+ 		if ( i != 0 ) {
+ 			enc = enc \ 10000
+ 			if ( i == 9 ) {
+ 				if ( inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) == cnt ) {
+@@ -15403,12 +15430,12 @@
+ 		if ( cnt == 0 ) {
+ 			s = lang("通常弾", "Normal"), lang("無限", "Unlimited")
+ 		}
+ 		else {
+ 			p = list(0, cnt - 1)
+-			i = inv(40 + p * 2 + 1, ci) \ 1000, inv(40 + p * 2 + 1, ci) / 1000
+-			s = ammoname(inv(40 + p * 2, ci) \ 10000), "" + i + "/" + i(1)
++			i = inv(STARTING_INV_ITEM_ENCHANT + p * 2 + 1, ci) \ 1000, inv(STARTING_INV_ITEM_ENCHANT + p * 2 + 1, ci) / 1000
++			s = ammoname(inv(STARTING_INV_ITEM_ENCHANT + p * 2, ci) \ 10000), "" + i + "/" + i(1)
+ 		}
+ 		s = s + ":" + s(1)
+ 		if ( inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) == cnt - 1 ) {
+ 			s = "[" + s + "]"
+ 			txtef COLOR_BLUE
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/event.hsp ../2.13-borscht/event.hsp
 --- ../2.12-borscht/event.hsp	2022-04-25 14:22:02.510067500 -0700
-+++ ../2.13-borscht/event.hsp	2022-06-26 12:14:16.300876600 -0700
++++ ../2.13-borscht/event.hsp	2022-09-18 13:32:37.963734500 -0700
 @@ -1924,11 +1924,11 @@
  	}
  	if ( _switch_val == 2 | _switch_sw ) {
@@ -958,7 +1847,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		efid = SKILL_EFFECT_GAIN_SPELL
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/god.hsp ../2.13-borscht/god.hsp
 --- ../2.12-borscht/god.hsp	2022-04-25 14:22:02.521077700 -0700
-+++ ../2.13-borscht/god.hsp	2022-06-26 12:14:16.314889500 -0700
++++ ../2.13-borscht/god.hsp	2022-09-18 13:32:37.980750200 -0700
 @@ -282,11 +282,11 @@
  		buff += lang("ボーナス: 筋力 / 耐久 / 盾 / 重量挙げ / 採掘 / 魔道具<p>", "Bonus   : STR/END/Shield/Weight Lifting/Mining/Magic Device<p>")
  		buff += lang("特殊能力: オパートスの甲殻(自動:あらゆる被ダメージを-10%)<p>", "Ability : Opatos' shell (Passive: Reduce any damage you<br>receive.)<p>")
@@ -974,7 +1863,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		buff = lang("クミロミは収穫の神です。クミロミを信仰した者は、大地の恵みを収穫し、それを加工する術を知ります。<p><p>", "Kumiromi is a god of harvest. Those faithful to Kumiromi receive<br>the blessings of nature.<p><p>")
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/help.hsp ../2.13-borscht/help.hsp
 --- ../2.12-borscht/help.hsp	2022-04-25 14:22:02.594054700 -0700
-+++ ../2.13-borscht/help.hsp	2022-06-26 12:14:16.405973700 -0700
++++ ../2.13-borscht/help.hsp	2022-09-18 13:32:38.070798300 -0700
 @@ -5351,11 +5351,11 @@
  	}
  	if ( mode == MODELIST_QUICK_START ) {
@@ -1014,9 +1903,22 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		if ( rnd(5) == 0 ) {
  			inv_getheader 0
  			ci = rnd(invrange) + invhead
+@@ -7960,11 +7960,11 @@
+ 		redraw 0
+ 		gmode 2
+ 		sxfix = 0
+ 		syfix = 0
+ 		gosub *screen_setPos
+-		gosub *los
++		gosub *label_3905
+ 		gosub *los_draw
+ 		p = windoww / 192
+ 		repeat p + 1
+ 			if ( cnt == p ) {
+ 				sx = windoww \ 192
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/init.hsp ../2.13-borscht/init.hsp
 --- ../2.12-borscht/init.hsp	2022-04-25 14:22:02.786142000 -0700
-+++ ../2.13-borscht/init.hsp	2022-06-26 12:14:16.572126700 -0700
++++ ../2.13-borscht/init.hsp	2022-09-18 13:32:38.266009800 -0700
 @@ -3290,17 +3290,17 @@
  	if ( 628 < 600 ) {
  		skillencdesc(SKILL_SPACT_CHANGE) = lang("", "")
@@ -1094,7 +1996,79 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		if ( ci >= 0 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/item.hsp ../2.13-borscht/item.hsp
 --- ../2.12-borscht/item.hsp	2022-04-25 14:22:02.867035900 -0700
-+++ ../2.13-borscht/item.hsp	2022-06-26 12:14:16.660207800 -0700
++++ ../2.13-borscht/item.hsp	2022-09-18 13:32:38.356614200 -0700
+@@ -1872,60 +1872,60 @@
+ 		if ( cdata(cnt, cc) \ EXT_EQUIP_SLOTS == 0 ) {
+ 			continue
+ 		}
+ 		ci = cdata(cnt, cc) \ EXT_EQUIP_SLOTS - 1
+ 		repeat 15
+-			if ( inv(40 + cnt * 2, ci) == 0 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 0 ) {
+ 				break
+ 			}
+-			if ( inv(40 + cnt * 2, ci) == 21 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 21 ) {
+ 				if ( mdata(MDATA_TYPE) != MAP_TYPE_WORLD ) {
+-					if ( rnd(25) < limit(abs(inv(40 + cnt * 2 + 1, ci)) / 50, 1, 25) ) {
++					if ( rnd(25) < limit(abs(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci)) / 50, 1, 25) ) {
+ 						efid = SKILL_SPELL_TELEPORT
+ 						tc = cc
+ 						gosub *effect
+ 						continue
+ 					}
+ 				}
+ 			}
+-			if ( inv(40 + cnt * 2, ci) == 45 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 45 ) {
+ 				if ( rnd(4) == 0 ) {
+ 					if ( synccheck(cc, -1) ) {
+ 						txtef COLOR_PURPLE
+ 						txt lang("何かが" + name(cc) + "の血を吸った。", "Something sucks " + name(cc) + your(cc) + " blood.")
+ 					}
+-					cdata(CDATA_CONDITION_BLEED, cc) += abs(inv(40 + cnt * 2 + 1, ci)) / 25 + 3
++					cdata(CDATA_CONDITION_BLEED, cc) += abs(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci)) / 25 + 3
+ 					continue
+ 				}
+ 			}
+-			if ( inv(40 + cnt * 2, ci) == 72 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 72 ) {
+ 				if ( rnd(5) == 0 ) {
+ 					if ( synccheck(cc, -1) ) {
+ 						txtef COLOR_PURPLE
+ 						txt lang("何かが" + name(cc) + "のMPを吸った。", "Something sucks " + name(cc) + your(cc) + " MP.")
+ 					}
+-					cdata(CDATA_CONDITION_MPOISON, cc) += abs(inv(40 + cnt * 2 + 1, ci)) / 50 + 3
++					cdata(CDATA_CONDITION_MPOISON, cc) += abs(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci)) / 50 + 3
+ 					continue
+ 				}
+ 			}
+-			if ( inv(40 + cnt * 2, ci) == 46 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 46 ) {
+ 				if ( rnd(20) == 0 ) {
+ 					if ( synccheck(cc, -1) ) {
+ 						txtef COLOR_PURPLE
+ 						txt lang(name(cc) + "は未熟になった。", name(cc) + " become" + _s(cc) + " inexperienced.")
+ 					}
+-					cdata(CDATA_EXP, cc) -= cdata(CDATA_EXP_TO_NEXT_LVL, cc) / (300 - limit(abs(inv(40 + cnt * 2 + 1, ci)) / 2, 0, 50)) + rnd(100)
++					cdata(CDATA_EXP, cc) -= cdata(CDATA_EXP_TO_NEXT_LVL, cc) / (300 - limit(abs(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci)) / 2, 0, 50)) + rnd(100)
+ 					if ( cdata(CDATA_EXP, cc) < 0 ) {
+ 						cdata(CDATA_EXP, cc) = 0
+ 					}
+ 					continue
+ 				}
+ 			}
+-			if ( inv(40 + cnt * 2, ci) == 47 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 47 ) {
+ 				if ( mdata(MDATA_TYPE) != MAP_TYPE_WORLD ) {
+ 					if ( mdata(MDATA_TYPE) != MAP_TYPE_HOME ) {
+-						if ( rnd(50) < limit(abs(inv(40 + cnt * 2 + 1, ci)) / 50, 1, 50) ) {
++						if ( rnd(50) < limit(abs(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci)) / 50, 1, 50) ) {
+ 							if ( synccheck(cc, -1) ) {
+ 								txtef COLOR_PURPLE
+ 								txt lang("魔力の渦が何かを召喚した！", "Several creatures are summoned from a vortex of magic.")
+ 							}
+ 							repeat 1 + rnd(3)
 @@ -2147,10 +2147,13 @@
  			if ( inv(INV_ITEM_COL, ci) == 29 ) {
  				inv(INV_ITEM_COL, ci) = 28
@@ -1109,9 +2083,330 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  	}
  	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_RED_BOOK ) {
  		if ( inv(INV_ITEM_PARAM1, ci) == 0 ) {
+@@ -3516,11 +3519,11 @@
+ 		healsp cc, 5 + inv(INV_ITEM_PARAM2, ci) * 3 + inv(INV_ITEM_LEVEL, ci) * 3
+ 	}
+ 	if ( cdata(CDATA_ID, cc) == CREATURE_ID_CUTE_FAIRY ) {
+ 		if ( cdata(CDATA_RELATION, cc) == RELATION_ALLY ) {
+ 			if ( nutrition >= 1000 ) {
+-				if ( cbit(CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, cc) != FALSE ) {
++				if ( cbit((974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), cc) != FALSE ) {
+ 					cibk = ci
+ 					gdata(GDATA_FLAG_CUTE_FAIRY_SEEDS_SPIT)++
+ 					flt
+ 					itemcreate -1, ITEM_ID_VEGETABLE_SEED, cdata(CDATA_X, cc), cdata(CDATA_Y, cc), 2
+ 					inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_NORMAL
+@@ -3542,11 +3545,11 @@
+ 					else {
+ 						flt
+ 						itemcreate -1, ITEM_ID_GEM_SEED, cdata(CDATA_X, cc), cdata(CDATA_Y, cc), 2
+ 						inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_NORMAL
+ 					}
+-					cbitmod CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, cc, FALSE
++					cbitmod (974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), cc, FALSE
+ 					txtef COLOR_SKY_BLUE
+ 					txtmore
+ 					txt lang("「げふぅ」" + name(cc) + "は種を吐き出した。", "「Ugh-Ughu」 " + name(cc) + " spews up " + itemname(ci, 1) + ".")
+ 					ci = cibk
+ 				}
+@@ -3554,16 +3557,16 @@
+ 		}
+ 	}
+ 	if ( cdata(CDATA_ID, cc) == CREATURE_ID_GOOSE ) {
+ 		if ( cdata(CDATA_RELATION, cc) == RELATION_ALLY ) {
+ 			if ( nutrition >= 1000 ) {
+-				if ( cbit(CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, cc) != FALSE ) {
++				if ( cbit((974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), cc) != FALSE ) {
+ 					snd SOUNDLIST_DING3
+ 					cibk = ci
+ 					flt
+ 					itemcreate -1, ITEM_ID_PLATINUM_COIN, cdata(CDATA_X, cc), cdata(CDATA_Y, cc), 2
+-					cbitmod CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, cc, FALSE
++					cbitmod (974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), cc, FALSE
+ 					txtef COLOR_SKY_BLUE
+ 					txtmore
+ 					txt lang(name(cc) + "の産んだ卵が割れて中からプラチナが出てきた。", "「Ugh-Ughu」 " + name(cc) + " laid a platina.")
+ 					ci = cibk
+ 				}
+@@ -3928,21 +3931,21 @@
+ 		if ( inv(INV_ITEM_ID, ci) == ITEM_ID_PANTY ) {
+ 			gdata(GDATA_FLAG_PANTIES_EATEN)++
+ 		}
+ 	}
+ 	repeat 15
+-		if ( inv(40 + cnt * 2, ci) == 0 ) {
++		if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 0 ) {
+ 			break
+ 		}
+-		enc = inv(40 + cnt * 2, ci)
++		enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci)
+ 		if ( enc == 36 ) {
+-			p = rnd(inv(40 + cnt * 2 + 1, ci) / 50 + 1) + 1
++			p = rnd(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 50 + 1) + 1
+ 			healsp cc, p
+ 			continue
+ 		}
+ 		if ( enc == 38 ) {
+-			p = rnd(inv(40 + cnt * 2 + 1, ci) / 25 + 1) + 1
++			p = rnd(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 25 + 1) + 1
+ 			healmp cc, p / 5
+ 			continue
+ 		}
+ 		if ( enc == 37 ) {
+ 			evadd EVENT_RAGNAROK, cc
+@@ -3950,51 +3953,51 @@
+ 		}
+ 		if ( enc == 40 ) {
+ 			if ( gdata(GDATA_TIME_STOP_TIME) == 0 & gdata(GDATA_FLAG_STOP_TIME_OTHER) == 0 ) {
+ 				txtef COLOR_SKY_BLUE
+ 				txt lang(name(cc) + "は時を止めた。", name(cc) + " stop" + _s(cc) + " time.")
+-				gdata(GDATA_TIME_STOP_TIME) = inv(40 + cnt * 2 + 1, ci) / 100 + 1 + 1
++				gdata(GDATA_TIME_STOP_TIME) = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 100 + 1 + 1
+ 				continue
+ 			}
+ 		}
+ 		enc2 = enc / 10000
+ 		if ( enc2 != 0 ) {
+ 			enc = enc \ 10000
+ 			if ( enc2 == 3 ) {
+-				skillexp enc, cc, (inv(40 + cnt * 2 + 1, ci) / 50 + 1) * 100 * (1 + (cc != CHARA_PLAYER) * 5)
+-				if ( inv(40 + cnt * 2 + 1, ci) / 50 + 1 >= 0 ) {
++				skillexp enc, cc, (inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 50 + 1) * 100 * (1 + (cc != CHARA_PLAYER) * 5)
++				if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 50 + 1 >= 0 ) {
+ 					txt lang(skillname(enc) + "の参考になる！", skillname(enc) + " develops.")
+ 				}
+ 				else {
+ 					txt lang(skillname(enc) + "がよくわからなくなった。", skillname(enc) + " deteriorates.")
+ 				}
+ 				continue
+ 			}
+ 			if ( enc2 == 1 ) {
+-				skillexp enc, cc, (inv(40 + cnt * 2 + 1, ci) / 50 + 1) * 100 * (1 + (cc != CHARA_PLAYER) * 5)
+-				if ( inv(40 + cnt * 2 + 1, ci) / 50 + 1 >= 0 ) {
++				skillexp enc, cc, (inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 50 + 1) * 100 * (1 + (cc != CHARA_PLAYER) * 5)
++				if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 50 + 1 >= 0 ) {
+ 					txt lang(skillname(enc) + "が発達した。", skillname(enc) + " develops.")
+ 				}
+ 				else {
+ 					txt lang(skillname(enc) + "が衰えた。", skillname(enc) + " deteriorates.")
+ 				}
+ 				continue
+ 			}
+ 			if ( enc2 == 10 ) {
+-				modgrowth cc, enc, limit((inv(40 + cnt * 2 + 1, ci) / 50 + 1) * 5, -50, 50)
+-				if ( inv(40 + cnt * 2 + 1, ci) >= 0 ) {
++				modgrowth cc, enc, limit((inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 50 + 1) * 5, -50, 50)
++				if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) >= 0 ) {
+ 				}
+-				if ( inv(40 + cnt * 2 + 1, ci) / 50 + 1 >= 0 ) {
++				if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 50 + 1 >= 0 ) {
+ 					txt lang(skillname(enc) + "が回復した。", skillname(enc) + " heals.")
+ 				}
+ 				else {
+ 					txt lang(skillname(enc) + "が消耗した。", skillname(enc) + " hurts.")
+ 				}
+ 				continue
+ 			}
+ 			if ( enc2 == 6 & enc != 19 ) {
+-				addbuff cc, 20 + (enc - 10), (inv(40 + cnt * 2 + 1, ci) / 50 + 1) * 5 * (1 + (cc != CHARA_PLAYER) * 2), 2000
++				addbuff cc, 20 + (enc - 10), (inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 50 + 1) * 5 * (1 + (cc != CHARA_PLAYER) * 2), 2000
+ 				continue
+ 			}
+ 		}
+ 	loop
+ 	eatstatusfood inv(INV_ITEM_STATUS, cieat), cc
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/item_data.hsp ../2.13-borscht/item_data.hsp
+--- ../2.12-borscht/item_data.hsp	2022-04-25 14:22:02.896062800 -0700
++++ ../2.13-borscht/item_data.hsp	2022-09-18 13:32:38.392152700 -0700
+@@ -2,11 +2,11 @@
+ 	randomize inv(INV_ITEM_TURN, getinheritance_arg1) + 1
+ 	dim getinheritance_arg2, 15
+ 	getinheritance_arg3 = 0
+ 	repeat 10
+ 		locvar_getinheritance_p = rnd(15)
+-		if ( inv(40 + locvar_getinheritance_p * 2, getinheritance_arg1) == 0 ) {
++		if ( inv(STARTING_INV_ITEM_ENCHANT + locvar_getinheritance_p * 2, getinheritance_arg1) == 0 ) {
+ 			continue
+ 		}
+ 		locvar_getinheritance_f = 0
+ 		repeat getinheritance_arg3 + 1
+ 			if ( locvar_getinheritance_p == getinheritance_arg2(cnt) ) {
+@@ -15,11 +15,11 @@
+ 			}
+ 		loop
+ 		if ( locvar_getinheritance_f == 1 ) {
+ 			continue
+ 		}
+-		if ( rnd(4) > getinheritance_arg3 | inv(40 + locvar_getinheritance_p * 2 + 1, getinheritance_arg1) < 0 ) {
++		if ( rnd(4) > getinheritance_arg3 | inv(STARTING_INV_ITEM_ENCHANT + locvar_getinheritance_p * 2 + 1, getinheritance_arg1) < 0 ) {
+ 			getinheritance_arg2(getinheritance_arg3) = locvar_getinheritance_p
+ 			getinheritance_arg3++
+ 		}
+ 	loop
+ 	randomize
+@@ -252,11 +252,11 @@
+ 	encref(ENCREF_GENERATE_CHANCE, ENCHANT_RES_CURSE) = 99, 150, 2000, (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
+ 	encref(ENCREF_GENERATE_CHANCE, ENCHANT_PROC) = 99, 300, 15000, (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
+ 	encref(ENCREF_GENERATE_CHANCE, ENCHANT_REWARD_QUALITY) = 100, 120, 300, FILTER_FURNITURE
+ 	encref(ENCREF_GENERATE_CHANCE, ENCHANT_DRUNK_LISTENER) = 100, 120, 300, FILTER_FURNITURE
+ 	encref(ENCREF_GENERATE_CHANCE, ENCHANT_FOOD) = 100, 120, 300, FILTER_ITEM_FOOD
+-	encref(ENCREF_GENERATE_CHANCE, ENCHANT_BANE_GOD) = 2, 170, 150, FILTER_WEAPON, FILTER_RANGE
++	encref(ENCREF_GENERATE_CHANCE, ENCHANT_GOD_BANE) = 2, 170, 150, FILTER_WEAPON, FILTER_RANGE
+ 	encref(ENCREF_GENERATE_CHANCE, ENCHANT_BANE_FLYING) = 2, 170, 150, FILTER_WEAPON, FILTER_RANGE
+ 	encref(ENCREF_GENERATE_CHANCE, ENCHANT_BANE_METAL) = 2, 170, 150, FILTER_WEAPON, FILTER_RANGE
+ 	encref(ENCREF_GENERATE_CHANCE, ENCHANT_REFLECT_MAGIC) = 3, 180, 250, FILTER_SHIELD, FILTER_CLOAK
+ 	encref(ENCREF_GENERATE_CHANCE, ENCHANT_REMOTE_BLOW) = 100, 120, 5000, FILTER_WEAPON
+ 	encref(ENCREF_GENERATE_CHANCE, ENCHANT_DEC_ENEMY_CRIT_CHANCE) = 99, 300, 5000, FILTER_ARMOR, FILTER_HELM, 19000
+@@ -1739,16 +1739,16 @@
+ #deffunc sortenc int sortenc_arg1
+ 	repeat
+ 		locvar_sortenc_f = 0
+ 		repeat 15 - 1
+ 			locvar_sortenc_cnt2 = cnt + 1
+-			if ( inv(40 + cnt * 2, sortenc_arg1) < inv(40 + locvar_sortenc_cnt2 * 2, sortenc_arg1) ) {
+-				locvar_randomenc_p = inv(40 + cnt * 2, sortenc_arg1), inv(40 + cnt * 2 + 1, sortenc_arg1)
+-				inv(40 + cnt * 2, sortenc_arg1) = inv(40 + locvar_sortenc_cnt2 * 2, sortenc_arg1)
+-				inv(40 + locvar_sortenc_cnt2 * 2, sortenc_arg1) = locvar_randomenc_p
+-				inv(40 + cnt * 2 + 1, sortenc_arg1) = inv(40 + locvar_sortenc_cnt2 * 2 + 1, sortenc_arg1)
+-				inv(40 + locvar_sortenc_cnt2 * 2 + 1, sortenc_arg1) = locvar_randomenc_p(1)
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, sortenc_arg1) < inv(STARTING_INV_ITEM_ENCHANT + locvar_sortenc_cnt2 * 2, sortenc_arg1) ) {
++				locvar_randomenc_p = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, sortenc_arg1), inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, sortenc_arg1)
++				inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, sortenc_arg1) = inv(STARTING_INV_ITEM_ENCHANT + locvar_sortenc_cnt2 * 2, sortenc_arg1)
++				inv(STARTING_INV_ITEM_ENCHANT + locvar_sortenc_cnt2 * 2, sortenc_arg1) = locvar_randomenc_p
++				inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, sortenc_arg1) = inv(STARTING_INV_ITEM_ENCHANT + locvar_sortenc_cnt2 * 2 + 1, sortenc_arg1)
++				inv(STARTING_INV_ITEM_ENCHANT + locvar_sortenc_cnt2 * 2 + 1, sortenc_arg1) = locvar_randomenc_p(1)
+ 				locvar_sortenc_f = 1
+ 			}
+ 		loop
+ 		if ( locvar_sortenc_f == 0 ) {
+ 			break
+@@ -1770,14 +1770,14 @@
+ 		locvar_encremove_enc = encremove_arg2
+ 	}
+ 	locvar_encremove_enc = encremove_arg2
+ 	locvar_encremove_encp = encremove_arg3
+ 	repeat 15
+-		if ( inv(40 + cnt * 2, encremove_arg1) == locvar_encremove_enc ) {
+-			inv(40 + cnt * 2 + 1, encremove_arg1) -= locvar_encremove_encp
+-			if ( inv(40 + cnt * 2 + 1, encremove_arg1) == 0 ) {
+-				inv(40 + cnt * 2, encremove_arg1) = 0
++		if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, encremove_arg1) == locvar_encremove_enc ) {
++			inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, encremove_arg1) -= locvar_encremove_encp
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, encremove_arg1) == 0 ) {
++				inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, encremove_arg1) = 0
+ 			}
+ 			break
+ 		}
+ 	loop
+ 	if ( encremove_arg2 < 10000 ) {
+@@ -1918,43 +1918,43 @@
+ 			locvar_encremove_encp += locvar_encremove_encp * 1000
+ 		}
+ 	}
+ 	locvar_encadd_i = -1
+ 	repeat 15
+-		if ( inv(40 + cnt * 2, encadd_itemidx) == locvar_encremove_enc ) {
++		if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, encadd_itemidx) == locvar_encremove_enc ) {
+ 			locvar_encadd_i = cnt
+ 			continue
+ 		}
+ 		if ( locvar_encadd_i == (-1) ) {
+-			if ( inv(40 + cnt * 2, encadd_itemidx) == 0 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, encadd_itemidx) == 0 ) {
+ 				locvar_encadd_i = cnt
+ 			}
+ 		}
+ 	loop
+ 	if ( locvar_encadd_i == (-1) ) {
+ 		return 0
+ 	}
+-	if ( inv(40 + locvar_encadd_i * 2, encadd_itemidx) == locvar_encremove_enc ) {
++	if ( inv(STARTING_INV_ITEM_ENCHANT + locvar_encadd_i * 2, encadd_itemidx) == locvar_encremove_enc ) {
+ 		if ( reftype == FILTER_AMMO ) {
+ 			return
+ 		}
+ 		if ( encadd_arg5 ) {
+ 		}
+ 		else {
+-			if ( inv(40 + locvar_encadd_i * 2 + 1, encadd_itemidx) > 300 | ibit(ITEM_BIT_PRECIOUS, encadd_itemidx) == TRUE ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + locvar_encadd_i * 2 + 1, encadd_itemidx) > 300 | ibit(ITEM_BIT_PRECIOUS, encadd_itemidx) == TRUE ) {
+ 				locvar_encremove_encp /= 2
+ 			}
+ 		}
+ 	}
+ 	if ( encadd_arg6 ) {
+ 		rtval = locvar_encremove_enc, locvar_encremove_encp
+ 		return
+ 	}
+-	if ( inv(40 + locvar_encadd_i * 2, encadd_itemidx) == locvar_encremove_enc ) {
+-		locvar_encremove_encp += inv(40 + locvar_encadd_i * 2 + 1, encadd_itemidx)
++	if ( inv(STARTING_INV_ITEM_ENCHANT + locvar_encadd_i * 2, encadd_itemidx) == locvar_encremove_enc ) {
++		locvar_encremove_encp += inv(STARTING_INV_ITEM_ENCHANT + locvar_encadd_i * 2 + 1, encadd_itemidx)
+ 	}
+-	inv(40 + locvar_encadd_i * 2, encadd_itemidx) = locvar_encremove_enc, locvar_encremove_encp
++	inv(STARTING_INV_ITEM_ENCHANT + locvar_encadd_i * 2, encadd_itemidx) = locvar_encremove_enc, locvar_encremove_encp
+ 	if ( encadd_enchant < EXT_ENCHANTMENT ) {
+ 		locvar_encremove_p = encadd_enchant
+ 	}
+ 	else {
+ 		locvar_encremove_p = encadd_enchant / 10000
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/item_func.hsp ../2.13-borscht/item_func.hsp
 --- ../2.12-borscht/item_func.hsp	2022-04-25 14:22:02.931004000 -0700
-+++ ../2.13-borscht/item_func.hsp	2022-06-26 12:14:16.729271500 -0700
++++ ../2.13-borscht/item_func.hsp	2022-09-18 13:32:38.428729600 -0700
+@@ -158,16 +158,16 @@
+ 		if ( cdata(cnt, encfind_charid) \ EXT_EQUIP_SLOTS == 0 ) {
+ 			continue
+ 		}
+ 		locvar_encfind_i = cdata(cnt, encfind_charid) \ EXT_EQUIP_SLOTS - 1
+ 		repeat 15
+-			if ( inv(40 + cnt * 2, locvar_encfind_i) == 0 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, locvar_encfind_i) == 0 ) {
+ 				break
+ 			}
+-			if ( inv(40 + cnt * 2, locvar_encfind_i) == encfind_encid ) {
+-				if ( inv(40 + cnt * 2 + 1, locvar_encfind_i) > locvar_encfind_f ) {
+-					locvar_encfind_f = inv(40 + cnt * 2 + 1, locvar_encfind_i)
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, locvar_encfind_i) == encfind_encid ) {
++				if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, locvar_encfind_i) > locvar_encfind_f ) {
++					locvar_encfind_f = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, locvar_encfind_i)
+ 					break
+ 				}
+ 			}
+ 		loop
+ 	loop
+@@ -179,27 +179,27 @@
+ 		if ( cdata(cnt, encfindpower_charid) \ EXT_EQUIP_SLOTS == 0 ) {
+ 			continue
+ 		}
+ 		locvar_encfind_i = cdata(cnt, encfindpower_charid) \ EXT_EQUIP_SLOTS - 1
+ 		repeat 15
+-			if ( inv(40 + cnt * 2, locvar_encfind_i) == 0 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, locvar_encfind_i) == 0 ) {
+ 				break
+ 			}
+-			if ( inv(40 + cnt * 2, locvar_encfind_i) == encfindpower_encid ) {
+-				locvar_encfind_f += inv(40 + cnt * 2 + 1, locvar_encfind_i)
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, locvar_encfind_i) == encfindpower_encid ) {
++				locvar_encfind_f += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, locvar_encfind_i)
+ 			}
+ 		loop
+ 	loop
+ 	return locvar_encfind_f
+ 
+ #defcfunc encfindspec int encfindspec_itemid, int encfindspec_encid
+ 	locvar_encfind_f = -1
+ 	repeat 15
+-		if ( inv(40 + cnt * 2, encfindspec_itemid) == 0 ) {
++		if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, encfindspec_itemid) == 0 ) {
+ 			break
+ 		}
+-		if ( inv(40 + cnt * 2, encfindspec_itemid) == encfindspec_encid ) {
++		if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, encfindspec_itemid) == encfindspec_encid ) {
+ 			locvar_encfind_f = 1
+ 			break
+ 		}
+ 	loop
+ 	return locvar_encfind_f
 @@ -880,10 +880,13 @@
  		}
  	}
@@ -1141,9 +2436,43 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		if ( inv(INV_ITEM_ID, remain_make_itemid) == ITEM_ID_GOLDEN_DOLL ) {
  			inv(INV_ITEM_WEIGHT, remain_make_itemid) = limit(inv(INV_ITEM_WEIGHT, remain_make_itemid) / 10 * 500, 5000, 100000)
  			inv(INV_ITEM_VALUE, remain_make_itemid) = limit((cdata(CDATA_LEVEL, remain_make_arg2) + 30) * 300, 3000, 90000)
+@@ -2108,30 +2111,30 @@
+ #deffunc equipinfo int equipinfo_arg1, int equipinfo_arg2, int equipinfo_arg3
+ 	if ( inv(INV_ITEM_KNOWN, equipinfo_arg1) < ITEM_KNOWN_FULL ) {
+ 		return
+ 	}
+ 	repeat 15
+-		locvar_equipinfo_p = inv(40 + cnt * 2, equipinfo_arg1)
++		locvar_equipinfo_p = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, equipinfo_arg1)
+ 		if ( locvar_equipinfo_p == 0 ) {
+ 			break
+ 		}
+ 		locvar_colorres_i = locvar_equipinfo_p / 10000
+ 		if ( locvar_colorres_i != 2 ) {
+ 			continue
+ 		}
+ 		locvar_colorres_i = locvar_equipinfo_p \ 10000
+ 		pos equipinfo_arg2 + (locvar_colorres_i - 50) * 20, equipinfo_arg3
+-		locvar_equipinfo_p = abs(inv(40 + cnt * 2 + 1, equipinfo_arg1) / 2 / 50) + 1
++		locvar_equipinfo_p = abs(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, equipinfo_arg1) / 2 / 50) + 1
+ 		if ( locvar_equipinfo_p > 5 ) {
+ 			locvar_equipinfo_s = "+"
+ 		}
+ 		else {
+ 			locvar_equipinfo_s = "" + locvar_equipinfo_p
+ 		}
+ 		if ( jp ) {
+ 			colorres
+-			if ( inv(40 + cnt * 2 + 1, equipinfo_arg1) >= 0 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, equipinfo_arg1) >= 0 ) {
+ 				mes "●"
+ 			}
+ 			else {
+ 				mes "▼"
+ 			}
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/main.hsp ../2.13-borscht/main.hsp
 --- ../2.12-borscht/main.hsp	2022-04-25 14:22:02.938010500 -0700
-+++ ../2.13-borscht/main.hsp	2022-06-26 12:14:16.736278000 -0700
++++ ../2.13-borscht/main.hsp	2022-09-18 13:32:38.437738100 -0700
 @@ -181,11 +181,11 @@
  	if ( dbg_randseed != 0 ) {
  		randseed = dbg_randseed
@@ -1159,7 +2488,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  	netrequest netload_filename
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/map.hsp ../2.13-borscht/map.hsp
 --- ../2.12-borscht/map.hsp	2022-04-25 14:22:03.039104400 -0700
-+++ ../2.13-borscht/map.hsp	2022-06-26 12:14:16.864396100 -0700
++++ ../2.13-borscht/map.hsp	2022-09-18 13:32:38.520371600 -0700
 @@ -521,17 +521,22 @@
  		cbitmod CHARA_BIT_MAGNETISM_N_POLE, cnt, FALSE
  		if ( gdata(GDATA_AREA) == AREA_WILDERNESS ) {
@@ -1184,6 +2513,19 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		if ( cdata(CDATA_ID, cnt) == CREATURE_ID_LAST_DANCER ) {
  			if ( cbit(CHARA_BIT_SANDBAG, cnt) == FALSE ) {
  				if ( cdata(CDATA_ALLIED, cnt) == 0 ) {
+@@ -1121,11 +1126,11 @@
+ 			}
+ 			continue
+ 		}
+ 		map(cdata(CDATA_X, cnt), cdata(CDATA_Y, cnt), MAP_CHARA_INDEX_PLUS_ONE) = 0
+ 		if ( cnt != 0 ) {
+-			if ( cdata(CDATA_AREA, cnt) != AREA_NONE ) {
++			if ( cdata(CDATA_AREA, cnt) != 0 ) {
+ 				cdata(CDATA_EXIST, cnt) = CHAR_STATE_ALLY_WORK
+ 			}
+ 		}
+ 	loop
+ 	if ( mdata(MDATA_CAN_SAVE) == 1 ) {
 @@ -1161,10 +1166,13 @@
  			continue
  		}
@@ -1198,6 +2540,27 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  	repeat 40 - 1, 16
  		if ( cdata(CDATA_EXIST, cnt) == CHAR_STATE_ALIVE ) {
  			map(cdata(CDATA_X, cnt), cdata(CDATA_Y, cnt), MAP_CHARA_INDEX_PLUS_ONE) = 0
+@@ -1208,18 +1216,18 @@
+ 	}
+ 	repeat 16
+ 		if ( cnt == 0 ) {
+ 			continue
+ 		}
+-		if ( cdata(CDATA_AREA, cnt) != AREA_NONE ) {
++		if ( cdata(CDATA_AREA, cnt) != 0 ) {
+ 			if ( cdata(CDATA_AREA, cnt) == gdata(GDATA_AREA) ) {
+ 				if ( cdata(CDATA_EXIST, cnt) == CHAR_STATE_ALLY_WORK ) {
+ 					cdata(CDATA_EXIST, cnt) = CHAR_STATE_ALIVE
+ 				}
+ 			}
+ 		}
+-		if ( cdata(CDATA_AREA, cnt) == AREA_HOME & gdata(GDATA_LEVEL) != cdata(CDATA_HOME, cnt) ) {
++		if ( cdata(CDATA_AREA, cnt) == 7 & gdata(GDATA_LEVEL) != cdata(CDATA_HOME, cnt) ) {
+ 			cdata(CDATA_EXIST, cnt) = CHAR_STATE_ALLY_WORK
+ 		}
+ 	loop
+ 	mid = "" + gdata(GDATA_AREA) + "_" + (100 + gdata(GDATA_LEVEL))
+ 	if ( mode == MODELIST_CONTINUE ) {
 @@ -9033,11 +9041,10 @@
  			}
  		}
@@ -1210,9 +2573,97 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  							map_reload "thiefguild"
  						}
  					}
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/map_user.hsp ../2.13-borscht/map_user.hsp
+--- ../2.12-borscht/map_user.hsp	2022-04-25 14:22:03.134011000 -0700
++++ ../2.13-borscht/map_user.hsp	2022-09-18 13:32:38.636479600 -0700
+@@ -816,14 +816,14 @@
+ 			if ( getworker(gdata(GDATA_AREA), c) == c ) {
+ 				f = get_freeallyne()
+ 				if ( f == 0 ) {
+ 					snd SOUNDLIST_FAIL1
+ 					txt lang("仲間の最大数に達しているため、連れていけない。", "Your party is already full. You can't invite someone anymore.")
+-					goto *label_4582
++					goto *label_4602
+ 				}
+ 				if ( gdata(GDATA_AREA) == AREA_HOME ) {
+-					cdata(CDATA_AREA, c) = AREA_NONE
++					cdata(CDATA_AREA, c) = 0
+ 					txt lang(cdatan(CDATAN_NAME, c) + "の滞在を取り消した。", cdatan(CDATAN_NAME, c) + " " + is(c) + " no longer staying at your home.")
+ 					cdata(CDATA_HOME, c) = 0
+ 				}
+ 				else {
+ 					removeworker gdata(GDATA_AREA)
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/module.hsp ../2.13-borscht/module.hsp
+--- ../2.12-borscht/module.hsp	2022-04-25 14:22:03.236015400 -0700
++++ ../2.13-borscht/module.hsp	2022-09-18 13:32:38.934756700 -0700
+@@ -703,11 +703,11 @@
+ 	repeat 16
+ 		if ( cnt == 0 ) {
+ 			continue
+ 		}
+ 		if ( cdata(CDATA_AREA, cnt) == removeworker_arg1 ) {
+-			cdata(CDATA_AREA, cnt) = AREA_NONE
++			cdata(CDATA_AREA, cnt) = 0
+ 		}
+ 	loop
+ 	return
+ 
+ #defcfunc calcshopreform
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/proc.hsp ../2.13-borscht/proc.hsp
 --- ../2.12-borscht/proc.hsp	2022-04-25 14:22:03.399927300 -0700
-+++ ../2.13-borscht/proc.hsp	2022-06-26 12:14:17.234737600 -0700
++++ ../2.13-borscht/proc.hsp	2022-09-18 13:32:39.544864200 -0700
+@@ -3765,11 +3765,11 @@
+ 			cure_anorexia tc
+ 			cdata(CDATA_VOMIT, tc) = 0
+ 		}
+ 		healsan tc, 10
+ 		if ( cbit(CHARA_BIT_LAY_HANDS, tc) | cdata(CDATA_ID, tc) == CREATURE_ID_GOOSE | cdata(CDATA_ID, tc) == CREATURE_ID_CUTE_FAIRY ) {
+-			cbitmod CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, tc, TRUE
++			cbitmod (974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), tc, TRUE
+ 		}
+ 	loop
+ 	cdata(CDATA_EVOCHAT_POINTS, CHARA_PLAYER) = 10
+ 	mode = MODELIST_TXT_ADV
+ 	timeslept = 7 + rnd(5)
+@@ -5666,11 +5666,11 @@
+ 				rc = cnt
+ 				gosub *resurrect
+ 				cxinit = cdata(CDATA_X, cc)
+ 				cyinit = cdata(CDATA_Y, cc)
+ 				gosub *place_chara
+-				cdata(CDATA_AREA, rc) = AREA_NONE
++				cdata(CDATA_AREA, rc) = 0
+ 				txtef COLOR_YELLOW
+ 				txt cnven(cdatan(CDATAN_NAME, rc)) + lang("は復活した！", " " + have(rc) + " been resurrected!")
+ 				txtvalid = 0
+ 				txt lang("「苦しい…」", cnvtalk("Painful..."))
+ 				cdata(CDATA_CAN_REVIVE, rc)--
+@@ -9834,11 +9834,11 @@
+ 			if ( gdata(GDATA_RIDER) == 0 ) {
+ 				txt lang(name(cc) + "は自分に乗ろうとした。", "You try to ride yourself.")
+ 			}
+ 			goto *effect_end
+ 		}
+-		if ( cdata(CDATA_AREA, tc) != AREA_NONE ) {
++		if ( cdata(CDATA_AREA, tc) != 0 ) {
+ 			txt lang("その仲間はこの場所に滞在中だ。", "The ally currently stays in this area.")
+ 			goto *effect_end
+ 		}
+ 		if ( gdata(GDATA_RIDER) != 0 ) {
+ 			if ( cdata(CDATA_RIDING, gdata(GDATA_RIDER)) == 0 ) {
+@@ -10481,11 +10481,11 @@
+ 		rc = stat
+ 		gosub *resurrect
+ 		cxinit = cdata(CDATA_X, cc)
+ 		cyinit = cdata(CDATA_Y, cc)
+ 		gosub *place_chara
+-		cdata(CDATA_AREA, rc) = AREA_NONE
++		cdata(CDATA_AREA, rc) = 0
+ 		txtef COLOR_YELLOW
+ 		txt cnven(cdatan(CDATAN_NAME, rc)) + lang("は復活した！", " " + have(rc) + " been resurrected!")
+ 		txtvalid = 0
+ 		txt lang("「ありがとう！」", cnvtalk("Thanks!"))
+ 		cdata(CDATA_CAN_REVIVE, rc)--
 @@ -15487,11 +15487,13 @@
  						else {
  							txt lang(name(tc) + "に命中した。", "The sand hits " + name(tc) + ".")
@@ -1228,6 +2679,32 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  			}
  		loop
  		goto *effect_end
+@@ -17400,11 +17402,11 @@
+ 				if ( cdata(CDATA_ROW_ACT, rc) != ACTION_NONE ) {
+ 					rowactend rc
+ 				}
+ 				map(cdata(CDATA_X, rc), cdata(CDATA_Y, rc), MAP_CHARA_INDEX_PLUS_ONE) = 0
+ 				cdata(CDATA_EXIST, rc) = CHAR_STATE_ALLY_WAIT
+-				cdata(CDATA_AREA, rc) = AREA_NONE
++				cdata(CDATA_AREA, rc) = 0
+ 				if ( cdata(CDATA_IN_TAGTEAM, rc) == (-1) ) {
+ 					ttc = cdata(CDATA_TAGTEAM_PARTNER, rc)
+ 					cell_setchara ttc, cdata(CDATA_X, rc), cdata(CDATA_Y, rc)
+ 					tag_end rc
+ 				}
+@@ -17436,11 +17438,11 @@
+ 			cdata(CDATA_EXIST, rc) = CHAR_STATE_ALIVE
+ 			cdata(CDATA_RELATION, rc) = cdata(CDATA_RELATION_ORG, rc)
+ 			cxinit = cdata(CDATA_X, CHARA_PLAYER)
+ 			cyinit = cdata(CDATA_Y, CHARA_PLAYER)
+ 			gosub *place_chara
+-			cdata(CDATA_AREA, rc) = AREA_NONE
++			cdata(CDATA_AREA, rc) = 0
+ 		}
+ 		gosub *screen_draw
+ 		return 0
+ 		goto *effect_end
+ 		_switch_sw++
 @@ -21213,10 +21215,12 @@
  				}
  				gdata(GDATA_FLAG_WORK_A_REMAINING) = 0
@@ -1264,9 +2741,58 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  					cdata(CDATA_DRAIN_HP, cnt) += 52
  					cdata(CDATA_WEIGHT, cnt) = 15000
  					if ( cnt != 0 ) {
+@@ -23617,19 +23624,19 @@
+ 				if ( rtval == 10 ) {
+ 					amp = ENCHANT_AMMO_RAPID
+ 				}
+ 				change = 0
+ 				repeat 15
+-					if ( inv(40 + cnt * 2, ci) == 0 ) {
++					if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 0 ) {
+ 						break
+ 					}
+-					enc = inv(40 + cnt * 2, ci)
++					enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci)
+ 					i = enc / 10000
+ 					if ( i != 0 ) {
+ 						enc = enc \ 10000
+ 						if ( i == 9 ) {
+-							if ( inv(40 + cnt * 2, ci) \ 10000 == amp ) {
++							if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) \ 10000 == amp ) {
+ 								inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) = cnt
+ 								change = 1
+ 								break
+ 							}
+ 						}
+@@ -23640,11 +23647,11 @@
+ 					txt lang(cdatan(CDATAN_NAME, tc) + "の矢弾はその切替に対応していない。", itemname(ci) + " isn't capable of that ammos.")
+ 					goto *effect_directive
+ 				}
+ 				snd SOUNDLIST_AMMO
+ 				change = 0
+-				i = inv(40 + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) * 2 + 1, ci) \ 1000, inv(40 + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) * 2 + 1, ci) / 1000
++				i = inv(STARTING_INV_ITEM_ENCHANT + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) * 2 + 1, ci) \ 1000, inv(STARTING_INV_ITEM_ENCHANT + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) * 2 + 1, ci) / 1000
+ 				s = ammoname(amp), "" + i + "/" + i(1)
+ 				s = s + ":" + s(1)
+ 				txtef COLOR_GREEN
+ 				txt lang(cdatan(CDATAN_NAME, tc) + "は" + s + "に切り替えた。", "Current Ammo Type")
+ 			}
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/screen.hsp ../2.13-borscht/screen.hsp
 --- ../2.12-borscht/screen.hsp	2022-04-25 14:22:03.639116900 -0700
-+++ ../2.13-borscht/screen.hsp	2022-06-26 12:14:17.490973900 -0700
++++ ../2.13-borscht/screen.hsp	2022-09-18 13:32:39.774077200 -0700
+@@ -150,11 +150,11 @@
+ 	}
+ 	else {
+ 		sxfix = 0
+ 		syfix = 0
+ 		gosub *screen_setPos
+-		gosub *los
++		gosub *label_3905
+ 		gosub *los_draw
+ 	}
+ 	screendrawhack = 10
+ 	gosub *screen_drawStatus
+ 	if ( autoturn == 1 ) {
 @@ -1002,19 +1002,21 @@
  	if ( gdata(GDATA_WIZARD) == 1 ) {
  		pos inf_clockw + 6, inf_clocky + 65
@@ -1376,9 +2902,195 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  			color 0
  			boxf 0, 960, chipi(CHIPI_WIDTH, xy2pic(1, 0)), chipi(CHIPI_HEIGHT, xy2pic(1, 0)) + 960
  			if ( 1 == 528 ) {
+@@ -7084,11 +7142,11 @@
+ 			cell_show sx, sy
+ 		loop
+ 	loop
+ 	return
+ 
+-*los
++*label_3905
+ 	memset slight, 0, (inf_screenw + 4) * (inf_screenh + 4) * 4
+ 	msync++
+ 	sy(2) = cdata(CDATA_Y, CHARA_PLAYER) - 17 / 2, cdata(CDATA_Y, CHARA_PLAYER) + 17 / 2, 17 / 2 - cdata(CDATA_Y, CHARA_PLAYER)
+ 	sx(3) = cdata(CDATA_X, CHARA_PLAYER) - 17 / 2
+ 	if ( cfg_scroll ) {
+@@ -7131,11 +7189,11 @@
+ 				slight(lx - 1, ly + 1) += 128
+ 				lx++
+ 				continue
+ 			}
+ 			if ( gdata(GDATA_AREA) == AREA_PET_ARENA ) {
+-				goto *los_jump
++				goto *label_3907
+ 			}
+ 			if ( cdata(CDATA_CONDITION_BLIND, CHARA_PLAYER) != 0 ) {
+ 				if ( sx != cdata(CDATA_X, CHARA_PLAYER) | sy != cdata(CDATA_Y, CHARA_PLAYER) ) {
+ 					goto *los_jump2
+ 				}
+@@ -7145,11 +7203,11 @@
+ 				if ( sy < sy(3) ) {
+ 					sx(2) = fovlist(0, sy + sy(4)) + sx(3)
+ 					if ( sx >= sx(2) ) {
+ 						if ( sx < fovlist(1, sy + sy(4)) + sx(3) ) {
+ 							if ( fov_los(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), sx, sy) ) {
+-*los_jump
++*label_3907
+ 								mapsync(sx, sy) = msync
+ 								if ( map(sx, sy, MAP_CHARA_INDEX_PLUS_ONE) != 0 ) {
+ 									cdata(CDATA_SYNC, map(sx, sy, MAP_CHARA_INDEX_PLUS_ONE) - 1) = msync
+ 								}
+ 								if ( map(sx, sy, MAP_TILE_ID_MEMORY) != map(sx, sy, MAP_TILE_ID) ) {
+@@ -8525,14 +8583,14 @@
+ 		}
+ 	}
+ 	encharge = 0
+ 	if ( findbuff(cc, BUFF_CHARGE) != (-1) ) {
+ 		repeat 15
+-			if ( inv(40 + cnt * 2, cw) == 0 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw) == 0 ) {
+ 				break
+ 			}
+-			if ( inv(40 + cnt * 2, cw) == 71 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw) == 71 ) {
+ 				encharge = 100
+ 				break
+ 			}
+ 		loop
+ 		if ( encharge == 100 ) {
+@@ -9628,31 +9686,31 @@
+ 			if ( r1 == 0 ) {
+ 				gdata(GDATA_ETHER_SPEED) += 5
+ 			}
+ 		}
+ 		repeat 15
+-			if ( inv(40 + cnt * 2, rp) == 0 ) {
++			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, rp) == 0 ) {
+ 				break
+ 			}
+-			rp2 = inv(40 + cnt * 2, rp)
++			rp2 = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, rp)
+ 			if ( rp2 >= 10000 ) {
+ 				rp3 = rp2 \ 10000
+ 				rp2 = rp2 / 10000
+ 				if ( rp2 == 1 ) {
+-					sdata(rp3, r1) += inv(40 + cnt * 2 + 1, rp) / 50 + 1
++					sdata(rp3, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 50 + 1
+ 					continue
+ 				}
+ 				if ( rp2 == 2 ) {
+-					sdata(rp3, r1) += inv(40 + cnt * 2 + 1, rp) / 2
++					sdata(rp3, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 2
+ 					if ( sdata(rp3, r1) < 0 ) {
+ 						sdata(rp3, r1) = 1
+ 					}
+ 					continue
+ 				}
+ 				if ( rp2 == 3 ) {
+ 					if ( sorg(rp3, r1) != 0 ) {
+-						sdata(rp3, r1) += inv(40 + cnt * 2 + 1, rp) / 50 + 1
++						sdata(rp3, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 50 + 1
+ 						if ( sdata(rp3, r1) < 1 ) {
+ 							sdata(rp3, r1) = 1
+ 						}
+ 					}
+ 					continue
+@@ -9670,13 +9728,13 @@
+ 						gdata(GDATA_GOD_DETECT) = 1
+ 						continue
+ 					}
+ 				}
+ 				if ( rp2 == 29 ) {
+-					sdata(SKILL_ATTR_SPD, r1) += inv(40 + cnt * 2 + 1, rp) / 50 + 1
++					sdata(SKILL_ATTR_SPD, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 50 + 1
+ 					if ( r1 == 0 ) {
+-						gdata(GDATA_TRAVEL_SPEED) += inv(40 + cnt * 2 + 1, rp) / 8
++						gdata(GDATA_TRAVEL_SPEED) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 8
+ 						continue
+ 					}
+ 				}
+ 				if ( rp2 == 32 ) {
+ 					cbitmod CHARA_BIT_FLOAT, r1, TRUE
+@@ -9725,63 +9783,63 @@
+ 				if ( rp2 == 55 ) {
+ 					cbitmod CHARA_BIT_CURE_BLEEDING, r1, TRUE
+ 					continue
+ 				}
+ 				if ( rp2 == 52 ) {
+-					cdata(CDATA_RES_DAMAGE, r1) += inv(40 + cnt * 2 + 1, rp) / 40 + 5
++					cdata(CDATA_RES_DAMAGE, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 40 + 5
+ 					continue
+ 				}
+ 				if ( rp2 == 53 ) {
+-					cdata(CDATA_IMMUNE_DAMAGE, r1) += inv(40 + cnt * 2 + 1, rp) / 60 + 3
++					cdata(CDATA_IMMUNE_DAMAGE, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 60 + 3
+ 					continue
+ 				}
+ 				if ( rp2 == 54 ) {
+-					cdata(CDATA_REFLECT_DAMAGE, r1) += inv(40 + cnt * 2 + 1, rp) / 5
++					cdata(CDATA_REFLECT_DAMAGE, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 5
+ 					continue
+ 				}
+ 				if ( rp2 == 44 ) {
+-					cdata(CDATA_CRIT_CHANCE, r1) += inv(40 + cnt * 2 + 1, rp) / 50
++					cdata(CDATA_CRIT_CHANCE, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 50
+ 					continue
+ 				}
+ 				if ( rp2 == 64 ) {
+-					cdata(CDATA_DEC_ENEMY_CRIT_CHANCE, r1) += inv(40 + cnt * 2 + 1, rp) / 50
++					cdata(CDATA_DEC_ENEMY_CRIT_CHANCE, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 50
+ 					continue
+ 				}
+ 				if ( rp2 == 39 ) {
+-					cdata(CDATA_PIERCING_CHANCE, r1) += inv(40 + cnt * 2 + 1, rp) / 50
++					cdata(CDATA_PIERCING_CHANCE, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 50
+ 					continue
+ 				}
+ 				if ( rp2 == 34 ) {
+-					cdata(CDATA_ENHANCE_SPELL, r1) += inv(40 + cnt * 2 + 1, rp)
++					cdata(CDATA_ENHANCE_SPELL, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp)
+ 					continue
+ 				}
+ 				if ( rp2 == 68 ) {
+-					cdata(CDATA_ENHANCE_BREATH, r1) += inv(40 + cnt * 2 + 1, rp)
++					cdata(CDATA_ENHANCE_BREATH, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp)
+ 					continue
+ 				}
+ 				if ( rp2 == 69 ) {
+-					cdata(CDATA_ROCK_THROWING, r1) += inv(40 + cnt * 2 + 1, rp)
++					cdata(CDATA_ROCK_THROWING, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp)
+ 					continue
+ 				}
+ 				if ( rp2 == 50 ) {
+-					cdata(CDATA_EXTRA_MELEE, r1) += inv(40 + cnt * 2 + 1, rp) / 15
++					cdata(CDATA_EXTRA_MELEE, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 15
+ 					continue
+ 				}
+ 				if ( rp2 == 51 ) {
+-					cdata(CDATA_EXTRA_SHOOT, r1) += inv(40 + cnt * 2 + 1, rp) / 15
++					cdata(CDATA_EXTRA_SHOOT, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 15
+ 					continue
+ 				}
+ 				if ( rp2 == 65 | rp2 == 66 ) {
+ 					cdata(CDATA_EXTRA_ATTACKS, r1)++
+ 					continue
+ 				}
+ 				if ( rp2 == 62 ) {
+-					cdata(CDATA_REFLECT_MAGIC, r1) += inv(40 + cnt * 2 + 1, rp) / 5
++					cdata(CDATA_REFLECT_MAGIC, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 5
+ 					continue
+ 				}
+ 				if ( rp2 == 63 ) {
+-					cdata(CDATA_REMOTE_BLOW, r1) += inv(40 + cnt * 2 + 1, rp) / 2
++					cdata(CDATA_REMOTE_BLOW, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 2
+ 					continue
+ 				}
+ 				if ( rp2 == 21 | rp2 == 45 | rp2 == 46 | rp2 == 47 | rp2 == 72 ) {
+ 					cbitmod CHARA_BIT_RES_CURSE, r1, TRUE
+ 					continue
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/system.hsp ../2.13-borscht/system.hsp
 --- ../2.12-borscht/system.hsp	2022-04-25 14:22:03.671146700 -0700
-+++ ../2.13-borscht/system.hsp	2022-06-26 12:14:17.515997100 -0700
++++ ../2.13-borscht/system.hsp	2022-09-18 13:32:39.827126600 -0700
 @@ -38,11 +38,11 @@
  	}
  	gdata(GDATA_TEMPORARY_FLAGS2) = 0
@@ -1464,7 +3176,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borsch
  		end
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.12-borscht/txtadv.hsp ../2.13-borscht/txtadv.hsp
 --- ../2.12-borscht/txtadv.hsp	2022-04-25 14:22:03.727198700 -0700
-+++ ../2.13-borscht/txtadv.hsp	2022-06-26 12:14:17.581056900 -0700
++++ ../2.13-borscht/txtadv.hsp	2022-09-18 13:32:39.923215800 -0700
 @@ -340,10 +340,11 @@
  	atxid = 0
  	exittempinv

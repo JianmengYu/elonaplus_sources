@@ -588,18 +588,18 @@
 		}
 		locvar_calccostreload_ci = cnt
 		repeat 15
-			if ( inv(40 + cnt * 2, locvar_calccostreload_ci) == 0 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, locvar_calccostreload_ci) == 0 ) {
 				break
 			}
-			locvar_calccostreload_enc = inv(40 + cnt * 2, locvar_calccostreload_ci)
+			locvar_calccostreload_enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, locvar_calccostreload_ci)
 			locvar_calccostreload_i = locvar_calccostreload_enc / 10000
 			if ( locvar_calccostreload_i != 0 ) {
 				locvar_calccostreload_enc = locvar_calccostreload_enc \ 10000
 				if ( locvar_calccostreload_i == 9 ) {
-					locvar_calccostreload_i = inv(40 + cnt * 2 + 1, locvar_calccostreload_ci) \ 1000, inv(40 + cnt * 2 + 1, locvar_calccostreload_ci) / 1000
+					locvar_calccostreload_i = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, locvar_calccostreload_ci) \ 1000, inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, locvar_calccostreload_ci) / 1000
 					locvar_calccosthire_cost += (locvar_calccostreload_i(1) - locvar_calccostreload_i) * (50 + locvar_calccostreload_enc * locvar_calccostreload_enc * 10)
 					if ( calccostreload_arg2 == 1 ) {
-						inv(40 + cnt * 2 + 1, locvar_calccostreload_ci) = locvar_calccostreload_i(1) * 1000 + locvar_calccostreload_i(1)
+						inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, locvar_calccostreload_ci) = locvar_calccostreload_i(1) * 1000 + locvar_calccostreload_i(1)
 					}
 				}
 			}
@@ -623,18 +623,18 @@
 			}
 			locvar_calccostreload_ci = cnt
 			repeat 15
-				if ( inv(40 + cnt * 2, locvar_calccostreload_ci) == 0 ) {
+				if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, locvar_calccostreload_ci) == 0 ) {
 					break
 				}
-				locvar_calccostreload_enc = inv(40 + cnt * 2, locvar_calccostreload_ci)
+				locvar_calccostreload_enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, locvar_calccostreload_ci)
 				locvar_calccostreload_i = locvar_calccostreload_enc / 10000
 				if ( locvar_calccostreload_i != 0 ) {
 					locvar_calccostreload_enc = locvar_calccostreload_enc \ 10000
 					if ( locvar_calccostreload_i == 9 ) {
-						locvar_calccostreload_i = inv(40 + cnt * 2 + 1, locvar_calccostreload_ci) \ 1000, inv(40 + cnt * 2 + 1, locvar_calccostreload_ci) / 1000
+						locvar_calccostreload_i = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, locvar_calccostreload_ci) \ 1000, inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, locvar_calccostreload_ci) / 1000
 						locvar_calccosthire_cost += (locvar_calccostreload_i(1) - locvar_calccostreload_i) * (50 + locvar_calccostreload_enc * locvar_calccostreload_enc * 10)
 						if ( calccostreload_arg2 == 1 ) {
-							inv(40 + cnt * 2 + 1, locvar_calccostreload_ci) = locvar_calccostreload_i(1) * 1000 + locvar_calccostreload_i(1)
+							inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, locvar_calccostreload_ci) = locvar_calccostreload_i(1) * 1000 + locvar_calccostreload_i(1)
 						}
 					}
 				}

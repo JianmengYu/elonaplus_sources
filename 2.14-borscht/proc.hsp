@@ -3824,8 +3824,8 @@
 			cbitmod CHARA_BIT_MAKE_GENE, tc, FALSE
 			gosub *re_select
 			gosub *generate_gene
-			gain_iden tc, CREATURE_ID_BUG, 20
-			gain_iden CREATURE_ID_BUG, tc, 20
+			gain_iden tc, CHARA_PLAYER, 20
+			gain_iden CHARA_PLAYER, tc, 20
 		}
 	}
 	gosub *sleep_draw

@@ -1874,12 +1874,12 @@
 		}
 		ci = cdata(cnt, cc) \ EXT_EQUIP_SLOTS - 1
 		repeat 15
-			if ( inv(40 + cnt * 2, ci) == 0 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 0 ) {
 				break
 			}
-			if ( inv(40 + cnt * 2, ci) == 21 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 21 ) {
 				if ( mdata(MDATA_TYPE) != MAP_TYPE_WORLD ) {
-					if ( rnd(25) < limit(abs(inv(40 + cnt * 2 + 1, ci)) / 50, 1, 25) ) {
+					if ( rnd(25) < limit(abs(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci)) / 50, 1, 25) ) {
 						efid = SKILL_SPELL_TELEPORT
 						tc = cc
 						gosub *effect
@@ -1887,43 +1887,43 @@
 					}
 				}
 			}
-			if ( inv(40 + cnt * 2, ci) == 45 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 45 ) {
 				if ( rnd(4) == 0 ) {
 					if ( synccheck(cc, -1) ) {
 						txtef COLOR_PURPLE
 						txt lang("何かが" + name(cc) + "の血を吸った。", "Something sucks " + name(cc) + your(cc) + " blood.")
 					}
-					cdata(CDATA_CONDITION_BLEED, cc) += abs(inv(40 + cnt * 2 + 1, ci)) / 25 + 3
+					cdata(CDATA_CONDITION_BLEED, cc) += abs(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci)) / 25 + 3
 					continue
 				}
 			}
-			if ( inv(40 + cnt * 2, ci) == 72 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 72 ) {
 				if ( rnd(5) == 0 ) {
 					if ( synccheck(cc, -1) ) {
 						txtef COLOR_PURPLE
 						txt lang("何かが" + name(cc) + "のMPを吸った。", "Something sucks " + name(cc) + your(cc) + " MP.")
 					}
-					cdata(CDATA_CONDITION_MPOISON, cc) += abs(inv(40 + cnt * 2 + 1, ci)) / 50 + 3
+					cdata(CDATA_CONDITION_MPOISON, cc) += abs(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci)) / 50 + 3
 					continue
 				}
 			}
-			if ( inv(40 + cnt * 2, ci) == 46 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 46 ) {
 				if ( rnd(20) == 0 ) {
 					if ( synccheck(cc, -1) ) {
 						txtef COLOR_PURPLE
 						txt lang(name(cc) + "は未熟になった。", name(cc) + " become" + _s(cc) + " inexperienced.")
 					}
-					cdata(CDATA_EXP, cc) -= cdata(CDATA_EXP_TO_NEXT_LVL, cc) / (300 - limit(abs(inv(40 + cnt * 2 + 1, ci)) / 2, 0, 50)) + rnd(100)
+					cdata(CDATA_EXP, cc) -= cdata(CDATA_EXP_TO_NEXT_LVL, cc) / (300 - limit(abs(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci)) / 2, 0, 50)) + rnd(100)
 					if ( cdata(CDATA_EXP, cc) < 0 ) {
 						cdata(CDATA_EXP, cc) = 0
 					}
 					continue
 				}
 			}
-			if ( inv(40 + cnt * 2, ci) == 47 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 47 ) {
 				if ( mdata(MDATA_TYPE) != MAP_TYPE_WORLD ) {
 					if ( mdata(MDATA_TYPE) != MAP_TYPE_HOME ) {
-						if ( rnd(50) < limit(abs(inv(40 + cnt * 2 + 1, ci)) / 50, 1, 50) ) {
+						if ( rnd(50) < limit(abs(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci)) / 50, 1, 50) ) {
 							if ( synccheck(cc, -1) ) {
 								txtef COLOR_PURPLE
 								txt lang("魔力の渦が何かを召喚した！", "Several creatures are summoned from a vortex of magic.")
@@ -3521,7 +3521,7 @@
 	if ( cdata(CDATA_ID, cc) == CREATURE_ID_CUTE_FAIRY ) {
 		if ( cdata(CDATA_RELATION, cc) == RELATION_ALLY ) {
 			if ( nutrition >= 1000 ) {
-				if ( cbit(CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, cc) != FALSE ) {
+				if ( cbit((974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), cc) != FALSE ) {
 					cibk = ci
 					gdata(GDATA_FLAG_CUTE_FAIRY_SEEDS_SPIT)++
 					flt
@@ -3547,7 +3547,7 @@
 						itemcreate -1, ITEM_ID_GEM_SEED, cdata(CDATA_X, cc), cdata(CDATA_Y, cc), 2
 						inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_NORMAL
 					}
-					cbitmod CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, cc, FALSE
+					cbitmod (974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), cc, FALSE
 					txtef COLOR_SKY_BLUE
 					txtmore
 					txt lang("「げふぅ」" + name(cc) + "は種を吐き出した。", "「Ugh-Ughu」 " + name(cc) + " spews up " + itemname(ci, 1) + ".")
@@ -3559,12 +3559,12 @@
 	if ( cdata(CDATA_ID, cc) == CREATURE_ID_GOOSE ) {
 		if ( cdata(CDATA_RELATION, cc) == RELATION_ALLY ) {
 			if ( nutrition >= 1000 ) {
-				if ( cbit(CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, cc) != FALSE ) {
+				if ( cbit((974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), cc) != FALSE ) {
 					snd SOUNDLIST_DING3
 					cibk = ci
 					flt
 					itemcreate -1, ITEM_ID_PLATINUM_COIN, cdata(CDATA_X, cc), cdata(CDATA_Y, cc), 2
-					cbitmod CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, cc, FALSE
+					cbitmod (974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), cc, FALSE
 					txtef COLOR_SKY_BLUE
 					txtmore
 					txt lang(name(cc) + "の産んだ卵が割れて中からプラチナが出てきた。", "「Ugh-Ughu」 " + name(cc) + " laid a platina.")
@@ -3933,17 +3933,17 @@
 		}
 	}
 	repeat 15
-		if ( inv(40 + cnt * 2, ci) == 0 ) {
+		if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 0 ) {
 			break
 		}
-		enc = inv(40 + cnt * 2, ci)
+		enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci)
 		if ( enc == 36 ) {
-			p = rnd(inv(40 + cnt * 2 + 1, ci) / 50 + 1) + 1
+			p = rnd(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 50 + 1) + 1
 			healsp cc, p
 			continue
 		}
 		if ( enc == 38 ) {
-			p = rnd(inv(40 + cnt * 2 + 1, ci) / 25 + 1) + 1
+			p = rnd(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 25 + 1) + 1
 			healmp cc, p / 5
 			continue
 		}
@@ -3955,7 +3955,7 @@
 			if ( gdata(GDATA_TIME_STOP_TIME) == 0 & gdata(GDATA_FLAG_STOP_TIME_OTHER) == 0 ) {
 				txtef COLOR_SKY_BLUE
 				txt lang(name(cc) + "は時を止めた。", name(cc) + " stop" + _s(cc) + " time.")
-				gdata(GDATA_TIME_STOP_TIME) = inv(40 + cnt * 2 + 1, ci) / 100 + 1 + 1
+				gdata(GDATA_TIME_STOP_TIME) = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 100 + 1 + 1
 				continue
 			}
 		}
@@ -3963,8 +3963,8 @@
 		if ( enc2 != 0 ) {
 			enc = enc \ 10000
 			if ( enc2 == 3 ) {
-				skillexp enc, cc, (inv(40 + cnt * 2 + 1, ci) / 50 + 1) * 100 * (1 + (cc != CHARA_PLAYER) * 5)
-				if ( inv(40 + cnt * 2 + 1, ci) / 50 + 1 >= 0 ) {
+				skillexp enc, cc, (inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 50 + 1) * 100 * (1 + (cc != CHARA_PLAYER) * 5)
+				if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 50 + 1 >= 0 ) {
 					txt lang(skillname(enc) + "の参考になる！", skillname(enc) + " develops.")
 				}
 				else {
@@ -3973,8 +3973,8 @@
 				continue
 			}
 			if ( enc2 == 1 ) {
-				skillexp enc, cc, (inv(40 + cnt * 2 + 1, ci) / 50 + 1) * 100 * (1 + (cc != CHARA_PLAYER) * 5)
-				if ( inv(40 + cnt * 2 + 1, ci) / 50 + 1 >= 0 ) {
+				skillexp enc, cc, (inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 50 + 1) * 100 * (1 + (cc != CHARA_PLAYER) * 5)
+				if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 50 + 1 >= 0 ) {
 					txt lang(skillname(enc) + "が発達した。", skillname(enc) + " develops.")
 				}
 				else {
@@ -3983,10 +3983,10 @@
 				continue
 			}
 			if ( enc2 == 10 ) {
-				modgrowth cc, enc, limit((inv(40 + cnt * 2 + 1, ci) / 50 + 1) * 5, -50, 50)
-				if ( inv(40 + cnt * 2 + 1, ci) >= 0 ) {
+				modgrowth cc, enc, limit((inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 50 + 1) * 5, -50, 50)
+				if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) >= 0 ) {
 				}
-				if ( inv(40 + cnt * 2 + 1, ci) / 50 + 1 >= 0 ) {
+				if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 50 + 1 >= 0 ) {
 					txt lang(skillname(enc) + "が回復した。", skillname(enc) + " heals.")
 				}
 				else {
@@ -3995,7 +3995,7 @@
 				continue
 			}
 			if ( enc2 == 6 & enc != 19 ) {
-				addbuff cc, 20 + (enc - 10), (inv(40 + cnt * 2 + 1, ci) / 50 + 1) * 5 * (1 + (cc != CHARA_PLAYER) * 2), 2000
+				addbuff cc, 20 + (enc - 10), (inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 50 + 1) * 5 * (1 + (cc != CHARA_PLAYER) * 2), 2000
 				continue
 			}
 		}

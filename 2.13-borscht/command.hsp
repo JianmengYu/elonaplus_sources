@@ -983,7 +983,7 @@
 				continue
 			}
 		}
-		if ( cdata(CDATA_AREA, cnt) != AREA_NONE ) {
+		if ( cdata(CDATA_AREA, cnt) != 0 ) {
 			if ( allyctrl == 1 | allyctrl == 2 ) {
 				continue
 			}
@@ -1013,7 +1013,7 @@
 			if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
 				continue
 			}
-			if ( cdata(CDATA_AREA, cnt) != AREA_NONE ) {
+			if ( cdata(CDATA_AREA, cnt) != 0 ) {
 				continue
 			}
 		}
@@ -1184,7 +1184,7 @@
 		}
 		if ( allyctrl == 0 | allyctrl == 2 | allyctrl == 3 | allyctrl == 4 | allyctrl == 5 | allyctrl == 6 | allyctrl == 7 | allyctrl == 8 ) {
 			s = "" + cdatan(CDATAN_AKA, i) + " " + cdatan(CDATAN_NAME, i)
-			if ( cdata(CDATA_AREA, i) != AREA_NONE ) {
+			if ( cdata(CDATA_AREA, i) != 0 ) {
 				s = s + "(" + mapname(cdata(CDATA_AREA, i)) + ")"
 			}
 			if ( cbit(CHARA_BIT_RIDE, i) ) {
@@ -2442,10 +2442,10 @@
 			if ( kakunin == 100 ) {
 				break
 			}
-			if ( inv(40 + cnt * 2, ci) == 0 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 0 ) {
 				break
 			}
-			val = inv(40 + cnt * 2, ci), inv(40 + cnt * 2 + 1, ci), 1, 0
+			val = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci), inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci), 1, 0
 			gosub *item_encdetail
 			if ( s == "" ) {
 				continue
@@ -5912,7 +5912,7 @@
 	if ( cbit(CHARA_BIT_BODYGUARD, tc) == FALSE & cbit(CHARA_BIT_GUARD_TEMP, tc) == FALSE ) {
 		if ( tc < MAX_CHARA_FOLLOWER ) {
 			if ( cdata(CDATA_IN_TAGTEAM, tc) != 1 ) {
-				if ( cdata(CDATA_AREA, tc) == AREA_NONE | tc == CHARA_PLAYER ) {
+				if ( cdata(CDATA_AREA, tc) == 0 | tc == CHARA_PLAYER ) {
 					if ( cdata(CDATA_IN_TAGTEAM, tc) == 0 ) {
 						promptl(0, promptmax) = lang("タッグ編成", "Tag organization."), "null", "" + 16
 						promptmax++
@@ -6018,7 +6018,7 @@
 		}
 		rc = tc
 		gosub *add_ally
-		cdata(CDATA_AREA, rc) = AREA_NONE
+		cdata(CDATA_AREA, rc) = 0
 		gosub *screen_draw
 		goto *turn_end
 	}
@@ -6428,7 +6428,7 @@
 				goto *pc_turn
 			}
 			if ( tc != CHARA_PLAYER ) {
-				if ( cdata(CDATA_AREA, ttc) != AREA_NONE | cdata(CDATA_AREA, tc) != AREA_NONE ) {
+				if ( cdata(CDATA_AREA, ttc) != 0 | cdata(CDATA_AREA, tc) != 0 ) {
 					txt lang("滞在中の仲間はタッグを組めない。", "The ally currently stays in this area.")
 					goto *pc_turn
 				}
@@ -14068,10 +14068,10 @@
 	}
 	if ( inv(INV_ITEM_KNOWN, ci) >= ITEM_KNOWN_FULL ) {
 		repeat 15
-			if ( inv(40 + cnt * 2, ci) == 0 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 0 ) {
 				break
 			}
-			val = inv(40 + cnt * 2, ci), inv(40 + cnt * 2 + 1, ci), 0, reftype
+			val = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci), inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci), 0, reftype
 			gosub *item_encdetail
 			listn(0, p) = lang("それは", "It ") + s
 			list(0, p) = rtval, rtval(1)
@@ -15395,10 +15395,10 @@
 	listmax = 0
 	cs = -1
 	repeat 15
-		if ( inv(40 + cnt * 2, ci) == 0 ) {
+		if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 0 ) {
 			break
 		}
-		enc = inv(40 + cnt * 2, ci)
+		enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci)
 		i = enc / 10000
 		if ( i != 0 ) {
 			enc = enc \ 10000
@@ -15432,8 +15432,8 @@
 		}
 		else {
 			p = list(0, cnt - 1)
-			i = inv(40 + p * 2 + 1, ci) \ 1000, inv(40 + p * 2 + 1, ci) / 1000
-			s = ammoname(inv(40 + p * 2, ci) \ 10000), "" + i + "/" + i(1)
+			i = inv(STARTING_INV_ITEM_ENCHANT + p * 2 + 1, ci) \ 1000, inv(STARTING_INV_ITEM_ENCHANT + p * 2 + 1, ci) / 1000
+			s = ammoname(inv(STARTING_INV_ITEM_ENCHANT + p * 2, ci) \ 10000), "" + i + "/" + i(1)
 		}
 		s = s + ":" + s(1)
 		if ( inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) == cnt - 1 ) {

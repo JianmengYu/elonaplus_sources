@@ -7880,7 +7880,7 @@
 				cdata(CDATA_SP_EARNED, gain_iden_charaid2) -= locvar_gain_iden_generes
 			}
 		}
-		if ( gain_iden_charaid1 != CREATURE_ID_BUG ) {
+		if ( gain_iden_charaid1 != CHARA_PLAYER ) {
 			cdata(CDATA_INFANT, gain_iden_charaid2) = cdata(CDATA_ID, gain_iden_charaid1)
 		}
 		txtef COLOR_YELLOW

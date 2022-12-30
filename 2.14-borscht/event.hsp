@@ -2364,7 +2364,7 @@
 					gosub *screen_fade
 					redraw 0
 					gosub *sleep_draw_init
-					gain_iden CREATURE_ID_BUG, tc, 18
+					gain_iden CHARA_PLAYER, tc, 18
 					break
 				}
 			}
@@ -2405,8 +2405,8 @@
 				gosub *screen_fade
 				redraw 0
 				gosub *sleep_draw_init
-				gain_iden CREATURE_ID_BUG, tc, 18
-				gain_iden tc, CREATURE_ID_BUG, 18
+				gain_iden CHARA_PLAYER, tc, 18
+				gain_iden tc, CHARA_PLAYER, 18
 				break
 			}
 		loop

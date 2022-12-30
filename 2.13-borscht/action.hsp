@@ -3688,15 +3688,15 @@
 	attackitem = cw
 	if ( ammo != (-1) ) {
 		if ( inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ammo) != (-1) ) {
-			if ( inv(40 + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ammo) * 2 + 1, ammo) \ 1000 <= 0 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ammo) * 2 + 1, ammo) \ 1000 <= 0 ) {
 				txt lang("通常弾を装填した。", "You load normal ammo.")
 				inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ammo) = -1
 			}
 			else {
-				ammoproc = inv(40 + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ammo) * 2, ammo) \ 10000
+				ammoproc = inv(STARTING_INV_ITEM_ENCHANT + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ammo) * 2, ammo) \ 10000
 				if ( cc == CHARA_PLAYER ) {
 				}
-				inv(40 + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ammo) * 2 + 1, ammo)--
+				inv(STARTING_INV_ITEM_ENCHANT + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ammo) * 2 + 1, ammo)--
 			}
 		}
 	}
@@ -4684,20 +4684,20 @@
 						loop
 						if ( cw2 != (-1) ) {
 							repeat 15
-								if ( inv(40 + cnt * 2, cw2) == 0 ) {
+								if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw2) == 0 ) {
 									break
 								}
-								enc = inv(40 + cnt * 2, cw2)
+								enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw2)
 								if ( dist(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), cdata(CDATA_X, tc), cdata(CDATA_Y, tc)) <= 1 ) {
 									if ( enc == 66 ) {
 										cdata(CDATA_EXTRA_ATTACKS_TYPE, cc) = 1
-										shootp = inv(40 + cnt * 2 + 1, cw2)
+										shootp = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw2)
 										break
 									}
 								}
 								if ( enc == 65 ) {
 									cdata(CDATA_EXTRA_ATTACKS_TYPE, cc) = 2
-									shootp = inv(40 + cnt * 2 + 1, cw2)
+									shootp = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw2)
 									break
 								}
 							loop
@@ -4705,20 +4705,20 @@
 								if ( cw3 != (-1) ) {
 									cw2 = cw3
 									repeat 15
-										if ( inv(40 + cnt * 2, cw2) == 0 ) {
+										if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw2) == 0 ) {
 											break
 										}
-										enc = inv(40 + cnt * 2, cw2)
+										enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw2)
 										if ( dist(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), cdata(CDATA_X, tc), cdata(CDATA_Y, tc)) <= 1 ) {
 											if ( enc == 66 ) {
 												cdata(CDATA_EXTRA_ATTACKS_TYPE, cc) = 1
-												shootp = inv(40 + cnt * 2 + 1, cw2)
+												shootp = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw2)
 												break
 											}
 										}
 										if ( enc == 65 ) {
 											cdata(CDATA_EXTRA_ATTACKS_TYPE, cc) = 2
-											shootp = inv(40 + cnt * 2 + 1, cw2)
+											shootp = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw2)
 											break
 										}
 									loop
@@ -4728,20 +4728,20 @@
 								if ( cw4 != (-1) ) {
 									cw2 = cw4
 									repeat 15
-										if ( inv(40 + cnt * 2, cw2) == 0 ) {
+										if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw2) == 0 ) {
 											break
 										}
-										enc = inv(40 + cnt * 2, cw2)
+										enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw2)
 										if ( dist(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), cdata(CDATA_X, tc), cdata(CDATA_Y, tc)) <= 1 ) {
 											if ( enc == 66 ) {
 												cdata(CDATA_EXTRA_ATTACKS_TYPE, cc) = 1
-												shootp = inv(40 + cnt * 2 + 1, cw2)
+												shootp = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw2)
 												break
 											}
 										}
 										if ( enc == 65 ) {
 											cdata(CDATA_EXTRA_ATTACKS_TYPE, cc) = 2
-											shootp = inv(40 + cnt * 2 + 1, cw2)
+											shootp = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw2)
 											break
 										}
 									loop
@@ -5548,12 +5548,12 @@
 	}
 	repeat 15
 		cw = attackitem
-		if ( inv(40 + cnt * 2, cw) == 0 ) {
+		if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw) == 0 ) {
 			break
 		}
-		enc = inv(40 + cnt * 2, cw)
+		enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw)
 		if ( enc == 36 ) {
-			p = rnd(inv(40 + cnt * 2 + 1, cw) / 50 + 1) + 1
+			p = rnd(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw) / 50 + 1) + 1
 			if ( cdata(CDATA_SP, tc) > 0 ) {
 				healsp cc, rnd(2) + 1
 			}
@@ -5568,7 +5568,7 @@
 			continue
 		}
 		if ( enc == 38 ) {
-			p = (rnd(inv(40 + cnt * 2 + 1, cw) / 100 + 1) + 20) * limit(orgdmg / 500, 1, 50) - cdata(CDATA_PV, tc)
+			p = (rnd(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw) / 100 + 1) + 20) * limit(orgdmg / 500, 1, 50) - cdata(CDATA_PV, tc)
 			if ( 0 ) {
 				txtef COLOR_SKY_BLUE
 				txt lang("マナダメ" + p + "オリダメ" + orgdmg + "。", name(cc) + " stop" + _s(cc) + " time.")
@@ -5596,7 +5596,7 @@
 					animeload 42, cc
 					txtef COLOR_SKY_BLUE
 					txt lang(name(cc) + "は時を止めた。", name(cc) + " stop" + _s(cc) + " time.")
-					gdata(GDATA_TIME_STOP_TIME) = limit(inv(40 + cnt * 2 + 1, cw) / 100 + 1 + 1, 2, 6)
+					gdata(GDATA_TIME_STOP_TIME) = limit(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw) / 100 + 1 + 1, 2, 6)
 					await
 					snd SOUNDLIST_CHEST1
 				}
@@ -5621,7 +5621,7 @@
 			s = refchara(cdata(CDATA_ID, tc), DBSPEC_CHARA_FILTER, 1)
 			if ( instr(s, 0, "/dragon/") != (-1) ) {
 				gdata(GDATA_DMG_TYPE) = 1
-				dmghp tc, orgdmg / 30 * ((rnd(20) + limit(inv(40 + cnt * 2 + 1, cw), 1, 2000)) / 50) + 1, cc
+				dmghp tc, orgdmg / 30 * ((rnd(20) + limit(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw), 1, 2000)) / 50) + 1, cc
 				subdmg = 0
 			}
 			continue
@@ -5630,7 +5630,7 @@
 			s = refchara(cdata(CDATA_ID, tc), DBSPEC_CHARA_FILTER, 1)
 			if ( instr(s, 0, "/god/") != (-1) ) {
 				gdata(GDATA_DMG_TYPE) = 1
-				dmghp tc, orgdmg / 30 * ((rnd(20) + limit(inv(40 + cnt * 2 + 1, cw), 1, 2000)) / 50) + 1, cc
+				dmghp tc, orgdmg / 30 * ((rnd(20) + limit(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw), 1, 2000)) / 50) + 1, cc
 				subdmg = 0
 			}
 			continue
@@ -5639,7 +5639,7 @@
 			s = refchara(cdata(CDATA_ID, tc), DBSPEC_CHARA_FILTER, 1)
 			if ( instr(s, 0, "/undead/") != (-1) ) {
 				gdata(GDATA_DMG_TYPE) = 1
-				dmghp tc, orgdmg / 30 * ((rnd(20) + limit(inv(40 + cnt * 2 + 1, cw), 1, 2000)) / 50) + 1, cc
+				dmghp tc, orgdmg / 30 * ((rnd(20) + limit(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw), 1, 2000)) / 50) + 1, cc
 				subdmg = 0
 			}
 			continue
@@ -5647,7 +5647,7 @@
 		if ( enc == 76 ) {
 			if ( cbit(CHARA_BIT_FLOAT, tc) == TRUE ) {
 				gdata(GDATA_DMG_TYPE) = 1
-				dmghp tc, orgdmg / 120 * ((rnd(10) + limit(inv(40 + cnt * 2 + 1, cw), 1, 2000)) / 50) + 1, cc
+				dmghp tc, orgdmg / 120 * ((rnd(10) + limit(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw), 1, 2000)) / 50) + 1, cc
 				subdmg = 0
 			}
 			continue
@@ -5655,7 +5655,7 @@
 		if ( enc == 84 ) {
 			if ( cbit(CHARA_BIT_METAL, tc) == TRUE ) {
 				gdata(GDATA_DMG_TYPE) = 1
-				dmghp tc, orgdmg / 25 * ((rnd(100) + limit(inv(40 + cnt * 2 + 1, cw), 1, 2000)) / 50) + 100, cc
+				dmghp tc, orgdmg / 25 * ((rnd(100) + limit(inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw), 1, 2000)) / 50) + 100, cc
 				subdmg = 0
 			}
 			continue
@@ -5673,7 +5673,7 @@
 					ele = SKILL_NONE
 				}
 				gdata(GDATA_DMG_TYPE) = 1
-				dmghp tc, orgdmg / 10 * (rnd(100) + inv(40 + cnt * 2 + 1, cw)) / 100 + 1, cc, ele, inv(40 + cnt * 2 + 1, cw) / 2 + 100
+				dmghp tc, orgdmg / 10 * (rnd(100) + inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw)) / 100 + 1, cc, ele, inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw) / 2 + 100
 				subdmg = 0
 				continue
 			}
@@ -5702,9 +5702,9 @@
 				tlocy = cdata(CDATA_Y, tc)
 				if ( rnd(100) < p ) {
 					gdata(GDATA_ACTIVATE_PROC) = 100
-					efpori = inv(40 + cnt * 2 + 1, cw) + sdata(attackskill, cc) * 10
+					efpori = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw) + sdata(attackskill, cc) * 10
 					efid = enc
-					efp = inv(40 + cnt * 2 + 1, cw) + sdata(attackskill, cc) * 10
+					efp = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, cw) + sdata(attackskill, cc) * 10
 					gosub *effect
 				}
 				gdata(GDATA_ACTIVATE_PROC) = 0
@@ -7317,7 +7317,7 @@
 				if ( list(0, rtval) == (-7) ) {
 					taiseip = taisei \ 9
 					if ( taiseip == 0 ) {
-						encadd ci, ENCHANT_BANE_GOD, 80, 0, 1
+						encadd ci, ENCHANT_GOD_BANE, 80, 0, 1
 					}
 					if ( taiseip == 1 ) {
 						encadd ci, ENCHANT_BANE_UNDEAD, 130, 0, 1
@@ -7352,11 +7352,11 @@
 					txt lang("その力は次第に脅威になっている。", "Its power is becoming a threat.")
 					encadd ci, ENCHANT_SUCK_BLOOD, 50
 					if ( stat == 0 ) {
-						inv(40 + (15 - 1) * 2, ci) = 0
+						inv(STARTING_INV_ITEM_ENCHANT + (15 - 1) * 2, ci) = 0
 						txt lang(itemname(ci) + "はエンチャントを消した。", itemname(ci) + " removes an enchantment.")
 						encadd ci, ENCHANT_SUCK_BLOOD, 50
 						if ( stat == 0 ) {
-							inv(40 + (15 - 2) * 2, ci) = 0
+							inv(STARTING_INV_ITEM_ENCHANT + (15 - 2) * 2, ci) = 0
 							txt lang(itemname(ci) + "はさらにエンチャントを消した。", itemname(ci) + " removes an enchantment.")
 						}
 					}
@@ -10270,20 +10270,20 @@
 					}
 					ci = cnt
 					repeat 15
-						if ( inv(40 + cnt * 2, ci) == 0 ) {
+						if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 0 ) {
 							break
 						}
-						enc = inv(40 + cnt * 2, ci)
+						enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci)
 						i = enc / 10000
 						if ( i != 0 ) {
 							enc = enc \ 10000
 							if ( i == 9 ) {
-								i = inv(40 + cnt * 2 + 1, ci) \ 1000, inv(40 + cnt * 2 + 1, ci) / 1000
-								if ( inv(40 + cnt * 2, ci) \ 10000 == 4 ) {
+								i = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) \ 1000, inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 1000
+								if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) \ 10000 == 4 ) {
 									continue
 								}
 								cost += (i(1) - i) * (50 + enc * enc * 10)
-								inv(40 + cnt * 2 + 1, ci) = i(1) * 1000 + i(1)
+								inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) = i(1) * 1000 + i(1)
 							}
 						}
 					loop
@@ -13607,15 +13607,15 @@
 					}
 					change = 0
 					repeat 15
-						if ( inv(40 + cnt * 2, ci) == 0 ) {
+						if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 0 ) {
 							break
 						}
-						enc = inv(40 + cnt * 2, ci)
+						enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci)
 						i = enc / 10000
 						if ( i != 0 ) {
 							enc = enc \ 10000
 							if ( i == 9 ) {
-								if ( inv(40 + cnt * 2, ci) \ 10000 == amp ) {
+								if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) \ 10000 == amp ) {
 									inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) = cnt
 									change = 1
 									break
@@ -13629,7 +13629,7 @@
 					}
 					snd SOUNDLIST_AMMO
 					change = 0
-					i = inv(40 + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) * 2 + 1, ci) \ 1000, inv(40 + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) * 2 + 1, ci) / 1000
+					i = inv(STARTING_INV_ITEM_ENCHANT + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) * 2 + 1, ci) \ 1000, inv(STARTING_INV_ITEM_ENCHANT + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) * 2 + 1, ci) / 1000
 					s = ammoname(amp), "" + i + "/" + i(1)
 					s = s + ":" + s(1)
 					txtef COLOR_GREEN
@@ -17514,7 +17514,7 @@
 				loop
 			}
 		}
-		cdata(CDATA_AREA, tc) = AREA_NONE
+		cdata(CDATA_AREA, tc) = 0
 		chara_vanquish tc
 		skillexp SKILL_NORMAL_GENE_ENGINEER, CHARA_PLAYER, 1200
 		randomize

@@ -3767,7 +3767,7 @@
 		}
 		healsan tc, 10
 		if ( cbit(CHARA_BIT_LAY_HANDS, tc) | cdata(CDATA_ID, tc) == CREATURE_ID_GOOSE | cdata(CDATA_ID, tc) == CREATURE_ID_CUTE_FAIRY ) {
-			cbitmod CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, tc, TRUE
+			cbitmod (974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), tc, TRUE
 		}
 	loop
 	cdata(CDATA_EVOCHAT_POINTS, CHARA_PLAYER) = 10
@@ -5668,7 +5668,7 @@
 				cxinit = cdata(CDATA_X, cc)
 				cyinit = cdata(CDATA_Y, cc)
 				gosub *place_chara
-				cdata(CDATA_AREA, rc) = AREA_NONE
+				cdata(CDATA_AREA, rc) = 0
 				txtef COLOR_YELLOW
 				txt cnven(cdatan(CDATAN_NAME, rc)) + lang("は復活した！", " " + have(rc) + " been resurrected!")
 				txtvalid = 0
@@ -9836,7 +9836,7 @@
 			}
 			goto *effect_end
 		}
-		if ( cdata(CDATA_AREA, tc) != AREA_NONE ) {
+		if ( cdata(CDATA_AREA, tc) != 0 ) {
 			txt lang("その仲間はこの場所に滞在中だ。", "The ally currently stays in this area.")
 			goto *effect_end
 		}
@@ -10483,7 +10483,7 @@
 		cxinit = cdata(CDATA_X, cc)
 		cyinit = cdata(CDATA_Y, cc)
 		gosub *place_chara
-		cdata(CDATA_AREA, rc) = AREA_NONE
+		cdata(CDATA_AREA, rc) = 0
 		txtef COLOR_YELLOW
 		txt cnven(cdatan(CDATAN_NAME, rc)) + lang("は復活した！", " " + have(rc) + " been resurrected!")
 		txtvalid = 0
@@ -17404,7 +17404,7 @@
 				}
 				map(cdata(CDATA_X, rc), cdata(CDATA_Y, rc), MAP_CHARA_INDEX_PLUS_ONE) = 0
 				cdata(CDATA_EXIST, rc) = CHAR_STATE_ALLY_WAIT
-				cdata(CDATA_AREA, rc) = AREA_NONE
+				cdata(CDATA_AREA, rc) = 0
 				if ( cdata(CDATA_IN_TAGTEAM, rc) == (-1) ) {
 					ttc = cdata(CDATA_TAGTEAM_PARTNER, rc)
 					cell_setchara ttc, cdata(CDATA_X, rc), cdata(CDATA_Y, rc)
@@ -17440,7 +17440,7 @@
 			cxinit = cdata(CDATA_X, CHARA_PLAYER)
 			cyinit = cdata(CDATA_Y, CHARA_PLAYER)
 			gosub *place_chara
-			cdata(CDATA_AREA, rc) = AREA_NONE
+			cdata(CDATA_AREA, rc) = 0
 		}
 		gosub *screen_draw
 		return 0
@@ -23626,15 +23626,15 @@
 				}
 				change = 0
 				repeat 15
-					if ( inv(40 + cnt * 2, ci) == 0 ) {
+					if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 0 ) {
 						break
 					}
-					enc = inv(40 + cnt * 2, ci)
+					enc = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci)
 					i = enc / 10000
 					if ( i != 0 ) {
 						enc = enc \ 10000
 						if ( i == 9 ) {
-							if ( inv(40 + cnt * 2, ci) \ 10000 == amp ) {
+							if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) \ 10000 == amp ) {
 								inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) = cnt
 								change = 1
 								break
@@ -23649,7 +23649,7 @@
 				}
 				snd SOUNDLIST_AMMO
 				change = 0
-				i = inv(40 + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) * 2 + 1, ci) \ 1000, inv(40 + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) * 2 + 1, ci) / 1000
+				i = inv(STARTING_INV_ITEM_ENCHANT + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) * 2 + 1, ci) \ 1000, inv(STARTING_INV_ITEM_ENCHANT + inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) * 2 + 1, ci) / 1000
 				s = ammoname(amp), "" + i + "/" + i(1)
 				s = s + ":" + s(1)
 				txtef COLOR_GREEN

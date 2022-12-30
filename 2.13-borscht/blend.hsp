@@ -591,13 +591,13 @@
 	if ( locvar_window_recipe_p > 0 ) {
 		repeat locvar_window_recipe_p
 			locvar_window_recipe_cnt2 = locvar_window_recipe_inhlist(cnt)
-			if ( inv(40 + locvar_window_recipe_cnt2 * 2, window_recipe_itemid) == 0 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + locvar_window_recipe_cnt2 * 2, window_recipe_itemid) == 0 ) {
 				break
 			}
-			val = inv(40 + locvar_window_recipe_cnt2 * 2, window_recipe_itemid), inv(40 + locvar_window_recipe_cnt2 * 2 + 1, window_recipe_itemid), 0, refitem(inv(INV_ITEM_ID, window_recipe_itemid), DBSPEC_TYPE)
+			val = inv(STARTING_INV_ITEM_ENCHANT + locvar_window_recipe_cnt2 * 2, window_recipe_itemid), inv(STARTING_INV_ITEM_ENCHANT + locvar_window_recipe_cnt2 * 2 + 1, window_recipe_itemid), 0, refitem(inv(INV_ITEM_ID, window_recipe_itemid), DBSPEC_TYPE)
 			gosub *item_encdetail
 			color 0, 0, 100
-			if ( inv(40 + locvar_window_recipe_cnt2 * 2 + 1, window_recipe_itemid) < 0 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + locvar_window_recipe_cnt2 * 2 + 1, window_recipe_itemid) < 0 ) {
 				color 180, 0, 0
 			}
 			pos locvar_window_recipe_dx, locvar_window_recipe_dy
@@ -779,7 +779,7 @@
 	rpid = STARTING_RPID + 23
 	rplistdef(length(rplistdef)) = 1 * EXT_RECIPES + rpid
 	rpdatan(rpid) = lang("ハーブ調合", "herb infusion")
-	rpdata(RPDATA_ITEM, rpid) = (10000 /*!!!@[RECIPE_BLEND_ACTION_HERBED_FOOD @@@ STARTING_RECIPE_BLEND_ACTION]@!!! */), 60, 1
+	rpdata(RPDATA_ITEM, rpid) = RECIPE_BLEND_ACTION_HERBED_FOOD, 60, 1
 	rpdata(RPDATA_SKILL + 0 * 2, rpid) = SKILL_NORMAL_GARDENING, 20, SKILL_NORMAL_COOKING, 30
 	rpdata(RPDATA_MAT + 0, rpid) = FILTER_ITEM_FOOD, ITEM_ID_STOMAFILLIA, ITEM_ID_CURARIA, RF_HERB
 	rpid = STARTING_RPID + 24
@@ -1636,7 +1636,7 @@
 			ti = rpref(10 + 0 * 2)
 			inv(INV_ITEM_NUM, ti)++
 		}
-		if ( rpdata(RPDATA_ITEM, rpid) >= (10000 /*!!!@[RECIPE_BLEND_ACTION_HERBED_FOOD @@@ STARTING_RECIPE_BLEND_ACTION]@!!! */) ) {
+		if ( rpdata(RPDATA_ITEM, rpid) >= RECIPE_BLEND_ACTION_HERBED_FOOD ) {
 			gosub *blend_act
 		}
 		if ( rpdata(RPDATA_ITEM, rpid) == ITEM_ID_RICE_BALL ) {
@@ -2089,7 +2089,7 @@
 			inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_NORMAL
 			item_identify ci, ITEM_KNOWN_FULL
 		}
-		if ( rpdata(RPDATA_ITEM, rpid) < (10000 /*!!!@[RECIPE_BLEND_ACTION_HERBED_FOOD @@@ STARTING_RECIPE_BLEND_ACTION]@!!! */) ) {
+		if ( rpdata(RPDATA_ITEM, rpid) < RECIPE_BLEND_ACTION_HERBED_FOOD ) {
 			txtef COLOR_GREEN
 			txt lang(itemname(ci, 1) + "の作成に成功した！", "You successfully create " + itemname(ci, 1) + "!")
 		}

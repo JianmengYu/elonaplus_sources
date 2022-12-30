@@ -152,7 +152,7 @@
 		sxfix = 0
 		syfix = 0
 		gosub *screen_setPos
-		gosub *los
+		gosub *label_3905
 		gosub *los_draw
 	}
 	screendrawhack = 10
@@ -7144,7 +7144,7 @@
 	loop
 	return
 
-*los
+*label_3905
 	memset slight, 0, (inf_screenw + 4) * (inf_screenh + 4) * 4
 	msync++
 	sy(2) = cdata(CDATA_Y, CHARA_PLAYER) - 17 / 2, cdata(CDATA_Y, CHARA_PLAYER) + 17 / 2, 17 / 2 - cdata(CDATA_Y, CHARA_PLAYER)
@@ -7191,7 +7191,7 @@
 				continue
 			}
 			if ( gdata(GDATA_AREA) == AREA_PET_ARENA ) {
-				goto *los_jump
+				goto *label_3907
 			}
 			if ( cdata(CDATA_CONDITION_BLIND, CHARA_PLAYER) != 0 ) {
 				if ( sx != cdata(CDATA_X, CHARA_PLAYER) | sy != cdata(CDATA_Y, CHARA_PLAYER) ) {
@@ -7205,7 +7205,7 @@
 					if ( sx >= sx(2) ) {
 						if ( sx < fovlist(1, sy + sy(4)) + sx(3) ) {
 							if ( fov_los(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), sx, sy) ) {
-*los_jump
+*label_3907
 								mapsync(sx, sy) = msync
 								if ( map(sx, sy, MAP_CHARA_INDEX_PLUS_ONE) != 0 ) {
 									cdata(CDATA_SYNC, map(sx, sy, MAP_CHARA_INDEX_PLUS_ONE) - 1) = msync
@@ -8585,10 +8585,10 @@
 	encharge = 0
 	if ( findbuff(cc, BUFF_CHARGE) != (-1) ) {
 		repeat 15
-			if ( inv(40 + cnt * 2, cw) == 0 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw) == 0 ) {
 				break
 			}
-			if ( inv(40 + cnt * 2, cw) == 71 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, cw) == 71 ) {
 				encharge = 100
 				break
 			}
@@ -9688,19 +9688,19 @@
 			}
 		}
 		repeat 15
-			if ( inv(40 + cnt * 2, rp) == 0 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, rp) == 0 ) {
 				break
 			}
-			rp2 = inv(40 + cnt * 2, rp)
+			rp2 = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, rp)
 			if ( rp2 >= 10000 ) {
 				rp3 = rp2 \ 10000
 				rp2 = rp2 / 10000
 				if ( rp2 == 1 ) {
-					sdata(rp3, r1) += inv(40 + cnt * 2 + 1, rp) / 50 + 1
+					sdata(rp3, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 50 + 1
 					continue
 				}
 				if ( rp2 == 2 ) {
-					sdata(rp3, r1) += inv(40 + cnt * 2 + 1, rp) / 2
+					sdata(rp3, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 2
 					if ( sdata(rp3, r1) < 0 ) {
 						sdata(rp3, r1) = 1
 					}
@@ -9708,7 +9708,7 @@
 				}
 				if ( rp2 == 3 ) {
 					if ( sorg(rp3, r1) != 0 ) {
-						sdata(rp3, r1) += inv(40 + cnt * 2 + 1, rp) / 50 + 1
+						sdata(rp3, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 50 + 1
 						if ( sdata(rp3, r1) < 1 ) {
 							sdata(rp3, r1) = 1
 						}
@@ -9730,9 +9730,9 @@
 					}
 				}
 				if ( rp2 == 29 ) {
-					sdata(SKILL_ATTR_SPD, r1) += inv(40 + cnt * 2 + 1, rp) / 50 + 1
+					sdata(SKILL_ATTR_SPD, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 50 + 1
 					if ( r1 == 0 ) {
-						gdata(GDATA_TRAVEL_SPEED) += inv(40 + cnt * 2 + 1, rp) / 8
+						gdata(GDATA_TRAVEL_SPEED) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 8
 						continue
 					}
 				}
@@ -9785,47 +9785,47 @@
 					continue
 				}
 				if ( rp2 == 52 ) {
-					cdata(CDATA_RES_DAMAGE, r1) += inv(40 + cnt * 2 + 1, rp) / 40 + 5
+					cdata(CDATA_RES_DAMAGE, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 40 + 5
 					continue
 				}
 				if ( rp2 == 53 ) {
-					cdata(CDATA_IMMUNE_DAMAGE, r1) += inv(40 + cnt * 2 + 1, rp) / 60 + 3
+					cdata(CDATA_IMMUNE_DAMAGE, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 60 + 3
 					continue
 				}
 				if ( rp2 == 54 ) {
-					cdata(CDATA_REFLECT_DAMAGE, r1) += inv(40 + cnt * 2 + 1, rp) / 5
+					cdata(CDATA_REFLECT_DAMAGE, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 5
 					continue
 				}
 				if ( rp2 == 44 ) {
-					cdata(CDATA_CRIT_CHANCE, r1) += inv(40 + cnt * 2 + 1, rp) / 50
+					cdata(CDATA_CRIT_CHANCE, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 50
 					continue
 				}
 				if ( rp2 == 64 ) {
-					cdata(CDATA_DEC_ENEMY_CRIT_CHANCE, r1) += inv(40 + cnt * 2 + 1, rp) / 50
+					cdata(CDATA_DEC_ENEMY_CRIT_CHANCE, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 50
 					continue
 				}
 				if ( rp2 == 39 ) {
-					cdata(CDATA_PIERCING_CHANCE, r1) += inv(40 + cnt * 2 + 1, rp) / 50
+					cdata(CDATA_PIERCING_CHANCE, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 50
 					continue
 				}
 				if ( rp2 == 34 ) {
-					cdata(CDATA_ENHANCE_SPELL, r1) += inv(40 + cnt * 2 + 1, rp)
+					cdata(CDATA_ENHANCE_SPELL, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp)
 					continue
 				}
 				if ( rp2 == 68 ) {
-					cdata(CDATA_ENHANCE_BREATH, r1) += inv(40 + cnt * 2 + 1, rp)
+					cdata(CDATA_ENHANCE_BREATH, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp)
 					continue
 				}
 				if ( rp2 == 69 ) {
-					cdata(CDATA_ROCK_THROWING, r1) += inv(40 + cnt * 2 + 1, rp)
+					cdata(CDATA_ROCK_THROWING, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp)
 					continue
 				}
 				if ( rp2 == 50 ) {
-					cdata(CDATA_EXTRA_MELEE, r1) += inv(40 + cnt * 2 + 1, rp) / 15
+					cdata(CDATA_EXTRA_MELEE, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 15
 					continue
 				}
 				if ( rp2 == 51 ) {
-					cdata(CDATA_EXTRA_SHOOT, r1) += inv(40 + cnt * 2 + 1, rp) / 15
+					cdata(CDATA_EXTRA_SHOOT, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 15
 					continue
 				}
 				if ( rp2 == 65 | rp2 == 66 ) {
@@ -9833,11 +9833,11 @@
 					continue
 				}
 				if ( rp2 == 62 ) {
-					cdata(CDATA_REFLECT_MAGIC, r1) += inv(40 + cnt * 2 + 1, rp) / 5
+					cdata(CDATA_REFLECT_MAGIC, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 5
 					continue
 				}
 				if ( rp2 == 63 ) {
-					cdata(CDATA_REMOTE_BLOW, r1) += inv(40 + cnt * 2 + 1, rp) / 2
+					cdata(CDATA_REMOTE_BLOW, r1) += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, rp) / 2
 					continue
 				}
 				if ( rp2 == 21 | rp2 == 45 | rp2 == 46 | rp2 == 47 | rp2 == 72 ) {

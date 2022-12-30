@@ -165,7 +165,7 @@
 		invfile = cdata(CDATA_ROLE_FILE_ID, tc)
 		gosub *shop_init
 		if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= bkrestock ) {
-			cbitmod CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, tc, TRUE
+			cbitmod (974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), tc, TRUE
 		}
 		if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= bkrestock ) {
 			if ( cdata(CDATA_ROLE, tc) != ROLE_SHOP_BOOK_RESERVE ) {
@@ -1473,7 +1473,7 @@
 		}
 		cbitmod CHARA_BIT_GUEST, tc, FALSE
 		cdata(CDATA_ROLE, tc) = ROLE_NONE
-		cdata(CDATA_AREA, tc) = AREA_HOME
+		cdata(CDATA_AREA, tc) = 7
 		goto *chat_event_SWEND1
 		_switch_sw++
 	}
@@ -25152,20 +25152,20 @@
 						p += 10000
 					}
 					repeat 15
-						if ( inv(40 + cnt * 2 + 1, ci) > 0 ) {
-							if ( inv(40 + cnt * 2, ci) >= 10000 ) {
-								if ( inv(40 + cnt * 2, ci) / 10000 == 6 ) {
+						if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) > 0 ) {
+							if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) >= 10000 ) {
+								if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) / 10000 == 6 ) {
 									p += 100
 									continue
 								}
-								if ( inv(40 + cnt * 2, ci) / 10000 == 1 ) {
-									p -= inv(40 + cnt * 2 + 1, ci) * 6 / 10
+								if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) / 10000 == 1 ) {
+									p -= inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) * 6 / 10
 								}
-								if ( inv(40 + cnt * 2, ci) / 10000 == 3 ) {
-									p -= inv(40 + cnt * 2 + 1, ci) / 2
+								if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) / 10000 == 3 ) {
+									p -= inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 2
 								}
 							}
-							p += inv(40 + cnt * 2 + 1, ci)
+							p += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci)
 						}
 					loop
 					listmax = 0
@@ -25541,20 +25541,20 @@
 						p += 10000
 					}
 					repeat 15
-						if ( inv(40 + cnt * 2 + 1, ci) > 0 ) {
-							if ( inv(40 + cnt * 2, ci) >= 10000 ) {
-								if ( inv(40 + cnt * 2, ci) / 10000 == 6 ) {
+						if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) > 0 ) {
+							if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) >= 10000 ) {
+								if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) / 10000 == 6 ) {
 									p += 100
 									continue
 								}
-								if ( inv(40 + cnt * 2, ci) / 10000 == 1 ) {
-									p -= inv(40 + cnt * 2 + 1, ci) * 6 / 10
+								if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) / 10000 == 1 ) {
+									p -= inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) * 6 / 10
 								}
-								if ( inv(40 + cnt * 2, ci) / 10000 == 3 ) {
-									p -= inv(40 + cnt * 2 + 1, ci) / 2
+								if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) / 10000 == 3 ) {
+									p -= inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) / 2
 								}
 							}
-							p += inv(40 + cnt * 2 + 1, ci)
+							p += inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci)
 						}
 					loop
 					if ( inv(INV_ITEM_QUALITY, ci) == FIX_QUALITY_MIRACLE ) {
@@ -25590,7 +25590,7 @@
 				ii = -1
 				repeat 15
 					if ( ii == (-1) ) {
-						if ( inv(40 + cnt * 2, ci) == 0 ) {
+						if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) == 0 ) {
 							ii = cnt
 						}
 					}
@@ -25624,7 +25624,7 @@
 						goto *chat_end
 					}
 					if ( chatval == 2 ) {
-						if ( inv(40 + (15 - 1) * 2, cibk) == 37 | inv(40 + (15 - 1) * 2, cibk) == 45 ) {
+						if ( inv(STARTING_INV_ITEM_ENCHANT + (15 - 1) * 2, cibk) == 37 | inv(STARTING_INV_ITEM_ENCHANT + (15 - 1) * 2, cibk) == 45 ) {
 							listmax = 0
 							buff = lang("消去とな？ふむ、このエンチャントだと…ちょっと無理じゃな…すまんのう。", "So you are also of the same genus as the others...")
 							tc = tc * (0 == 0) + (0 != 0) * 0
@@ -25656,8 +25656,8 @@
 						snd SOUNDLIST_BUILD1
 						await 300
 						snd SOUNDLIST_BUILD1
-						inv(40 + (15 - 1) * 2 + 1, cibk) = 0
-						inv(40 + (15 - 1) * 2, cibk) = 0
+						inv(STARTING_INV_ITEM_ENCHANT + (15 - 1) * 2 + 1, cibk) = 0
+						inv(STARTING_INV_ITEM_ENCHANT + (15 - 1) * 2, cibk) = 0
 						txt lang(itemname(cibk) + "のエンチャントがひとつ消えた。", itemname(cibk) + " removes an enchantment.")
 					}
 				}
@@ -30229,8 +30229,8 @@
 					inv(INV_ITEM_LEVEL, ci) = 0
 				}
 				repeat 15
-					inv(40 + cnt * 2 + 1, ci) = 0
-					inv(40 + cnt * 2, ci) = 0
+					inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, ci) = 0
+					inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, ci) = 0
 				loop
 				r1 = 0
 				gosub *charaRefresh
@@ -38290,7 +38290,7 @@
 					}
 				}
 				map(cdata(CDATA_X, cnt), cdata(CDATA_Y, cnt), MAP_CHARA_INDEX_PLUS_ONE) = 0
-				cdata(CDATA_AREA, cnt) = AREA_NONE
+				cdata(CDATA_AREA, cnt) = 0
 			loop
 			tc = CHARA_PLAYER
 			repeat 200
@@ -42660,7 +42660,7 @@
 			}
 		}
 		map(cdata(CDATA_X, cnt), cdata(CDATA_Y, cnt), MAP_CHARA_INDEX_PLUS_ONE) = 0
-		cdata(CDATA_AREA, cnt) = AREA_NONE
+		cdata(CDATA_AREA, cnt) = 0
 	loop
 	tc = CHARA_PLAYER
 	repeat 200
@@ -46059,7 +46059,7 @@
 		}
 		map(cdata(CDATA_X, tc), cdata(CDATA_Y, tc), MAP_CHARA_INDEX_PLUS_ONE) = 0
 		cdata(CDATA_EXIST, tc) = CHAR_STATE_ALLY_WAIT
-		cdata(CDATA_AREA, tc) = AREA_NONE
+		cdata(CDATA_AREA, tc) = 0
 		if ( cdata(CDATA_IN_TAGTEAM, tc) == (-1) ) {
 			ttc = cdata(CDATA_TAGTEAM_PARTNER, tc)
 			cell_setchara ttc, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
@@ -48745,7 +48745,7 @@
 			rc = tc
 			gosub *add_ally
 			cdata(CDATA_ROLE, rc) = ROLE_NONE
-			cdata(CDATA_AREA, rc) = AREA_NONE
+			cdata(CDATA_AREA, rc) = 0
 			cdata(CDATA_IMPRESSION, tc) = 100
 			rc = oc
 			gosub *adv_generate
@@ -49091,7 +49091,7 @@
 		goto *chat_default
 	}
 	if ( chatval == 113 ) {
-		if ( cbit(CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, tc) == FALSE ) {
+		if ( cbit((974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), tc) == FALSE ) {
 			buff = lang("今は余ってない" + _na(2), "It's not left over now.")
 			goto *chat_default
 		}
@@ -49101,7 +49101,7 @@
 		gdata(GDATA_FLAG_TOTAL_POTION_PLUGS) += plug
 		txtef COLOR_GREEN
 		txt lang("ポーションの栓を" + plug + "個手に入れた。[残り" + gdata(GDATA_FLAG_TOTAL_POTION_PLUGS) + "個]", name(0) + " get " + plug + " potion plugs.[Remaining plug " + gdata(GDATA_FLAG_TOTAL_POTION_PLUGS) + "]")
-		cbitmod CHARA_BIT_EXCLUSIVE_SKILL_CHARGE, tc, FALSE
+		cbitmod (974 /*!!!@[CHARA_BIT_EXCLUSIVE_SKILL_CHARGE @@@ CHARA_BIT_LAY_HAND_CHARGE]@!!! */), tc, FALSE
 		goto *chat_default
 	}
 	if ( chatval == 64 ) {

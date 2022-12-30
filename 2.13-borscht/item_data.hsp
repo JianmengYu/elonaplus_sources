@@ -4,7 +4,7 @@
 	getinheritance_arg3 = 0
 	repeat 10
 		locvar_getinheritance_p = rnd(15)
-		if ( inv(40 + locvar_getinheritance_p * 2, getinheritance_arg1) == 0 ) {
+		if ( inv(STARTING_INV_ITEM_ENCHANT + locvar_getinheritance_p * 2, getinheritance_arg1) == 0 ) {
 			continue
 		}
 		locvar_getinheritance_f = 0
@@ -17,7 +17,7 @@
 		if ( locvar_getinheritance_f == 1 ) {
 			continue
 		}
-		if ( rnd(4) > getinheritance_arg3 | inv(40 + locvar_getinheritance_p * 2 + 1, getinheritance_arg1) < 0 ) {
+		if ( rnd(4) > getinheritance_arg3 | inv(STARTING_INV_ITEM_ENCHANT + locvar_getinheritance_p * 2 + 1, getinheritance_arg1) < 0 ) {
 			getinheritance_arg2(getinheritance_arg3) = locvar_getinheritance_p
 			getinheritance_arg3++
 		}
@@ -254,7 +254,7 @@
 	encref(ENCREF_GENERATE_CHANCE, ENCHANT_REWARD_QUALITY) = 100, 120, 300, FILTER_FURNITURE
 	encref(ENCREF_GENERATE_CHANCE, ENCHANT_DRUNK_LISTENER) = 100, 120, 300, FILTER_FURNITURE
 	encref(ENCREF_GENERATE_CHANCE, ENCHANT_FOOD) = 100, 120, 300, FILTER_ITEM_FOOD
-	encref(ENCREF_GENERATE_CHANCE, ENCHANT_BANE_GOD) = 2, 170, 150, FILTER_WEAPON, FILTER_RANGE
+	encref(ENCREF_GENERATE_CHANCE, ENCHANT_GOD_BANE) = 2, 170, 150, FILTER_WEAPON, FILTER_RANGE
 	encref(ENCREF_GENERATE_CHANCE, ENCHANT_BANE_FLYING) = 2, 170, 150, FILTER_WEAPON, FILTER_RANGE
 	encref(ENCREF_GENERATE_CHANCE, ENCHANT_BANE_METAL) = 2, 170, 150, FILTER_WEAPON, FILTER_RANGE
 	encref(ENCREF_GENERATE_CHANCE, ENCHANT_REFLECT_MAGIC) = 3, 180, 250, FILTER_SHIELD, FILTER_CLOAK
@@ -1741,12 +1741,12 @@
 		locvar_sortenc_f = 0
 		repeat 15 - 1
 			locvar_sortenc_cnt2 = cnt + 1
-			if ( inv(40 + cnt * 2, sortenc_arg1) < inv(40 + locvar_sortenc_cnt2 * 2, sortenc_arg1) ) {
-				locvar_randomenc_p = inv(40 + cnt * 2, sortenc_arg1), inv(40 + cnt * 2 + 1, sortenc_arg1)
-				inv(40 + cnt * 2, sortenc_arg1) = inv(40 + locvar_sortenc_cnt2 * 2, sortenc_arg1)
-				inv(40 + locvar_sortenc_cnt2 * 2, sortenc_arg1) = locvar_randomenc_p
-				inv(40 + cnt * 2 + 1, sortenc_arg1) = inv(40 + locvar_sortenc_cnt2 * 2 + 1, sortenc_arg1)
-				inv(40 + locvar_sortenc_cnt2 * 2 + 1, sortenc_arg1) = locvar_randomenc_p(1)
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, sortenc_arg1) < inv(STARTING_INV_ITEM_ENCHANT + locvar_sortenc_cnt2 * 2, sortenc_arg1) ) {
+				locvar_randomenc_p = inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, sortenc_arg1), inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, sortenc_arg1)
+				inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, sortenc_arg1) = inv(STARTING_INV_ITEM_ENCHANT + locvar_sortenc_cnt2 * 2, sortenc_arg1)
+				inv(STARTING_INV_ITEM_ENCHANT + locvar_sortenc_cnt2 * 2, sortenc_arg1) = locvar_randomenc_p
+				inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, sortenc_arg1) = inv(STARTING_INV_ITEM_ENCHANT + locvar_sortenc_cnt2 * 2 + 1, sortenc_arg1)
+				inv(STARTING_INV_ITEM_ENCHANT + locvar_sortenc_cnt2 * 2 + 1, sortenc_arg1) = locvar_randomenc_p(1)
 				locvar_sortenc_f = 1
 			}
 		loop
@@ -1772,10 +1772,10 @@
 	locvar_encremove_enc = encremove_arg2
 	locvar_encremove_encp = encremove_arg3
 	repeat 15
-		if ( inv(40 + cnt * 2, encremove_arg1) == locvar_encremove_enc ) {
-			inv(40 + cnt * 2 + 1, encremove_arg1) -= locvar_encremove_encp
-			if ( inv(40 + cnt * 2 + 1, encremove_arg1) == 0 ) {
-				inv(40 + cnt * 2, encremove_arg1) = 0
+		if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, encremove_arg1) == locvar_encremove_enc ) {
+			inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, encremove_arg1) -= locvar_encremove_encp
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2 + 1, encremove_arg1) == 0 ) {
+				inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, encremove_arg1) = 0
 			}
 			break
 		}
@@ -1920,12 +1920,12 @@
 	}
 	locvar_encadd_i = -1
 	repeat 15
-		if ( inv(40 + cnt * 2, encadd_itemidx) == locvar_encremove_enc ) {
+		if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, encadd_itemidx) == locvar_encremove_enc ) {
 			locvar_encadd_i = cnt
 			continue
 		}
 		if ( locvar_encadd_i == (-1) ) {
-			if ( inv(40 + cnt * 2, encadd_itemidx) == 0 ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + cnt * 2, encadd_itemidx) == 0 ) {
 				locvar_encadd_i = cnt
 			}
 		}
@@ -1933,14 +1933,14 @@
 	if ( locvar_encadd_i == (-1) ) {
 		return 0
 	}
-	if ( inv(40 + locvar_encadd_i * 2, encadd_itemidx) == locvar_encremove_enc ) {
+	if ( inv(STARTING_INV_ITEM_ENCHANT + locvar_encadd_i * 2, encadd_itemidx) == locvar_encremove_enc ) {
 		if ( reftype == FILTER_AMMO ) {
 			return
 		}
 		if ( encadd_arg5 ) {
 		}
 		else {
-			if ( inv(40 + locvar_encadd_i * 2 + 1, encadd_itemidx) > 300 | ibit(ITEM_BIT_PRECIOUS, encadd_itemidx) == TRUE ) {
+			if ( inv(STARTING_INV_ITEM_ENCHANT + locvar_encadd_i * 2 + 1, encadd_itemidx) > 300 | ibit(ITEM_BIT_PRECIOUS, encadd_itemidx) == TRUE ) {
 				locvar_encremove_encp /= 2
 			}
 		}
@@ -1949,10 +1949,10 @@
 		rtval = locvar_encremove_enc, locvar_encremove_encp
 		return
 	}
-	if ( inv(40 + locvar_encadd_i * 2, encadd_itemidx) == locvar_encremove_enc ) {
-		locvar_encremove_encp += inv(40 + locvar_encadd_i * 2 + 1, encadd_itemidx)
+	if ( inv(STARTING_INV_ITEM_ENCHANT + locvar_encadd_i * 2, encadd_itemidx) == locvar_encremove_enc ) {
+		locvar_encremove_encp += inv(STARTING_INV_ITEM_ENCHANT + locvar_encadd_i * 2 + 1, encadd_itemidx)
 	}
-	inv(40 + locvar_encadd_i * 2, encadd_itemidx) = locvar_encremove_enc, locvar_encremove_encp
+	inv(STARTING_INV_ITEM_ENCHANT + locvar_encadd_i * 2, encadd_itemidx) = locvar_encremove_enc, locvar_encremove_encp
 	if ( encadd_enchant < EXT_ENCHANTMENT ) {
 		locvar_encremove_p = encadd_enchant
 	}

@@ -821,7 +821,7 @@
 					goto *label_4602
 				}
 				if ( gdata(GDATA_AREA) == AREA_HOME ) {
-					cdata(CDATA_AREA, c) = AREA_NONE
+					cdata(CDATA_AREA, c) = 0
 					txt lang(cdatan(CDATAN_NAME, c) + "の滞在を取り消した。", cdatan(CDATAN_NAME, c) + " " + is(c) + " no longer staying at your home.")
 					cdata(CDATA_HOME, c) = 0
 				}

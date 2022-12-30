@@ -705,7 +705,7 @@
 			continue
 		}
 		if ( cdata(CDATA_AREA, cnt) == removeworker_arg1 ) {
-			cdata(CDATA_AREA, cnt) = AREA_NONE
+			cdata(CDATA_AREA, cnt) = 0
 		}
 	loop
 	return

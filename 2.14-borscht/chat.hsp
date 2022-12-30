@@ -44285,8 +44285,8 @@
 						txt "\"You are awesome!", "\"Oh my god....", "\"Okay, okay, you win!", "\"Holy...!"
 					}
 				}
-				gain_iden tc, CREATURE_ID_BUG, 15
-				gain_iden CREATURE_ID_BUG, tc, 15
+				gain_iden tc, CHARA_PLAYER, 15
+				gain_iden CHARA_PLAYER, tc, 15
 				gosub *music_play
 				goto *chat_end
 				return
