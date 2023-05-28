@@ -1,0 +1,176 @@
+--- ../2.17-borscht/db_creature.hsp	2023-05-12 09:05:57.700098400 +0800
++++ ../2.18-borscht/db_creature.hsp	2023-05-28 09:12:52.221573200 +0800
+@@ -727,25 +727,25 @@
+ 	}
+ 	dbsum += 60000 / (500 + abs(objlv - 68) * 400) + 1
+ 	dblist(0, dbmax) = 1060, dbsum
+ 	dbmax++
+ 
+-*label_6850
++*label_6884
+ 	if ( 30 > objlv ) {
+-		goto *label_6852
++		goto *label_6886
+ 	}
+ 	if ( fltselect != 1 ) {
+-		goto *label_6852
++		goto *label_6886
+ 	}
+ 	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
+ 		if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
+-			goto *label_6852
++			goto *label_6886
+ 		}
+ 	}
+ 	if ( fltnrace != "" ) {
+-		if ( fltnrace != "god" ) {
+-			goto *label_6852
++		if ( fltnrace != "servant" ) {
++			goto *label_6886
+ 		}
+ 	}
+ 	if ( filtermax != 0 ) {
+ 		dbtmp = 1
+ 		repeat filtermax
+@@ -760,25 +760,25 @@
+ 	}
+ 	dbsum += 30000 / (500 + abs(objlv - 30) * 400) + 1
+ 	dblist(0, dbmax) = 1059, dbsum
+ 	dbmax++
+ 
+-*label_6852
++*label_6886
+ 	if ( 30 > objlv ) {
+-		goto *label_6854
++		goto *label_6888
+ 	}
+ 	if ( fltselect != 1 ) {
+-		goto *label_6854
++		goto *label_6888
+ 	}
+ 	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
+ 		if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
+-			goto *label_6854
++			goto *label_6888
+ 		}
+ 	}
+ 	if ( fltnrace != "" ) {
+-		if ( fltnrace != "god" ) {
+-			goto *label_6854
++		if ( fltnrace != "servant" ) {
++			goto *label_6888
+ 		}
+ 	}
+ 	if ( filtermax != 0 ) {
+ 		dbtmp = 1
+ 		repeat filtermax
+@@ -793,25 +793,25 @@
+ 	}
+ 	dbsum += 30000 / (500 + abs(objlv - 30) * 400) + 1
+ 	dblist(0, dbmax) = 1058, dbsum
+ 	dbmax++
+ 
+-*label_6854
++*label_6888
+ 	if ( 30 > objlv ) {
+-		goto *label_6856
++		goto *label_6890
+ 	}
+ 	if ( fltselect != 1 ) {
+-		goto *label_6856
++		goto *label_6890
+ 	}
+ 	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
+ 		if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
+-			goto *label_6856
++			goto *label_6890
+ 		}
+ 	}
+ 	if ( fltnrace != "" ) {
+-		if ( fltnrace != "god" ) {
+-			goto *label_6856
++		if ( fltnrace != "servant" ) {
++			goto *label_6890
+ 		}
+ 	}
+ 	if ( filtermax != 0 ) {
+ 		dbtmp = 1
+ 		repeat filtermax
+@@ -37573,11 +37573,11 @@
+ 				return "" + "/god/"
+ 			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_REF ) {
+-			dbidn = "god"
++			dbidn = "servant"
+ 			dbmode = DBMODE_REF
+ 			gosub *db_race
+ 			cpicref = 1052
+ 			cpicref += 0 * 1000
+ 			return
+@@ -37610,11 +37610,11 @@
+ 				cdatan(CDATAN_NAME, rc) = "green dark guardian"
+ 			}
+ 			cdata(CDATA_RELATION, rc) = RELATION_ENEMY
+ 			cdata(CDATA_RELATION_ORG, rc) = RELATION_ENEMY
+ 			cdata(CDATA_ALIGNMENT, rc) = -10000
+-			dbidn = "god"
++			dbidn = "servant"
+ 			dbmode = DBMODE_SET
+ 			gosub *db_race
+ 			dbidn = "gunner"
+ 			dbmode = DBMODE_SET
+ 			gosub *db_class
+@@ -37654,11 +37654,11 @@
+ 				return "" + "/god/"
+ 			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_REF ) {
+-			dbidn = "god"
++			dbidn = "servant"
+ 			dbmode = DBMODE_REF
+ 			gosub *db_race
+ 			cpicref = 1051
+ 			cpicref += 0 * 1000
+ 			return
+@@ -37691,11 +37691,11 @@
+ 				cdatan(CDATAN_NAME, rc) = "blue dark guardian"
+ 			}
+ 			cdata(CDATA_RELATION, rc) = RELATION_ENEMY
+ 			cdata(CDATA_RELATION_ORG, rc) = RELATION_ENEMY
+ 			cdata(CDATA_ALIGNMENT, rc) = -10000
+-			dbidn = "god"
++			dbidn = "servant"
+ 			dbmode = DBMODE_SET
+ 			gosub *db_race
+ 			dbidn = "wizard"
+ 			dbmode = DBMODE_SET
+ 			gosub *db_class
+@@ -37730,11 +37730,11 @@
+ 				return "" + "/god/"
+ 			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_REF ) {
+-			dbidn = "god"
++			dbidn = "servant"
+ 			dbmode = DBMODE_REF
+ 			gosub *db_race
+ 			cpicref = 1050
+ 			cpicref += 0 * 1000
+ 			return
+@@ -37766,11 +37766,11 @@
+ 				cdatan(CDATAN_NAME, rc) = "crimson dark guardian"
+ 			}
+ 			cdata(CDATA_RELATION, rc) = RELATION_ENEMY
+ 			cdata(CDATA_RELATION_ORG, rc) = RELATION_ENEMY
+ 			cdata(CDATA_ALIGNMENT, rc) = -10000
+-			dbidn = "god"
++			dbidn = "servant"
+ 			dbmode = DBMODE_SET
+ 			gosub *db_race
+ 			dbidn = "predator"
+ 			dbmode = DBMODE_SET
+ 			gosub *db_class
