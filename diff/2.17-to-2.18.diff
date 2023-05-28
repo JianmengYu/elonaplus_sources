@@ -1,6 +1,6 @@
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/action.hsp ../2.18-borscht/action.hsp
 --- ../2.17-borscht/action.hsp	2023-05-12 09:05:56.518673900 +0800
-+++ ../2.18-borscht/action.hsp	2023-05-28 09:12:50.939588900 +0800
++++ ../2.18-borscht/action.hsp	2023-05-28 09:55:48.015818800 +0800
 @@ -610,11 +610,11 @@
  				snd SOUNDLIST_BASH1
  			}
@@ -616,7 +616,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  		_switch_sw++
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/ai.hsp ../2.18-borscht/ai.hsp
 --- ../2.17-borscht/ai.hsp	2023-05-12 09:05:56.554694600 +0800
-+++ ../2.18-borscht/ai.hsp	2023-05-28 09:12:50.970922300 +0800
++++ ../2.18-borscht/ai.hsp	2023-05-28 09:55:48.084606700 +0800
 @@ -2996,10 +2996,17 @@
  			if ( rnd(10) == 0 ) {
  				act = SKILL_SPACT_DRAIN_BLOOD
@@ -657,7 +657,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  					act = SKILL_SPACT_VENOTRATE
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/calculation.hsp ../2.18-borscht/calculation.hsp
 --- ../2.17-borscht/calculation.hsp	2023-05-12 09:05:56.594441600 +0800
-+++ ../2.18-borscht/calculation.hsp	2023-05-28 09:12:51.008822300 +0800
++++ ../2.18-borscht/calculation.hsp	2023-05-28 09:55:48.170410300 +0800
 @@ -154,37 +154,17 @@
  			if ( inv(INV_ITEM_KNOWN, calcitemvalue_itemid) >= ITEM_KNOWN_FULL ) {
  				locvar_calcitemvalue_value = inv(INV_ITEM_VALUE, calcitemvalue_itemid)
@@ -778,7 +778,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  			cdata(CDATA_EMO_ICON, r1) = 14 + 100
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/chara.hsp ../2.18-borscht/chara.hsp
 --- ../2.17-borscht/chara.hsp	2023-05-12 09:05:56.623419300 +0800
-+++ ../2.18-borscht/chara.hsp	2023-05-28 09:12:51.036709500 +0800
++++ ../2.18-borscht/chara.hsp	2023-05-28 10:41:35.765731400 +0800
 @@ -396,25 +396,41 @@
  			txtef COLOR_YELLOW
  			txt lang("あなたは「" + skillname(SKILL_SPACT_MANA_BURST) + "」の能力を得た。", "You have learned new ability, " + skillname(SKILL_SPACT_MANA_BURST) + ".")
@@ -826,7 +826,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  			txtef COLOR_YELLOW
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/chara_func.hsp ../2.18-borscht/chara_func.hsp
 --- ../2.17-borscht/chara_func.hsp	2023-05-12 09:05:56.674316700 +0800
-+++ ../2.18-borscht/chara_func.hsp	2023-05-28 09:12:51.088571800 +0800
++++ ../2.18-borscht/chara_func.hsp	2023-05-28 09:55:48.358873200 +0800
 @@ -1097,10 +1097,13 @@
  		cdata(CDATA_SPEED_FIX, CHARA_PLAYER) -= 30
  	}
@@ -917,7 +917,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  			}
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/chat.hsp ../2.18-borscht/chat.hsp
 --- ../2.17-borscht/chat.hsp	2023-05-12 09:05:56.977556800 +0800
-+++ ../2.18-borscht/chat.hsp	2023-05-28 09:12:51.467556800 +0800
++++ ../2.18-borscht/chat.hsp	2023-05-28 09:55:49.184694400 +0800
 @@ -17484,10 +17484,12 @@
  			flt
  			itemcreate -1, ITEM_ID_SMALL_MEDAL, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), 3
@@ -972,7 +972,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  			}
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/chips.hsp ../2.18-borscht/chips.hsp
 --- ../2.17-borscht/chips.hsp	2023-05-12 09:05:57.007868500 +0800
-+++ ../2.18-borscht/chips.hsp	2023-05-28 09:12:51.484512100 +0800
++++ ../2.18-borscht/chips.hsp	2023-05-28 09:55:49.228545900 +0800
 @@ -23,11 +23,11 @@
  				locvar_create_pcpic_body = iequiploc(locvar_create_pcpic_i)
  				gosub *pcc_wear
@@ -1782,7 +1782,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  	chipc(CHIPC_HEIGHT, xy2pic(4, 35)) = inf_tiles * 2, inf_tiles + 16
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/command.hsp ../2.18-borscht/command.hsp
 --- ../2.17-borscht/command.hsp	2023-05-12 09:05:57.079124000 +0800
-+++ ../2.18-borscht/command.hsp	2023-05-28 09:12:51.562303500 +0800
++++ ../2.18-borscht/command.hsp	2023-05-28 12:29:09.029283400 +0800
 @@ -3802,11 +3802,11 @@
  	page = 0
  	pagesize = 16
@@ -1901,7 +1901,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  		color 20, 10, 0
  		if ( cdata(CDATA_ROLE, cc) == ROLE_ADVENTURER | cc < MAX_CHARA_FOLLOWER ) {
 -			s = lang("レベル", "Level"), lang("経験", "EXP"), lang("必要値", "Next Lv"), lang("信仰", "God"), lang("所属", "Guild")
-+			s = lang("レベル", "Level"), lang("必要値", "Next Lv"), lang("信仰", "God"), lang("所属", "Guild"), lang("成長力", "Grow Rate"), ""
++			s = lang("レベル", "Level"), lang("必要値", "Next Lv"), lang("信仰", "God"), lang("所属", "Guild"), lang("成長力", "Growth"), ""
  		}
  		else {
 -			s = lang("レベル", "Level"), lang("経験", "EXP"), lang("必要値", "Next Lv"), lang("信仰", "God"), ""
@@ -1959,7 +1959,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  	noteadd fixtxt("職業       : " + classname, 30) + fixtxt("所属      : " + guildname(), 32)
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/event.hsp ../2.18-borscht/event.hsp
 --- ../2.17-borscht/event.hsp	2023-05-12 09:05:58.374391600 +0800
-+++ ../2.18-borscht/event.hsp	2023-05-28 09:12:52.901861900 +0800
++++ ../2.18-borscht/event.hsp	2023-05-28 11:13:53.502436700 +0800
 @@ -30,212 +30,218 @@
  		if ( mode != MODELIST_TXT_ADV ) {
  			id = 31
@@ -2709,7 +2709,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  	gosub *autoTurn_pic
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/god.hsp ../2.18-borscht/god.hsp
 --- ../2.17-borscht/god.hsp	2023-05-12 09:05:58.383348200 +0800
-+++ ../2.18-borscht/god.hsp	2023-05-28 09:12:52.912839900 +0800
++++ ../2.18-borscht/god.hsp	2023-05-28 09:55:53.334562100 +0800
 @@ -266,10 +266,13 @@
  	}
  	return
@@ -2726,7 +2726,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  		buff += lang("特殊能力: 精密攻撃(自動:与える物理ダメージを+20%)<p>", "Ability : Mani's covering fire (Passive: Increase physical damage you<br>give.)<p>")
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/help.hsp ../2.18-borscht/help.hsp
 --- ../2.17-borscht/help.hsp	2023-05-12 09:05:58.444185700 +0800
-+++ ../2.18-borscht/help.hsp	2023-05-28 09:12:52.971685600 +0800
++++ ../2.18-borscht/help.hsp	2023-05-28 09:55:53.509092200 +0800
 @@ -5351,11 +5351,11 @@
  	}
  	if ( mode == MODELIST_QUICK_START ) {
@@ -2879,7 +2879,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  			ci = rnd(invrange) + invhead
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/init.hsp ../2.18-borscht/init.hsp
 --- ../2.17-borscht/init.hsp	2023-05-12 09:05:58.568883600 +0800
-+++ ../2.18-borscht/init.hsp	2023-05-28 09:12:53.100327700 +0800
++++ ../2.18-borscht/init.hsp	2023-05-28 09:55:53.867174000 +0800
 @@ -1466,13 +1466,13 @@
  		return
  	}
@@ -3115,7 +3115,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  		if ( ci >= 0 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/item.hsp ../2.18-borscht/item.hsp
 --- ../2.17-borscht/item.hsp	2023-05-12 09:05:58.598261600 +0800
-+++ ../2.18-borscht/item.hsp	2023-05-28 09:12:53.130223100 +0800
++++ ../2.18-borscht/item.hsp	2023-05-28 09:55:53.940938600 +0800
 @@ -93,11 +93,11 @@
  	isetplantherbf = ITEM_ID_STOMAFILLIA, ITEM_ID_CURARIA, ITEM_ID_MORGIA
  	isetdrinkinn = ITEM_ID_COFFEE, ITEM_ID_COLA, ITEM_ID_BARLEY_TEA, ITEM_ID_GREEN_TEA, ITEM_ID_BLACK_TEA, ITEM_ID_JUICE
@@ -3303,7 +3303,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  			if ( cdata(CDATA_SPINDLE_COMBINATION_B, CHARA_PLAYER) == 8 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/item_data.hsp ../2.18-borscht/item_data.hsp
 --- ../2.17-borscht/item_data.hsp	2023-05-12 09:05:58.616497800 +0800
-+++ ../2.18-borscht/item_data.hsp	2023-05-28 09:12:53.148175300 +0800
++++ ../2.18-borscht/item_data.hsp	2023-05-28 09:55:54.006760800 +0800
 @@ -118,11 +118,11 @@
  	return
  
@@ -3319,7 +3319,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  	}
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/item_func.hsp ../2.18-borscht/item_func.hsp
 --- ../2.17-borscht/item_func.hsp	2023-05-12 09:05:58.632482700 +0800
-+++ ../2.18-borscht/item_func.hsp	2023-05-28 09:12:53.167155100 +0800
++++ ../2.18-borscht/item_func.hsp	2023-05-28 09:55:54.078570100 +0800
 @@ -945,10 +945,18 @@
  		}
  		if ( ibit(ITEM_BIT_ACIDPROOF, itemowner_itemid) != TRUE ) {
@@ -3341,7 +3341,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  				if ( inv(INV_ITEM_ID, itemowner_itemid) == ITEM_ID_FISH ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/main.hsp ../2.18-borscht/main.hsp
 --- ../2.17-borscht/main.hsp	2023-05-12 09:05:58.636472300 +0800
-+++ ../2.18-borscht/main.hsp	2023-05-28 09:12:53.171114300 +0800
++++ ../2.18-borscht/main.hsp	2023-05-28 09:55:54.089539200 +0800
 @@ -181,11 +181,11 @@
  	if ( dbg_randseed != 0 ) {
  		randseed = dbg_randseed
@@ -3357,7 +3357,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  	netrequest netload_filename
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/map.hsp ../2.18-borscht/map.hsp
 --- ../2.17-borscht/map.hsp	2023-05-12 09:05:58.716376500 +0800
-+++ ../2.18-borscht/map.hsp	2023-05-28 09:12:53.254890500 +0800
++++ ../2.18-borscht/map.hsp	2023-05-28 09:55:54.389737200 +0800
 @@ -411,10 +411,15 @@
  	}
  	if ( gdata(GDATA_AREA) == AREA_DRAGON_VOLCANO ) {
@@ -3933,7 +3933,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  	adata(ADATA_X, p) = 41
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/map_func.hsp ../2.18-borscht/map_func.hsp
 --- ../2.17-borscht/map_func.hsp	2023-05-12 09:05:58.735368200 +0800
-+++ ../2.18-borscht/map_func.hsp	2023-05-28 09:12:53.276830200 +0800
++++ ../2.18-borscht/map_func.hsp	2023-05-28 09:55:54.468526800 +0800
 @@ -143,12 +143,18 @@
  	if ( gdata(GDATA_AREA) == AREA_WEST_RASKILIS ) {
  		tile_downstairs = xy2pic(2, 7)
@@ -3972,7 +3972,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  	}
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/map_user.hsp ../2.18-borscht/map_user.hsp
 --- ../2.17-borscht/map_user.hsp	2023-05-12 09:05:58.763251700 +0800
-+++ ../2.18-borscht/map_user.hsp	2023-05-28 09:12:53.306749900 +0800
++++ ../2.18-borscht/map_user.hsp	2023-05-28 09:55:54.555341400 +0800
 @@ -54,11 +54,11 @@
  		txt lang("それはワールドマップでしか使えない。", "You can only use it in the world map.")
  		gosub *screen_draw
@@ -3988,7 +3988,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  	area = -1
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/module.hsp ../2.18-borscht/module.hsp
 --- ../2.17-borscht/module.hsp	2023-05-12 09:05:58.820403000 +0800
-+++ ../2.18-borscht/module.hsp	2023-05-28 09:12:53.373605800 +0800
++++ ../2.18-borscht/module.hsp	2023-05-28 09:55:54.741793800 +0800
 @@ -431,10 +431,13 @@
  				if ( cdata(STARTING_CDATA_FOOD_EXP + skillexp_skillid - 10, skillexp_charid) > 0 ) {
  					locvar_skillmod_exp = locvar_skillmod_exp * (100 + cdata(STARTING_CDATA_FOOD_EXP + skillexp_skillid - 10, skillexp_charid)) / 100
@@ -4208,7 +4208,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  								if ( locvar_cell_draw_c != 0 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/proc.hsp ../2.18-borscht/proc.hsp
 --- ../2.17-borscht/proc.hsp	2023-05-12 09:05:58.947027400 +0800
-+++ ../2.18-borscht/proc.hsp	2023-05-28 09:12:53.503637200 +0800
++++ ../2.18-borscht/proc.hsp	2023-05-28 09:55:55.138732000 +0800
 @@ -1596,11 +1596,11 @@
  								p = limit((p + 1) / 5 + 1, 1, 30)
  							}
@@ -4702,7 +4702,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  		}
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/screen.hsp ../2.18-borscht/screen.hsp
 --- ../2.17-borscht/screen.hsp	2023-05-12 09:05:59.015441000 +0800
-+++ ../2.18-borscht/screen.hsp	2023-05-28 09:12:53.578438500 +0800
++++ ../2.18-borscht/screen.hsp	2023-05-28 09:55:55.337200100 +0800
 @@ -1101,13 +1101,58 @@
  			color 0, 0, 0
  			bmes "You can surrender by pressing the ESC key.", 235, 235, 235
@@ -4863,7 +4863,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borsch
  
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.17-borscht/system.hsp ../2.18-borscht/system.hsp
 --- ../2.17-borscht/system.hsp	2023-05-12 09:05:59.035386200 +0800
-+++ ../2.18-borscht/system.hsp	2023-05-28 09:12:53.598384800 +0800
++++ ../2.18-borscht/system.hsp	2023-05-28 09:55:55.386069800 +0800
 @@ -38,11 +38,11 @@
  	}
  	gdata(GDATA_TEMPORARY_FLAGS2) = 0

@@ -4426,7 +4426,7 @@
 #define global	ITEM_ID_POT_OF_ALCHEMIST	790
 #define global	ITEM_ID_DRAGON_SLAYER	791
 #define global	ITEM_ID_PUTITORO	792
-#define global	MAX_ITEM_ID	ITEM_ID_WHITE_DARK_ORB + 3
+#define global	MAX_ITEM_ID	ITEM_ID_SAZAE + 3
 #define global	MAX_ITEM_DBID	1499
 #define global	ITEM_ID_PILE_DRIVER	793
 #define global	ITEM_ID_NEGATIVE_EDGE	794

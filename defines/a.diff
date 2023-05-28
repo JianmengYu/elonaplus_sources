@@ -1,5 +1,5 @@
---- ./2.17.hsp	2023-05-28 09:08:53.106587000 +0800
-+++ ./2.18.hsp	2023-05-28 09:08:53.151433300 +0800
+--- ./2.17.hsp	2023-05-28 09:55:28.236703000 +0800
++++ ./2.18.hsp	2023-05-28 09:55:28.374336400 +0800
 @@ -866,10 +866,11 @@
  #define global	CHARA_BIT_MAGNETISM_N_POLE	1030
  #define global	CHARA_BIT_UPLIFTED_WHILE_CASTING	1031
@@ -7,7 +7,7 @@
  #define global	CHARA_BIT_PROHIBIT_EATING_FROM_GROUND	1033
  #define global	CHARA_BIT_BIRTHED_CHILD	1034
 +#define global	CHARA_BIT_SHADOW_CLONE	1035
- 
+
  // Group: chara_id
  #define global	CREATURE_ID_BUG	0
  #define global	CREATURE_ID_SHOPKEEPER	1
@@ -19,9 +19,9 @@
  #define global	CHARACTER_TIER_SUMMONED_GOD_TRUCE	30
  #define global	CHARACTER_TIER_SUMMONED_GOD_HOME	40
 +#define global	CHARACTER_TIER_SHIP_HULL_ENDURANCE	5
- 
+
  // Group: characreate_loc
- 
+
  // Group: chipc
  #define global	CHIPC_X	0
 @@ -2692,10 +2694,12 @@
@@ -32,9 +32,9 @@
  #define global	FILTER_NONE2	99999999
 +#define global	FILTER_JUNK_SEABED	64101
 +#define global	FILTER_ENVIRONMENT_SEABED	80001
- 
+
  // Group: filter_item_or_item_id
- 
+
  // Group: filter_race
  #define global	FILTER_NOTHING	0
 @@ -3258,10 +3262,14 @@
@@ -47,11 +47,24 @@
 +#define global	GDATA_FLAG_SHIP_IMAGE	STARTING_GDATA_FLAG + 445
 +#define global	GDATA_FLAG_MOST_EXPENSIVE_SHIP_THIS_MONTH	STARTING_GDATA_FLAG + 446
 +#define global	GDATA_FLAG_SHIP_LAST_PORT	STARTING_GDATA_FLAG + 447
- 
+
  // Group: gdatan
  #define global	GDATAN_TEAM1	0
  #define global	GDATAN_TEAM2	1
- 
+
+@@ -4416,11 +4424,11 @@
+ #define global	ITEM_ID_SKULL_BOW	788
+ #define global	ITEM_ID_POT_FOR_FUSION	789
+ #define global	ITEM_ID_POT_OF_ALCHEMIST	790
+ #define global	ITEM_ID_DRAGON_SLAYER	791
+ #define global	ITEM_ID_PUTITORO	792
+-#define global	MAX_ITEM_ID	ITEM_ID_WHITE_DARK_ORB + 3
++#define global	MAX_ITEM_ID	ITEM_ID_SAZAE + 3
+ #define global	MAX_ITEM_DBID	1499
+ #define global	ITEM_ID_PILE_DRIVER	793
+ #define global	ITEM_ID_NEGATIVE_EDGE	794
+ #define global	ITEM_ID_GAU_17_CUSTOM	795
+ #define global	ITEM_ID_KANEITUUHOU	796
 @@ -4901,10 +4909,22 @@
  #define global	ITEM_ID_RES_UPPER	1271
  #define global	ITEM_ID_FIGHTING_DESTONE	1272
@@ -70,7 +83,7 @@
 +#define global	ITEM_ID_HOTATE	1285
 +#define global	ITEM_ID_HAMAGURI	1286
 +#define global	ITEM_ID_SAZAE	1287
- 
+
  // Group: item_known
  #define global	ITEM_KNOWN_NONE	0
  #define global	ITEM_KNOWN_NAME	1
@@ -96,7 +109,7 @@
  #define global	MUSICLIST_MCCHURCH	135
 +#define global	MUSICLIST_MCOCEANDAY	136
 +#define global	MUSICLIST_MCOCEANNIGHT	137
- 
+
  // Group: pcc
  #define global	PCC_HAIR	1
  #define global	PCC_CHEST	2
@@ -108,7 +121,7 @@
  #define global	SKILL_EFFECT_DEED_SUMMON_VEHICLE	SKILL_EFFECT_MIN + 73
  #define global	SKILL_EFFECT_GOLDEN_MEAD	SKILL_EFFECT_MIN + 74
 +#define global	SKILL_EFFECT_SHIP_DEED	SKILL_EFFECT_MIN + 75
- 
+
  // Group: skill_id
  #define global	SKILL_NONE	0
  #define global	MAX_SPACT_COUNT	500
@@ -134,7 +147,7 @@
  #define global	SKILL_SPACT_LIMITER_VANISH	851
 +#define global	SKILL_SPACT_SHADOW_JUMP	852
 +#define global	SKILL_SPACT_SHADOW_HOP	853
- 
+
  // Group: skill_spell
  #define global	STARTING_SKILL_SPELL	400
  #define global	SKILL_SPELL_HEAL_LIGHT	400
@@ -147,7 +160,7 @@
  #define global	SOUNDLIST_HAWK1	303
 +#define global	SOUNDLIST_UMINADO	304
 +#define global	SOUNDLIST_MIZU2	305
- 
+
  // Group: sprite_sheet
  #define global	SPRITE_SHEET_COLS_MAP	33
  #define global	SPRITE_SHEET_ROWS_MAP	25
