@@ -1,0 +1,28 @@
+--- ../2.18R-borscht/db_creature.hsp	2023-06-10 20:15:23.424237400 +0800
++++ ../2.19-borscht/db_creature.hsp	2023-08-02 16:45:40.668584400 +0800
+@@ -94774,11 +94774,11 @@
+ 			if ( dbspec == 2 ) {
+ 				if ( jp ) {
+ 					return "ŠC‘¯"
+ 				}
+ 				else {
+-					return "thief guild member"
++					return "pirate"
+ 				}
+ 			}
+ 			if ( dbspec == 8 ) {
+ 				return "" + "/man/nefia0/"
+ 			}
+@@ -94816,11 +94816,11 @@
+ 			cdata(CDATA_TXT, rc) += 1
+ 			if ( jp ) {
+ 				cdatan(CDATAN_NAME, rc) = "ŠC‘¯"
+ 			}
+ 			else {
+-				cdatan(CDATAN_NAME, rc) = "thief guild member"
++				cdatan(CDATAN_NAME, rc) = "pirate"
+ 			}
+ 			cdatan(CDATAN_NAME, rc) = lang(cdatan(CDATAN_NAME, rc) + "‚Ì" + randomname(), randomname() + " the " + cdatan(CDATAN_NAME, rc))
+ 			cbitmod CHARA_BIT_HAS_NAME, rc, TRUE
+ 			cdata(CDATA_RELATION, rc) = RELATION_ENEMY
+ 			cdata(CDATA_RELATION_ORG, rc) = RELATION_ENEMY

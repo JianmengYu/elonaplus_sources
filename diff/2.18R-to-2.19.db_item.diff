@@ -1,0 +1,884 @@
+--- ../2.18R-borscht/db_item.hsp	2023-06-10 20:15:24.098787400 +0800
++++ ../2.19-borscht/db_item.hsp	2023-08-02 16:45:44.054528400 +0800
+@@ -1,25 +1,190 @@
+ *db_item
+ 	if ( dbmode != DBMODE_FIND ) {
+-		goto *label_3576
++		goto *db_item_set
+ 	}
+ 	dbmax = 0
+ 	dbsum = 0
++	if ( 70 > objlv ) {
++		goto *db_item_POTION_PHYSICAL
++	}
++	if ( fltselect != 0 ) {
++		goto *db_item_POTION_PHYSICAL
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_SCROLL ) {
++			goto *db_item_POTION_PHYSICAL
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_POTION_PHYSICAL
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_SCROLL_HARVEST), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_POTION_PHYSICAL
++		}
++	}
++	dbsum += 100000 / (1000 + abs(objlv - 70) * 0) + 1
++	dblist(0, dbmax) = 1292, dbsum
++	dbmax++
++
++*db_item_POTION_PHYSICAL
++	if ( 1 > objlv ) {
++		goto *db_item_POTION_CALAMITY
++	}
++	if ( fltselect != 0 ) {
++		goto *db_item_POTION_CALAMITY
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_SCROLL ) {
++			goto *db_item_POTION_CALAMITY
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_POTION_CALAMITY
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_SCROLL_ATTRACT), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_POTION_CALAMITY
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 1) * 0) + 1
++	dblist(0, dbmax) = 1291, dbsum
++	dbmax++
++
++*db_item_POTION_CALAMITY
++	if ( 66 > objlv ) {
++		goto *db_item_POTION_AGONY
++	}
++	if ( fltselect != 0 ) {
++		goto *db_item_POTION_AGONY
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_POTION ) {
++			goto *db_item_POTION_AGONY
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_POTION_AGONY
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_POTION_AGONY), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_POTION_AGONY
++		}
++	}
++	dbsum += 1000 / (1000 + abs(objlv - 66) * 0) + 1
++	dblist(0, dbmax) = 1290, dbsum
++	dbmax++
++
++*db_item_POTION_AGONY
++	if ( 66 > objlv ) {
++		goto *db_item_SCROLL_ATTRACT
++	}
++	if ( fltselect != 0 ) {
++		goto *db_item_SCROLL_ATTRACT
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_POTION ) {
++			goto *db_item_SCROLL_ATTRACT
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_SCROLL_ATTRACT
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_POTION_CALAMITY), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_SCROLL_ATTRACT
++		}
++	}
++	dbsum += 1000 / (1000 + abs(objlv - 66) * 0) + 1
++	dblist(0, dbmax) = 1289, dbsum
++	dbmax++
++
++*db_item_SCROLL_ATTRACT
++	if ( 77 > objlv ) {
++		goto *db_item_SCROLL_HARVEST
++	}
++	if ( fltselect != 1 ) {
++		goto *db_item_SCROLL_HARVEST
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_POTION ) {
++			goto *db_item_SCROLL_HARVEST
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_SCROLL_HARVEST
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_POTION_PHYSICAL), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_SCROLL_HARVEST
++		}
++	}
++	dbsum += 1000 / (1000 + abs(objlv - 77) * 0) + 1
++	dblist(0, dbmax) = 1288, dbsum
++	dbmax++
++
++*db_item_SCROLL_HARVEST
+ 	if ( 1 > objlv ) {
+-		goto *label_1000
++		goto *db_item_HAMAGURI
+ 	}
+ 	if ( fltselect != 0 ) {
+-		goto *label_1000
++		goto *db_item_HAMAGURI
+ 	}
+ 	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
+ 		if ( flttypemajor != FILTER_ITEM_FOOD ) {
+-			goto *label_1000
++			goto *db_item_HAMAGURI
+ 		}
+ 	}
+ 	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
+ 		if ( flttypeminor != FILTER_JUNK_SEABED ) {
+-			goto *label_1000
++			goto *db_item_HAMAGURI
+ 		}
+ 	}
+ 	if ( filtermax != 0 ) {
+ 		dbtmp = 1
+ 		repeat filtermax
+@@ -42520,11 +42685,361 @@
+ 	else {
+ 		dbid = 25
+ 	}
+ 	return
+ 
+-*label_3576
++*db_item_set
++	if ( dbid == 1292 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 900
++			inv(INV_ITEM_WEIGHT, ci) = 20
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_SCROLL_HARVEST
++			inv(INV_ITEM_PIC, ci) = xy2pic(8, 14)
++			reftype = FILTER_ITEM_SCROLL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_SCROLL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 53000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 900
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 2 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 70
++			}
++			if ( dbspec == 8 ) {
++				return 100
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_ON_READ ) {
++			efid = SKILL_SPELL_WIZARDS_HARVEST
++			efp = 100
++			gosub *readScroll
++			return -1
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "金貨を収穫する魔法が込められた巻物。その金貨がどこから来ているのかは、深く考えない方がいいだろう。\n#～魔具全典～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "読むと空から金貨が降ってくる巻物だ。\n#～鑑定報告書：＜紙片＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = "A magical scroll with arcane writing."
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1291 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 270
++			inv(INV_ITEM_WEIGHT, ci) = 20
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_SCROLL_ATTRACT
++			inv(INV_ITEM_PIC, ci) = xy2pic(8, 14)
++			reftype = FILTER_ITEM_SCROLL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_SCROLL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 53000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 270
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 2 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_ON_READ ) {
++			efid = SKILL_EFFECT_SCROLL_OF_ATTRACT
++			efp = 100
++			gosub *readScroll
++			return -1
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "敵対者を自分の周りに引き寄せる巻物。逃げ隠れしている敵を探し出し、殲滅するためのもの。使い時を間違えると囲まれて危険なことになるので注意。\n#～魔具全典～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "敵を３体まで引き寄せる巻物だ。\n#～鑑定報告書：＜紙片＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = "A magical scroll with arcane writing."
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1290 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 18000
++			inv(INV_ITEM_WEIGHT, ci) = 100
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_POTION_AGONY
++			inv(INV_ITEM_PIC, ci) = xy2pic(5, 9)
++			reftype = FILTER_ITEM_POTION
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 500
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = "/nogive/noshop/"
++			reftype = FILTER_ITEM_POTION
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 52000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 18000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 4 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 66
++			}
++			if ( dbspec == 8 ) {
++				return 1
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_ON_DRINK ) {
++			efid = SKILL_EFFECT_POTION_AGONY
++			efp = 100
++			gosub *drinkPotion
++			return -1
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "いくつもの苦しみを詰め込んだ上級ポーション。よほどの強敵でなければこれ１本で無力化できるだろう。\n#～飲めるのみもの、飲めないのみもの～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "様々な状態異常を引き起こすポーションだ。\n#～鑑定報告書：＜液体＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1289 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 18000
++			inv(INV_ITEM_WEIGHT, ci) = 100
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_POTION_CALAMITY
++			inv(INV_ITEM_PIC, ci) = xy2pic(5, 9)
++			reftype = FILTER_ITEM_POTION
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 500
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = "/nogive/noshop/"
++			reftype = FILTER_ITEM_POTION
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 52000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 18000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 4 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 66
++			}
++			if ( dbspec == 8 ) {
++				return 1
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_ON_DRINK ) {
++			efid = SKILL_EFFECT_POTION_CALAMITY
++			efp = 100
++			gosub *drinkPotion
++			return -1
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "多くの呪いを詰め込んだ上級ポーション。しぶとかった相手が急激に弱るほどに禍々しい。\n#～飲めるのみもの、飲めないのみもの～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "様々なデバフを引き起こすポーションだ。\n#～鑑定報告書：＜液体＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1288 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 21000
++			inv(INV_ITEM_WEIGHT, ci) = 100
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_POTION_PHYSICAL
++			inv(INV_ITEM_PIC, ci) = xy2pic(5, 9)
++			reftype = FILTER_ITEM_POTION
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 500
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = "/noshop/"
++			reftype = FILTER_ITEM_POTION
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 52000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 21000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 4 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 77
++			}
++			if ( dbspec == 8 ) {
++				return 1
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_ON_DRINK ) {
++			efid = SKILL_EFFECT_POTION_PHYSICAL
++			efp = 100
++			gosub *drinkPotion
++			return -1
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "身体能力を一時的に研ぎ澄ます上級ポーション。かなり最近になって製法が確立された新しい薬品だ。\n#～飲めるのみもの、飲めないのみもの～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "身体能力を向上させるポーションだ。\n#～鑑定報告書：＜液体＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
+ 	if ( dbid == 1287 ) {
+ 		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_MATERIAL, ci) = ITEM_MATERIAL_RAW
+ 			inv(INV_ITEM_VALUE, ci) = 2000
+ 			inv(INV_ITEM_WEIGHT, ci) = 2000
+@@ -43046,11 +43561,11 @@
+ 			gosub *readScroll
+ 			return -1
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+-				description(0) = "漁船の所有権を得られる証書。漁獲用の網を備えており、魚を一網打尽にできる。しかし気を付けた方がいい…船を軽く沈めるモンスターの前ではあなたが獲物となるのだから。\n#～今日から君も冒険者・旅用マニュアル～"
++				description(0) = "漁船の所有権を得られる証書。漁獲用の網を備えており、一度に多くの魚を獲ることができる。ただし獲りすぎて腐らせないように注意が必要だ。\n#～今日から君も冒険者・旅用マニュアル～"
+ 				description(1) = "権利書を染めることで塗装を指定可能。海に面した街などで読むと船を呼べる。なお、税金は期間中に使用した最も高価な船で計算されるので注意。雷雨やエーテル風にかなり弱いが、沈んでも保険料を払っていれば権利は失わない。\n#～旅用マニュアル注釈～"
+ 				description(2) = ""
+ 				description(3) = "海マップでの乗り物の権利書だ。何度でも読むことができる。\n#～鑑定報告書：＜証書＞カテゴリ～"
+ 			}
+ 			else {
+@@ -43116,11 +43631,11 @@
+ 			gosub *readScroll
+ 			return -1
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+-				description(0) = "海賊船の所有権を得られる証書。レトロな大砲を備えており砲撃が可能。大きく掲げられた海賊旗には大きなロマンが詰まっている。問題は、遭遇した商船が一目散に逃げていくことだろうか。\n#～今日から君も冒険者・旅用マニュアル～"
++				description(0) = "海賊船の所有権を得られる証書。レトロな大砲を備えており砲撃が可能。大きく掲げられた海賊旗には大きなロマンが詰まっている。趣味や威嚇で海賊旗を掲げている船も多いのだとか。実際に賊かどうかを分けるのは船ではなく船長ということであろう。\n#～今日から君も冒険者・旅用マニュアル～"
+ 				description(1) = "権利書を染めることで塗装を指定可能。海に面した街などで読むと船を呼べる。なお、税金は期間中に使用した最も高価な船で計算されるので注意。雷雨やエーテル風にかなり弱いが、沈んでも保険料を払っていれば権利は失わない。\n#～旅用マニュアル注釈～"
+ 				description(2) = ""
+ 				description(3) = "海マップでの乗り物の権利書だ。何度でも読むことができる。\n#～鑑定報告書：＜証書＞カテゴリ～"
+ 			}
+ 			else {
+@@ -43186,11 +43701,11 @@
+ 			gosub *readScroll
+ 			return -1
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+-				description(0) = "客船の所有権を得られる証書。設備はとっても快適だが、もてなしてくれるスタッフまでは付属していない。\n#～今日から君も冒険者・旅用マニュアル～"
++				description(0) = "客船の所有権を得られる証書。設備は快適で部屋数も多い。ただしもてなしてくれるスタッフまでは付属していない。\n#～今日から君も冒険者・旅用マニュアル～"
+ 				description(1) = "権利書を染めることで塗装を指定可能。海に面した街などで読むと船を呼べる。なお、税金は期間中に使用した最も高価な船で計算されるので注意。雷雨やエーテル風に結構弱いが、沈んでも保険料を払っていれば権利は失わない。\n#～旅用マニュアル注釈～"
+ 				description(2) = ""
+ 				description(3) = "海マップでの乗り物の権利書だ。何度でも読むことができる。\n#～鑑定報告書：＜証書＞カテゴリ～"
+ 			}
+ 			else {
+@@ -43651,12 +44166,12 @@
+ 			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+-				description(0) = "過酷な環境に適応するために開発された薬。身体の免疫力を活性化することで、装備に依存せず耐性を獲得するという。妖精の鱗粉から作られるというデマが流行った時期があり、鱗粉を奪われ翅がハゲてスカスカになる妖精が続出したがそれも昔のことである。\n#～毒も薬も用法・用量～"
+-				description(1) = ""
++				description(0) = "身体の免疫力を活性化することで、装備に依存せず各種耐性を獲得する。限界までは効果が加算されていくので、積極的に投与していきたいところ。\n#～毒も薬も用法・用量～"
++				description(1) = "過酷な環境に適応するために開発された薬。妖精の鱗粉から作られるというデマが流行った時期があり、鱗粉を奪われ翅がハゲてスカスカになる妖精が続出したがそれも昔のことである。\n#～製薬の歴史～"
+ 				description(2) = ""
+ 				description(3) = "各耐性を一定まで上げる道具だ。使用することができる（使い捨て）。\n#～鑑定報告書：＜器具＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+@@ -43716,11 +44231,11 @@
+ 			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+-				description(0) = "反応速度を永続強化し、回避力を上げる薬。とは言っても貧弱な装備をしていてはあまり効果がない。良い装備で増幅した時にこそ真価を発揮する。\n#～毒も薬も用法・用量～"
++				description(0) = "装備などから得られるＤＶの倍率を永続的に増加させる薬。そのため貧弱な装備をしている間は効果を実感しにくいかもしれない。限界までは効果が加算されていくので、積極的に投与していきたいところ。\n#～毒も薬も用法・用量～"
+ 				description(1) = ""
+ 				description(2) = ""
+ 				description(3) = "ＤＶ補正を上げる道具だ。使用することができる（使い捨て）。\n#～鑑定報告書：＜器具＞カテゴリ～"
+ 			}
+ 			else {
+@@ -43781,11 +44296,11 @@
+ 			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+-				description(0) = "表皮の強度を永続強化し、防御力を上げる薬。とは言っても貧弱な装備をしていてはあまり効果がない。良い装備で増幅した時にこそ真価を発揮する。\n#～毒も薬も用法・用量～"
++				description(0) = "装備などから得られるＰＶの倍率を永続的に増加させる薬。そのため貧弱な装備をしている間は効果を実感しにくいかもしれない。限界までは効果が加算されていくので、積極的に投与していきたいところ。\n#～毒も薬も用法・用量～"
+ 				description(1) = ""
+ 				description(2) = ""
+ 				description(3) = "ＰＶ補正を上げる道具だ。使用することができる（使い捨て）。\n#～鑑定報告書：＜器具＞カテゴリ～"
+ 			}
+ 			else {
+@@ -69660,11 +70175,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "災いを封じ込めた上級ポーション。復讐に燃える魔術士が偶然生み出したとされる。\n#～飲めるのみもの、飲めないのみもの～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "様々な状態異常を引き起こすポーションだ。\n#～鑑定報告書：＜液体＞カテゴリ～"
++				description(3) = "様々な状態異常とデバフを引き起こすポーションだ。\n#～鑑定報告書：＜液体＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = "A clear odorless liquid."
+@@ -83506,14 +84021,14 @@
+ 			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+-				description(0) = "「それ自体が悪なのではない、使ったものが悪なのだ」\n#～説明書の最後のページに書かれた文字～"
++				description(0) = "爆弾魔が古代文献を元に趣味で個人製造した爆弾。熱と衝撃波で広範囲を地形破壊するためとても危険。本来は放射線というもので周囲を汚染する効果もあるのだが、そちらはイルヴァの生物にはほとんど効かないので無いも同然。爆弾としては製造や取り回しに難があり、範囲はともかく殺傷能力は時代遅れ。そんなレトロ感も爆弾魔のお気に入りらしい。\n#～エウダーナに学ぶ必勝交易法～"
+ 				description(1) = ""
+-				description(2) = ""
+-				description(3) = "一定時間後広範囲に壊滅的な破壊を加える爆弾だ（使い捨て）。\n#～鑑定報告書：＜爆弾＞カテゴリ～"
++				description(2) = "「それ自体が悪なのではない、使ったものが悪なのだ」\n#～説明書の最後のページに書かれた文字～"
++				description(3) = "使用から一定ターンで爆発する爆弾だ。使用することができる（使い捨て）。\n#～鑑定報告書：＜爆弾＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = "A horrifying weapon of destruction from ancient times."
+@@ -86747,11 +87262,11 @@
+ 			return -1
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "世界のどこかに埋められているという、隠されし財宝の在処が記された地図。断片的な情報の為に発掘は困難を極めるが、どうにかその場所を見つけた時あなたは達成感にも似た感動を得るだろう。\n#～今日から君も冒険者・旅用マニュアル～"
+-				description(1) = ""
++				description(1) = "ワールドマップ上の示された場所に立ち、足元の地面を掘る（Ｓｈｉｆｔ＋Ｄキー）と宝を発見できる。\n#～旅用マニュアル注釈～"
+ 				description(2) = ""
+ 				description(3) = "マップのどこかに隠された財宝の書かれた地図だ。\n#～鑑定報告書：＜紙片＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+@@ -127902,10 +128417,20 @@
+ 		return 0
+ 	}
+ 	return -999
+ 
+ *db_setFilterItem
++	filter_item(ITEM_ID_SCROLL_HARVEST) = ""
++	rffilter_item(ITEM_ID_SCROLL_HARVEST) = ""
++	filter_item(ITEM_ID_SCROLL_ATTRACT) = ""
++	rffilter_item(ITEM_ID_SCROLL_ATTRACT) = ""
++	filter_item(ITEM_ID_POTION_AGONY) = "/nogive/noshop/"
++	rffilter_item(ITEM_ID_POTION_AGONY) = ""
++	filter_item(ITEM_ID_POTION_CALAMITY) = "/nogive/noshop/"
++	rffilter_item(ITEM_ID_POTION_CALAMITY) = ""
++	filter_item(ITEM_ID_POTION_PHYSICAL) = "/noshop/"
++	rffilter_item(ITEM_ID_POTION_PHYSICAL) = ""
+ 	filter_item(ITEM_ID_SAZAE) = "/fish/"
+ 	rffilter_item(ITEM_ID_SAZAE) = "/fish/"
+ 	filter_item(ITEM_ID_HAMAGURI) = "/fish/"
+ 	rffilter_item(ITEM_ID_HAMAGURI) = "/fish/"
+ 	filter_item(ITEM_ID_HOTATE) = "/fish/"
+@@ -129619,11 +130144,11 @@
+ 	filter_item(ITEM_ID_SCROLL_FAITH) = "/noshop/"
+ 	rffilter_item(ITEM_ID_SCROLL_FAITH) = ""
+ 	filter_item(ITEM_ID_SCROLL_GROWTH) = "/noshop/"
+ 	rffilter_item(ITEM_ID_SCROLL_GROWTH) = ""
+ 	filter_item(ITEM_ID_POTION_WEAKEN_RESISTANCE) = "/neg/"
+-	rffilter_item(ITEM_ID_POTION_WEAKEN_RESISTANCE) = ""
++	rffilter_item(ITEM_ID_POTION_WEAKEN_RESISTANCE) = "/debuff/"
+ 	filter_item(ITEM_ID_SLEEPING_BAG) = ""
+ 	rffilter_item(ITEM_ID_SLEEPING_BAG) = ""
+ 	filter_item(ITEM_ID_STOMAFILLIA) = ""
+ 	rffilter_item(ITEM_ID_STOMAFILLIA) = ""
+ 	filter_item(ITEM_ID_ALRAUNIA) = ""
+@@ -129713,11 +130238,11 @@
+ 	filter_item(ITEM_ID_SCROLL_HOLY_VEIL) = ""
+ 	rffilter_item(ITEM_ID_SCROLL_HOLY_VEIL) = "/holy/"
+ 	filter_item(ITEM_ID_SPELLBOOK_HOLY_VEIL) = ""
+ 	rffilter_item(ITEM_ID_SPELLBOOK_HOLY_VEIL) = "/holy/"
+ 	filter_item(ITEM_ID_POTION_WEAKNESS) = "/neg/"
+-	rffilter_item(ITEM_ID_POTION_WEAKNESS) = ""
++	rffilter_item(ITEM_ID_POTION_WEAKNESS) = "/debuff/"
+ 	filter_item(ITEM_ID_SPELLBOOK_ELEMENTAL_SCAR) = ""
+ 	rffilter_item(ITEM_ID_SPELLBOOK_ELEMENTAL_SCAR) = ""
+ 	filter_item(ITEM_ID_SPELLBOOK_WEAKNESS) = ""
+ 	rffilter_item(ITEM_ID_SPELLBOOK_WEAKNESS) = ""
+ 	filter_item(ITEM_ID_POTION_HERO) = ""
+@@ -129725,11 +130250,11 @@
+ 	filter_item(ITEM_ID_SPELLBOOK_HERO) = ""
+ 	rffilter_item(ITEM_ID_SPELLBOOK_HERO) = ""
+ 	filter_item(ITEM_ID_ROD_SPEED) = ""
+ 	rffilter_item(ITEM_ID_ROD_SPEED) = ""
+ 	filter_item(ITEM_ID_POTION_SLOW) = "/neg/"
+-	rffilter_item(ITEM_ID_POTION_SLOW) = ""
++	rffilter_item(ITEM_ID_POTION_SLOW) = "/debuff/"
+ 	filter_item(ITEM_ID_POTION_SPEED) = ""
+ 	rffilter_item(ITEM_ID_POTION_SPEED) = ""
+ 	filter_item(ITEM_ID_SPELLBOOK_SLOW) = ""
+ 	rffilter_item(ITEM_ID_SPELLBOOK_SLOW) = ""
+ 	filter_item(ITEM_ID_SPELLBOOK_SPEED) = ""
+@@ -129741,11 +130266,11 @@
+ 	filter_item(ITEM_ID_POTION_TROLL_BLOOD) = ""
+ 	rffilter_item(ITEM_ID_POTION_TROLL_BLOOD) = ""
+ 	filter_item(ITEM_ID_SPELLBOOK_REGENERATION) = ""
+ 	rffilter_item(ITEM_ID_SPELLBOOK_REGENERATION) = ""
+ 	filter_item(ITEM_ID_POTION_SILENCE) = "/neg/"
+-	rffilter_item(ITEM_ID_POTION_SILENCE) = ""
++	rffilter_item(ITEM_ID_POTION_SILENCE) = "/debuff/"
+ 	filter_item(ITEM_ID_SPELLBOOK_SILENCE) = ""
+ 	rffilter_item(ITEM_ID_SPELLBOOK_SILENCE) = ""
+ 	filter_item(ITEM_ID_ROD_SILENCE) = ""
+ 	rffilter_item(ITEM_ID_ROD_SILENCE) = ""
+ 	filter_item(ITEM_ID_SPELLBOOK_HOLY_SHIELD) = ""
+@@ -130481,10 +131006,94 @@
+ 	filter_item(ITEM_ID_DUMMY) = ""
+ 	rffilter_item(ITEM_ID_DUMMY) = ""
+ 	return
+ 
+ *db_setItem
++	ilight(ITEM_ID_SCROLL_HARVEST) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_SCROLL_HARVEST) = ""
++	iorgweight(ITEM_ID_SCROLL_HARVEST) = 20
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_SCROLL_HARVEST) = "収穫の巻物"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_SCROLL_HARVEST) = "harvest"
++		ioriginalnameref2(ITEM_ID_SCROLL_HARVEST) = "scroll"
++	}
++	ipicref(ITEM_ID_SCROLL_HARVEST) = xy2pic(8, 14)
++	p = (1292 + gdata(GDATA_RAND_SEED_A)) \ 6
++	iknownnameref(ITEM_ID_SCROLL_HARVEST) = _namescroll(p) + strblank + strscroll
++	icolref(ITEM_ID_SCROLL_HARVEST) = _randcolor(p)
++	irandomname(ITEM_ID_SCROLL_HARVEST) = 1
++	ilight(ITEM_ID_SCROLL_ATTRACT) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_SCROLL_ATTRACT) = ""
++	iorgweight(ITEM_ID_SCROLL_ATTRACT) = 20
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_SCROLL_ATTRACT) = "引き寄せの巻物"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_SCROLL_ATTRACT) = "attract"
++		ioriginalnameref2(ITEM_ID_SCROLL_ATTRACT) = "scroll"
++	}
++	ipicref(ITEM_ID_SCROLL_ATTRACT) = xy2pic(8, 14)
++	p = (1291 + gdata(GDATA_RAND_SEED_A)) \ 6
++	iknownnameref(ITEM_ID_SCROLL_ATTRACT) = _namescroll(p) + strblank + strscroll
++	icolref(ITEM_ID_SCROLL_ATTRACT) = _randcolor(p)
++	irandomname(ITEM_ID_SCROLL_ATTRACT) = 1
++	ilight(ITEM_ID_POTION_AGONY) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_POTION_AGONY) = ""
++	iorgweight(ITEM_ID_POTION_AGONY) = 100
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_POTION_AGONY) = "阿苦薬"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_POTION_AGONY) = "agony"
++		ioriginalnameref2(ITEM_ID_POTION_AGONY) = "high potion"
++	}
++	ipicref(ITEM_ID_POTION_AGONY) = xy2pic(5, 9)
++	if ( jp ) {
++		iknownnameref(ITEM_ID_POTION_AGONY) = "苦しみを呼ぶ薬"
++	}
++	else {
++		iknownnameref(ITEM_ID_POTION_AGONY) = "clear liquid"
++	}
++	icolref(ITEM_ID_POTION_AGONY) = COLOR_RED
++	ilight(ITEM_ID_POTION_CALAMITY) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_POTION_CALAMITY) = ""
++	iorgweight(ITEM_ID_POTION_CALAMITY) = 100
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_POTION_CALAMITY) = "禍多岐薬"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_POTION_CALAMITY) = "calamity"
++		ioriginalnameref2(ITEM_ID_POTION_CALAMITY) = "high potion"
++	}
++	ipicref(ITEM_ID_POTION_CALAMITY) = xy2pic(5, 9)
++	if ( jp ) {
++		iknownnameref(ITEM_ID_POTION_CALAMITY) = "呪いを呼ぶ薬"
++	}
++	else {
++		iknownnameref(ITEM_ID_POTION_CALAMITY) = "clear liquid"
++	}
++	icolref(ITEM_ID_POTION_CALAMITY) = COLOR_PURPLE
++	ilight(ITEM_ID_POTION_PHYSICAL) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_POTION_PHYSICAL) = ""
++	iorgweight(ITEM_ID_POTION_PHYSICAL) = 100
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_POTION_PHYSICAL) = "強身薬"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_POTION_PHYSICAL) = "physical"
++		ioriginalnameref2(ITEM_ID_POTION_PHYSICAL) = "high potion"
++	}
++	ipicref(ITEM_ID_POTION_PHYSICAL) = xy2pic(5, 9)
++	if ( jp ) {
++		iknownnameref(ITEM_ID_POTION_PHYSICAL) = "新式の薬"
++	}
++	else {
++		iknownnameref(ITEM_ID_POTION_PHYSICAL) = "clear liquid"
++	}
++	icolref(ITEM_ID_POTION_PHYSICAL) = COLOR_BLUE
+ 	ilight(ITEM_ID_SAZAE) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_SAZAE) = ""
+ 	iorgweight(ITEM_ID_SAZAE) = 2000
+ 	if ( jp ) {
+ 		ioriginalnameref(ITEM_ID_SAZAE) = "サザエ"
+@@ -148902,11 +149511,11 @@
+ 		ioriginalnameref2(ITEM_ID_DUMMY) = ""
+ 	}
+ 	ipicref(ITEM_ID_DUMMY) = xy2pic(0, 1)
+ 	iknownnameref(ITEM_ID_DUMMY) = ioriginalnameref(ITEM_ID_DUMMY)
+ 	icolref(ITEM_ID_DUMMY) = COLOR_DEFAULT
+-	maxitemid = 1290
++	maxitemid = 1295
+ 	return
+ 	goto *recipe_ref
+ 
+ #deffunc calcweaponfix int calcweaponfix_itemid
+ 	pierce = 0
+@@ -150224,11 +150833,16 @@
+ 		matval = SKILL_NORMAL_JEWELER, 1, 100
+ 		matneed = MATERIAL_PAPER, 2, MATERIAL_MEMORY_FRAGMENT, 1
+ 		return 1
+ 	}
+ 	return -1
+-	goto *label_3585
++	goto *label_3595
++
++
++
++
++
+ 
+ 
+ 
+ 
+ 
