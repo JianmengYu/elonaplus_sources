@@ -709,7 +709,7 @@
 	rpdatan(rpid) = lang("呪いの薬", "calamity medicine")
 	rpdata(RPDATA_ITEM, rpid) = ITEM_ID_POTION_CALAMITY, 50 + 1 * 10000
 	rpdata(RPDATA_SKILL + 0 * 2, rpid) = SKILL_NORMAL_ALCHEMY, 15, SKILL_NORMAL_MAGIC_DEVICE, 30
-	rpdata(RPDATA_MAT + 0, rpid) = RF_ALE, MAX_RF, MAX_RF
+	rpdata(RPDATA_MAT + 0, rpid) = RF_ALE, RF_DEBUFF_POTION, RF_DEBUFF_POTION
 	rpid = STARTING_RPID + 13
 	rplistdef(length(rplistdef)) = 1 * EXT_RECIPES + rpid
 	rpdatan(rpid) = lang("手作りボール", "ball making")
@@ -1060,7 +1060,7 @@
 	rpdata(RPDATA_ITEM, rpid) = ITEM_ID_POTION_DISASTER, 60 + 3 * 10000
 	rpdata(RPDATA_SKILL + 0 * 2, rpid) = SKILL_NORMAL_ALCHEMY, 20, SKILL_NORMAL_MAGIC_DEVICE, 50
 	rpdata(RPDATA_EQ + 0, rpid) = 0
-	rpdata(RPDATA_MAT + 0, rpid) = ITEM_ID_CARAMEL_OF_TERMINATION, RF_POISON, MAX_RF
+	rpdata(RPDATA_MAT + 0, rpid) = ITEM_ID_CARAMEL_OF_TERMINATION, RF_POISON, RF_DEBUFF_POTION
 	rpid = ITEM_ID_POTION_AQUA_SANCTIO + EXT_RP
 	rplistshop(length(rplistshop)) = 30 * EXT_RECIPES + rpid
 	rpdata(RPDATA_ITEM, rpid) = ITEM_ID_POTION_AQUA_SANCTIO, 90 + 6 * 10000
@@ -1101,7 +1101,7 @@
 	rfnameorg(RFNAMEORG_ID, RF_FISH - EXT_RF) = "fish", lang("魚介類", "fish")
 	rfnameorg(RFNAMEORG_ID, RF_EVITEM - EXT_RF) = "EVitem", lang("進化アイテム", "EVitem")
 	rfnameorg(RFNAMEORG_ID, RF_POISON - EXT_RF) = "poison", lang("状態異常薬", "nega potion")
-	rfnameorg(RFNAMEORG_ID, MAX_RF - EXT_RF) = "poison", lang("デバフ薬", "debuff potion")
+	rfnameorg(RFNAMEORG_ID, RF_DEBUFF_POTION - EXT_RF) = "poison", lang("デバフ薬", "debuff potion")
 	rfnameorg(RFNAMEORG_ID, RF_FRUIT - EXT_RF) = "fruit", lang("適当な果物", "any fruit")
 	rfnameorg(RFNAMEORG_ID, RF_BREAD - EXT_RF) = "bread", lang("パン類", "any bread")
 	rfnameorg(RFNAMEORG_ID, RF_ALE - EXT_RF) = "ale", lang("適当なアルコール", "any alcohol")

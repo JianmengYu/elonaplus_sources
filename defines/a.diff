@@ -1,5 +1,5 @@
---- ./2.18R.hsp	2023-08-02 16:45:15.879767600 +0800
-+++ ./2.19.hsp	2023-08-02 16:45:16.088209300 +0800
+--- ./2.18R.hsp	2023-08-03 14:03:53.682456400 +0800
++++ ./2.19.hsp	2023-08-03 14:03:53.836045700 +0800
 @@ -686,10 +686,11 @@
  #define global	CDATA_THIRST	446
  #define global	CDATA_MARK_ITEM_PIC	447
@@ -109,7 +109,43 @@
  #define global	MEFSUBREF_X	0
  #define global	MEFSUBREF_Y	1
  #define global	MEFSUBREF_TYPE	2
-@@ -5781,10 +5800,11 @@
+@@ -5637,10 +5656,19 @@
+ #define global	RANDOM_EVENT_DREAM_THIS_WORLD_IS_CANVAS	42
+ #define global	RANDOM_EVENT_DREAM_MEANING_OF_STUDY	43
+ #define global	RANDOM_EVENT_DREAM_SELF_REVELATION	44
+ #define global	RANDOM_EVENT_DREAM_SELF_AWARENESS	45
+ #define global	RANDOM_EVENT_DREAM_MARGINAL_MAN	46
++#define global	RANDOM_EVENT_SEA_RAGING_SEA	47
++#define global	RANDOM_EVENT_SEA_SWEPT_AWAY	48
++#define global	RANDOM_EVENT_SEA_AFTER_ESCAPE	49
++#define global	RANDOM_EVENT_SEA_DRIFTERS	50
++#define global	RANDOM_EVENT_SEA_AERIAL_THREAT	51
++#define global	RANDOM_EVENT_SEA_UNDERSEA_THREAT	52
++#define global	RANDOM_EVENT_SHIP	53
++#define global	RANDOM_EVENT_DRIFTER	54
++#define global	RANDOM_EVENT_BIG_CATCH	55
+ 
+ // Group: rank
+ #define global	RANK_ARENA	0
+ #define global	RANK_PET_ARENA	1
+ #define global	RANK_CRAWLER	2
+@@ -5710,13 +5738,14 @@
+ #define global	RF_COFFIN	EXT_RF + 22
+ #define global	RF_BAIT	EXT_RF + 23
+ #define global	RF_BARREL	EXT_RF + 24
+ #define global	RF_LEAF	EXT_RF + 25
+ #define global	RF_DISINFECTANT	EXT_RF + 26
+-#define global	MAX_RF	RF_BLANKET + 1
++#define global	MAX_RF	RF_DEBUFF_POTION + 1
+ #define global	RF_STAR	EXT_RF + 27
+ #define global	RF_BLANKET	EXT_RF + 28
++#define global	RF_DEBUFF_POTION	EXT_RF + 29
+ 
+ // Group: rfnameorg
+ #define global	RFNAMEORG_ID	0
+ #define global	RFNAMEORG_NAME	1
+ 
+@@ -5781,10 +5810,11 @@
  #define global	ROLE_GUEST_TRAINER	2005
  #define global	ROLE_GUEST_PRODUCER	2006
  #define global	MAX_ROLE_GUEST	3000
@@ -121,7 +157,7 @@
  #define global	RPACTION_LOVE	"EXT_RPACTION"
  #define global	RPACTION_DYE	"EXT_RPACTION + 1"
  #define global	RPACTION_POISON	"EXT_RPACTION + 2"
-@@ -5956,10 +5976,14 @@
+@@ -5956,10 +5986,14 @@
  #define global	SKILL_EFFECT_DISINFECTANT	SKILL_EFFECT_MIN + 71
  #define global	SKILL_EFFECT_SCROLL_OF_WITCHCRAFT	SKILL_EFFECT_MIN + 72
  #define global	SKILL_EFFECT_DEED_SUMMON_VEHICLE	SKILL_EFFECT_MIN + 73

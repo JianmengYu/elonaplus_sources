@@ -1,5 +1,5 @@
 --- ../2.18R-borscht/db_item.hsp	2023-06-10 20:15:24.098787400 +0800
-+++ ../2.19-borscht/db_item.hsp	2023-08-02 16:45:44.054528400 +0800
++++ ../2.19-borscht/db_item.hsp	2023-08-03 14:04:12.767148500 +0800
 @@ -1,25 +1,190 @@
  *db_item
  	if ( dbmode != DBMODE_FIND ) {
@@ -9,19 +9,19 @@
  	dbmax = 0
  	dbsum = 0
 +	if ( 70 > objlv ) {
-+		goto *db_item_POTION_PHYSICAL
++		goto *db_item_SCROLL_ATTRACT
 +	}
 +	if ( fltselect != 0 ) {
-+		goto *db_item_POTION_PHYSICAL
++		goto *db_item_SCROLL_ATTRACT
 +	}
 +	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
 +		if ( flttypemajor != FILTER_ITEM_SCROLL ) {
-+			goto *db_item_POTION_PHYSICAL
++			goto *db_item_SCROLL_ATTRACT
 +		}
 +	}
 +	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
 +		if ( flttypeminor != FILTER_NONE ) {
-+			goto *db_item_POTION_PHYSICAL
++			goto *db_item_SCROLL_ATTRACT
 +		}
 +	}
 +	if ( filtermax != 0 ) {
@@ -33,28 +33,28 @@
 +			}
 +		loop
 +		if ( dbtmp == 0 ) {
-+			goto *db_item_POTION_PHYSICAL
++			goto *db_item_SCROLL_ATTRACT
 +		}
 +	}
 +	dbsum += 100000 / (1000 + abs(objlv - 70) * 0) + 1
 +	dblist(0, dbmax) = 1292, dbsum
 +	dbmax++
 +
-+*db_item_POTION_PHYSICAL
++*db_item_SCROLL_ATTRACT
 +	if ( 1 > objlv ) {
-+		goto *db_item_POTION_CALAMITY
++		goto *db_item_POTION_AGONY
 +	}
 +	if ( fltselect != 0 ) {
-+		goto *db_item_POTION_CALAMITY
++		goto *db_item_POTION_AGONY
 +	}
 +	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
 +		if ( flttypemajor != FILTER_ITEM_SCROLL ) {
-+			goto *db_item_POTION_CALAMITY
++			goto *db_item_POTION_AGONY
 +		}
 +	}
 +	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
 +		if ( flttypeminor != FILTER_NONE ) {
-+			goto *db_item_POTION_CALAMITY
++			goto *db_item_POTION_AGONY
 +		}
 +	}
 +	if ( filtermax != 0 ) {
@@ -66,28 +66,28 @@
 +			}
 +		loop
 +		if ( dbtmp == 0 ) {
-+			goto *db_item_POTION_CALAMITY
++			goto *db_item_POTION_AGONY
 +		}
 +	}
 +	dbsum += 1000000 / (1000 + abs(objlv - 1) * 0) + 1
 +	dblist(0, dbmax) = 1291, dbsum
 +	dbmax++
 +
-+*db_item_POTION_CALAMITY
++*db_item_POTION_AGONY
 +	if ( 66 > objlv ) {
-+		goto *db_item_POTION_AGONY
++		goto *db_item_POTION_CALAMITY
 +	}
 +	if ( fltselect != 0 ) {
-+		goto *db_item_POTION_AGONY
++		goto *db_item_POTION_CALAMITY
 +	}
 +	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
 +		if ( flttypemajor != FILTER_ITEM_POTION ) {
-+			goto *db_item_POTION_AGONY
++			goto *db_item_POTION_CALAMITY
 +		}
 +	}
 +	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
 +		if ( flttypeminor != FILTER_NONE ) {
-+			goto *db_item_POTION_AGONY
++			goto *db_item_POTION_CALAMITY
 +		}
 +	}
 +	if ( filtermax != 0 ) {
@@ -99,28 +99,28 @@
 +			}
 +		loop
 +		if ( dbtmp == 0 ) {
-+			goto *db_item_POTION_AGONY
++			goto *db_item_POTION_CALAMITY
 +		}
 +	}
 +	dbsum += 1000 / (1000 + abs(objlv - 66) * 0) + 1
 +	dblist(0, dbmax) = 1290, dbsum
 +	dbmax++
 +
-+*db_item_POTION_AGONY
++*db_item_POTION_CALAMITY
 +	if ( 66 > objlv ) {
-+		goto *db_item_SCROLL_ATTRACT
++		goto *db_item_POTION_PHYSICAL
 +	}
 +	if ( fltselect != 0 ) {
-+		goto *db_item_SCROLL_ATTRACT
++		goto *db_item_POTION_PHYSICAL
 +	}
 +	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
 +		if ( flttypemajor != FILTER_ITEM_POTION ) {
-+			goto *db_item_SCROLL_ATTRACT
++			goto *db_item_POTION_PHYSICAL
 +		}
 +	}
 +	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
 +		if ( flttypeminor != FILTER_NONE ) {
-+			goto *db_item_SCROLL_ATTRACT
++			goto *db_item_POTION_PHYSICAL
 +		}
 +	}
 +	if ( filtermax != 0 ) {
@@ -132,28 +132,28 @@
 +			}
 +		loop
 +		if ( dbtmp == 0 ) {
-+			goto *db_item_SCROLL_ATTRACT
++			goto *db_item_POTION_PHYSICAL
 +		}
 +	}
 +	dbsum += 1000 / (1000 + abs(objlv - 66) * 0) + 1
 +	dblist(0, dbmax) = 1289, dbsum
 +	dbmax++
 +
-+*db_item_SCROLL_ATTRACT
++*db_item_POTION_PHYSICAL
 +	if ( 77 > objlv ) {
-+		goto *db_item_SCROLL_HARVEST
++		goto *db_item_SAZAE
 +	}
 +	if ( fltselect != 1 ) {
-+		goto *db_item_SCROLL_HARVEST
++		goto *db_item_SAZAE
 +	}
 +	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
 +		if ( flttypemajor != FILTER_ITEM_POTION ) {
-+			goto *db_item_SCROLL_HARVEST
++			goto *db_item_SAZAE
 +		}
 +	}
 +	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
 +		if ( flttypeminor != FILTER_NONE ) {
-+			goto *db_item_SCROLL_HARVEST
++			goto *db_item_SAZAE
 +		}
 +	}
 +	if ( filtermax != 0 ) {
@@ -165,14 +165,14 @@
 +			}
 +		loop
 +		if ( dbtmp == 0 ) {
-+			goto *db_item_SCROLL_HARVEST
++			goto *db_item_SAZAE
 +		}
 +	}
 +	dbsum += 1000 / (1000 + abs(objlv - 77) * 0) + 1
 +	dblist(0, dbmax) = 1288, dbsum
 +	dbmax++
 +
-+*db_item_SCROLL_HARVEST
++*db_item_SAZAE
  	if ( 1 > objlv ) {
 -		goto *label_1000
 +		goto *db_item_HAMAGURI
