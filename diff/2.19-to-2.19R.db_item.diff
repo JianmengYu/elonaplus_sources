@@ -1,0 +1,405 @@
+--- ../2.19-borscht/db_item.hsp	2023-08-03 14:04:12.767148500 +0800
++++ ../2.19R-borscht/db_item.hsp	2023-08-08 08:44:44.410828700 +0800
+@@ -134732,11 +134732,11 @@
+ 	irandomname(ITEM_ID_SPELLBOOK_WATER_BEAM) = 1
+ 	ilight(ITEM_ID_ROD_BUBBLE_BALL) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_BUBBLE_BALL) = ""
+ 	iorgweight(ITEM_ID_ROD_BUBBLE_BALL) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_BUBBLE_BALL) = "泡沫の波動の杖"
++		ioriginalnameref(ITEM_ID_ROD_BUBBLE_BALL) = "泡沫の波動の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_BUBBLE_BALL) = "bubble ball"
+ 		ioriginalnameref2(ITEM_ID_ROD_BUBBLE_BALL) = "rod"
+ 	}
+@@ -134799,11 +134799,11 @@
+ 	icolref(ITEM_ID_PLEASANT_SLEEP_BLANKET) = COLOR_YELLOW
+ 	ilight(ITEM_ID_ROD_MAGIC_LASER) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_MAGIC_LASER) = ""
+ 	iorgweight(ITEM_ID_ROD_MAGIC_LASER) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_MAGIC_LASER) = "マジックレーザーの杖"
++		ioriginalnameref(ITEM_ID_ROD_MAGIC_LASER) = "マジックレーザーの魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_MAGIC_LASER) = "magic laser"
+ 		ioriginalnameref2(ITEM_ID_ROD_MAGIC_LASER) = "rod"
+ 	}
+@@ -134814,11 +134814,11 @@
+ 	irandomname(ITEM_ID_ROD_MAGIC_LASER) = 1
+ 	ilight(ITEM_ID_ROD_POISON_BALL) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_POISON_BALL) = ""
+ 	iorgweight(ITEM_ID_ROD_POISON_BALL) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_POISON_BALL) = "猛毒の波動の杖"
++		ioriginalnameref(ITEM_ID_ROD_POISON_BALL) = "猛毒の波動の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_POISON_BALL) = "poison ball"
+ 		ioriginalnameref2(ITEM_ID_ROD_POISON_BALL) = "rod"
+ 	}
+@@ -136604,11 +136604,11 @@
+ 	icolref(ITEM_ID_COCONUT_CRAB) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_ROD_LIGHTNING_BALL) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_LIGHTNING_BALL) = ""
+ 	iorgweight(ITEM_ID_ROD_LIGHTNING_BALL) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_LIGHTNING_BALL) = "雷光の波動の杖"
++		ioriginalnameref(ITEM_ID_ROD_LIGHTNING_BALL) = "雷光の波動の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_LIGHTNING_BALL) = "lightning ball"
+ 		ioriginalnameref2(ITEM_ID_ROD_LIGHTNING_BALL) = "rod"
+ 	}
+@@ -136871,11 +136871,11 @@
+ 	icolref(ITEM_ID_MOONLIGHT) = COLOR_YELLOW
+ 	ilight(ITEM_ID_ROD_ECLIPSE) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_ECLIPSE) = ""
+ 	iorgweight(ITEM_ID_ROD_ECLIPSE) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_ECLIPSE) = "月蝕の波動の杖"
++		ioriginalnameref(ITEM_ID_ROD_ECLIPSE) = "月蝕の波動の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_ECLIPSE) = "eclipse"
+ 		ioriginalnameref2(ITEM_ID_ROD_ECLIPSE) = "rod"
+ 	}
+@@ -141513,11 +141513,11 @@
+ 	irandomname(ITEM_ID_SPELLBOOK_MAKE_DOOR) = 1
+ 	ilight(ITEM_ID_ROD_MAKE_DOOR) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_MAKE_DOOR) = ""
+ 	iorgweight(ITEM_ID_ROD_MAKE_DOOR) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_MAKE_DOOR) = "扉生成の杖"
++		ioriginalnameref(ITEM_ID_ROD_MAKE_DOOR) = "扉生成の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_MAKE_DOOR) = "make door"
+ 		ioriginalnameref2(ITEM_ID_ROD_MAKE_DOOR) = "rod"
+ 	}
+@@ -141660,11 +141660,11 @@
+ 	icolref(ITEM_ID_JERKY) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_ROD_FIRE_WALL) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_FIRE_WALL) = ""
+ 	iorgweight(ITEM_ID_ROD_FIRE_WALL) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_FIRE_WALL) = "炎の壁の杖"
++		ioriginalnameref(ITEM_ID_ROD_FIRE_WALL) = "炎の壁の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_FIRE_WALL) = "fire wall"
+ 		ioriginalnameref2(ITEM_ID_ROD_FIRE_WALL) = "rod"
+ 	}
+@@ -141931,11 +141931,11 @@
+ 	icolref(ITEM_ID_FEATHER) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_ROD_HEALING_HANDS) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_HEALING_HANDS) = ""
+ 	iorgweight(ITEM_ID_ROD_HEALING_HANDS) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_HEALING_HANDS) = "癒しの手の杖"
++		ioriginalnameref(ITEM_ID_ROD_HEALING_HANDS) = "癒しの手の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_HEALING_HANDS) = "healing hands"
+ 		ioriginalnameref2(ITEM_ID_ROD_HEALING_HANDS) = "rod"
+ 	}
+@@ -142019,11 +142019,11 @@
+ 	irandomname(ITEM_ID_SPELLBOOK_WALL_CREATION) = 1
+ 	ilight(ITEM_ID_ROD_WALL_CREATION) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_WALL_CREATION) = ""
+ 	iorgweight(ITEM_ID_ROD_WALL_CREATION) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_WALL_CREATION) = "壁生成の杖"
++		ioriginalnameref(ITEM_ID_ROD_WALL_CREATION) = "壁生成の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_WALL_CREATION) = "wall creation"
+ 		ioriginalnameref2(ITEM_ID_ROD_WALL_CREATION) = "rod"
+ 	}
+@@ -142374,11 +142374,11 @@
+ 	irandomname(ITEM_ID_BOTTLE_DYE) = 1
+ 	ilight(ITEM_ID_ROD_ALCHEMY) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_ALCHEMY) = ""
+ 	iorgweight(ITEM_ID_ROD_ALCHEMY) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_ALCHEMY) = "錬金術の杖"
++		ioriginalnameref(ITEM_ID_ROD_ALCHEMY) = "錬金術の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_ALCHEMY) = "alchemy"
+ 		ioriginalnameref2(ITEM_ID_ROD_ALCHEMY) = "rod"
+ 	}
+@@ -142389,11 +142389,11 @@
+ 	irandomname(ITEM_ID_ROD_ALCHEMY) = 1
+ 	ilight(ITEM_ID_ROD_CHANGE_CREATURE) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_CHANGE_CREATURE) = ""
+ 	iorgweight(ITEM_ID_ROD_CHANGE_CREATURE) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_CHANGE_CREATURE) = "変化の杖"
++		ioriginalnameref(ITEM_ID_ROD_CHANGE_CREATURE) = "変化の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_CHANGE_CREATURE) = "change creature"
+ 		ioriginalnameref2(ITEM_ID_ROD_CHANGE_CREATURE) = "rod"
+ 	}
+@@ -142835,11 +142835,11 @@
+ 	icolref(ITEM_ID_MACHINE) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_ROD_WEB) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_WEB) = ""
+ 	iorgweight(ITEM_ID_ROD_WEB) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_WEB) = "蜘蛛の巣の杖"
++		ioriginalnameref(ITEM_ID_ROD_WEB) = "蜘蛛の巣の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_WEB) = "web"
+ 		ioriginalnameref2(ITEM_ID_ROD_WEB) = "rod"
+ 	}
+@@ -142906,11 +142906,11 @@
+ 	irandomname(ITEM_ID_SPELLBOOK_DOMINATION) = 1
+ 	ilight(ITEM_ID_ROD_DOMINATION) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_DOMINATION) = ""
+ 	iorgweight(ITEM_ID_ROD_DOMINATION) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_DOMINATION) = "支配の杖"
++		ioriginalnameref(ITEM_ID_ROD_DOMINATION) = "支配の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_DOMINATION) = "domination"
+ 		ioriginalnameref2(ITEM_ID_ROD_DOMINATION) = "rod"
+ 	}
+@@ -143826,11 +143826,11 @@
+ 	icolref(ITEM_ID_RED_TREASURE_MACHINE) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_ROD_UNCURSE) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_UNCURSE) = ""
+ 	iorgweight(ITEM_ID_ROD_UNCURSE) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_UNCURSE) = "解呪の杖"
++		ioriginalnameref(ITEM_ID_ROD_UNCURSE) = "解呪の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_UNCURSE) = "uncurse"
+ 		ioriginalnameref2(ITEM_ID_ROD_UNCURSE) = "rod"
+ 	}
+@@ -144118,11 +144118,11 @@
+ 	icolref(ITEM_ID_BOTTLE_SULFURIC) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_ROD_MANA) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_MANA) = ""
+ 	iorgweight(ITEM_ID_ROD_MANA) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_MANA) = "魔力の杖"
++		ioriginalnameref(ITEM_ID_ROD_MANA) = "魔力の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_MANA) = "mana"
+ 		ioriginalnameref2(ITEM_ID_ROD_MANA) = "rod"
+ 	}
+@@ -144208,11 +144208,11 @@
+ 	irandomname(ITEM_ID_SPELLBOOK_HOLY_LIGHT) = 1
+ 	ilight(ITEM_ID_ROD_HOLY_LIGHT) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_HOLY_LIGHT) = ""
+ 	iorgweight(ITEM_ID_ROD_HOLY_LIGHT) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_HOLY_LIGHT) = "浄化の杖"
++		ioriginalnameref(ITEM_ID_ROD_HOLY_LIGHT) = "浄化の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_HOLY_LIGHT) = "holy light"
+ 		ioriginalnameref2(ITEM_ID_ROD_HOLY_LIGHT) = "rod"
+ 	}
+@@ -144328,11 +144328,11 @@
+ 	irandomname(ITEM_ID_SPELLBOOK_HERO) = 1
+ 	ilight(ITEM_ID_ROD_SPEED) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_SPEED) = ""
+ 	iorgweight(ITEM_ID_ROD_SPEED) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_SPEED) = "加速の杖"
++		ioriginalnameref(ITEM_ID_ROD_SPEED) = "加速の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_SPEED) = "speed"
+ 		ioriginalnameref2(ITEM_ID_ROD_SPEED) = "rod"
+ 	}
+@@ -144493,11 +144493,11 @@
+ 	irandomname(ITEM_ID_SPELLBOOK_SILENCE) = 1
+ 	ilight(ITEM_ID_ROD_SILENCE) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_SILENCE) = ""
+ 	iorgweight(ITEM_ID_ROD_SILENCE) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_SILENCE) = "沈黙の杖"
++		ioriginalnameref(ITEM_ID_ROD_SILENCE) = "沈黙の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_SILENCE) = "silence"
+ 		ioriginalnameref2(ITEM_ID_ROD_SILENCE) = "rod"
+ 	}
+@@ -145521,11 +145521,11 @@
+ 	icolref(ITEM_ID_WELL_KEPT_ARMOR) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_ROD_WISHING) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_WISHING) = ""
+ 	iorgweight(ITEM_ID_ROD_WISHING) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_WISHING) = "願いの杖"
++		ioriginalnameref(ITEM_ID_ROD_WISHING) = "願いの魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_WISHING) = "wishing"
+ 		ioriginalnameref2(ITEM_ID_ROD_WISHING) = "rod"
+ 	}
+@@ -146737,11 +146737,11 @@
+ 	icolref(ITEM_ID_CORPSE) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_ROD_CURE) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_CURE) = ""
+ 	iorgweight(ITEM_ID_ROD_CURE) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_CURE) = "癒しの杖"
++		ioriginalnameref(ITEM_ID_ROD_CURE) = "癒しの魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_CURE) = "cure"
+ 		ioriginalnameref2(ITEM_ID_ROD_CURE) = "rod"
+ 	}
+@@ -146752,11 +146752,11 @@
+ 	irandomname(ITEM_ID_ROD_CURE) = 1
+ 	ilight(ITEM_ID_ROD_MAGIC_MAPPING) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_MAGIC_MAPPING) = ""
+ 	iorgweight(ITEM_ID_ROD_MAGIC_MAPPING) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_MAGIC_MAPPING) = "千里眼の杖"
++		ioriginalnameref(ITEM_ID_ROD_MAGIC_MAPPING) = "千里眼の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_MAGIC_MAPPING) = "magic mapping"
+ 		ioriginalnameref2(ITEM_ID_ROD_MAGIC_MAPPING) = "rod"
+ 	}
+@@ -147092,11 +147092,11 @@
+ 	icolref(ITEM_ID_QUWAPANA) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_ROD_SLOW) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_SLOW) = ""
+ 	iorgweight(ITEM_ID_ROD_SLOW) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_SLOW) = "鈍足の杖"
++		ioriginalnameref(ITEM_ID_ROD_SLOW) = "鈍足の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_SLOW) = "slow"
+ 		ioriginalnameref2(ITEM_ID_ROD_SLOW) = "rod"
+ 	}
+@@ -147107,11 +147107,11 @@
+ 	irandomname(ITEM_ID_ROD_SLOW) = 1
+ 	ilight(ITEM_ID_ROD_LIGHTNING_BOLT) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_LIGHTNING_BOLT) = ""
+ 	iorgweight(ITEM_ID_ROD_LIGHTNING_BOLT) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_LIGHTNING_BOLT) = "稲妻の軌跡の杖"
++		ioriginalnameref(ITEM_ID_ROD_LIGHTNING_BOLT) = "稲妻の軌跡の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_LIGHTNING_BOLT) = "lightning bolt"
+ 		ioriginalnameref2(ITEM_ID_ROD_LIGHTNING_BOLT) = "rod"
+ 	}
+@@ -147759,11 +147759,11 @@
+ 	icolref(ITEM_ID_BEAKER) = COLOR_RANDOM
+ 	ilight(ITEM_ID_ROD_LIFE) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_LIFE) = ""
+ 	iorgweight(ITEM_ID_ROD_LIFE) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_LIFE) = "生命の杖"
++		ioriginalnameref(ITEM_ID_ROD_LIFE) = "生命の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_LIFE) = "heal"
+ 		ioriginalnameref2(ITEM_ID_ROD_LIFE) = "rod"
+ 	}
+@@ -147787,11 +147787,11 @@
+ 	icolref(ITEM_ID_BREAD_DISPLAY) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_ROD_FIRE_BOLT) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_FIRE_BOLT) = ""
+ 	iorgweight(ITEM_ID_ROD_FIRE_BOLT) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_FIRE_BOLT) = "炎の衝撃の杖"
++		ioriginalnameref(ITEM_ID_ROD_FIRE_BOLT) = "炎の衝撃の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_FIRE_BOLT) = "fire bolt"
+ 		ioriginalnameref2(ITEM_ID_ROD_FIRE_BOLT) = "rod"
+ 	}
+@@ -147802,11 +147802,11 @@
+ 	irandomname(ITEM_ID_ROD_FIRE_BOLT) = 1
+ 	ilight(ITEM_ID_ROD_ICE_BOLT) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_ICE_BOLT) = ""
+ 	iorgweight(ITEM_ID_ROD_ICE_BOLT) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_ICE_BOLT) = "氷の視線の杖"
++		ioriginalnameref(ITEM_ID_ROD_ICE_BOLT) = "氷の視線の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_ICE_BOLT) = "ice bolt"
+ 		ioriginalnameref2(ITEM_ID_ROD_ICE_BOLT) = "rod"
+ 	}
+@@ -147817,11 +147817,11 @@
+ 	irandomname(ITEM_ID_ROD_ICE_BOLT) = 1
+ 	ilight(ITEM_ID_ROD_SUMMON_MONSTERS) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_SUMMON_MONSTERS) = ""
+ 	iorgweight(ITEM_ID_ROD_SUMMON_MONSTERS) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_SUMMON_MONSTERS) = "サモンモンスターの杖"
++		ioriginalnameref(ITEM_ID_ROD_SUMMON_MONSTERS) = "サモンモンスターの魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_SUMMON_MONSTERS) = "summon monsters"
+ 		ioriginalnameref2(ITEM_ID_ROD_SUMMON_MONSTERS) = "rod"
+ 	}
+@@ -147832,11 +147832,11 @@
+ 	irandomname(ITEM_ID_ROD_SUMMON_MONSTERS) = 1
+ 	ilight(ITEM_ID_ROD_MAGIC_MISSILE) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_MAGIC_MISSILE) = ""
+ 	iorgweight(ITEM_ID_ROD_MAGIC_MISSILE) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_MAGIC_MISSILE) = "マジックミサイルの杖"
++		ioriginalnameref(ITEM_ID_ROD_MAGIC_MISSILE) = "マジックミサイルの魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_MAGIC_MISSILE) = "magic missile"
+ 		ioriginalnameref2(ITEM_ID_ROD_MAGIC_MISSILE) = "rod"
+ 	}
+@@ -147847,11 +147847,11 @@
+ 	irandomname(ITEM_ID_ROD_MAGIC_MISSILE) = 1
+ 	ilight(ITEM_ID_ROD_CURE_MINOR_WOUND) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_CURE_MINOR_WOUND) = ""
+ 	iorgweight(ITEM_ID_ROD_CURE_MINOR_WOUND) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_CURE_MINOR_WOUND) = "軽傷治療の杖"
++		ioriginalnameref(ITEM_ID_ROD_CURE_MINOR_WOUND) = "軽傷治療の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_CURE_MINOR_WOUND) = "cure minor wound"
+ 		ioriginalnameref2(ITEM_ID_ROD_CURE_MINOR_WOUND) = "rod"
+ 	}
+@@ -149241,11 +149241,11 @@
+ 	irandomname(ITEM_ID_SPELLBOOK_TELEPORTATION) = 1
+ 	ilight(ITEM_ID_ROD_TELEPORTATION) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_TELEPORTATION) = ""
+ 	iorgweight(ITEM_ID_ROD_TELEPORTATION) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_TELEPORTATION) = "テレポートの杖"
++		ioriginalnameref(ITEM_ID_ROD_TELEPORTATION) = "テレポートの魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_TELEPORTATION) = "teleportation"
+ 		ioriginalnameref2(ITEM_ID_ROD_TELEPORTATION) = "rod"
+ 	}
+@@ -149256,11 +149256,11 @@
+ 	irandomname(ITEM_ID_ROD_TELEPORTATION) = 1
+ 	ilight(ITEM_ID_ROD_IDENTIFY) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_ROD_IDENTIFY) = ""
+ 	iorgweight(ITEM_ID_ROD_IDENTIFY) = 400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ROD_IDENTIFY) = "鑑定の杖"
++		ioriginalnameref(ITEM_ID_ROD_IDENTIFY) = "鑑定の魔杖"
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_ROD_IDENTIFY) = "identify"
+ 		ioriginalnameref2(ITEM_ID_ROD_IDENTIFY) = "rod"
+ 	}
