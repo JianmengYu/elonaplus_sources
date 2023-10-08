@@ -4206,7 +4206,7 @@
 				mdata(MDATA_CAN_SAVE) = 0
 				mdata(MDATA_MUSIC) = MUSICLIST_MCLASTBOSS
 				mdatan(0) = lang("古の研究施設", "The Depth")
-				if ( gdata(GDATA_FLAG_MAIN) < 3400 ) {
+				if ( gdata(GDATA_FLAG_MAIN) < 340 ) {
 					evadd EVENT_MESHERA_PLANT
 					flt
 					characreate -1, CREATURE_ID_MESHERA_PLANT, 16, 5

@@ -40,7 +40,7 @@
 	return
 
 *fixSave
-	if ( gdata(GDATA_VERSION) != int(double("6.21") * 1000) ) {
+	if ( gdata(GDATA_VERSION) != int(double("6.22") * 1000) ) {
 		dialog lang("Ver." + gdata(GDATA_VERSION) + "のセーブデータをアップデートします。", "Updating your save data from Ver." + gdata(GDATA_VERSION) + " now.")
 	}
 	if ( gdata(GDATA_HEIR_DEED) < 0 ) {
@@ -877,11 +877,11 @@
 			}
 		}
 	}
-	if ( gdata(GDATA_VERSION) != int(double("6.21") * 1000) ) {
+	if ( gdata(GDATA_VERSION) != int(double("6.22") * 1000) ) {
 		gdata(GDATA_WORLD_RENEW) = TRUE
 	}
 	del_chara 56
-	if ( gdata(GDATA_VERSION) > int(double("6.21") * 1000) ) {
+	if ( gdata(GDATA_VERSION) > int(double("6.22") * 1000) ) {
 		dialog "invalid version"
 		goto *exit_game
 	}
@@ -935,7 +935,7 @@
 			snd SOUNDLIST_ENC
 		}
 	}
-	gdata(GDATA_VERSION) = int(double("6.21") * 1000)
+	gdata(GDATA_VERSION) = int(double("6.22") * 1000)
 	cbitmod CHARA_BIT_PCC, CHARA_PLAYER, TRUE
 	gdata(GDATA_SPEEDSUM_RESET) = 1
 	gosub *initial_recipe
@@ -3402,7 +3402,7 @@
 		pos x + 4, y + 4
 		gfini dx - 1, 35
 		gfdec 60, 60, 60
-		aplsel "ElonaPlus 2.20"
+		aplsel "ElonaPlus 2.20fix1"
 		if ( stat == 1 ) {
 			dialog "Failed to get WINDOW ID", 1
 			clrobj 1
@@ -3765,7 +3765,7 @@
 	notesel dbm
 	buff = ""
 	if ( dbm == "" ) {
-		noteadd "ElonaPlus 2.20" + " v" + "6.21" + " Debug Console    Type \"?\" for help. Hit ESC to exit."
+		noteadd "ElonaPlus 2.20fix1" + " v" + "6.22" + " Debug Console    Type \"?\" for help. Hit ESC to exit."
 		noteadd ""
 	}
 	font lang(cfg_font1, cfg_font2), 14 - en * 2, 0
@@ -4176,7 +4176,7 @@
 	return
 
 *mutexobj
-	CreateMutexA 0, 0, "ElonaPlus 2.20"
+	CreateMutexA 0, 0, "ElonaPlus 2.20fix1"
 	mutex_handle = stat
 	func_3
 	if ( stat == 183 ) {

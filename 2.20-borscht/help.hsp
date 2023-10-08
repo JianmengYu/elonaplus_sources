@@ -5353,7 +5353,7 @@
 		repeat 9
 			gdata(STARTING_GDATA_RANK + cnt) = 5000
 		loop
-		gdata(GDATA_VERSION) = int(double("6.21") * 1000)
+		gdata(GDATA_VERSION) = int(double("6.22") * 1000)
 		gdata(STARTING_GDATA_SHORTCUT + 1) = 424
 		gdata(STARTING_GDATA_SHORTCUT + 2) = 300
 		gdata(STARTING_GDATA_SHORTCUT + 3) = 631
@@ -5955,7 +5955,7 @@
 		gosub *setArea
 		gdata(GDATA_LEVEL) = 1
 		gdata(GDATA_LEVEL_START_ON) = 4
-		gdata(GDATA_VERSION) = int(double("6.21") * 1000)
+		gdata(GDATA_VERSION) = int(double("6.22") * 1000)
 		gdata(GDATA_WEATHER) = WEATHER_RAIN, 6
 		repeat 20
 			gdata(STARTING_GDATA_RANK + cnt) = 10000
@@ -7880,7 +7880,7 @@
 
 *pc_turn_init_WEND1
 	if ( dbg_titleinfo ) {
-		title "ElonaPlus 2.20" + " ver " + "6.21" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
+		title "ElonaPlus 2.20fix1" + " ver " + "6.22" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
 	}
 	if ( trait(TRAIT_ETHER_ADDICTED_POTION) != 0 ) {
 		if ( rnd(5) == 0 ) {
