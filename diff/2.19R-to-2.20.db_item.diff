@@ -1,0 +1,531 @@
+--- ../2.19R-borscht/db_item.hsp	2023-08-08 08:52:06.883149400 +0800
++++ ../2.20-borscht/db_item.hsp	2023-10-08 09:08:52.680610200 +0800
+@@ -2,10 +2,142 @@
+ 	if ( dbmode != DBMODE_FIND ) {
+ 		goto *db_item_set
+ 	}
+ 	dbmax = 0
+ 	dbsum = 0
++	if ( 1 > objlv ) {
++		goto *db_item_FLOAT_CAGE
++	}
++	if ( fltselect != 1 ) {
++		goto *db_item_FLOAT_CAGE
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_SCROLL ) {
++			goto *db_item_FLOAT_CAGE
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_ITEM_DEED ) {
++			goto *db_item_FLOAT_CAGE
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_DEED_CAMP), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_FLOAT_CAGE
++		}
++	}
++	dbsum += 1000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1296, dbsum
++	dbmax++
++
++*db_item_FLOAT_CAGE
++	if ( 1 > objlv ) {
++		goto *db_item_SLAVE_SPINNER
++	}
++	if ( fltselect != 1 ) {
++		goto *db_item_SLAVE_SPINNER
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *db_item_SLAVE_SPINNER
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_SLAVE_SPINNER
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_FLOAT_CAGE), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_SLAVE_SPINNER
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 1) * 0) + 1
++	dblist(0, dbmax) = 1295, dbsum
++	dbmax++
++
++*db_item_SLAVE_SPINNER
++	if ( 1 > objlv ) {
++		goto *db_item_SLAVE_WHEEL
++	}
++	if ( fltselect != 1 ) {
++		goto *db_item_SLAVE_WHEEL
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *db_item_SLAVE_WHEEL
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_SLAVE_WHEEL
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_SLAVE_SPINNER), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_SLAVE_WHEEL
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 1) * 0) + 1
++	dblist(0, dbmax) = 1294, dbsum
++	dbmax++
++
++*db_item_SLAVE_WHEEL
++	if ( 1 > objlv ) {
++		goto *db_item_SCROLL_HARVEST
++	}
++	if ( fltselect != 1 ) {
++		goto *db_item_SCROLL_HARVEST
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *db_item_SCROLL_HARVEST
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_SCROLL_HARVEST
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_SLAVE_WHEEL), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_SCROLL_HARVEST
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 1) * 0) + 1
++	dblist(0, dbmax) = 1293, dbsum
++	dbmax++
++
++*db_item_SCROLL_HARVEST
+ 	if ( 70 > objlv ) {
+ 		goto *db_item_SCROLL_ATTRACT
+ 	}
+ 	if ( fltselect != 0 ) {
+ 		goto *db_item_SCROLL_ATTRACT
+@@ -42686,10 +42818,273 @@
+ 		dbid = 25
+ 	}
+ 	return
+ 
+ *db_item_set
++	if ( dbid == 1296 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 240000
++			inv(INV_ITEM_WEIGHT, ci) = 500
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_DEED_CAMP
++			inv(INV_ITEM_PIC, ci) = xy2pic(11, 9)
++			reftype = FILTER_ITEM_SCROLL
++			reftypeminor = FILTER_ITEM_DEED
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_SCROLL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 53000
++			}
++			if ( dbspec == 9 ) {
++				return 53100
++			}
++			if ( dbspec == 20 ) {
++				return 240000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 2 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 1
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_ON_READ ) {
++			efid = SKILL_EFFECT_CREATE_BUILDING
++			return -1
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "収容所を作る権利が得られる証書。何を収容して何をするかは権利者に委ねられている。\n#～ダルフィ不動産・商品カタログ～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "読むことで収容所を作ることができる権利書だ。\n#～鑑定報告書：＜証書＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = "A deed for a ranch."
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1295 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 4800
++			inv(INV_ITEM_WEIGHT, ci) = 10000
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_FLOAT_CAGE
++			inv(INV_ITEM_PIC, ci) = xy2pic(10, 38)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_FLOAT_CAGE
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 4800
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "エウダーナで開発された拘束器具。主に実験動物や重罪魔導士を連行するために用いられていた。近年は即時従順にさせるモンスターボールや支配魔法が普及したため、骨董品と化している。起動すると青くなるが、節約のため浮遊魔術は常時発動しておらず、檻を移動させる時のみ浮く仕様。\n#～拘束器具の歴史～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "瀕死の相手を捕まえて連行できる檻。何度でも使用することができる。\n#～鑑定報告書：＜器具＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1294 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 3600
++			inv(INV_ITEM_WEIGHT, ci) = 22000
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_SLAVE_SPINNER
++			inv(INV_ITEM_PIC, ci) = xy2pic(9, 38)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_SLAVE_SPINNER
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 3600
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "奴隷にぐるぐる回させてエナジーを得る器具。昔のものは複数人でないと回らないくらい重い物だったが、近年の省奴隷ブームに乗っかり、独りで回せるくらい軽いタイプが主流となってきている。\n#～今日から始める奴隷運用～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "人力で労働エナジーを生む器具。何度でも使用することができる。\n#～鑑定報告書：＜器具＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1293 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 1800
++			inv(INV_ITEM_WEIGHT, ci) = 13000
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_SLAVE_WHEEL
++			inv(INV_ITEM_PIC, ci) = xy2pic(11, 38)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_SLAVE_WHEEL
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 1800
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "奴隷を走らせてエナジーを得る器具。ハムスターは楽しそうに回すし、ハムスターでなくても運動不足を解消できて健康にいい。だから無理矢理走らせてもたぶん虐待にはならない。\n#～今日から始める奴隷運用～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "人力で労働エナジーを生む器具。何度でも使用することができる。\n#～鑑定報告書：＜器具＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
+ 	if ( dbid == 1292 ) {
+ 		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_VALUE, ci) = 900
+ 			inv(INV_ITEM_WEIGHT, ci) = 20
+ 		}
+@@ -128417,10 +128812,18 @@
+ 		return 0
+ 	}
+ 	return -999
+ 
+ *db_setFilterItem
++	filter_item(ITEM_ID_DEED_CAMP) = ""
++	rffilter_item(ITEM_ID_DEED_CAMP) = ""
++	filter_item(ITEM_ID_FLOAT_CAGE) = ""
++	rffilter_item(ITEM_ID_FLOAT_CAGE) = ""
++	filter_item(ITEM_ID_SLAVE_SPINNER) = ""
++	rffilter_item(ITEM_ID_SLAVE_SPINNER) = ""
++	filter_item(ITEM_ID_SLAVE_WHEEL) = ""
++	rffilter_item(ITEM_ID_SLAVE_WHEEL) = ""
+ 	filter_item(ITEM_ID_SCROLL_HARVEST) = ""
+ 	rffilter_item(ITEM_ID_SCROLL_HARVEST) = ""
+ 	filter_item(ITEM_ID_SCROLL_ATTRACT) = ""
+ 	rffilter_item(ITEM_ID_SCROLL_ATTRACT) = ""
+ 	filter_item(ITEM_ID_POTION_AGONY) = "/nogive/noshop/"
+@@ -131006,10 +131409,62 @@
+ 	filter_item(ITEM_ID_DUMMY) = ""
+ 	rffilter_item(ITEM_ID_DUMMY) = ""
+ 	return
+ 
+ *db_setItem
++	ilight(ITEM_ID_DEED_CAMP) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_DEED_CAMP) = ""
++	iorgweight(ITEM_ID_DEED_CAMP) = 500
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_DEED_CAMP) = "収容所の権利書"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_DEED_CAMP) = "camp"
++		ioriginalnameref2(ITEM_ID_DEED_CAMP) = "deed"
++	}
++	ipicref(ITEM_ID_DEED_CAMP) = xy2pic(11, 9)
++	iknownnameref(ITEM_ID_DEED_CAMP) = ioriginalnameref(ITEM_ID_DEED_CAMP)
++	icolref(ITEM_ID_DEED_CAMP) = COLOR_PURPLE
++	ilight(ITEM_ID_FLOAT_CAGE) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_FLOAT_CAGE) = ""
++	iorgweight(ITEM_ID_FLOAT_CAGE) = 10000
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_FLOAT_CAGE) = "浮遊檻"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_FLOAT_CAGE) = "float cage"
++		ioriginalnameref2(ITEM_ID_FLOAT_CAGE) = ""
++	}
++	ipicref(ITEM_ID_FLOAT_CAGE) = xy2pic(10, 38)
++	iknownnameref(ITEM_ID_FLOAT_CAGE) = ioriginalnameref(ITEM_ID_FLOAT_CAGE)
++	icolref(ITEM_ID_FLOAT_CAGE) = COLOR_DEFAULT
++	ilight(ITEM_ID_SLAVE_SPINNER) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_SLAVE_SPINNER) = ""
++	iorgweight(ITEM_ID_SLAVE_SPINNER) = 22000
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_SLAVE_SPINNER) = "奴隷グルグル"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_SLAVE_SPINNER) = "slave spinner"
++		ioriginalnameref2(ITEM_ID_SLAVE_SPINNER) = ""
++	}
++	ipicref(ITEM_ID_SLAVE_SPINNER) = xy2pic(9, 38)
++	iknownnameref(ITEM_ID_SLAVE_SPINNER) = ioriginalnameref(ITEM_ID_SLAVE_SPINNER)
++	icolref(ITEM_ID_SLAVE_SPINNER) = COLOR_DEFAULT
++	ilight(ITEM_ID_SLAVE_WHEEL) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_SLAVE_WHEEL) = ""
++	iorgweight(ITEM_ID_SLAVE_WHEEL) = 13000
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_SLAVE_WHEEL) = "奴隷バタバタ"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_SLAVE_WHEEL) = "slave wheel"
++		ioriginalnameref2(ITEM_ID_SLAVE_WHEEL) = ""
++	}
++	ipicref(ITEM_ID_SLAVE_WHEEL) = xy2pic(11, 38)
++	iknownnameref(ITEM_ID_SLAVE_WHEEL) = ioriginalnameref(ITEM_ID_SLAVE_WHEEL)
++	icolref(ITEM_ID_SLAVE_WHEEL) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_SCROLL_HARVEST) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_SCROLL_HARVEST) = ""
+ 	iorgweight(ITEM_ID_SCROLL_HARVEST) = 20
+ 	if ( jp ) {
+ 		ioriginalnameref(ITEM_ID_SCROLL_HARVEST) = "収穫の巻物"
+@@ -149511,11 +149966,11 @@
+ 		ioriginalnameref2(ITEM_ID_DUMMY) = ""
+ 	}
+ 	ipicref(ITEM_ID_DUMMY) = xy2pic(0, 1)
+ 	iknownnameref(ITEM_ID_DUMMY) = ioriginalnameref(ITEM_ID_DUMMY)
+ 	icolref(ITEM_ID_DUMMY) = COLOR_DEFAULT
+-	maxitemid = 1295
++	maxitemid = 1299
+ 	return
+ 	goto *recipe_ref
+ 
+ #deffunc calcweaponfix int calcweaponfix_itemid
+ 	pierce = 0
+@@ -150833,11 +151288,15 @@
+ 		matval = SKILL_NORMAL_JEWELER, 1, 100
+ 		matneed = MATERIAL_PAPER, 2, MATERIAL_MEMORY_FRAGMENT, 1
+ 		return 1
+ 	}
+ 	return -1
+-	goto *label_3595
++	goto *label_3609
++
++
++
++
+ 
+ 
+ 
+ 
+ 

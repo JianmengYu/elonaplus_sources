@@ -31,6 +31,8 @@
 #define global	ACTION_WORK_B	27
 #define global	ACTION_WORK_C	28
 #define global	ACTION_BEGGING	29
+#define global	ACTION_SLAVE_SPINNER	107
+#define global	ACTION_SLAVE_WHEEL	108
 
 // Group: action_2
 #define global	ACTION_SLEEP	100
@@ -80,6 +82,8 @@
 #define global	ADATA_EXTRA_MEDAL	38
 #define global	ADATA_SHOP_TYPE_CHANGE_COOLDOWN	39
 #define global	ADATA_RANCH_PRODUCE_RESTRICTION	39
+#define global	ADATA_LABOR_CAMP_TOIL_ENERGY	37
+#define global	ADATA_LABOR_CAMP_TOIL_LEVEL	38
 
 // Group: ai_action
 #define global	ACTION_MELEE	-1
@@ -165,6 +169,7 @@
 #define global	ANIMATION_POLLEN_CANNON	61
 #define global	ANIMATION_LASER_BAZOOKA	62
 #define global	ANIMATION_HYPER_PLUG_BURST	63
+#define global	ANIMATION_GOD_CHARGE_ROD	64
 
 // Group: area_id
 #define global	MAX_AREA_COUNT	500
@@ -276,6 +281,7 @@
 #define global	AREA_SOUTH_RASKILIS	95
 #define global	AREA_WEST_RASKILIS	96
 #define global	AREA_OCEAN	47
+#define global	AREA_CAMP	105
 
 // Group: atx
 #define global	ATX_RANDOM	0
@@ -443,7 +449,6 @@
 #define global	CDATA_SPEED_FIX	39
 #define global	CDATA_ALIGNMENT	40
 #define global	CDATA_SKILLPOINT	41
-#define global	CDATA_SP_EARNED	42
 #define global	CDATA_INV_WEIGHT	43
 #define global	CDATA_CARRY_LIMIT	44
 #define global	CDATA_BURDEN	45
@@ -618,7 +623,6 @@
 #define global	CDATA_DAMAGE_FIX	184
 #define global	CDATA_DIRECTIVE_MODE_ORG	185
 #define global	CDATA_MASTER_SERVANT2	186
-#define global	CDATA_TAMER_WHIP_PICKUP	187
 #define global	CDATA_TONE_SEX	188
 #define global	CDATA_SPINDLE_COMBINATION_A	189
 #define global	CDATA_SPINDLE_COMBINATION_B	190
@@ -631,7 +635,6 @@
 #define global	CDATA_CHARACTER_TIER	197
 #define global	CDATA_INIT_ATTR	198
 #define global	CDATA_INIT_SPEED	199
-#define global	CDATA_TAMER_WHIP_EAT	213
 #define global	CDATA_EVOLUTION_STAGE	214
 #define global	CDATA_CONDITION_METAL	265
 #define global	CDATA_DIRECTIVE_MODE	266
@@ -688,6 +691,10 @@
 #define global	CDATA_MARK_ITEM_Y	449
 #define global	CDATA_MARK_ITEM_ADJUST_W	46
 #define global	CDATA_HEART_LOCK_RELATION	441
+#define global	CDATA_PREGNANCY_PROGRESS	42
+#define global	CDATA_GUARD_BREAK	60
+#define global	CDATA_PREGNANCY_FEMALE_CHILD	213
+#define global	CDATA_PREGNANCY_MALE_CHILD	187
 
 // Group: cdatan
 #define global	CDATAN_NAME	0
@@ -875,6 +882,8 @@
 #define global	CHARA_BIT_HAS_SEPPUKUED	1037
 #define global	CHARA_BIT_HEARTLOCK_CAREFREE	1038
 #define global	CHARA_BIT_HEARTLOCK_DANGEROUS	1039
+#define global	CHARA_BIT_LOCKED_UP	1040
+#define global	CHARA_BIT_LABOR_CAMP	1041
 
 // Group: chara_id
 #define global	CREATURE_ID_BUG	0
@@ -1231,7 +1240,7 @@
 #define global	CREATURE_ID_THE_LEOPARD_WARRIOR	351
 #define global	CREATURE_ID_SILVIA_THE_PRINCESS	352
 #define global	CREATURE_ID_CARAVAN_MASTER	353
-#define global	MAX_CREATURE_ID	CREATURE_ID_CHAOSHAPRINCESS_ZEHLS + 3
+#define global	MAX_CREATURE_ID	CREATURE_ID_ANABOLIC_RESISTANCE + 3
 #define global	CREATURE_ID_GOOSE	354
 #define global	CREATURE_ID_INSANE_KUMIROMI	355
 #define global	CREATURE_ID_DEVASTATE_LULWY	356
@@ -1960,6 +1969,16 @@
 #define global	CREATURE_ID_CHAOSHAPRINCESS_VARGM	1079
 #define global	CREATURE_ID_CHAOSHAPRINCESS_DIBWL	1080
 #define global	CREATURE_ID_CHAOSHAPRINCESS_ZEHLS	1081
+#define global	CREATURE_ID_WANDERER_OF_ELEA	1082
+#define global	CREATURE_ID_AVENGER_OF_ELEA	1083
+#define global	CREATURE_ID_MOB_OF_ELEA	1084
+#define global	CREATURE_ID_INSTIGATOR_OF_ELEA	1085
+#define global	CREATURE_ID_PIRATE_MUSKETEER	1086
+#define global	CREATURE_ID_ROUGH_PIRATE	1087
+#define global	CREATURE_ID_BOUNCTERIA	1088
+#define global	CREATURE_ID_MESHERA_UNFINISHED	1089
+#define global	CREATURE_ID_MONSTER_BACTERIA	1090
+#define global	CREATURE_ID_ANABOLIC_RESISTANCE	1091
 
 // Group: chara_state
 #define global	CHAR_STATE_DEAD	0
@@ -2401,6 +2420,7 @@
 #define global	ENCOUNTER_CHESTNUT_GIANT	5
 #define global	ENCOUNTER_SHIP_PIRATE	6
 #define global	ENCOUNTER_SHIP_MERCHANT	7
+#define global	ENCOUNTER_ELEA_REPARATION	8
 
 // Group: encprocref
 #define global	ENCPROCREF_SKILL_ID	0
@@ -2556,6 +2576,7 @@
 #define global	EVENT_SHIP_PIRATE	94
 #define global	EVENT_SHIP_MERCHANT	95
 #define global	EVENT_LEAVING_BEGGAR_CAVE	96
+#define global	EVENT_ELEA_REPARATION	97
 
 // Group: evitem
 #define global	EVITEM_HEART_KING	11
@@ -3375,9 +3396,9 @@
 #define global	RANGE_INV_ITEM_FIXED_ENCHANT	10
 #define global	INV_ITEM_MAX	70
 #define global	INV_ITEM_AMUR_CAGE	31
-#define global	INV_ITEM_SHOP_SAMPLE	32
 #define global	INV_ITEM_NEED_SLEEP	33
 #define global	INV_ITEM_CHARA_PIC	34
+#define global	INV_ITEM_PARTS	32
 
 // Group: inv_id
 #define global	INV_GROUND	-1
@@ -3613,6 +3634,9 @@
 #define global	EFFECT_FIGHTING_DESTONE	143
 #define global	EFFECT_WHITE_DARK_ORB	144
 #define global	EFFECT_AWAKE_DESTONE	145
+#define global	EFFECT_FLOAT_CAGE	146
+#define global	EFFECT_SLAVE_SPINNER	147
+#define global	EFFECT_SLAVE_WHEEL	148
 
 // Group: item_file
 #define global	ITEM_ROLE_FILE_NONE2	-1
@@ -4438,7 +4462,7 @@
 #define global	ITEM_ID_POT_OF_ALCHEMIST	790
 #define global	ITEM_ID_DRAGON_SLAYER	791
 #define global	ITEM_ID_PUTITORO	792
-#define global	MAX_ITEM_ID	ITEM_ID_SCROLL_HARVEST + 3
+#define global	MAX_ITEM_ID	ITEM_ID_DEED_CAMP + 3
 #define global	MAX_ITEM_DBID	1499
 #define global	ITEM_ID_PILE_DRIVER	793
 #define global	ITEM_ID_NEGATIVE_EDGE	794
@@ -4940,6 +4964,10 @@
 #define global	ITEM_ID_POTION_AGONY	1290
 #define global	ITEM_ID_SCROLL_ATTRACT	1291
 #define global	ITEM_ID_SCROLL_HARVEST	1292
+#define global	ITEM_ID_SLAVE_WHEEL	1293
+#define global	ITEM_ID_SLAVE_SPINNER	1294
+#define global	ITEM_ID_FLOAT_CAGE	1295
+#define global	ITEM_ID_DEED_CAMP	1296
 
 // Group: item_known
 #define global	ITEM_KNOWN_NONE	0
@@ -6123,7 +6151,7 @@
 #define global	SKILL_SPACT_DECAPITATION	658
 #define global	SKILL_SPACT_DROP_MINE	659
 #define global	SKILL_SPACT_MANIS_DISASSEMBLY	660
-#define global	MAX_SKILL	SKILL_SPACT_ACCEL_NECRO + 1
+#define global	MAX_SKILL	SKILL_SPACT_GOD_CHARGE_ROD + 1
 #define global	SKILL_SPACT_INSANE_WAVE	661
 #define global	SKILL_SPACT_SUPER_VIBRATING_FIST	662
 #define global	SKILL_SPACT_TEMPEST_ARROW	663
@@ -6318,6 +6346,7 @@
 #define global	SKILL_SPACT_SHADOW_JUMP	852
 #define global	SKILL_SPACT_SHADOW_HOP	853
 #define global	SKILL_SPACT_ACCEL_NECRO	854
+#define global	SKILL_SPACT_GOD_CHARGE_ROD	855
 
 // Group: skill_spell
 #define global	STARTING_SKILL_SPELL	400
