@@ -1,0 +1,1398 @@
+--- ../2.20-borscht/db_item.hsp	2023-10-08 12:53:01.375595100 +0800
++++ ../2.21-borscht/db_item.hsp	2023-12-29 15:16:10.289437600 +0800
+@@ -3,10 +3,76 @@
+ 		goto *db_item_set
+ 	}
+ 	dbmax = 0
+ 	dbsum = 0
+ 	if ( 1 > objlv ) {
++		goto *db_item_SPLENDID_CHAIN
++	}
++	if ( fltselect != 0 ) {
++		goto *db_item_SPLENDID_CHAIN
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_POTION ) {
++			goto *db_item_SPLENDID_CHAIN
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_SPLENDID_CHAIN
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_TOIL_ENERGY_DRINK), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_SPLENDID_CHAIN
++		}
++	}
++	dbsum += 200000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1298, dbsum
++	dbmax++
++
++*db_item_SPLENDID_CHAIN
++	if ( 1 > objlv ) {
++		goto *db_item_DEED_CAMP
++	}
++	if ( fltselect != 0 ) {
++		goto *db_item_DEED_CAMP
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_JUNK ) {
++			goto *db_item_DEED_CAMP
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_DEED_CAMP
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_SPLENDID_CHAIN), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_DEED_CAMP
++		}
++	}
++	dbsum += 150000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1297, dbsum
++	dbmax++
++
++*db_item_DEED_CAMP
++	if ( 1 > objlv ) {
+ 		goto *db_item_FLOAT_CAGE
+ 	}
+ 	if ( fltselect != 1 ) {
+ 		goto *db_item_FLOAT_CAGE
+ 	}
+@@ -42818,10 +42884,141 @@
+ 		dbid = 25
+ 	}
+ 	return
+ 
+ *db_item_set
++	if ( dbid == 1298 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 450
++			inv(INV_ITEM_WEIGHT, ci) = 100
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_TOIL_ENERGY_DRINK
++			inv(INV_ITEM_PIC, ci) = xy2pic(12, 38)
++			reftype = FILTER_ITEM_POTION
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_POTION
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 52000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 450
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 4 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 200
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_ON_DRINK ) {
++			efid = SKILL_EFFECT_ENERGY_MAX
++			efp = 100
++			gosub *drinkPotion
++			return -1
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "労働エナジーを配合した飲料。元気を前借りする効能があり、スタミナ消費もしくは労働や搾乳による生命力低下を一度だけ防止する。飲みすぎると健康を損なうというウワサがあるが、少なくとも現代のイルヴァにそこまで貧弱な生物は存在しない。\n#～飲めるのみもの、飲めないのみもの～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "満腹度を回復できる飲み物だ。\n#～鑑定報告書：＜液体＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1297 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 3600
++			inv(INV_ITEM_WEIGHT, ci) = 2100
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_SPLENDID_CHAIN
++			inv(INV_ITEM_PIC, ci) = xy2pic(13, 38)
++			reftype = FILTER_JUNK
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_JUNK
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 64000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 3600
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 150
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "自慢できるほどに立派な鎖。首でも手首でも足首でも、場所を選ばず付けられるデザインが人気だが、首に付けてネクタイっぽく垂らすのが一番スタンダードだ。\n#～選ぼう、大切な人への贈り物～"
++				description(1) = "「他の奴隷が最近やたらと立派な鎖を見せびらかして自慢してくるのだ。俺もたまらなく立派な鎖が欲しい！」\n#～鎖自慢された奴隷の言葉～"
++				description(2) = ""
++				description(3) = "主従度の高い相手に渡すと喜ばれる鎖だ。\n#～鑑定報告書：＜用具＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
+ 	if ( dbid == 1296 ) {
+ 		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_VALUE, ci) = 240000
+ 			inv(INV_ITEM_WEIGHT, ci) = 500
+ 		}
+@@ -52196,11 +52393,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "今は亡き弩砲職人の、晩年の作品。狙撃仕様の軽量バリスタ。職人の全知識を注いだ結果、狙撃銃と同等の射程を実現。貫通力と取り回し面も向上している。弩砲コレクター垂涎の逸品。\n#～イルヴァ幻想辞典～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "射程の長い弩砲だ。\n#～鑑定報告書：＜秘宝＞カテゴリ～"
++				description(3) = "狙撃型の弩砲だ。\n#～鑑定報告書：＜秘宝＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -128812,10 +129009,14 @@
+ 		return 0
+ 	}
+ 	return -999
+ 
+ *db_setFilterItem
++	filter_item(ITEM_ID_TOIL_ENERGY_DRINK) = ""
++	rffilter_item(ITEM_ID_TOIL_ENERGY_DRINK) = ""
++	filter_item(ITEM_ID_SPLENDID_CHAIN) = ""
++	rffilter_item(ITEM_ID_SPLENDID_CHAIN) = ""
+ 	filter_item(ITEM_ID_DEED_CAMP) = ""
+ 	rffilter_item(ITEM_ID_DEED_CAMP) = ""
+ 	filter_item(ITEM_ID_FLOAT_CAGE) = ""
+ 	rffilter_item(ITEM_ID_FLOAT_CAGE) = ""
+ 	filter_item(ITEM_ID_SLAVE_SPINNER) = ""
+@@ -131409,10 +131610,36 @@
+ 	filter_item(ITEM_ID_DUMMY) = ""
+ 	rffilter_item(ITEM_ID_DUMMY) = ""
+ 	return
+ 
+ *db_setItem
++	ilight(ITEM_ID_TOIL_ENERGY_DRINK) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_TOIL_ENERGY_DRINK) = ""
++	iorgweight(ITEM_ID_TOIL_ENERGY_DRINK) = 100
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_TOIL_ENERGY_DRINK) = "労働エナジードリンク"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_TOIL_ENERGY_DRINK) = "toil-energy drink"
++		ioriginalnameref2(ITEM_ID_TOIL_ENERGY_DRINK) = ""
++	}
++	ipicref(ITEM_ID_TOIL_ENERGY_DRINK) = xy2pic(12, 38)
++	iknownnameref(ITEM_ID_TOIL_ENERGY_DRINK) = ioriginalnameref(ITEM_ID_TOIL_ENERGY_DRINK)
++	icolref(ITEM_ID_TOIL_ENERGY_DRINK) = COLOR_DEFAULT
++	ilight(ITEM_ID_SPLENDID_CHAIN) = LIGHT_TYPE_CRYSTAL
++	ialphanameref(ITEM_ID_SPLENDID_CHAIN) = ""
++	iorgweight(ITEM_ID_SPLENDID_CHAIN) = 2100
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_SPLENDID_CHAIN) = "立派な鎖"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_SPLENDID_CHAIN) = "splendid chain"
++		ioriginalnameref2(ITEM_ID_SPLENDID_CHAIN) = ""
++	}
++	ipicref(ITEM_ID_SPLENDID_CHAIN) = xy2pic(13, 38)
++	iknownnameref(ITEM_ID_SPLENDID_CHAIN) = ioriginalnameref(ITEM_ID_SPLENDID_CHAIN)
++	icolref(ITEM_ID_SPLENDID_CHAIN) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_DEED_CAMP) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_DEED_CAMP) = ""
+ 	iorgweight(ITEM_ID_DEED_CAMP) = 500
+ 	if ( jp ) {
+ 		ioriginalnameref(ITEM_ID_DEED_CAMP) = "収容所の権利書"
+@@ -149966,915 +150193,915 @@
+ 		ioriginalnameref2(ITEM_ID_DUMMY) = ""
+ 	}
+ 	ipicref(ITEM_ID_DUMMY) = xy2pic(0, 1)
+ 	iknownnameref(ITEM_ID_DUMMY) = ioriginalnameref(ITEM_ID_DUMMY)
+ 	icolref(ITEM_ID_DUMMY) = COLOR_DEFAULT
+-	maxitemid = 1299
++	maxitemid = 1301
+ 	return
+ 	goto *recipe_ref
+ 
+ #deffunc calcweaponfix int calcweaponfix_itemid
+ 	pierce = 0
+ 	rangemap = 100, 20, 20, 20, 20, 20, 20, 20, 20, 20
+ 	if ( calcweaponfix_itemid == ITEM_ID_RAVENBRAND ) {
+ 		pierce = 15
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_BAMBNIR ) {
+ 		pierce = 25
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_KALPA_HAND ) {
+ 		pierce = 60
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_FRIGHT_PRAWN ) {
+ 		pierce = 0
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_ANNINDOFU_LIKE_A_LIGHTSABRE ) {
+ 		pierce = 90
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_KANI_KAMA ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_GO_RENGE ) {
+ 		pierce = 0
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_EPECLAIR ) {
+ 		pierce = 80
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_GOUTEN ) {
+ 		pierce = 15
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_DGT_101 ) {
+ 		pierce = 5
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_NUMENIUS ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_ENGOKU ) {
+ 		pierce = 10
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_POWER_TRIANGLE ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_CROSS_RAIL ) {
+ 		pierce = 10
+-		rangemap = 80, 100, 90, 80, 70, 60, 50, 40, 20
++		rangemap = 150, 150, 100, 100, 100, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_NAZUNAS_SOX ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SCORPIERCE ) {
+ 		pierce = 50
+-		rangemap = 70, 80, 90, 100, 100, 90, 90, 80, 80
++		rangemap = 50, 50, 100, 150, 150, 150, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_YOMI_TO ) {
+ 		pierce = 0
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_RINKHALS ) {
+ 		pierce = 5
+-		rangemap = 80, 100, 90, 80, 70, 60, 50, 40, 20
++		rangemap = 150, 150, 100, 100, 100, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_LINGS_BOW ) {
+ 		pierce = 15
+-		rangemap = 90, 100, 100, 80, 60, 40, 20, 20, 20
++		rangemap = 100, 150, 150, 100, 100, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_KUNAI ) {
+ 		pierce = 0
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_FLEURE ) {
+ 		pierce = 80
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_DRILL ) {
+ 		pierce = 15
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_LANCE ) {
+ 		pierce = 60
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_TOMAHAWK ) {
+ 		pierce = 5
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_CHAINSAW ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SCISSORS ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_BONE_SCYTHE ) {
+ 		pierce = 15
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_WAR_HAMMER ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_STAR_HAMMER ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SHAKUJO ) {
+ 		pierce = 10
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_NUNCHAKU ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_BLADE_BOW ) {
+ 		pierce = 15
+-		rangemap = 90, 100, 100, 80, 60, 40, 20, 20, 20
++		rangemap = 100, 150, 150, 100, 100, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_CROSSFIRE ) {
+ 		pierce = 10
+-		rangemap = 80, 100, 90, 80, 70, 60, 50, 40, 20
++		rangemap = 150, 150, 100, 100, 100, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_GUN_PAIR ) {
+ 		pierce = 20
+-		rangemap = 90, 100, 80, 60, 30, 20, 20, 20, 20
++		rangemap = 150, 150, 150, 100, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_GRAVITAIL ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_BEETLE_CYBORG ) {
+ 		pierce = 10
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_GOD_BINDER ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_CROWN_POINT ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_YOHUALLI_TEZCATL ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_GULIWELZEN ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_NECROMANTIS ) {
+ 		pierce = 5
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_ZUGAIKURAI ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_DOKURO_MIKADUKI ) {
+ 		pierce = 15
+-		rangemap = 60, 90, 100, 100, 80, 60, 40, 20, 20
++		rangemap = 50, 100, 100, 150, 150, 100, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_HELTIARRE ) {
+ 		pierce = 15
+-		rangemap = 90, 100, 100, 80, 60, 40, 20, 20, 20
++		rangemap = 100, 150, 150, 100, 100, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SASANQUA_SICKLE ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_BLOOD_ROD ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_THE_WHITE_HAWK ) {
+ 		pierce = 10
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_ION_CAKRAM ) {
+ 		pierce = 30
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SPADILLE ) {
+ 		pierce = 30
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_HL_KRSW ) {
+ 		pierce = 5
+-		rangemap = 100, 100, 100, 100, 100, 100, 100, 50, 20
++		rangemap = 100, 100, 100, 100, 100, 100, 100, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_LUCKY_ALMONDS ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_BLOODY_TEARS ) {
+ 		pierce = 30
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_IVY_SPINE ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_MELODYUS ) {
+ 		pierce = 10
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_GRANDEL ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_WHIP ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SOCKS ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_CHAINSICKLE ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_BALLISTA ) {
+ 		pierce = 40
+-		rangemap = 80, 100, 90, 80, 70, 60, 50, 40, 20
++		rangemap = 150, 150, 100, 100, 100, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_N97_CANNON ) {
+ 		pierce = 0
+-		rangemap = 70, 80, 90, 100, 100, 90, 90, 80, 80
++		rangemap = 50, 50, 100, 150, 150, 150, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_TRISHULA ) {
+ 		pierce = 25
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_HOUSENKA ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_OTOGIRI ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_ROCK ) {
+ 		pierce = 0
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_CLAW ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_REPEATING_BOW ) {
+ 		pierce = 5
+-		rangemap = 80, 100, 90, 80, 70, 60, 50, 40, 20
++		rangemap = 150, 150, 100, 100, 100, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_GUR_BAGH_NAKH ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_ASTRAL_SICKLE ) {
+ 		pierce = 5
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_VICE_STAFF ) {
+ 		pierce = 20
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_GRAVITY_AXE ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_DRAKE_ROD ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SONIC_TONFA ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SABER_TONFA ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SMASH_TONFA ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SHIELD_TONFA ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SACRIFICE_TONFA ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_GRIFFON ) {
+ 		pierce = 20
+-		rangemap = 90, 100, 80, 60, 30, 20, 20, 20, 20
++		rangemap = 150, 150, 150, 100, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_MOONLIGHT ) {
+ 		pierce = 100
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_AA_12_ADVANCE ) {
+ 		pierce = 25
+-		rangemap = 100, 80, 50, 20, 20, 20, 20, 20, 20
++		rangemap = 200, 200, 100, 50, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SLASH_JOKER ) {
+ 		pierce = 0
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_RAINBOW ) {
+ 		pierce = 20
+-		rangemap = 50, 90, 100, 90, 80, 80, 70, 60, 50
++		rangemap = 50, 50, 150, 150, 150, 100, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_FLASH_CROSSBOW ) {
+ 		pierce = 25
+-		rangemap = 80, 100, 90, 80, 70, 60, 50, 40, 20
++		rangemap = 150, 150, 100, 100, 100, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_UNICORN_DRILL ) {
+ 		pierce = 60
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_NOVA_GRENADE ) {
+ 		pierce = 0
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_FLAME_EDGE ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_ZWIEBEL ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SEALED_SHIELD ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_VITAL_FLAYER ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_NAIL_STRADIVARIUS ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_GERBERA_CROSS ) {
+ 		pierce = 15
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_NIGHTMARE ) {
+ 		pierce = 0
+-		rangemap = 100, 100, 100, 100, 100, 100, 100, 100, 20
++		rangemap = 100, 100, 100, 100, 100, 100, 100, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_BUSTER_BOOK ) {
+ 		pierce = 65
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_STONE_COIN ) {
+ 		pierce = 65
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_BLACK_MONKSHOOD ) {
+ 		pierce = 5
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SASUMATA ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SNIPER_RIFLE ) {
+ 		pierce = 0
+-		rangemap = 70, 80, 90, 100, 100, 90, 90, 80, 80
++		rangemap = 50, 50, 100, 150, 150, 150, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_VALKOINEN_KUOLEMA ) {
+ 		pierce = 0
+-		rangemap = 70, 80, 90, 100, 100, 90, 90, 80, 80
++		rangemap = 50, 50, 100, 150, 150, 150, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SOLAR_CANE ) {
+ 		pierce = 100
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_STORM_BRINGER ) {
+ 		pierce = 15
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_KINDNESS_BLADE ) {
+ 		pierce = 65
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_DREADNOUGHT ) {
+ 		pierce = 65
+-		rangemap = 80, 100, 90, 80, 70, 60, 50, 40, 20
++		rangemap = 150, 150, 100, 100, 100, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_G3_EXA ) {
+ 		pierce = 65
+-		rangemap = 80, 100, 100, 90, 80, 70, 40, 20, 20
++		rangemap = 100, 100, 150, 150, 100, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_GOD_BREAKER ) {
+ 		pierce = 65
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_BEAST_SICKLE ) {
+ 		pierce = 65
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_GEMINI ) {
+ 		pierce = 20
+-		rangemap = 90, 100, 80, 60, 30, 20, 20, 20, 20
++		rangemap = 150, 150, 150, 100, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_OTI_TUBAKI ) {
+ 		pierce = 40
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_DYNAMIC_SABER ) {
+ 		pierce = 10
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_KANEITUUHOU ) {
+ 		pierce = 100
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_GAU_17_CUSTOM ) {
+ 		pierce = 0
+-		rangemap = 80, 100, 100, 90, 80, 70, 40, 20, 20
++		rangemap = 100, 100, 150, 150, 100, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_NEGATIVE_EDGE ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_PILE_DRIVER ) {
+ 		pierce = 50
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_DRAGON_SLAYER ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SKULL_BOW ) {
+ 		pierce = 15
+-		rangemap = 60, 90, 100, 100, 80, 60, 40, 20, 20
++		rangemap = 50, 100, 100, 150, 150, 100, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_KITCHEN_KNIFE ) {
+ 		pierce = 40
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_LIGHTSABRE ) {
+ 		pierce = 100
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_MAUSER_C96_CUSTOM ) {
+ 		pierce = 35
+-		rangemap = 90, 100, 80, 60, 30, 20, 20, 20, 20
++		rangemap = 150, 150, 150, 100, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_CARNEADES_PLANK ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_HIRYU_TO ) {
+ 		pierce = 20
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_FRISIAS_TAIL ) {
+ 		pierce = 65
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SCYTHE ) {
+ 		pierce = 5
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SHIELD_OF_THORNS ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_ALUD ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_KILL_KILL_PIANO ) {
+ 		pierce = 0
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_CLAYMORE2 ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SHENAS_PANTY ) {
+ 		pierce = 5
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_VANILLA_ROCK ) {
+ 		pierce = 50
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_GRENADE ) {
+ 		pierce = 0
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SHURIKEN ) {
+ 		pierce = 15
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_AXE_OF_DESTRUCTION ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_GAIA_HAMMER ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_LUCKY_DAGGER ) {
+ 		pierce = 10
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_HOLY_LANCE ) {
+ 		pierce = 30
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_ELEMENTAL_STAFF ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_KUMIROMI_SCYTHE ) {
+ 		pierce = 15
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_WINCHESTER_PREMIUM ) {
+ 		pierce = 30
+-		rangemap = 100, 80, 50, 20, 20, 20, 20, 20, 20
++		rangemap = 200, 200, 100, 50, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_WIND_BOW ) {
+ 		pierce = 20
+-		rangemap = 50, 90, 100, 90, 80, 80, 70, 60, 50
++		rangemap = 50, 50, 150, 150, 150, 100, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_PANTY ) {
+ 		pierce = 5
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_RAIL_GUN ) {
+ 		pierce = 5
+-		rangemap = 70, 80, 90, 100, 100, 90, 90, 80, 80
++		rangemap = 50, 50, 100, 150, 150, 150, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_LASER_GUN ) {
+ 		pierce = 5
+-		rangemap = 100, 100, 100, 100, 100, 100, 100, 50, 20
++		rangemap = 100, 100, 100, 100, 100, 100, 100, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SHOT_GUN ) {
+ 		pierce = 30
+-		rangemap = 100, 80, 50, 20, 20, 20, 20, 20, 20
++		rangemap = 200, 200, 100, 50, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_CROSSBOW ) {
+ 		pierce = 25
+-		rangemap = 80, 100, 90, 80, 70, 60, 50, 40, 20
++		rangemap = 150, 150, 100, 100, 100, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_TOWER_SHIELD ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_KITE_SHIELD ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_LARGE_SHIELD ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SHIELD ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_ROUND_SHIELD ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SMALL_SHIELD ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_RANKIS ) {
+ 		pierce = 40
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_STAFF_OF_INSANITY ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_BLOOD_MOON ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_WAKIZASHI ) {
+ 		pierce = 5
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_HALBERD ) {
+ 		pierce = 40
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_BARDISH ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_CLAYMORE ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_MACHINE_GUN ) {
+ 		pierce = 0
+-		rangemap = 80, 100, 100, 90, 80, 70, 40, 20, 20
++		rangemap = 100, 100, 150, 150, 100, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SHORT_BOW ) {
+ 		pierce = 15
+-		rangemap = 90, 100, 100, 80, 60, 40, 20, 20, 20
++		rangemap = 100, 150, 150, 100, 100, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_LONG_STAFF ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_TRIDENT ) {
+ 		pierce = 25
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_HAMMER ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_BATTLE_AXE ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SCIMITAR ) {
+ 		pierce = 10
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_KATANA ) {
+ 		pierce = 20
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SPEAR ) {
+ 		pierce = 25
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_STAFF ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SICKLE ) {
+ 		pierce = 5
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_STONE ) {
+ 		pierce = 5
+-		rangemap = 90, 100, 80, 70, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_BOW_OF_VINDALE ) {
+ 		pierce = 20
+-		rangemap = 50, 90, 100, 90, 80, 80, 70, 60, 50
++		rangemap = 50, 50, 150, 150, 150, 100, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_ETHER_DAGGER ) {
+ 		pierce = 20
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_RAGNAROK ) {
+ 		pierce = 20
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_MOURNBLADE ) {
+ 		pierce = 15
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_SCYTHE_OF_THE_VOID ) {
+ 		pierce = 15
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_PISTOL ) {
+ 		pierce = 10
+-		rangemap = 90, 100, 80, 60, 30, 20, 20, 20, 20
++		rangemap = 150, 150, 150, 100, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_KNIGHT_SHIELD ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_LONG_BOW ) {
+ 		pierce = 20
+-		rangemap = 50, 90, 100, 90, 80, 80, 70, 60, 50
++		rangemap = 50, 50, 150, 150, 150, 100, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_ZANTETSUKEN ) {
+ 		pierce = 25
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_DIABLOS ) {
+ 		pierce = 10
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_CLUB ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_HAND_AXE ) {
+ 		pierce = 0
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_DAGGER ) {
+ 		pierce = 10
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_LONG_SWORD ) {
+ 		pierce = 5
+-		rangemap = 50, 80, 60, 30, 20, 20, 20, 20, 20
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+ 	return 0
+ 
+ *recipe_ref
+@@ -151288,11 +151515,13 @@
+ 		matval = SKILL_NORMAL_JEWELER, 1, 100
+ 		matneed = MATERIAL_PAPER, 2, MATERIAL_MEMORY_FRAGMENT, 1
+ 		return 1
+ 	}
+ 	return -1
+-	goto *label_3609
++	goto *label_3613
++
++
+ 
+ 
+ 
+ 
+ 
