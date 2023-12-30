@@ -14618,6 +14618,7 @@
 			if ( adata(ADATA_MIN_LEVEL, cnt) > 6666 ) {
 				adata(ADATA_MIN_LEVEL, cnt) = 6666
 			}
+			adata(ADATA_MAX_LEVEL, cnt) = adata(ADATA_MIN_LEVEL, cnt) + 2
 			txtef COLOR_BLUE
 			txt lang(mapname(cnt) + "は震えた。", mapname(cnt) + " vibrated.")
 		loop

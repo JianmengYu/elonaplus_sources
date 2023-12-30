@@ -3827,6 +3827,11 @@
 			act = ACTION_MELEE
 		}
 	}
+	if ( cdata(CDATA_CONDITION_BIND, cc) >= 20 | (cc == gdata(GDATA_RIDER) & gdata(GDATA_RIDER) != 0) | cdata(CDATA_IN_TAGTEAM, cc) == 1 ) {
+		if ( act == SKILL_SPELL_TELEPORT | act == SKILL_SPELL_SHORT_TELEPORT | act == SKILL_SPACT_SHADOW_STEP | act == SKILL_SPACT_SHADOW_JUMP | act == SKILL_SPACT_DIMENSIONAL_MOVE | act == SKILL_SPACT_JUMPING_DROP | act == SKILL_SPACT_DIVING_DRILL | act == SKILL_SPACT_THUNDERCLAP_KICK ) {
+			act = ACTION_MELEE
+		}
+	}
 	if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_TALKING ) {
 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_NONE ) {
 			if ( cdata(CDATA_TARGET, cc) != 0 | cdata(CDATA_TARGET, cc) == 0 ) {

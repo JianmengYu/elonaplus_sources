@@ -12128,6 +12128,12 @@
 	}
 	if ( _switch_val == 852 | _switch_sw ) {
 		_switch_sw = 0
+		if ( cdata(CDATA_CONDITION_BIND, cc) >= 20 ) {
+			if ( efid == SKILL_SPACT_SHADOW_STEP ) {
+				txt lang("固定されていて動かない！", "It does not move to be fixed!")
+				goto *effect_end
+			}
+		}
 		if ( gdata(GDATA_RIDER) != 0 ) {
 			if ( cc == gdata(GDATA_RIDER) ) {
 				goto *effect_end
@@ -18323,6 +18329,26 @@
 	}
 	if ( _switch_val == 856 | _switch_sw ) {
 		_switch_sw = 0
+		if ( gdata(GDATA_RIDER) != 0 ) {
+			if ( cc == gdata(GDATA_RIDER) ) {
+				goto *effect_end
+			}
+		}
+		if ( cdata(CDATA_IN_TAGTEAM, cc) == 1 ) {
+			goto *effect_end
+		}
+		if ( cdata(CDATA_TARGET, cc) == (-1) | cc == cdata(CDATA_TARGET, cc) ) {
+			if ( cc == CHARA_PLAYER ) {
+				txt lang("ターゲットをしていない。", "you have not set a target.")
+			}
+			goto *effect_end
+		}
+		if ( cdata(CDATA_CONDITION_BIND, cc) >= 20 ) {
+			if ( efid == SKILL_SPACT_SHADOW_STEP ) {
+				txt lang("固定されていて動かない！", "It does not move to be fixed!")
+				goto *effect_end
+			}
+		}
 		snd SOUNDLIST_SONIC
 		animeload 32, tc
 		cc = tc
@@ -18332,6 +18358,26 @@
 	}
 	if ( _switch_val == 857 | _switch_sw ) {
 		_switch_sw = 0
+		if ( gdata(GDATA_RIDER) != 0 ) {
+			if ( cc == gdata(GDATA_RIDER) ) {
+				goto *effect_end
+			}
+		}
+		if ( cdata(CDATA_IN_TAGTEAM, cc) == 1 ) {
+			goto *effect_end
+		}
+		if ( cdata(CDATA_TARGET, cc) == (-1) | cc == cdata(CDATA_TARGET, cc) ) {
+			if ( cc == CHARA_PLAYER ) {
+				txt lang("ターゲットをしていない。", "you have not set a target.")
+			}
+			goto *effect_end
+		}
+		if ( cdata(CDATA_CONDITION_BIND, cc) >= 20 ) {
+			if ( efid == SKILL_SPACT_SHADOW_STEP ) {
+				txt lang("固定されていて動かない！", "It does not move to be fixed!")
+				goto *effect_end
+			}
+		}
 		snd SOUNDLIST_GORO05
 		animeload 32, tc
 		cc = tc
