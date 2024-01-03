@@ -538,16 +538,18 @@
 						txt lang("現在ポイント", "Removed Point ") + "(" + qdata(QDATA_PARAM2, gdata(GDATA_QUEST_REF)) + ") " + lang("撤去ノルマ", "Quota ") + "(" + qdata(QDATA_PARAM1, gdata(GDATA_QUEST_REF)) + ")"
 					}
 					cell_featset movx, movy, 0
-					if ( rnd(3) == 0 ) {
-						txtef COLOR_RED
-						txt lang("落とし穴から何かが飛び出してきた！", "Something jumped out of the pit!")
-						flt
-						initlv = gdata(GDATA_FLAG_MINEFIELD_QUEST_LEVEL) * 2
-						characreate -1, CREATURE_ID_BAMBOO_SPEAR_SPIRIT, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER)
-						cdatan(CDATAN_NAME, rc) += " Lv" + cdata(CDATA_LEVEL, rc)
-						cdata(CDATA_EMO_ICON, rc) = 18 + 100 * 2
-						cdata(CDATA_AI_AGGRO, rc) = 30
-						cdata(CDATA_CHARACTER_TIER, rc) = CHARACTER_TIER_SUMMONED_NORMAL
+					if ( gdata(GDATA_QUEST) == QUEST_TYPE_MINEFIELD ) {
+						if ( rnd(3) == 0 ) {
+							txtef COLOR_RED
+							txt lang("落とし穴から何かが飛び出してきた！", "Something jumped out of the pit!")
+							flt
+							initlv = gdata(GDATA_FLAG_MINEFIELD_QUEST_LEVEL) * 2
+							characreate -1, CREATURE_ID_BAMBOO_SPEAR_SPIRIT, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER)
+							cdatan(CDATAN_NAME, rc) += " Lv" + cdata(CDATA_LEVEL, rc)
+							cdata(CDATA_EMO_ICON, rc) = 18 + 100 * 2
+							cdata(CDATA_AI_AGGRO, rc) = 30
+							cdata(CDATA_CHARACTER_TIER, rc) = CHARACTER_TIER_SUMMONED_NORMAL
+						}
 					}
 				}
 				if ( feat(FEAT_CELL_SUB_FEATURE_ID) == CELL_SUB_FEATURE_TRAP_QUEST_PITFALL | feat(FEAT_CELL_SUB_FEATURE_ID) == CELL_SUB_FEATURE_TRAP_PITFALL ) {
@@ -573,16 +575,20 @@
 						}
 					}
 					cell_featset movx, movy, 0
-					if ( rnd(3) == 0 ) {
-						txtef COLOR_RED
-						txt lang("落とし穴から何かが飛び出してきた！", "Something jumped out of the pit!")
-						flt
-						initlv = gdata(GDATA_FLAG_MINEFIELD_QUEST_LEVEL) * 2
-						characreate -1, CREATURE_ID_BAMBOO_SPEAR_SPIRIT, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER)
-						cdatan(CDATAN_NAME, rc) += " Lv" + cdata(CDATA_LEVEL, rc)
-						cdata(CDATA_EMO_ICON, rc) = 18 + 100 * 2
-						cdata(CDATA_AI_AGGRO, rc) = 30
-						cdata(CDATA_CHARACTER_TIER, rc) = CHARACTER_TIER_SUMMONED_NORMAL
+					if ( gdata(GDATA_QUEST) == QUEST_TYPE_MINEFIELD ) {
+						if ( feat(FEAT_CELL_SUB_FEATURE_ID) == CELL_SUB_FEATURE_TRAP_QUEST_PITFALL ) {
+							if ( rnd(3) == 0 ) {
+								txtef COLOR_RED
+								txt lang("落とし穴から何かが飛び出してきた！", "Something jumped out of the pit!")
+								flt
+								initlv = gdata(GDATA_FLAG_MINEFIELD_QUEST_LEVEL) * 2
+								characreate -1, CREATURE_ID_BAMBOO_SPEAR_SPIRIT, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER)
+								cdatan(CDATAN_NAME, rc) += " Lv" + cdata(CDATA_LEVEL, rc)
+								cdata(CDATA_EMO_ICON, rc) = 18 + 100 * 2
+								cdata(CDATA_AI_AGGRO, rc) = 30
+								cdata(CDATA_CHARACTER_TIER, rc) = CHARACTER_TIER_SUMMONED_NORMAL
+							}
+						}
 					}
 				}
 				efsource = 0

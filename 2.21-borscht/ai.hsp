@@ -2510,7 +2510,7 @@
 			}
 		}
 		if ( cdata(CDATA_ID, cc) == CREATURE_ID_NURSE ) {
-			if ( cdata(CDATA_SANITY, cc) >= 10 | cdata(CDATA_SANITY, CHARA_PLAYER) >= 10 ) {
+			if ( cdata(CDATA_SANITY, cc) > 10 | cdata(CDATA_SANITY, CHARA_PLAYER) > 10 ) {
 				if ( rnd(5) == 0 ) {
 					act = SKILL_SPACT_RAIN_OF_SANITY
 				}
@@ -3005,7 +3005,7 @@
 				if ( rnd(8) == 0 ) {
 					act = SKILL_SPELL_CRYSTAL_SPEAR
 				}
-				if ( cdata(CDATA_SANITY, cc) >= 10 | cdata(CDATA_SANITY, CHARA_PLAYER) >= 10 ) {
+				if ( cdata(CDATA_SANITY, cc) > 10 | cdata(CDATA_SANITY, CHARA_PLAYER) > 10 ) {
 					if ( rnd(5) == 0 ) {
 						act = SKILL_SPACT_RAIN_OF_SANITY
 					}
