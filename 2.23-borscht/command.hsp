@@ -79,8 +79,8 @@
 		return lang("ここには" + rtval + "種類のアイテムがある。", "There are " + rtval + " items lying here.")
 	}
 
-*label_5457
-	goto *label_5460
+*label_5460
+	goto *label_5463
 
 #deffunc txttargetnpc int txttargetnpc_arg1, int txttargetnpc_arg2, int txttargetnpc_arg3
 	locvar_txttargetnpc_dy = 0
@@ -120,6 +120,13 @@
 				locvar_txttargetnpc_dy++
 				bmes s, 255, 2552, 255
 			loop
+			if ( trait(TRAIT_NORMAL_DISCERNMENT) != 0 ) {
+				txttargetsex
+				color 0, 0, 0
+				pos 100, windowh - inf_verh - 45 - locvar_txttargetnpc_dy * 20
+				locvar_txttargetnpc_dy++
+				bmes lang("性別：" + s + "　年齢：" + calcage(locvar_txttargetnpc_i) + "歳　信仰：" + godname(cdata(CDATA_GOD, locvar_txttargetnpc_i)) + " ", "Sex:" + s + " / Age:" + calcage(locvar_txttargetnpc_i) + " / Religion:" + godname(cdata(CDATA_GOD, locvar_txttargetnpc_i)) + ""), 255, 2552, 255
+			}
 			if ( cdata(CDATA_TAGTEAM_PARTNER, locvar_txttargetnpc_i) > 0 ) {
 				color 0, 0, 0
 				pos 100, windowh - inf_verh - 45 - locvar_txttargetnpc_dy * 20
@@ -160,7 +167,7 @@
 	cansee = 1
 	return
 
-*label_5460
+*label_5463
 
 #deffunc key_direction
 	kdx = 0
@@ -2444,7 +2451,7 @@
 	}
 	if ( cbit(CHARA_BIT_SHOP_SALES_ROUTE, tc) == TRUE ) {
 		list(0, listmax) = 1, 99998
-		listn(0, listmax) = lang("[営業]", "[SHOP]") + lang("あなたは独自の販売ルートを持つ[毎日独自に稼ぐ]", "You got proprietary sales route.")
+		listn(0, listmax) = lang("[営業]", "[SHOP]") + lang("あなたは独自の商品調達ルートを持つ[独自の稼ぎ増加]", "You got proprietary procurement route.")
 		listmax++
 	}
 	if ( cbit(CHARA_BIT_SHOP_STRONG_ALLY, tc) == TRUE ) {
@@ -2828,7 +2835,7 @@
 	noteadd ""
 	gosub *quest_info
 	val = 0
-	gosub *label_0446
+	gosub *label_0447
 	repeat gdata(GDATA_CLIENT)
 		if ( qdata(QDATA_STATE, cnt) == QUEST_STATE_NONE ) {
 			continue
@@ -5244,7 +5251,7 @@
 			}
 		}
 	loop
-	repeat 858 - 600
+	repeat 865 - 600
 		if ( spact(cnt) == 1 ) {
 			if ( sdataref(SKILL_DATAREF_TG, cnt + 600) / 1000 * 1000 != 3000 & cnt + 600 != 746 & cnt + 600 != 667 & cnt + 600 != 693 & cnt + 600 != 740 ) {
 				list(0, listmax) = cnt + 600, sdataref(SKILL_DATAREF_USE, 600 + cnt)
@@ -5390,7 +5397,7 @@
 		snd SOUNDLIST_CHEST1
 		txtef COLOR_GREEN
 		txt lang("【技能・全表示】", "[Sealed skills release]")
-		repeat 858 - 600
+		repeat 865 - 600
 			if ( spact(cnt) == 2 ) {
 				if ( sdataref(SKILL_DATAREF_TG, cnt + 600) / 1000 * 1000 != 3000 & cnt + 600 != 746 & cnt + 600 != 667 & cnt + 600 != 693 & cnt + 600 != 740 ) {
 					spact(cnt) = 1
@@ -5463,7 +5470,7 @@
 	cs = commark(2) \ 1000
 	page = commark(2) / 1000
 	curmenu = 2
-	repeat 858 - 600
+	repeat 865 - 600
 		if ( spact(cnt) == 1 ) {
 			if ( sdataref(SKILL_DATAREF_TG, cnt + 600) / 1000 * 1000 == 3000 | cnt + 600 == 746 | cnt + 600 == 667 | cnt + 600 == 693 | cnt + 600 == 740 ) {
 				list(0, listmax) = cnt + 600, sdataref(SKILL_DATAREF_USE, 600 + cnt)
@@ -5602,7 +5609,7 @@
 		snd SOUNDLIST_CHEST1
 		txtef COLOR_GREEN
 		txt lang("【広域技能・全表示】", "[Sealed skills release]")
-		repeat 858 - 600
+		repeat 865 - 600
 			if ( spact(cnt) == 2 ) {
 				if ( sdataref(SKILL_DATAREF_TG, cnt + 600) / 1000 * 1000 == 3000 | cnt + 600 == 746 | cnt + 600 == 667 | cnt + 600 == 693 | cnt + 600 == 740 ) {
 					spact(cnt) = 1
@@ -5923,7 +5930,7 @@
 		}
 	}
 	if ( 0 ) {
-		txt lang(name(tc) + "のDV補正は" + cdata(CDATA_DV_FIX, tc) + "でPV補正は" + cdata(CDATA_PV_FIX, tc) + "。そして使用中のアイテムは" + itemname(cdata(CDATA_AI_ITEM, tc)) + "。", name(cc) + " fainted after failing to suffer from severe pain.")
+		txt lang(name(tc) + "のDV補正は" + cdata(CDATA_DV_FIX, tc) + "でPV補正は" + cdata(CDATA_PV_FIX, tc) + "。そして使用中のアイテムは" + itemname(cdata(CDATA_AI_ITEM, tc)) + "。関係は" + cdata(CDATA_RELATION, tc) + "、orgは" + cdata(CDATA_RELATION_ORG, tc) + "。", name(cc) + " fainted after failing to suffer from severe pain.")
 	}
 	if ( cdata(CDATA_ID, tc) == CREATURE_ID_POPPY_THE_LITTLE_DOG ) {
 		if ( gdata(GDATA_FLAG_SUB_DOG) >= 1000 ) {
@@ -6006,6 +6013,14 @@
 			if ( cbit(CHARA_BIT_SANDBAG, tc) ) {
 				promptl(0, promptmax) = lang("縄を解く", "Release"), "null", "" + 9
 				promptmax++
+			}
+		}
+		if ( gdata(GDATA_AREA) != AREA_CAMP ) {
+			if ( cdata(CDATA_FAME, tc) <= (-90) ) {
+				if ( cbit(CHARA_BIT_LOCKED_UP, tc) ) {
+					promptl(0, promptmax) = lang("檻から解き放つ", "Release"), "null", "" + 30
+					promptmax++
+				}
 			}
 		}
 	}
@@ -6499,6 +6514,31 @@
 		snd SOUNDLIST_CURSE3
 		chara_vanquish tc
 		gosub *screen_draw
+		goto *pc_turn
+	}
+	if ( p == 30 ) {
+		cdata(CDATA_RELATION_ORG, tc) = cdata(CDATA_FAME, tc) + 100
+		cdata(CDATA_FAME, tc) = 1
+		cdata(CDATA_RELATION, tc) = cdata(CDATA_RELATION_ORG, tc)
+		cdata(CDATA_ALLIED, tc) = 0
+		cdata(CDATA_X_ORG, tc) = cdata(CDATA_X, tc)
+		cdata(CDATA_Y_ORG, tc) = cdata(CDATA_Y, tc)
+		cbitmod CHARA_BIT_LOCKED_UP, tc, FALSE
+		flt
+		itemcreate -1, ITEM_ID_FLOAT_CAGE, cdata(CDATA_X, tc), cdata(CDATA_Y, tc), 0
+		inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_NORMAL
+		snd SOUNDLIST_ENC
+		txt lang(name(tc) + "を檻から出した。もはや" + name(tc) + "は連行対象ではない。", "You let " + name(tc) + " out of the cage. " + name(tc) + " is now free...")
+		if ( cbit(CHARA_BIT_PCC, tc) == TRUE ) {
+			txtef COLOR_YELLOW
+			txtmore
+			txt lang(cdatan(CDATAN_NAME, tc) + "は元々の姿に着替えた。", cdatan(CDATAN_NAME, tc) + " changed original cloth.")
+			cbitmod CHARA_BIT_PCC, tc, FALSE
+		}
+		cdata(CDATA_AREA, tc) = gdata(GDATA_AREA)
+		relocate_chara tc, -1
+		cdata(CDATA_RELATION, tc) = RELATION_DISLIKE
+		cdata(CDATA_RELATION_ORG, tc) = RELATION_DISLIKE
 		goto *pc_turn
 	}
 	if ( p == 15 ) {
@@ -7534,7 +7574,7 @@
 	gsel BUFFER_SCREEN
 	windowshadow = 1
 
-*label_5708
+*label_5711
 	redraw 0
 	cs_bk = -1
 	pagemax = (listmax - 1) / pagesize
@@ -7548,7 +7588,7 @@
 	}
 	drawmenu 1
 
-*label_5709
+*label_5712
 	if ( 1 == 0 ) {
 		goto *skill_desc
 	}
@@ -7637,7 +7677,7 @@
 		p = list(0, pagesize * page + cs)
 		if ( gdata(STARTING_GDATA_SHORTCUT + sc) == p ) {
 			gdata(STARTING_GDATA_SHORTCUT + sc) = 0
-			goto *label_5708
+			goto *label_5711
 		}
 		repeat 20
 			if ( gdata(STARTING_GDATA_SHORTCUT + cnt) == p ) {
@@ -7647,7 +7687,7 @@
 		gdata(STARTING_GDATA_SHORTCUT + sc) = p
 		txt lang("{" + sc + "}キーにショートカットを割り当てた。", "You have assigned the shortcut to {" + sc + "} key.")
 		display_msg inf_screeny + inf_tiles
-		goto *label_5708
+		goto *label_5711
 	}
 	if ( key == key_mode2 ) {
 		p = 0
@@ -7710,21 +7750,21 @@
 		if ( pagemax != 0 ) {
 			snd SOUNDLIST_POP1
 			page++
-			goto *label_5708
+			goto *label_5711
 		}
 	}
 	if ( key == key_pagedown ) {
 		if ( pagemax != 0 ) {
 			snd SOUNDLIST_POP1
 			page--
-			goto *label_5708
+			goto *label_5711
 		}
 	}
 	if ( key == key_cancel ) {
 		gosub *screen_draw
 		goto *pc_turn
 	}
-	goto *label_5709
+	goto *label_5712
 
 *skill_desc
 	s = ""
@@ -9171,7 +9211,11 @@
 			cdata(CDATA_SANITY, cc) = 100
 		}
 		if ( cc < MAX_CHARA_FOLLOWER ) {
-			s = "" + cdata(CDATA_HP, cc) + "/" + cdata(CDATA_MP, cc), "" + sdata(SKILL_ATTR_LIFE, cc) + "(" + sorg(SKILL_ATTR_LIFE, cc) + ")", "" + sdata(SKILL_ATTR_MANA, cc) + "(" + sorg(SKILL_ATTR_MANA, cc) + ")", "" + cdata(CDATA_SANITY, cc) + "" + lang("%", " %"), "" + cdata(CDATA_SPEED, cc) + "(" + sorg(SKILL_ATTR_SPD, cc) + ")", "" + cdata(CDATA_FAME, cc), "" + cdata(CDATA_KARMA, CHARA_PLAYER), "" + cdata(CDATA_SHOP_INVEST, cc) + "" + lang("階相当", " level"), ""
+			meisei = cdata(CDATA_FAME, cc)
+			if ( meisei < 0 ) {
+				meisei = 0
+			}
+			s = "" + cdata(CDATA_HP, cc) + "/" + cdata(CDATA_MP, cc), "" + sdata(SKILL_ATTR_LIFE, cc) + "(" + sorg(SKILL_ATTR_LIFE, cc) + ")", "" + sdata(SKILL_ATTR_MANA, cc) + "(" + sorg(SKILL_ATTR_MANA, cc) + ")", "" + cdata(CDATA_SANITY, cc) + "" + lang("%", " %"), "" + cdata(CDATA_SPEED, cc) + "(" + sorg(SKILL_ATTR_SPD, cc) + ")", "" + meisei, "" + cdata(CDATA_KARMA, CHARA_PLAYER), "" + cdata(CDATA_SHOP_INVEST, cc) + "" + lang("階相当", " level"), ""
 		}
 		else {
 			if ( cdata(CDATA_ALLIED, cc) == 0 ) {
@@ -9808,7 +9852,7 @@
 
 *com_item_mark_loop
 	if ( 1 == 0 ) {
-		goto *label_5761
+		goto *label_5764
 	}
 	gosub *screen_draw
 	getkey p, 13
@@ -9874,7 +9918,7 @@
 	cursor_check
 	goto *com_item_mark_loop
 
-*label_5761
+*label_5764
 	gosub *screen_draw
 	return
 
@@ -9892,7 +9936,7 @@
 
 *com_item_mark_adjust_loop
 	if ( 1 == 0 ) {
-		goto *label_5766
+		goto *label_5769
 	}
 	gosub *screen_draw
 	getkey p, 13
@@ -9960,7 +10004,7 @@
 	cursor_check
 	goto *com_item_mark_adjust_loop
 
-*label_5766
+*label_5769
 	gosub *screen_draw
 	return
 
@@ -11889,6 +11933,14 @@
 						continue
 					}
 					if ( reftype != FILTER_ITEM_FOOD ) {
+						continue
+					}
+				}
+				if ( invctrl(1) == 32 ) {
+					if ( reftype != FILTER_ITEM_SPELLBOOK ) {
+						continue
+					}
+					if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_RECIPE | inv(INV_ITEM_ID, cnt) == ITEM_ID_ANCIENT_BOOK | inv(INV_ITEM_ID, cnt) == ITEM_ID_SPELLBOOK_WISHING ) {
 						continue
 					}
 				}
@@ -13899,7 +13951,7 @@
 			goto *com_wear
 		}
 		if ( invctrl == INVCTRL_SHOP_BUY | invctrl == INVCTRL_SHOP_SELL | invctrl == INVCTRL_INV_FILE_GET | invctrl == INVCTRL_METAL ) {
-			goto *label_6849
+			goto *label_6859
 		}
 		if ( invally == 1 ) {
 			invally = 0
@@ -15420,7 +15472,7 @@
 	notesel buff
 	procid = (procid + 1) \ 4
 	proclist(procid) = "Dump:1" + " ct:" + ct
-	noteadd "Elona Version " + "6.32" + " キャラクター情報 " + gdata(GDATA_YEAR) + "年" + gdata(GDATA_MONTH) + "月" + gdata(GDATA_DAY) + "日 " + gdata(GDATA_HOUR) + "時" + gdata(GDATA_MIN) + "分  " + mdatan(0)
+	noteadd "Elona Version " + "6.33" + " キャラクター情報 " + gdata(GDATA_YEAR) + "年" + gdata(GDATA_MONTH) + "月" + gdata(GDATA_DAY) + "日 " + gdata(GDATA_HOUR) + "時" + gdata(GDATA_MIN) + "分  " + mdatan(0)
 	noteadd ""
 	noteadd "  " + fixtxt("" + cdatan(CDATAN_AKA, CHARA_PLAYER) + cdatan(CDATAN_NAME, CHARA_PLAYER), 34) + _sex(cdata(CDATA_SEX, CHARA_PLAYER)) + " " + calcage(0) + "歳" + "  " + cdata(CDATA_HEIGHT, CHARA_PLAYER) + "cm" + " " + cdata(CDATA_WEIGHT, CHARA_PLAYER) + "kg"
 	noteadd ""

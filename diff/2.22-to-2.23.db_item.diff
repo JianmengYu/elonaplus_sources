@@ -1,0 +1,195 @@
+--- ../2.22-borscht/db_item.hsp	2024-03-19 08:40:58.067597000 +0800
++++ ../2.23-borscht/db_item.hsp	2024-06-11 11:43:26.795017200 +0800
+@@ -3,10 +3,43 @@
+ 		goto *db_item_set
+ 	}
+ 	dbmax = 0
+ 	dbsum = 0
+ 	if ( 1 > objlv ) {
++		goto *db_item_TOIL_ENERGY_DRINK
++	}
++	if ( fltselect != 1 ) {
++		goto *db_item_TOIL_ENERGY_DRINK
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_JUNK ) {
++			goto *db_item_TOIL_ENERGY_DRINK
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_TOIL_ENERGY_DRINK
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_POTION_PLUG), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_TOIL_ENERGY_DRINK
++		}
++	}
++	dbsum += 500000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1299, dbsum
++	dbmax++
++
++*db_item_TOIL_ENERGY_DRINK
++	if ( 1 > objlv ) {
+ 		goto *db_item_SPLENDID_CHAIN
+ 	}
+ 	if ( fltselect != 0 ) {
+ 		goto *db_item_SPLENDID_CHAIN
+ 	}
+@@ -42884,10 +42917,71 @@
+ 		dbid = 25
+ 	}
+ 	return
+ 
+ *db_item_set
++	if ( dbid == 1299 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 30
++			inv(INV_ITEM_WEIGHT, ci) = 10
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_POTION_PLUG
++			inv(INV_ITEM_PIC, ci) = xy2pic(25, 36)
++			reftype = FILTER_JUNK
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_JUNK
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 64000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 30
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 500
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "現代で一般的に使われているポーションの栓。普通の人にとってはゴミである。\n#～私の愛する幾千ものガラクタ～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "何の変哲もないポーションの栓だ。\n#～鑑定報告書：＜廃品＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
+ 	if ( dbid == 1298 ) {
+ 		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_VALUE, ci) = 450
+ 			inv(INV_ITEM_WEIGHT, ci) = 100
+ 		}
+@@ -42940,11 +43034,11 @@
+ 			gosub *drinkPotion
+ 			return -1
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+-				description(0) = "労働エナジーを配合した飲料。元気を前借りする効能があり、スタミナ消費もしくは労働や搾乳による生命力低下を一度だけ防止する。飲みすぎると健康を損なうというウワサがあるが、少なくとも現代のイルヴァにそこまで貧弱な生物は存在しない。\n#～飲めるのみもの、飲めないのみもの～"
++				description(0) = "労働エナジーを配合した飲料。短時間スタミナの減少を無効化する効能がある。さらに、労働や搾乳による生命力低下を一度だけ防止する。飲みすぎると健康を損なうというウワサがあるが、少なくとも現代のイルヴァにそこまで貧弱な生物は存在しない。\n#～飲めるのみもの、飲めないのみもの～"
+ 				description(1) = ""
+ 				description(2) = ""
+ 				description(3) = "満腹度を回復できる飲み物だ。\n#～鑑定報告書：＜液体＞カテゴリ～"
+ 			}
+ 			else {
+@@ -129009,10 +129103,12 @@
+ 		return 0
+ 	}
+ 	return -999
+ 
+ *db_setFilterItem
++	filter_item(ITEM_ID_POTION_PLUG) = ""
++	rffilter_item(ITEM_ID_POTION_PLUG) = ""
+ 	filter_item(ITEM_ID_TOIL_ENERGY_DRINK) = ""
+ 	rffilter_item(ITEM_ID_TOIL_ENERGY_DRINK) = ""
+ 	filter_item(ITEM_ID_SPLENDID_CHAIN) = ""
+ 	rffilter_item(ITEM_ID_SPLENDID_CHAIN) = ""
+ 	filter_item(ITEM_ID_DEED_CAMP) = ""
+@@ -131610,10 +131706,23 @@
+ 	filter_item(ITEM_ID_DUMMY) = ""
+ 	rffilter_item(ITEM_ID_DUMMY) = ""
+ 	return
+ 
+ *db_setItem
++	ilight(ITEM_ID_POTION_PLUG) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_POTION_PLUG) = ""
++	iorgweight(ITEM_ID_POTION_PLUG) = 10
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_POTION_PLUG) = "ポーションの栓"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_POTION_PLUG) = "potion plug"
++		ioriginalnameref2(ITEM_ID_POTION_PLUG) = ""
++	}
++	ipicref(ITEM_ID_POTION_PLUG) = xy2pic(25, 36)
++	iknownnameref(ITEM_ID_POTION_PLUG) = ioriginalnameref(ITEM_ID_POTION_PLUG)
++	icolref(ITEM_ID_POTION_PLUG) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_TOIL_ENERGY_DRINK) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_TOIL_ENERGY_DRINK) = ""
+ 	iorgweight(ITEM_ID_TOIL_ENERGY_DRINK) = 100
+ 	if ( jp ) {
+ 		ioriginalnameref(ITEM_ID_TOIL_ENERGY_DRINK) = "労働エナジードリンク"
+@@ -150193,11 +150302,11 @@
+ 		ioriginalnameref2(ITEM_ID_DUMMY) = ""
+ 	}
+ 	ipicref(ITEM_ID_DUMMY) = xy2pic(0, 1)
+ 	iknownnameref(ITEM_ID_DUMMY) = ioriginalnameref(ITEM_ID_DUMMY)
+ 	icolref(ITEM_ID_DUMMY) = COLOR_DEFAULT
+-	maxitemid = 1301
++	maxitemid = 1302
+ 	return
+ 	goto *recipe_ref
+ 
+ #deffunc calcweaponfix int calcweaponfix_itemid
+ 	pierce = 0
+@@ -151515,11 +151624,12 @@
+ 		matval = SKILL_NORMAL_JEWELER, 1, 100
+ 		matneed = MATERIAL_PAPER, 2, MATERIAL_MEMORY_FRAGMENT, 1
+ 		return 1
+ 	}
+ 	return -1
+-	goto *label_3614
++	goto *label_3617
++
+ 
+ 
+ 
+ 
+ 
