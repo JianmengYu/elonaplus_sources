@@ -1,0 +1,345 @@
+--- ../2.23-borscht/db_item.hsp	2024-08-17 23:34:25.148726900 +0800
++++ ../2.24-borscht/db_item.hsp	2024-08-17 23:35:45.013813000 +0800
+@@ -3,10 +3,43 @@
+ 		goto *db_item_set
+ 	}
+ 	dbmax = 0
+ 	dbsum = 0
+ 	if ( 1 > objlv ) {
++		goto *db_item_POTION_PLUG
++	}
++	if ( fltselect != 1 ) {
++		goto *db_item_POTION_PLUG
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_JUNK ) {
++			goto *db_item_POTION_PLUG
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_POTION_PLUG
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_TRAINING_TICKET), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_POTION_PLUG
++		}
++	}
++	dbsum += 200000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1300, dbsum
++	dbmax++
++
++*db_item_POTION_PLUG
++	if ( 1 > objlv ) {
+ 		goto *db_item_TOIL_ENERGY_DRINK
+ 	}
+ 	if ( fltselect != 1 ) {
+ 		goto *db_item_TOIL_ENERGY_DRINK
+ 	}
+@@ -42917,10 +42950,71 @@
+ 		dbid = 25
+ 	}
+ 	return
+ 
+ *db_item_set
++	if ( dbid == 1300 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 30
++			inv(INV_ITEM_WEIGHT, ci) = 1
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_TRAINING_TICKET
++			inv(INV_ITEM_PIC, ci) = xy2pic(10, 16)
++			reftype = FILTER_JUNK
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = "/noshop/"
++			reftype = FILTER_JUNK
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 64000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 30
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 200
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "しつけのなっていないペットが増えて社会問題になっていたため、その解決策として導入された。ペットに持たせると、券と引き換えに訓練を受けることができる。各家庭に無料配布されており、ペットを飼っていない人は飼っている人にプレゼントして酒をおごってもらうなどの使い方をしているようだ。\n#～パルミア広報～"
++				description(1) = "「訓練券で受けられるのは基本コースまでです。それ以上は所持金払いじゃないと割に合わないので」\n#～ペットトレイナーの言葉～"
++				description(2) = "「訓練券も使えますが手続きが面倒なので所持金払い歓迎！」\n#～訓練所の張り紙～"
++				description(3) = "ペットを訓練する際に所持金の代わりに使える紙だ。\n#～鑑定報告書：＜紙片＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = "A ticket that can be used instead of platinum when teaching skills."
++			}
++			return
++		}
++		return 0
++	}
+ 	if ( dbid == 1299 ) {
+ 		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_VALUE, ci) = 30
+ 			inv(INV_ITEM_WEIGHT, ci) = 10
+ 		}
+@@ -54242,14 +54336,14 @@
+ 			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+-				description(0) = "爆薬が詰められたタル。衝撃を与えても平気だが、導火線に火がつくと爆発するので注意。巻き込まれないよう可能な限り離れてから燃やそう。\n#～危険物取扱マニュアル～"
++				description(0) = "複数ブロックに火薬が詰められたタル。ぶつけると爆炎を発生させて周囲を焼き払う。それとは別に、火がつくと火炎の残滓を噴き出す。いずれも威力は工作と生化学の技術に依存する。\n#～危険物取扱マニュアル～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "燃焼時に爆発するタルだ。\n#～鑑定報告書：＜爆弾＞カテゴリ～"
++				description(3) = "燃焼時に火を噴くタルだ。\n#～鑑定報告書：＜爆弾＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = "Barrel which explodes when burning."
+@@ -62427,14 +62521,14 @@
+ 			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+-				description(0) = "再度の錬金術によって融合し、立派な魔剣に生まれ変わった。切れ味は上がっているが、長く握っていると柄から生命を吸い取られるので敵にぶつけてしまった方がいい。ぶつけた時の威力は生成時の錬金術の技術に依存する。\n#～魔具全典～"
++				description(0) = "再度の錬金術によって融合し、立派な魔剣に生まれ変わった。地獄と魔法の力を纏ってパワーアップしたが、暴れっぷりが増しているのでやはり敵にぶつけてしまった方がいい。ぶつけた時の威力は投擲と魔道具の技術に依存する。\n#～魔具全典～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "ぶつけた相手に地獄・魔法属性の追加ダメージを与える。\n#～鑑定報告書：＜魔道具＞カテゴリ～"
++				description(3) = "ぶつけることでダメージを与えつつ相手の態勢を崩すアイテムだ。\n#～鑑定報告書：＜魔道具＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -63694,14 +63788,14 @@
+ 			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+-				description(0) = "錬金術で作られた強力な魔力爆弾。護身用に昔の錬金術士が開発したものらしい。放出された魔力が多段爆発するのが特徴。その威力は生成時の錬金術・魔力制御の技術に依存する。\n#～魔具全典～"
++				description(0) = "錬金術で作られた強力な魔力爆弾。護身用に昔の錬金術士が開発したものらしい。放出された魔力が多段爆発するのが特徴。その威力は魔力制御と魔道具の技術に依存する。\n#～魔具全典～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "投げると多段爆発する結晶だ。\n#～鑑定報告書：＜魔道具＞カテゴリ～"
++				description(3) = "ぶつけることで多段爆発する結晶だ。\n#～鑑定報告書：＜魔道具＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -63755,14 +63849,14 @@
+ 			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+-				description(0) = "錬金術により魔力の結晶の組成を組み替えたもの。封じ込めた魔力が不安定になっており、ピンを抜いて衝撃を与えると魔力爆発を起こす。その威力は生成時の錬金術・魔力制御の技術に依存する。簡単に作れる危険物として有名。\n#～魔具全典～"
++				description(0) = "錬金術により魔力の結晶の組成を組み替えたもの。封じ込めた魔力が不安定になっており、ピンを抜いて衝撃を与えると魔力爆発を起こす。その威力は魔力制御と魔道具の技術に依存する。簡単に作れる危険物として有名。\n#～魔具全典～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "投げると爆発する結晶だ。\n#～鑑定報告書：＜魔道具＞カテゴリ～"
++				description(3) = "ぶつけることで爆発する結晶だ。\n#～鑑定報告書：＜魔道具＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -63816,14 +63910,14 @@
+ 			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+-				description(0) = "一度は折れてしまった剣が、錬金術によって生まれ変わった姿。再び折れることを怖がって、構えようとすると剣が暴れる。振り回すには向いていないので暴れる隙を与えず投げてしまおう。情けは無用だ。ぶつけた時の威力は生成時の錬金術の技術に依存する。\n#～魔具全典～"
++				description(0) = "一度は折れてしまった剣が、錬金術によって生まれ変わった姿。再び折れることを怖がって、構えようとすると剣が暴れる。振り回すには向いていないので暴れる隙を与えず投げてしまおう。情けは無用だ。ぶつけた時の威力は投擲と魔道具の技術に依存する。\n#～魔具全典～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "ぶつけた相手に地獄属性の追加ダメージを与える。\n#～鑑定報告書：＜魔道具＞カテゴリ～"
++				description(3) = "ぶつけることでダメージを与えつつ相手の態勢を崩すアイテムだ。\n#～鑑定報告書：＜魔道具＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -93065,11 +93159,11 @@
+ 		}
+ 		return 0
+ 	}
+ 	if ( dbid == 542 ) {
+ 		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
+-			inv(INV_ITEM_VALUE, ci) = 45000
++			inv(INV_ITEM_VALUE, ci) = 60000
+ 			inv(INV_ITEM_WEIGHT, ci) = 500
+ 		}
+ 		if ( dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_ID, ci) = ITEM_ID_DEED_FARM
+ 			inv(INV_ITEM_PIC, ci) = xy2pic(11, 9)
+@@ -93092,11 +93186,11 @@
+ 			}
+ 			if ( dbspec == 9 ) {
+ 				return 53100
+ 			}
+ 			if ( dbspec == 20 ) {
+-				return 45000
++				return 60000
+ 			}
+ 			if ( dbspec == 19 ) {
+ 				return
+ 			}
+ 			if ( dbspec == 2 ) {
+@@ -94295,11 +94389,11 @@
+ 		}
+ 		return 0
+ 	}
+ 	if ( dbid == 522 ) {
+ 		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
+-			inv(INV_ITEM_VALUE, ci) = 200000
++			inv(INV_ITEM_VALUE, ci) = 50000
+ 			inv(INV_ITEM_WEIGHT, ci) = 500
+ 		}
+ 		if ( dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_ID, ci) = ITEM_ID_DEED_SHOP
+ 			inv(INV_ITEM_PIC, ci) = xy2pic(11, 9)
+@@ -94323,11 +94417,11 @@
+ 			}
+ 			if ( dbspec == 9 ) {
+ 				return 53100
+ 			}
+ 			if ( dbspec == 20 ) {
+-				return 200000
++				return 50000
+ 			}
+ 			if ( dbspec == 19 ) {
+ 				return
+ 			}
+ 			if ( dbspec == 2 ) {
+@@ -94364,11 +94458,11 @@
+ 		}
+ 		return 0
+ 	}
+ 	if ( dbid == 521 ) {
+ 		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
+-			inv(INV_ITEM_VALUE, ci) = 140000
++			inv(INV_ITEM_VALUE, ci) = 70000
+ 			inv(INV_ITEM_WEIGHT, ci) = 500
+ 		}
+ 		if ( dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_ID, ci) = ITEM_ID_DEED_MUSEUM
+ 			inv(INV_ITEM_PIC, ci) = xy2pic(11, 9)
+@@ -94392,11 +94486,11 @@
+ 			}
+ 			if ( dbspec == 9 ) {
+ 				return 53100
+ 			}
+ 			if ( dbspec == 20 ) {
+-				return 140000
++				return 70000
+ 			}
+ 			if ( dbspec == 19 ) {
+ 				return
+ 			}
+ 			if ( dbspec == 2 ) {
+@@ -129103,10 +129197,12 @@
+ 		return 0
+ 	}
+ 	return -999
+ 
+ *db_setFilterItem
++	filter_item(ITEM_ID_TRAINING_TICKET) = "/noshop/"
++	rffilter_item(ITEM_ID_TRAINING_TICKET) = ""
+ 	filter_item(ITEM_ID_POTION_PLUG) = ""
+ 	rffilter_item(ITEM_ID_POTION_PLUG) = ""
+ 	filter_item(ITEM_ID_TOIL_ENERGY_DRINK) = ""
+ 	rffilter_item(ITEM_ID_TOIL_ENERGY_DRINK) = ""
+ 	filter_item(ITEM_ID_SPLENDID_CHAIN) = ""
+@@ -131706,10 +131802,23 @@
+ 	filter_item(ITEM_ID_DUMMY) = ""
+ 	rffilter_item(ITEM_ID_DUMMY) = ""
+ 	return
+ 
+ *db_setItem
++	ilight(ITEM_ID_TRAINING_TICKET) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_TRAINING_TICKET) = ""
++	iorgweight(ITEM_ID_TRAINING_TICKET) = 1
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_TRAINING_TICKET) = "ペット訓練券"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_TRAINING_TICKET) = "pet training ticket"
++		ioriginalnameref2(ITEM_ID_TRAINING_TICKET) = ""
++	}
++	ipicref(ITEM_ID_TRAINING_TICKET) = xy2pic(10, 16)
++	iknownnameref(ITEM_ID_TRAINING_TICKET) = ioriginalnameref(ITEM_ID_TRAINING_TICKET)
++	icolref(ITEM_ID_TRAINING_TICKET) = COLOR_BLUE
+ 	ilight(ITEM_ID_POTION_PLUG) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_POTION_PLUG) = ""
+ 	iorgweight(ITEM_ID_POTION_PLUG) = 10
+ 	if ( jp ) {
+ 		ioriginalnameref(ITEM_ID_POTION_PLUG) = "ポーションの栓"
+@@ -150302,11 +150411,11 @@
+ 		ioriginalnameref2(ITEM_ID_DUMMY) = ""
+ 	}
+ 	ipicref(ITEM_ID_DUMMY) = xy2pic(0, 1)
+ 	iknownnameref(ITEM_ID_DUMMY) = ioriginalnameref(ITEM_ID_DUMMY)
+ 	icolref(ITEM_ID_DUMMY) = COLOR_DEFAULT
+-	maxitemid = 1302
++	maxitemid = 1303
+ 	return
+ 	goto *recipe_ref
+ 
+ #deffunc calcweaponfix int calcweaponfix_itemid
+ 	pierce = 0
+@@ -151624,11 +151733,12 @@
+ 		matval = SKILL_NORMAL_JEWELER, 1, 100
+ 		matneed = MATERIAL_PAPER, 2, MATERIAL_MEMORY_FRAGMENT, 1
+ 		return 1
+ 	}
+ 	return -1
+-	goto *label_3617
++	goto *label_3619
++
+ 
+ 
+ 
+ 
+ 
