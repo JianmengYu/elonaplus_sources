@@ -6488,16 +6488,16 @@
 		rapidmagic = 3
 	}
 	if ( efid == SKILL_SPELL_FIRE_CLAW | efid == SKILL_SPELL_COLD_BLADE | efid == SKILL_SPELL_FIRE_BOLT | efid == SKILL_SPELL_ICE_BOLT | efid == SKILL_SPELL_FIRE_BALL | efid == SKILL_SPELL_ICE_BALL ) {
-		fusifc = encfindpower(cc, ENCHANT_FIRE_AND_COLD)
+		fusifc = limit((encfindpower(cc, ENCHANT_FIRE_AND_COLD) + 1) / 50, 0, 5)
 	}
 	if ( efid == SKILL_SPELL_MIND_THORN | efid == SKILL_SPELL_SOUND_CANNONBALL | efid == SKILL_SPELL_MIND_BOLT | efid == SKILL_SPELL_SOUND_BOLT | efid == SKILL_SPELL_ILLUSION_ROAR | efid == SKILL_SPELL_RAGING_ROAR ) {
-		fusims = encfindpower(cc, ENCHANT_MIND_AND_SOUND)
+		fusims = limit((encfindpower(cc, ENCHANT_MIND_AND_SOUND) + 1) / 50, 0, 5)
 	}
 	if ( efid == SKILL_SPELL_NERVE_ARROW | efid == SKILL_SPELL_POISON_MUCUS | efid == SKILL_SPELL_NERVE_BOLT | efid == SKILL_SPELL_POISON_BOLT | efid == SKILL_SPELL_ANGUISH_JAIL | efid == SKILL_SPELL_POISON_STORM ) {
-		fusipn = encfindpower(cc, ENCHANT_POISON_AND_NERVE)
+		fusipn = limit((encfindpower(cc, ENCHANT_POISON_AND_NERVE) + 1) / 50, 0, 5)
 	}
 	if ( efid == SKILL_SPELL_DARK_EYE | efid == SKILL_SPELL_NETHER_ARROW | efid == SKILL_SPELL_DARKNESS_BOLT | efid == SKILL_SPELL_NETHER_BOLT | efid == SKILL_SPELL_ECLIPSE | efid == SKILL_SPELL_NETHER_WAVE ) {
-		fusidne = encfindpower(cc, ENCHANT_DARKNESS_AND_NETHER)
+		fusidne = limit((encfindpower(cc, ENCHANT_DARKNESS_AND_NETHER) + 1) / 50, 0, 5)
 	}
 	if ( rapidmagic ) {
 		repeat rapidmagic
@@ -7628,44 +7628,46 @@
 								wet tc, 5
 							}
 							if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
-								if ( fusifc > 0 ) {
-									if ( ele == SKILL_RES_FIRE ) {
-										snd SOUNDLIST_ATK_ICE
-										dmghp tc, limit(dmg * fusifc / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_COLD, elep
+								if ( dmg >= 5 ) {
+									if ( fusifc > 0 ) {
+										if ( ele == SKILL_RES_FIRE ) {
+											snd SOUNDLIST_ATK_ICE
+											dmghp tc, dmg / 5 * fusifc + 1, cc, SKILL_RES_COLD, elep
+										}
+										if ( ele == SKILL_RES_COLD ) {
+											snd SOUNDLIST_ATK_FIRE
+											dmghp tc, dmg / 5 * fusifc + 1, cc, SKILL_RES_FIRE, elep
+										}
 									}
-									if ( ele == SKILL_RES_COLD ) {
-										snd SOUNDLIST_ATK_FIRE
-										dmghp tc, limit(dmg * fusifc / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_FIRE, elep
+									if ( fusims > 0 ) {
+										if ( ele == SKILL_RES_MIND ) {
+											snd SOUNDLIST_ATK_SOUND
+											dmghp tc, dmg / 5 * fusims + 1, cc, SKILL_RES_SOUND, elep
+										}
+										if ( ele == SKILL_RES_SOUND ) {
+											snd SOUNDLIST_ATK_MIND
+											dmghp tc, dmg / 5 * fusims + 1, cc, SKILL_RES_MIND, elep
+										}
 									}
-								}
-								if ( fusims > 0 ) {
-									if ( ele == SKILL_RES_MIND ) {
-										snd SOUNDLIST_ATK_SOUND
-										dmghp tc, limit(dmg * fusims / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_SOUND, elep
+									if ( fusipn > 0 ) {
+										if ( ele == SKILL_RES_POISON ) {
+											snd SOUNDLIST_ATK_NERVE
+											dmghp tc, dmg / 5 * fusipn + 1, cc, SKILL_RES_NERVE, elep
+										}
+										if ( ele == SKILL_RES_NERVE ) {
+											snd SOUNDLIST_ATK_POISON
+											dmghp tc, dmg / 5 * fusipn + 1, cc, SKILL_RES_POISON, elep
+										}
 									}
-									if ( ele == SKILL_RES_SOUND ) {
-										snd SOUNDLIST_ATK_MIND
-										dmghp tc, limit(dmg * fusims / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_MIND, elep
-									}
-								}
-								if ( fusipn > 0 ) {
-									if ( ele == SKILL_RES_POISON ) {
-										snd SOUNDLIST_ATK_NERVE
-										dmghp tc, limit(dmg * fusipn / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_NERVE, elep
-									}
-									if ( ele == SKILL_RES_NERVE ) {
-										snd SOUNDLIST_ATK_POISON
-										dmghp tc, limit(dmg * fusipn / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_POISON, elep
-									}
-								}
-								if ( fusidne > 0 ) {
-									if ( ele == SKILL_RES_DARKNESS ) {
-										snd SOUNDLIST_ATK_HELL
-										dmghp tc, limit(dmg * fusidne / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_NETHER, elep
-									}
-									if ( ele == SKILL_RES_NETHER ) {
-										snd SOUNDLIST_ATK_DARK
-										dmghp tc, limit(dmg * fusidne / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_DARKNESS, elep
+									if ( fusidne > 0 ) {
+										if ( ele == SKILL_RES_DARKNESS ) {
+											snd SOUNDLIST_ATK_HELL
+											dmghp tc, dmg / 5 * fusidne + 1, cc, SKILL_RES_NETHER, elep
+										}
+										if ( ele == SKILL_RES_NETHER ) {
+											snd SOUNDLIST_ATK_DARK
+											dmghp tc, dmg / 5 * fusidne + 1, cc, SKILL_RES_DARKNESS, elep
+										}
 									}
 								}
 							}
@@ -8000,44 +8002,46 @@
 									wet tc, 5
 								}
 								if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
-									if ( fusifc > 0 ) {
-										if ( ele == SKILL_RES_FIRE ) {
-											snd SOUNDLIST_ATK_ICE
-											dmghp tc, limit(dmg * fusifc / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_COLD, elep
+									if ( dmg >= 5 ) {
+										if ( fusifc > 0 ) {
+											if ( ele == SKILL_RES_FIRE ) {
+												snd SOUNDLIST_ATK_ICE
+												dmghp tc, dmg / 5 * fusifc + 1, cc, SKILL_RES_COLD, elep
+											}
+											if ( ele == SKILL_RES_COLD ) {
+												snd SOUNDLIST_ATK_FIRE
+												dmghp tc, dmg / 5 * fusifc + 1, cc, SKILL_RES_FIRE, elep
+											}
 										}
-										if ( ele == SKILL_RES_COLD ) {
-											snd SOUNDLIST_ATK_FIRE
-											dmghp tc, limit(dmg * fusifc / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_FIRE, elep
+										if ( fusims > 0 ) {
+											if ( ele == SKILL_RES_MIND ) {
+												snd SOUNDLIST_ATK_SOUND
+												dmghp tc, dmg / 5 * fusims + 1, cc, SKILL_RES_SOUND, elep
+											}
+											if ( ele == SKILL_RES_SOUND ) {
+												snd SOUNDLIST_ATK_MIND
+												dmghp tc, dmg / 5 * fusims + 1, cc, SKILL_RES_MIND, elep
+											}
 										}
-									}
-									if ( fusims > 0 ) {
-										if ( ele == SKILL_RES_MIND ) {
-											snd SOUNDLIST_ATK_SOUND
-											dmghp tc, limit(dmg * fusims / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_SOUND, elep
+										if ( fusipn > 0 ) {
+											if ( ele == SKILL_RES_POISON ) {
+												snd SOUNDLIST_ATK_NERVE
+												dmghp tc, dmg / 5 * fusipn + 1, cc, SKILL_RES_NERVE, elep
+											}
+											if ( ele == SKILL_RES_NERVE ) {
+												snd SOUNDLIST_ATK_POISON
+												dmghp tc, dmg / 5 * fusipn + 1, cc, SKILL_RES_POISON, elep
+											}
 										}
-										if ( ele == SKILL_RES_SOUND ) {
-											snd SOUNDLIST_ATK_MIND
-											dmghp tc, limit(dmg * fusims / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_MIND, elep
-										}
-									}
-									if ( fusipn > 0 ) {
-										if ( ele == SKILL_RES_POISON ) {
-											snd SOUNDLIST_ATK_NERVE
-											dmghp tc, limit(dmg * fusipn / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_NERVE, elep
-										}
-										if ( ele == SKILL_RES_NERVE ) {
-											snd SOUNDLIST_ATK_POISON
-											dmghp tc, limit(dmg * fusipn / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_POISON, elep
-										}
-									}
-									if ( fusidne > 0 ) {
-										if ( ele == SKILL_RES_DARKNESS ) {
-											snd SOUNDLIST_ATK_HELL
-											dmghp tc, limit(dmg * fusidne / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_NETHER, elep
-										}
-										if ( ele == SKILL_RES_NETHER ) {
-											snd SOUNDLIST_ATK_DARK
-											dmghp tc, limit(dmg * fusidne / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_DARKNESS, elep
+										if ( fusidne > 0 ) {
+											if ( ele == SKILL_RES_DARKNESS ) {
+												snd SOUNDLIST_ATK_HELL
+												dmghp tc, dmg / 5 * fusidne + 1, cc, SKILL_RES_NETHER, elep
+											}
+											if ( ele == SKILL_RES_NETHER ) {
+												snd SOUNDLIST_ATK_DARK
+												dmghp tc, dmg / 5 * fusidne + 1, cc, SKILL_RES_DARKNESS, elep
+											}
 										}
 									}
 								}
@@ -8169,44 +8173,46 @@
 					wet tc, 5
 				}
 				if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
-					if ( fusifc > 0 ) {
-						if ( ele == SKILL_RES_FIRE ) {
-							snd SOUNDLIST_ATK_ICE
-							dmghp tc, limit(dmg * fusifc / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_COLD, elep
+					if ( dmg >= 5 ) {
+						if ( fusifc > 0 ) {
+							if ( ele == SKILL_RES_FIRE ) {
+								snd SOUNDLIST_ATK_ICE
+								dmghp tc, dmg / 5 * fusifc + 1, cc, SKILL_RES_COLD, elep
+							}
+							if ( ele == SKILL_RES_COLD ) {
+								snd SOUNDLIST_ATK_FIRE
+								dmghp tc, dmg / 5 * fusifc + 1, cc, SKILL_RES_FIRE, elep
+							}
 						}
-						if ( ele == SKILL_RES_COLD ) {
-							snd SOUNDLIST_ATK_FIRE
-							dmghp tc, limit(dmg * fusifc / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_FIRE, elep
+						if ( fusims > 0 ) {
+							if ( ele == SKILL_RES_MIND ) {
+								snd SOUNDLIST_ATK_SOUND
+								dmghp tc, dmg / 5 * fusims + 1, cc, SKILL_RES_SOUND, elep
+							}
+							if ( ele == SKILL_RES_SOUND ) {
+								snd SOUNDLIST_ATK_MIND
+								dmghp tc, dmg / 5 * fusims + 1, cc, SKILL_RES_MIND, elep
+							}
 						}
-					}
-					if ( fusims > 0 ) {
-						if ( ele == SKILL_RES_MIND ) {
-							snd SOUNDLIST_ATK_SOUND
-							dmghp tc, limit(dmg * fusims / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_SOUND, elep
+						if ( fusipn > 0 ) {
+							if ( ele == SKILL_RES_POISON ) {
+								snd SOUNDLIST_ATK_NERVE
+								dmghp tc, dmg / 5 * fusipn + 1, cc, SKILL_RES_NERVE, elep
+							}
+							if ( ele == SKILL_RES_NERVE ) {
+								snd SOUNDLIST_ATK_POISON
+								dmghp tc, dmg / 5 * fusipn + 1, cc, SKILL_RES_POISON, elep
+							}
 						}
-						if ( ele == SKILL_RES_SOUND ) {
-							snd SOUNDLIST_ATK_MIND
-							dmghp tc, limit(dmg * fusims / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_MIND, elep
-						}
-					}
-					if ( fusipn > 0 ) {
-						if ( ele == SKILL_RES_POISON ) {
-							snd SOUNDLIST_ATK_NERVE
-							dmghp tc, limit(dmg * fusipn / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_NERVE, elep
-						}
-						if ( ele == SKILL_RES_NERVE ) {
-							snd SOUNDLIST_ATK_POISON
-							dmghp tc, limit(dmg * fusipn / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_POISON, elep
-						}
-					}
-					if ( fusidne > 0 ) {
-						if ( ele == SKILL_RES_DARKNESS ) {
-							snd SOUNDLIST_ATK_HELL
-							dmghp tc, limit(dmg * fusidne / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_NETHER, elep
-						}
-						if ( ele == SKILL_RES_NETHER ) {
-							snd SOUNDLIST_ATK_DARK
-							dmghp tc, limit(dmg * fusidne / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_DARKNESS, elep
+						if ( fusidne > 0 ) {
+							if ( ele == SKILL_RES_DARKNESS ) {
+								snd SOUNDLIST_ATK_HELL
+								dmghp tc, dmg / 5 * fusidne + 1, cc, SKILL_RES_NETHER, elep
+							}
+							if ( ele == SKILL_RES_NETHER ) {
+								snd SOUNDLIST_ATK_DARK
+								dmghp tc, dmg / 5 * fusidne + 1, cc, SKILL_RES_DARKNESS, elep
+							}
 						}
 					}
 				}
@@ -8832,29 +8838,13 @@
 							}
 						}
 						if ( 0 ) {
-							flt
-							characreate -1, CREATURE_ID_RAT, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
-							flt
-							characreate -1, CREATURE_ID_SAIKYO_NEZUMI, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
-							flt
-							characreate -1, CREATURE_ID_ULTIMATE_EXPERIMENTAL, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
-							flt
-							characreate -1, CREATURE_ID_MOUNTAIN_SHAKER, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
-							flt
-							characreate -1, CREATURE_ID_DOPING_GUINEA_PIG, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
-							flt
-							characreate -1, CREATURE_ID_GUNDEGU, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
-							flt
-							characreate -1, CREATURE_ID_RUSH_RAT, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
-							flt
-							characreate -1, CREATURE_ID_HIGH_JUMP_RAT, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
-							flt
-							characreate -1, CREATURE_ID_HUGE_CHINCHILLA, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
+							if ( cc == CHARA_PLAYER ) {
+							}
 						}
 					}
 					if ( efid != SKILL_SPACT_SUMMON_SISTER ) {
 						if ( cdata(CDATA_ID, rc) == cdata(CDATA_ID, cc) ) {
-							if ( cdata(CDATA_ID, cc) != CREATURE_ID_POWERFUL_GREAT_WYRM ) {
+							if ( cdata(CDATA_ID, cc) != CREATURE_ID_POWERFUL_GREAT_WYRM & cdata(CDATA_ID, cc) != CREATURE_ID_RUSH_RAT ) {
 								chara_vanquish rc
 								continue cnt
 							}
@@ -22971,9 +22961,6 @@
 					cdata(CDATA_SALES_EXP, cnt) = 1000
 					cdata(CDATA_LIVESTOCK_QUALITY, cnt) = rnd(12) + 1
 					cdata(CDATA_LIVESTOCK_PRODUCE_QUALITY, cnt) = rnd(12) + 1
-					if ( cnt != 0 ) {
-						cdata(CDATA_SP, cnt) = 0
-					}
 					txt lang("deru" + gdata(GDATA_FLAG_RARE_DROP) + "、" + gdata(GDATA_FLAG_REALTIME_MINUTES) + "だ。運勢は" + sdata(SKILL_ATTR_LUC, CHARA_PLAYER) + "。", "*" + skillname(efid) + "* ")
 				loop
 			}

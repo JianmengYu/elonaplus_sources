@@ -45810,9 +45810,11 @@
 			list(0, listmax) = 101
 			listn(0, listmax) = lang("【特別な気持ちいいこと】", "<<Interest in a little tail t'night>>")
 			listmax++
-			list(0, listmax) = 118
-			listn(0, listmax) = lang("心の開錠", "<Mind unlock>")
-			listmax++
+			if ( tagevochat == 0 ) {
+				list(0, listmax) = 118
+				listn(0, listmax) = lang("心の開錠", "<Mind unlock>")
+				listmax++
+			}
 			if ( tagevochat == 1 ) {
 				list(0, listmax) = 111
 				listn(0, listmax) = lang("タッグ間でevochatさせる", "<Evochat without you>")
@@ -54769,7 +54771,7 @@
 						grotate BUFFER_CHR, 0, 960, 0, chipc(CHIPC_WIDTH, p) * 6, chipc(CHIPC_HEIGHT, p) * 6
 					}
 				}
-				if ( evochat < 2 | evochat == 11 ) {
+				if ( evochat >= 2 & evochat < 11 ) {
 					if ( tagevochat > 0 ) {
 						if ( cdata(CDATA_IN_TAGTEAM, tc) == (-1) ) {
 							pos windoww / 2 - 250, windowh - 88 - chipc(CHIPC_HEIGHT, p) * 3
@@ -54803,7 +54805,7 @@
 						gcopy BUFFER_BUF, 0, 0, 300, 500
 					}
 				}
-				if ( evochat < 2 | evochat == 11 ) {
+				if ( evochat >= 2 & evochat < 11 ) {
 					if ( tagevochat > 0 ) {
 						if ( cdata(CDATA_IN_TAGTEAM, tc) == (-1) ) {
 							pos windoww / 2 - 150 - 250, windowh - 588

@@ -1,6 +1,6 @@
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/action.hsp ../2.24-borscht/action.hsp
 --- ../2.23-borscht/action.hsp	2024-08-17 23:34:25.065476500 +0800
-+++ ../2.24-borscht/action.hsp	2024-08-17 23:35:43.831471600 +0800
++++ ../2.24-borscht/action.hsp	2024-08-17 23:38:43.010587800 +0800
 @@ -636,23 +636,34 @@
  						cdata(CDATA_CONDITION_SUFFOCATION, tc) = 10
  					}
@@ -118,7 +118,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  				inv(INV_ITEM_PARAM2, ti) = calcitemvalue(ti, 0)
  				inv(INV_ITEM_PARAM3, ti) = gdata(GDATA_AREA)
  			}
-@@ -2308,18 +2332,38 @@
+@@ -2308,18 +2332,44 @@
  		if ( p != 0 ) {
  			if ( tname(p) != "" ) {
  				txtmore
@@ -130,7 +130,9 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
 +						txt lang("植物の栽培に適していそうだ。", "It seems suitable for growing plants.")
 +					}
 +					else {
-+						txt lang("それは畑でのみ機能する。", "It only works on the Crop.")
++						if ( mdata(MDATA_TYPE) == MAP_TYPE_HOME ) {
++							txt lang("それは畑でのみ機能する。", "It only works on the Crop.")
++						}
 +					}
 +				}
 +			}
@@ -141,7 +143,9 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
 +						txt lang("有機物を置いておくと肥料に変わりそうだ。", "If organic matter is left, it will turn into fertilizer.")
 +					}
 +					else {
-+						txt lang("それは畑でのみ機能する。", "It only works on the Crop.")
++						if ( mdata(MDATA_TYPE) == MAP_TYPE_HOME ) {
++							txt lang("それは畑でのみ機能する。", "It only works on the Crop.")
++						}
 +					}
  				}
  			}
@@ -152,14 +156,16 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
 +						txt lang("料理素材を置いておくと乾物に変わりそうだ。", "If cooking ingredients is left, it will turn into dry food.")
 +					}
 +					else {
-+						txt lang("それは牧場でのみ機能する。", "It only works on the Ranch.")
++						if ( mdata(MDATA_TYPE) == MAP_TYPE_HOME ) {
++							txt lang("それは牧場でのみ機能する。", "It only works on the Ranch.")
++						}
 +					}
  				}
  			}
  			if ( mdata(MDATA_TYPE) == MAP_TYPE_WORLD & gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND) > 0 ) {
  				snd SOUNDLIST_DRAG01
  				if ( gdata(GDATA_FLAG_WORLD_MAP_VEHICLE_KIND) == 3 ) {
-@@ -4025,15 +4069,10 @@
+@@ -4025,15 +4075,10 @@
  		}
  	}
  	if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_INTERCEPT ) {
@@ -175,7 +181,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  			if ( cdata(CDATA_SHIELD_STYLE_TYPE, cc) == 1 ) {
  				if ( cdata(CDATA_ATTACK_STYLE, cc) & 1 ) {
  					weap = sdata(SKILL_NORMAL_SHIELD, cc)
-@@ -5092,15 +5131,10 @@
+@@ -5092,15 +5137,10 @@
  				}
  			}
  			if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_INTERCEPT ) {
@@ -191,7 +197,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  					if ( cdata(CDATA_SHIELD_STYLE_TYPE, cc) == 0 | cdata(CDATA_SHIELD_STYLE_TYPE, cc) == 2 ) {
  						if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
  							weap = sdata(SKILL_WEAPON_MARTIAL_ARTS, cc)
-@@ -5451,15 +5485,10 @@
+@@ -5451,15 +5491,10 @@
  		}
  	}
  	if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_INTERCEPT ) {
@@ -207,7 +213,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  	}
  	if ( cdata(CDATA_POWER_GAUGE, cc) >= 100 ) {
  		if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
-@@ -9123,17 +9152,10 @@
+@@ -9123,17 +9158,10 @@
  			inv(INV_ITEM_PARAM1, ci) = 165
  		}
  		if ( inv(INV_ITEM_PARAM2, ci) == 0 ) {
@@ -225,7 +231,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  			animeload 23, tc
  			txtef COLOR_PINK
  			txt lang(name(tc) + "の頭に情報が流れ込んだ。", "Memories flow in!")
-@@ -9851,15 +9873,10 @@
+@@ -9851,15 +9879,10 @@
  			}
  		}
  		if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_INTERCEPT ) {
@@ -241,7 +247,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  				if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
  					cipk = ci
  					efid = SKILL_SPACT_HYPER_PLUG_BURST
-@@ -10988,10 +11005,24 @@
+@@ -10988,10 +11011,24 @@
  				}
  				if ( cdata(CDATA_POWER_GAUGE, tc) < 50 ) {
  					txt lang("それは無理だ。", "It's impossible.")
@@ -266,7 +272,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  						if ( cdata(STARTING_CDATA_BUFF + cnt * ARRAY_CDATA_BUFF, tc) == BUFF_NONE ) {
  							break
  						}
-@@ -12867,11 +12898,11 @@
+@@ -12867,11 +12904,11 @@
  		snd SOUNDLIST_INV
  		gosub *com_inventory
  		if ( stat == 1 ) {
@@ -279,7 +285,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  				itemcreate -1, ITEM_ID_NECRO_PARTS, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), 0
  				inv(INV_ITEM_WEIGHT, ci) = inv(INV_ITEM_WEIGHT, cibk2) / 8
  				inv(INV_ITEM_SUB_NAME, ci) = inv(INV_ITEM_SUB_NAME, cibk2)
-@@ -17294,11 +17325,12 @@
+@@ -17294,11 +17331,12 @@
  						skillmod SKILL_ATTR_SPD, tc, 30000
  						skillmod SKILL_ATTR_DEX, tc, 10000
  					}
@@ -293,7 +299,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  						skillmod SKILL_ATTR_MAG, tc, 30000
  						cdata(CDATA_EVOLUTION_STAGE, tc)++
  					}
-@@ -17512,10 +17544,11 @@
+@@ -17512,10 +17550,11 @@
  						skillmod SKILL_ATTR_SPD, tc, 10000
  						skillmod SKILL_ATTR_MAG, tc, 40000
  					}
@@ -305,7 +311,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  						skillmod SKILL_ATTR_SPD, tc, 20000
  						skillmod SKILL_ATTR_CON, tc, 20000
  						resistmod tc, SKILL_RES_FIRE, 50 * 10
-@@ -19218,10 +19251,14 @@
+@@ -19218,10 +19257,14 @@
  	}
  	if ( sdata(SKILL_NORMAL_GARDENING, CHARA_PLAYER) < rnd(p + 1) | rnd(200) < p - saibai | feat(FEAT_CELL_SUB_FEATURE_ID) \ 10 == 0 ) {
  		map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_FEATS_ON_TILE) = 0
@@ -322,7 +328,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  	}
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/ai.hsp ../2.24-borscht/ai.hsp
 --- ../2.23-borscht/ai.hsp	2024-08-17 23:34:25.067478900 +0800
-+++ ../2.24-borscht/ai.hsp	2024-08-17 23:35:43.850074900 +0800
++++ ../2.24-borscht/ai.hsp	2024-08-17 23:38:43.031312800 +0800
 @@ -1508,26 +1508,28 @@
  					}
  				}
@@ -424,7 +430,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  		}
  	}
  	if ( tc == cc ) {
-@@ -1954,11 +2003,11 @@
+@@ -1954,94 +2003,113 @@
  	if ( cc < MAX_CHARA_FOLLOWER | (cdata(CDATA_ALLIED, cc) == 100 & gdata(GDATA_AREA) != AREA_SHOW_HOUSE) ) {
  		if ( cdata(CDATA_TARGET, cc) == 0 | (cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_INTERCEPT | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_TALKING & dist(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER)) > sdataref(SKILL_DATAREF_TG, SKILL_SPACT_CHEER) \ 1000 + 1) ) {
  			goto *ai_followMove
@@ -435,22 +441,172 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  		cic = -1
  		inv_find ITEM_ID_ALPHA_SHIFT_CORE, cc
  		if ( stat != (-1) ) {
- 			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) ) {
+-			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) ) {
++			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) | cc >= MAX_CHARA_FOLLOWER ) {
  				cic = stat
-@@ -3027,11 +3076,11 @@
+ 			}
+ 		}
+ 		inv_find ITEM_ID_BETA_SHIFT_CORE, cc
+ 		if ( stat != (-1) ) {
+-			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) ) {
++			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) | cc >= MAX_CHARA_FOLLOWER ) {
+ 				cic = stat
+ 			}
+ 		}
+ 		inv_find ITEM_ID_GAMMA_SHIFT_CORE, cc
+ 		if ( stat != (-1) ) {
+-			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) ) {
++			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) | cc >= MAX_CHARA_FOLLOWER ) {
+ 				cic = stat
+ 			}
+ 		}
+ 		inv_find ITEM_ID_DELTA_SHIFT_CORE, cc
+ 		if ( stat != (-1) ) {
+-			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) ) {
++			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) | cc >= MAX_CHARA_FOLLOWER ) {
+ 				cic = stat
+ 			}
+ 		}
+ 		inv_find ITEM_ID_OMEGA_SHIFT_CORE, cc
+ 		if ( stat != (-1) ) {
+-			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) ) {
++			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) | cc >= MAX_CHARA_FOLLOWER ) {
+ 				cic = stat
+ 			}
+ 		}
+ 		if ( cic != (-1) ) {
+ 			inv(INV_ITEM_NUM, cic) > 0
++			if ( inv(INV_ITEM_ID, cic) >= ITEM_ID_DELTA_SHIFT_CORE ) {
++				addbuff cc, BUFF_SPEED, cdata(CDATA_LEVEL, cc) * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 200
++				addbuff cc, BUFF_HERO, cdata(CDATA_LEVEL, cc) * 5 * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 200
++				addbuff cc, BUFF_GEM_POWER, cdata(CDATA_LEVEL, cc) * 5 * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 200
++				addbuff cc, BUFF_CONCENTRATION, cdata(CDATA_LEVEL, cc) * 5 * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 200
++				addbuff cc, BUFF_DIVINE_WISDOM, cdata(CDATA_LEVEL, cc) * 5 * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 200
++			}
++			if ( inv(INV_ITEM_ID, cic) == ITEM_ID_OMEGA_SHIFT_CORE ) {
++				addbuff cc, BUFF_SPEED, cdata(CDATA_LEVEL, cc) * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 150
++				addbuff cc, BUFF_HERO, cdata(CDATA_LEVEL, cc) * 5 * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 150
++				addbuff cc, BUFF_GEM_POWER, cdata(CDATA_LEVEL, cc) * 5 * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 150
++				addbuff cc, BUFF_CONCENTRATION, cdata(CDATA_LEVEL, cc) * 5 * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 150
++				addbuff cc, BUFF_DIVINE_WISDOM, cdata(CDATA_LEVEL, cc) * 5 * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 150
++			}
+ 			inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), cic) = gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 + inv(INV_ITEM_PARAM3, cic)
+ 			hikae = cdatan(CDATAN_NAME, cc)
+ 			cdatan(CDATAN_NAME, cc) = cdatan(CDATAN_FORM_SHIFT_NAME, cc)
+ 			cdatan(CDATAN_FORM_SHIFT_NAME, cc) = hikae
+ 			if ( cdatan(CDATAN_NAME, cc) == "" ) {
+ 				cdatan(CDATAN_NAME, cc) = cdatan(CDATAN_FORM_SHIFT_NAME, cc) + lang("／アルター", "-altered")
+ 			}
+-			hikae = cdata(CDATA_PORTRAIT, cc)
+-			cdata(CDATA_PORTRAIT, cc) = cdata(CDATA_FORM_SHIFT_PORTRAIT, cc)
+-			cdata(CDATA_FORM_SHIFT_PORTRAIT, cc) = hikae
+-			hikae = cdata(CDATA_FACE, cc)
+-			cdata(CDATA_FACE, cc) = cdata(CDATA_FORM_SHIFT_FACE, cc)
+-			cdata(CDATA_FORM_SHIFT_FACE, cc) = hikae
+-			hikae = pcc(PCC_HAIR, cc)
+-			pcc(PCC_HAIR, cc) = cdata(CDATA_FORM_SHIFT_PCC_HAIR, cc)
+-			cdata(CDATA_FORM_SHIFT_PCC_HAIR, cc) = hikae
+-			hikae = pcc(PCC_SUB_HAIR, cc)
+-			pcc(PCC_SUB_HAIR, cc) = cdata(CDATA_FORM_SHIFT_PCC_SUB_HAIR, cc)
+-			cdata(CDATA_FORM_SHIFT_PCC_SUB_HAIR, cc) = hikae
+-			hikae = pcc(PCC_BODY, cc)
+-			pcc(PCC_BODY, cc) = cdata(CDATA_FORM_SHIFT_PCC_BODY, cc)
+-			cdata(CDATA_FORM_SHIFT_PCC_BODY, cc) = hikae
+-			hikae = pcc(PCC_CLOTH, cc)
+-			pcc(PCC_CLOTH, cc) = cdata(CDATA_FORM_SHIFT_PCC_CLOTH, cc)
+-			cdata(CDATA_FORM_SHIFT_PCC_CLOTH, cc) = hikae
+-			hikae = pcc(PCC_PANTS, cc)
+-			pcc(PCC_PANTS, cc) = cdata(CDATA_FORM_SHIFT_PCC_PANTS, cc)
+-			cdata(CDATA_FORM_SHIFT_PCC_PANTS, cc) = hikae
+-			hikae = pcc(PCC_ETC1, cc)
+-			pcc(PCC_ETC1, cc) = cdata(CDATA_FORM_SHIFT_PCC_ETC1, cc)
+-			cdata(CDATA_FORM_SHIFT_PCC_ETC1, cc) = hikae
+-			hikae = pcc(PCC_ETC2, cc)
+-			pcc(PCC_ETC2, cc) = cdata(CDATA_FORM_SHIFT_PCC_ETC2, cc)
+-			cdata(CDATA_FORM_SHIFT_PCC_ETC2, cc) = hikae
+-			hikae = pcc(PCC_ETC3, cc)
+-			pcc(PCC_ETC3, cc) = cdata(CDATA_FORM_SHIFT_PCC_ETC3, cc)
+-			cdata(CDATA_FORM_SHIFT_PCC_ETC3, cc) = hikae
+-			hikae = pcc(PCC_EYE, cc)
+-			pcc(PCC_EYE, cc) = cdata(CDATA_FORM_SHIFT_PCC_EYE, cc)
+-			cdata(CDATA_FORM_SHIFT_PCC_EYE, cc) = hikae
+-			hikae = pcc(PCC_RIDE, cc)
+-			pcc(PCC_RIDE, cc) = cdata(CDATA_FORM_SHIFT_PCC_RIDE, cc)
+-			cdata(CDATA_FORM_SHIFT_PCC_RIDE, cc) = hikae
+-			if ( pcc(PCC_BODY, cc) == 0 ) {
+-				pcc(PCC_BODY, cc) = 1
+-			}
+-			hikae = cdata(CDATA_PIC, cc)
+-			cdata(CDATA_PIC, cc) = cdata(CDATA_FORM_SHIFT_PIC, cc)
+-			cdata(CDATA_FORM_SHIFT_PIC, cc) = hikae
+-			create_pcpic cc, 0
++			if ( cc < MAX_CHARA_FOLLOWER ) {
++				hikae = cdata(CDATA_PORTRAIT, cc)
++				cdata(CDATA_PORTRAIT, cc) = cdata(CDATA_FORM_SHIFT_PORTRAIT, cc)
++				cdata(CDATA_FORM_SHIFT_PORTRAIT, cc) = hikae
++				hikae = cdata(CDATA_FACE, cc)
++				cdata(CDATA_FACE, cc) = cdata(CDATA_FORM_SHIFT_FACE, cc)
++				cdata(CDATA_FORM_SHIFT_FACE, cc) = hikae
++				hikae = pcc(PCC_HAIR, cc)
++				pcc(PCC_HAIR, cc) = cdata(CDATA_FORM_SHIFT_PCC_HAIR, cc)
++				cdata(CDATA_FORM_SHIFT_PCC_HAIR, cc) = hikae
++				hikae = pcc(PCC_SUB_HAIR, cc)
++				pcc(PCC_SUB_HAIR, cc) = cdata(CDATA_FORM_SHIFT_PCC_SUB_HAIR, cc)
++				cdata(CDATA_FORM_SHIFT_PCC_SUB_HAIR, cc) = hikae
++				hikae = pcc(PCC_BODY, cc)
++				pcc(PCC_BODY, cc) = cdata(CDATA_FORM_SHIFT_PCC_BODY, cc)
++				cdata(CDATA_FORM_SHIFT_PCC_BODY, cc) = hikae
++				hikae = pcc(PCC_CLOTH, cc)
++				pcc(PCC_CLOTH, cc) = cdata(CDATA_FORM_SHIFT_PCC_CLOTH, cc)
++				cdata(CDATA_FORM_SHIFT_PCC_CLOTH, cc) = hikae
++				hikae = pcc(PCC_PANTS, cc)
++				pcc(PCC_PANTS, cc) = cdata(CDATA_FORM_SHIFT_PCC_PANTS, cc)
++				cdata(CDATA_FORM_SHIFT_PCC_PANTS, cc) = hikae
++				hikae = pcc(PCC_ETC1, cc)
++				pcc(PCC_ETC1, cc) = cdata(CDATA_FORM_SHIFT_PCC_ETC1, cc)
++				cdata(CDATA_FORM_SHIFT_PCC_ETC1, cc) = hikae
++				hikae = pcc(PCC_ETC2, cc)
++				pcc(PCC_ETC2, cc) = cdata(CDATA_FORM_SHIFT_PCC_ETC2, cc)
++				cdata(CDATA_FORM_SHIFT_PCC_ETC2, cc) = hikae
++				hikae = pcc(PCC_ETC3, cc)
++				pcc(PCC_ETC3, cc) = cdata(CDATA_FORM_SHIFT_PCC_ETC3, cc)
++				cdata(CDATA_FORM_SHIFT_PCC_ETC3, cc) = hikae
++				hikae = pcc(PCC_EYE, cc)
++				pcc(PCC_EYE, cc) = cdata(CDATA_FORM_SHIFT_PCC_EYE, cc)
++				cdata(CDATA_FORM_SHIFT_PCC_EYE, cc) = hikae
++				hikae = pcc(PCC_RIDE, cc)
++				pcc(PCC_RIDE, cc) = cdata(CDATA_FORM_SHIFT_PCC_RIDE, cc)
++				cdata(CDATA_FORM_SHIFT_PCC_RIDE, cc) = hikae
++				if ( pcc(PCC_BODY, cc) == 0 ) {
++					pcc(PCC_BODY, cc) = 1
++				}
++				hikae = cdata(CDATA_PIC, cc)
++				cdata(CDATA_PIC, cc) = cdata(CDATA_FORM_SHIFT_PIC, cc)
++				cdata(CDATA_FORM_SHIFT_PIC, cc) = hikae
++				create_pcpic cc, 0
++			}
++			if ( 0 ) {
++				snd SOUNDLIST_AMMO
++			}
+ 			customtalk cc, DBMODE_FLAVOR_SHIFT
+ 			gosub *convert_word
+ 			if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
+ 				if ( jp ) {
+ 					txt "「変身！」", "「フォームアップ！」", "「ドレスアップ！」", "「トランスフォーム！」"
+@@ -3027,11 +3095,11 @@
  			if ( rnd(10) == 0 ) {
  				act = SKILL_SPACT_DRAIN_BLOOD
  			}
  		}
  	}
 -	if ( cdata(CDATA_ID, cc) == CREATURE_ID_JUMP_LANDMINE_GIRL | cdata(CDATA_ID, cc) == CREATURE_ID_SPEED_HACK_CHEATAH | cdata(CDATA_ID, cc) == CREATURE_ID_BLACK_HOPPER_X | cdata(CDATA_ID, cc) == CREATURE_ID_FLIGHT_FISH | cdata(CDATA_ID, cc) == CREATURE_ID_FLYING_LEECH | cdata(CDATA_ID, cc) == CREATURE_ID_SUZAKU | cdata(CDATA_ID, cc) == CREATURE_ID_STRIKE_EAGLE ) {
-+	if ( cdata(CDATA_ID, cc) == CREATURE_ID_JUMP_LANDMINE_GIRL | cdata(CDATA_ID, cc) == CREATURE_ID_SPEED_HACK_CHEATAH | cdata(CDATA_ID, cc) == CREATURE_ID_BLACK_HOPPER_X | cdata(CDATA_ID, cc) == CREATURE_ID_FLIGHT_FISH | cdata(CDATA_ID, cc) == CREATURE_ID_FLYING_LEECH | cdata(CDATA_ID, cc) == CREATURE_ID_SUZAKU | cdata(CDATA_ID, cc) == CREATURE_ID_STRIKE_EAGLE | cdata(CDATA_ID, cc) == 1152 ) {
++	if ( cdata(CDATA_ID, cc) == CREATURE_ID_JUMP_LANDMINE_GIRL | cdata(CDATA_ID, cc) == CREATURE_ID_SPEED_HACK_CHEATAH | cdata(CDATA_ID, cc) == CREATURE_ID_BLACK_HOPPER_X | cdata(CDATA_ID, cc) == CREATURE_ID_FLIGHT_FISH | cdata(CDATA_ID, cc) == CREATURE_ID_FLYING_LEECH | cdata(CDATA_ID, cc) == CREATURE_ID_SUZAKU | cdata(CDATA_ID, cc) == CREATURE_ID_STRIKE_EAGLE | cdata(CDATA_ID, cc) == CREATURE_ID_HIGH_JUMP_RAT ) {
  		if ( cdata(CDATA_CONDITION_POISON, cc) == 0 & cdata(CDATA_CONDITION_BLEED, cc) == 0 & cdata(CDATA_CONDITION_SUFFOCATION, cc) == 0 ) {
  			if ( rnd(5) == 0 ) {
  				act = SKILL_SPACT_JUMPING_DROP
  			}
  		}
-@@ -3041,10 +3090,26 @@
+@@ -3041,10 +3109,26 @@
  			if ( rnd(5) == 0 ) {
  				act = SKILL_SPACT_DIVING_DRILL
  			}
@@ -479,7 +635,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  			}
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/blend.hsp ../2.24-borscht/blend.hsp
 --- ../2.23-borscht/blend.hsp	2024-08-17 23:34:25.068480700 +0800
-+++ ../2.24-borscht/blend.hsp	2024-08-17 23:35:43.864178700 +0800
++++ ../2.24-borscht/blend.hsp	2024-08-17 23:38:43.045107200 +0800
 @@ -889,17 +889,17 @@
  	rpdata(RPDATA_MAT + 0, rpid) = RF_MAGI, RF_MAGI, RF_MAGI, ITEM_ID_MAGATAMA
  	rpid = STARTING_RPID + 42
@@ -535,7 +691,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  			flt
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/calculation.hsp ../2.24-borscht/calculation.hsp
 --- ../2.23-borscht/calculation.hsp	2024-08-17 23:34:25.069479400 +0800
-+++ ../2.24-borscht/calculation.hsp	2024-08-17 23:35:43.874406100 +0800
++++ ../2.24-borscht/calculation.hsp	2024-08-17 23:38:43.056861400 +0800
 @@ -375,10 +375,14 @@
  		locvar_calcitemvalue_value = 1
  	}
@@ -653,7 +809,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/chara.hsp ../2.24-borscht/chara.hsp
 --- ../2.23-borscht/chara.hsp	2024-08-17 23:34:25.070480200 +0800
-+++ ../2.24-borscht/chara.hsp	2024-08-17 23:35:43.892475300 +0800
++++ ../2.24-borscht/chara.hsp	2024-08-17 23:38:43.076454000 +0800
 @@ -2414,10 +2414,14 @@
  	}
  	if ( cdata(CDATA_ID, rc) == CREATURE_ID_SILVER_CAT | cdata(CDATA_ID, rc) == CREATURE_ID_STRAY_CAT | cdata(CDATA_ID, rc) == CREATURE_ID_BAMBOO_SPROUT | cdata(CDATA_ID, rc) == CREATURE_ID_CHAOS_SEED | cdata(CDATA_ID, rc) == CREATURE_ID_KARATA_THE_SEMINAR_MASCOT | cdata(CDATA_ID, rc) == CREATURE_ID_NURSING_MOTH ) {
@@ -684,7 +840,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  		cdata(CDATA_HEIGHT, rc) = rnd(15) + 165
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/chara_func.hsp ../2.24-borscht/chara_func.hsp
 --- ../2.23-borscht/chara_func.hsp	2024-08-17 23:34:25.072985700 +0800
-+++ ../2.24-borscht/chara_func.hsp	2024-08-17 23:35:43.925320200 +0800
++++ ../2.24-borscht/chara_func.hsp	2024-08-17 23:38:43.112340800 +0800
 @@ -3475,11 +3475,11 @@
  		cdata(CDATA_INIT_SPEED, check_talk_arg2) = sorg(SKILL_ATTR_SPD, check_talk_arg2)
  	}
@@ -872,7 +1028,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  					gdata(GDATA_SLEEP_EXP) = 1000000000
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/chat.hsp ../2.24-borscht/chat.hsp
 --- ../2.23-borscht/chat.hsp	2024-08-17 23:34:25.088796200 +0800
-+++ ../2.24-borscht/chat.hsp	2024-08-17 23:35:44.128323700 +0800
++++ ../2.24-borscht/chat.hsp	2024-08-17 23:38:43.333180700 +0800
 @@ -3382,10 +3382,23 @@
  			if ( scenemode ) {
  				if ( scene_cut == 1 ) {
@@ -1571,7 +1727,26 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  				listn(0, listmax) = strmore
  				listmax++
  				chatesc = 1
-@@ -45647,11 +45949,11 @@
+@@ -45506,13 +45808,15 @@
+ 				listmax++
+ 			}
+ 			list(0, listmax) = 101
+ 			listn(0, listmax) = lang("【特別な気持ちいいこと】", "<<Interest in a little tail t'night>>")
+ 			listmax++
+-			list(0, listmax) = 118
+-			listn(0, listmax) = lang("心の開錠", "<Mind unlock>")
+-			listmax++
++			if ( tagevochat == 0 ) {
++				list(0, listmax) = 118
++				listn(0, listmax) = lang("心の開錠", "<Mind unlock>")
++				listmax++
++			}
+ 			if ( tagevochat == 1 ) {
+ 				list(0, listmax) = 111
+ 				listn(0, listmax) = lang("タッグ間でevochatさせる", "<Evochat without you>")
+ 				listmax++
+ 			}
+@@ -45647,11 +45951,11 @@
  			if ( cdata(CDATA_ROLE, tc) == ROLE_SHOP_BLACKMARKET ) {
  				list(0, listmax) = 86
  				listn(0, listmax) = lang("「キセル」が欲しい", "I want a kiseru.")
@@ -1584,7 +1759,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  				listmax++
  			}
  		}
-@@ -45848,11 +46150,11 @@
+@@ -45848,11 +46152,11 @@
  		if ( cdata(CDATA_ROLE, tc) == ROLE_TRAINER ) {
  			list(0, listmax) = 17
  			listn(0, listmax) = lang("訓練したい", "Train me.")
@@ -1597,7 +1772,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  		if ( cdata(CDATA_ROLE, tc) == ROLE_MAYOR ) {
  			if ( mdata(MDATA_CITY_COMPLAINTS) == 0 ) {
  				list(0, listmax) = 73
-@@ -45862,10 +46164,15 @@
+@@ -45862,10 +46166,15 @@
  			if ( mdata(MDATA_CITY_COMPLAINTS) > 0 ) {
  				list(0, listmax) = 74
  				listn(0, listmax) = lang("街の管理コマンド", "I want to run the town management.")
@@ -1613,7 +1788,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  		}
  		if ( cdata(CDATA_ROLE, tc) == ROLE_INFORMER ) {
  			list(0, listmax) = 18
-@@ -49271,10 +49578,45 @@
+@@ -49271,10 +49580,45 @@
  			txtmore
  			gosub *cell_info
  		}
@@ -1659,7 +1834,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  		if ( cdata(CDATA_SEX, tc) == 0 ) {
  			if ( kaiwa == 0 ) {
  				listmax = 0
-@@ -53833,10 +54175,11 @@
+@@ -53833,10 +54177,11 @@
  			gosub *add_ally
  			cbitmod CHARA_BIT_BODYGUARD, rc, TRUE
  			qdata(QDATA_PARAM2, rq) = cdata(CDATA_ID, rc)
@@ -1671,7 +1846,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  		}
  		buff = lang(_thanks() + "期待してい" + _ru(), "Thanks. I'm counting on you.")
  		if ( qdata(QDATA_EXIST, rq) == QUEST_TYPE_DELIVER ) {
-@@ -54017,47 +54360,55 @@
+@@ -54017,47 +54362,55 @@
  	listn(0, listmax) = lang("やめる", "Reject")
  	listmax++
  	chatesc = 1
@@ -1734,7 +1909,33 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  	if ( chatval != 2 & chatval != 1 ) {
  		buff = lang("冷やかし" + _ka(1), "You kidding? ")
  	}
-@@ -54738,10 +55089,21 @@
+@@ -54416,11 +54769,11 @@
+ 						pos windoww / 2, windowh - 88 - chipc(CHIPC_HEIGHT, p) * 3
+ 						gmode 2, chipc(CHIPC_WIDTH, p), chipc(CHIPC_HEIGHT, p)
+ 						grotate BUFFER_CHR, 0, 960, 0, chipc(CHIPC_WIDTH, p) * 6, chipc(CHIPC_HEIGHT, p) * 6
+ 					}
+ 				}
+-				if ( evochat < 2 | evochat == 11 ) {
++				if ( evochat >= 2 & evochat < 11 ) {
+ 					if ( tagevochat > 0 ) {
+ 						if ( cdata(CDATA_IN_TAGTEAM, tc) == (-1) ) {
+ 							pos windoww / 2 - 250, windowh - 88 - chipc(CHIPC_HEIGHT, p) * 3
+ 							gmode 2, chipc(CHIPC_WIDTH, p), chipc(CHIPC_HEIGHT, p)
+ 							grotate BUFFER_CHR, 0, 960, 0, chipc(CHIPC_WIDTH, p) * 6, chipc(CHIPC_HEIGHT, p) * 6
+@@ -54450,11 +54803,11 @@
+ 					if ( tagevochat == 0 ) {
+ 						pos windoww / 2 - 150, windowh - 588
+ 						gcopy BUFFER_BUF, 0, 0, 300, 500
+ 					}
+ 				}
+-				if ( evochat < 2 | evochat == 11 ) {
++				if ( evochat >= 2 & evochat < 11 ) {
+ 					if ( tagevochat > 0 ) {
+ 						if ( cdata(CDATA_IN_TAGTEAM, tc) == (-1) ) {
+ 							pos windoww / 2 - 150 - 250, windowh - 588
+ 							gcopy BUFFER_BUF, 0, 0, 300, 500
+ 						}
+@@ -54738,10 +55091,21 @@
  		if ( cdata(CDATA_ROLE, tc) == ROLE_SHOP_TRADE ) {
  			if ( cdata(CDATA_ROLE_SHOP_LEVEL, tc) == 0 ) {
  				cdata(CDATA_ROLE_SHOP_LEVEL, tc) = 10
@@ -1758,7 +1959,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  			}
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/chips.hsp ../2.24-borscht/chips.hsp
 --- ../2.23-borscht/chips.hsp	2024-08-17 23:34:25.089798500 +0800
-+++ ../2.24-borscht/chips.hsp	2024-08-17 23:35:44.137359400 +0800
++++ ../2.24-borscht/chips.hsp	2024-08-17 23:38:43.343199600 +0800
 @@ -1071,11 +1071,11 @@
  	lightdata(LIGHTDATA_PIC, LIGHT_TYPE_CANDLE_LOW) = 4, 0, 50, 16, 5, 70, 1
  	lightdata(LIGHTDATA_PIC, LIGHT_TYPE_WINDOW) = 12, 0, 100, 24, 3, 10
@@ -1774,7 +1975,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  		chipc(CHIPC_X, cnt) = cnt \ 33 * inf_tiles, cnt / 33 * inf_tiles, inf_tiles, inf_tiles, 16
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/command.hsp ../2.24-borscht/command.hsp
 --- ../2.23-borscht/command.hsp	2024-08-17 23:34:25.093797300 +0800
-+++ ../2.24-borscht/command.hsp	2024-08-17 23:35:44.183394400 +0800
++++ ../2.24-borscht/command.hsp	2024-08-17 23:38:43.393212700 +0800
 @@ -2157,11 +2157,16 @@
  		listn(0, listmax) = lang("[bit]", "[bit]") + lang("あなたは変装している", "You are disguising yourself.")
  		listmax++
@@ -1873,7 +2074,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  	noteadd fixtxt("職業       : " + classname, 30) + fixtxt("所属      : " + guildname(), 32)
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/db_card.hsp ../2.24-borscht/db_card.hsp
 --- ../2.23-borscht/db_card.hsp	2024-08-17 23:34:25.099377400 +0800
-+++ ../2.24-borscht/db_card.hsp	2024-08-17 23:35:44.253740300 +0800
++++ ../2.24-borscht/db_card.hsp	2024-08-17 23:38:43.471508500 +0800
 @@ -1,6 +1,110 @@
  *db_card
 +	if ( dbid == 1123 ) {
@@ -2018,7 +2219,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  		cardreftype = 10
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/db_race.hsp ../2.24-borscht/db_race.hsp
 --- ../2.23-borscht/db_race.hsp	2024-08-17 23:34:25.150098800 +0800
-+++ ../2.24-borscht/db_race.hsp	2024-08-17 23:35:45.032775200 +0800
++++ ../2.24-borscht/db_race.hsp	2024-08-17 23:38:44.319157200 +0800
 @@ -1266,11 +1266,11 @@
  			racename = lang("妖精", cnven("fairy"))
  			cpicref = 390
@@ -2047,7 +2248,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  		if ( dbmode == DBMODE_REF_PLAYABLE ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/help.hsp ../2.24-borscht/help.hsp
 --- ../2.23-borscht/help.hsp	2024-08-17 23:34:25.155101700 +0800
-+++ ../2.24-borscht/help.hsp	2024-08-17 23:35:45.093090500 +0800
++++ ../2.24-borscht/help.hsp	2024-08-17 23:38:44.385151500 +0800
 @@ -5351,11 +5351,11 @@
  	}
  	if ( mode == MODELIST_QUICK_START ) {
@@ -2110,7 +2311,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  *pc_turn_init_WEND1
  	if ( dbg_titleinfo ) {
 -		title "ElonaPlus 2.23" + " ver " + "6.33" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
-+		title "ElonaPlus 2.24" + " ver " + "6.34" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
++		title "ElonaPlus 2.24fix" + " ver " + "6.34" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
  	}
  	if ( trait(TRAIT_ETHER_ADDICTED_POTION) != 0 ) {
  		if ( rnd(5) == 0 ) {
@@ -2118,7 +2319,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  			ci = rnd(invrange) + invhead
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/init.hsp ../2.24-borscht/init.hsp
 --- ../2.23-borscht/init.hsp	2024-08-17 23:34:25.160575000 +0800
-+++ ../2.24-borscht/init.hsp	2024-08-17 23:35:45.172906500 +0800
++++ ../2.24-borscht/init.hsp	2024-08-17 23:38:44.470519600 +0800
 @@ -1521,13 +1521,13 @@
  		return
  	}
@@ -2247,7 +2448,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  		if ( ci >= 0 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/item.hsp ../2.24-borscht/item.hsp
 --- ../2.23-borscht/item.hsp	2024-08-17 23:34:25.161575700 +0800
-+++ ../2.24-borscht/item.hsp	2024-08-17 23:35:45.190024600 +0800
++++ ../2.24-borscht/item.hsp	2024-08-17 23:38:44.489048200 +0800
 @@ -1287,10 +1287,19 @@
  			itemcreate -1, ITEM_ID_EVITEM, cdata(CDATA_X, rc), cdata(CDATA_Y, rc), 0
  			if ( stat != 0 ) {
@@ -2404,7 +2605,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/item_func.hsp ../2.24-borscht/item_func.hsp
 --- ../2.23-borscht/item_func.hsp	2024-08-17 23:34:25.163575200 +0800
-+++ ../2.24-borscht/item_func.hsp	2024-08-17 23:35:45.210327700 +0800
++++ ../2.24-borscht/item_func.hsp	2024-08-17 23:38:44.511964700 +0800
 @@ -1005,10 +1005,13 @@
  				else {
  					if ( inv(INV_ITEM_SUB_NAME, itemowner_itemid) < 0 | inv(INV_ITEM_SUB_NAME, itemowner_itemid) >= 1499 ) {
@@ -2445,7 +2646,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  		if ( ibit(ITEM_BIT_CHARGE_ITEM, itemname_itemid) == TRUE ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/main.hsp ../2.24-borscht/main.hsp
 --- ../2.23-borscht/main.hsp	2024-08-17 23:34:25.163575200 +0800
-+++ ../2.24-borscht/main.hsp	2024-08-17 23:35:45.211831500 +0800
++++ ../2.24-borscht/main.hsp	2024-08-17 23:38:44.512964800 +0800
 @@ -181,11 +181,11 @@
  	if ( dbg_randseed != 0 ) {
  		randseed = dbg_randseed
@@ -2453,7 +2654,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  	randomize randseed
  	exrand_randomize randseed
 -	title "ElonaPlus 2.23"
-+	title "ElonaPlus 2.24"
++	title "ElonaPlus 2.24fix"
  	goto *system_init
  	goto *label_0003
  
@@ -2461,7 +2662,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  	netrequest netload_filename
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/map.hsp ../2.24-borscht/map.hsp
 --- ../2.23-borscht/map.hsp	2024-08-17 23:34:25.167080200 +0800
-+++ ../2.24-borscht/map.hsp	2024-08-17 23:35:45.264075600 +0800
++++ ../2.24-borscht/map.hsp	2024-08-17 23:38:44.569251700 +0800
 @@ -12496,11 +12496,11 @@
  							repeat renewmulti
  								if ( feat >= tile_plant + 2 ) {
@@ -2477,7 +2678,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  								}
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/map_user.hsp ../2.24-borscht/map_user.hsp
 --- ../2.23-borscht/map_user.hsp	2024-08-17 23:34:25.169079900 +0800
-+++ ../2.24-borscht/map_user.hsp	2024-08-17 23:35:45.293037400 +0800
++++ ../2.24-borscht/map_user.hsp	2024-08-17 23:38:44.601369500 +0800
 @@ -1885,19 +1885,10 @@
  			}
  		}
@@ -2533,7 +2734,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  		autosave = 1 * (gdata(GDATA_AREA) != AREA_SHOW_HOUSE)
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/module.hsp ../2.24-borscht/module.hsp
 --- ../2.23-borscht/module.hsp	2024-08-17 23:34:25.171583900 +0800
-+++ ../2.24-borscht/module.hsp	2024-08-17 23:35:45.328959700 +0800
++++ ../2.24-borscht/module.hsp	2024-08-17 23:38:44.640038500 +0800
 @@ -1886,10 +1886,14 @@
  											pos locvar_cell_draw_px + 24, locvar_cell_draw_py + 8
  											grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48, 0, 24, 40
@@ -2551,7 +2752,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  						if ( cdata(CDATA_CONDITION_ANGRY, CHARA_PLAYER) != 0 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/proc.hsp ../2.24-borscht/proc.hsp
 --- ../2.23-borscht/proc.hsp	2024-08-17 23:34:25.178091500 +0800
-+++ ../2.24-borscht/proc.hsp	2024-08-17 23:35:45.416267900 +0800
++++ ../2.24-borscht/proc.hsp	2024-08-17 23:38:44.735365700 +0800
 @@ -2017,15 +2017,10 @@
  			}
  		}
@@ -2662,6 +2863,31 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  				if ( sdataref(SKILL_DATAREF_TYPE, efid) == 1 | sdataref(SKILL_DATAREF_TYPE, efid) == 2 | (sdataref(SKILL_DATAREF_TYPE, efid) == 3 & efid != SKILL_SPACT_RAIN_OF_SANITY & efid != SKILL_SPELL_HEALING_RAIN) ) {
  					efid = SKILL_SPACT_DIFFUSION_WAVE
  					gosub *effect
+@@ -6513,20 +6486,20 @@
+ 	rapidmagic = 0
+ 	if ( cbit(CHARA_BIT_RAPID_MAGIC, cc) & sdataref(SKILL_DATAREF_TYPE, efid) == 2 ) {
+ 		rapidmagic = 3
+ 	}
+ 	if ( efid == SKILL_SPELL_FIRE_CLAW | efid == SKILL_SPELL_COLD_BLADE | efid == SKILL_SPELL_FIRE_BOLT | efid == SKILL_SPELL_ICE_BOLT | efid == SKILL_SPELL_FIRE_BALL | efid == SKILL_SPELL_ICE_BALL ) {
+-		fusifc = encfindpower(cc, ENCHANT_FIRE_AND_COLD)
++		fusifc = limit((encfindpower(cc, ENCHANT_FIRE_AND_COLD) + 1) / 50, 0, 5)
+ 	}
+ 	if ( efid == SKILL_SPELL_MIND_THORN | efid == SKILL_SPELL_SOUND_CANNONBALL | efid == SKILL_SPELL_MIND_BOLT | efid == SKILL_SPELL_SOUND_BOLT | efid == SKILL_SPELL_ILLUSION_ROAR | efid == SKILL_SPELL_RAGING_ROAR ) {
+-		fusims = encfindpower(cc, ENCHANT_MIND_AND_SOUND)
++		fusims = limit((encfindpower(cc, ENCHANT_MIND_AND_SOUND) + 1) / 50, 0, 5)
+ 	}
+ 	if ( efid == SKILL_SPELL_NERVE_ARROW | efid == SKILL_SPELL_POISON_MUCUS | efid == SKILL_SPELL_NERVE_BOLT | efid == SKILL_SPELL_POISON_BOLT | efid == SKILL_SPELL_ANGUISH_JAIL | efid == SKILL_SPELL_POISON_STORM ) {
+-		fusipn = encfindpower(cc, ENCHANT_POISON_AND_NERVE)
++		fusipn = limit((encfindpower(cc, ENCHANT_POISON_AND_NERVE) + 1) / 50, 0, 5)
+ 	}
+ 	if ( efid == SKILL_SPELL_DARK_EYE | efid == SKILL_SPELL_NETHER_ARROW | efid == SKILL_SPELL_DARKNESS_BOLT | efid == SKILL_SPELL_NETHER_BOLT | efid == SKILL_SPELL_ECLIPSE | efid == SKILL_SPELL_NETHER_WAVE ) {
+-		fusidne = encfindpower(cc, ENCHANT_DARKNESS_AND_NETHER)
++		fusidne = limit((encfindpower(cc, ENCHANT_DARKNESS_AND_NETHER) + 1) / 50, 0, 5)
+ 	}
+ 	if ( rapidmagic ) {
+ 		repeat rapidmagic
+ 			gosub *effect
+ 			if ( cdata(CDATA_EXIST, tc) != CHAR_STATE_ALIVE ) {
 @@ -7207,15 +7180,10 @@
  					}
  				}
@@ -2678,7 +2904,265 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  						tg = 2000
  					}
  				}
-@@ -8352,15 +8320,10 @@
+@@ -7658,48 +7626,50 @@
+ 							dmghp tc, dmg, cc, ele, elep
+ 							if ( efid == SKILL_SPELL_WATER_BOLT ) {
+ 								wet tc, 5
+ 							}
+ 							if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
+-								if ( fusifc > 0 ) {
+-									if ( ele == SKILL_RES_FIRE ) {
+-										snd SOUNDLIST_ATK_ICE
+-										dmghp tc, limit(dmg * fusifc / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_COLD, elep
+-									}
+-									if ( ele == SKILL_RES_COLD ) {
+-										snd SOUNDLIST_ATK_FIRE
+-										dmghp tc, limit(dmg * fusifc / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_FIRE, elep
+-									}
+-								}
+-								if ( fusims > 0 ) {
+-									if ( ele == SKILL_RES_MIND ) {
+-										snd SOUNDLIST_ATK_SOUND
+-										dmghp tc, limit(dmg * fusims / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_SOUND, elep
+-									}
+-									if ( ele == SKILL_RES_SOUND ) {
+-										snd SOUNDLIST_ATK_MIND
+-										dmghp tc, limit(dmg * fusims / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_MIND, elep
+-									}
+-								}
+-								if ( fusipn > 0 ) {
+-									if ( ele == SKILL_RES_POISON ) {
+-										snd SOUNDLIST_ATK_NERVE
+-										dmghp tc, limit(dmg * fusipn / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_NERVE, elep
++								if ( dmg >= 5 ) {
++									if ( fusifc > 0 ) {
++										if ( ele == SKILL_RES_FIRE ) {
++											snd SOUNDLIST_ATK_ICE
++											dmghp tc, dmg / 5 * fusifc + 1, cc, SKILL_RES_COLD, elep
++										}
++										if ( ele == SKILL_RES_COLD ) {
++											snd SOUNDLIST_ATK_FIRE
++											dmghp tc, dmg / 5 * fusifc + 1, cc, SKILL_RES_FIRE, elep
++										}
+ 									}
+-									if ( ele == SKILL_RES_NERVE ) {
+-										snd SOUNDLIST_ATK_POISON
+-										dmghp tc, limit(dmg * fusipn / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_POISON, elep
++									if ( fusims > 0 ) {
++										if ( ele == SKILL_RES_MIND ) {
++											snd SOUNDLIST_ATK_SOUND
++											dmghp tc, dmg / 5 * fusims + 1, cc, SKILL_RES_SOUND, elep
++										}
++										if ( ele == SKILL_RES_SOUND ) {
++											snd SOUNDLIST_ATK_MIND
++											dmghp tc, dmg / 5 * fusims + 1, cc, SKILL_RES_MIND, elep
++										}
+ 									}
+-								}
+-								if ( fusidne > 0 ) {
+-									if ( ele == SKILL_RES_DARKNESS ) {
+-										snd SOUNDLIST_ATK_HELL
+-										dmghp tc, limit(dmg * fusidne / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_NETHER, elep
++									if ( fusipn > 0 ) {
++										if ( ele == SKILL_RES_POISON ) {
++											snd SOUNDLIST_ATK_NERVE
++											dmghp tc, dmg / 5 * fusipn + 1, cc, SKILL_RES_NERVE, elep
++										}
++										if ( ele == SKILL_RES_NERVE ) {
++											snd SOUNDLIST_ATK_POISON
++											dmghp tc, dmg / 5 * fusipn + 1, cc, SKILL_RES_POISON, elep
++										}
+ 									}
+-									if ( ele == SKILL_RES_NETHER ) {
+-										snd SOUNDLIST_ATK_DARK
+-										dmghp tc, limit(dmg * fusidne / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_DARKNESS, elep
++									if ( fusidne > 0 ) {
++										if ( ele == SKILL_RES_DARKNESS ) {
++											snd SOUNDLIST_ATK_HELL
++											dmghp tc, dmg / 5 * fusidne + 1, cc, SKILL_RES_NETHER, elep
++										}
++										if ( ele == SKILL_RES_NETHER ) {
++											snd SOUNDLIST_ATK_DARK
++											dmghp tc, dmg / 5 * fusidne + 1, cc, SKILL_RES_DARKNESS, elep
++										}
+ 									}
+ 								}
+ 							}
+ 							if ( gdata(GDATA_TEMPORARY_FLAGS) == 0 ) {
+ 								if ( cdata(CDATA_REFLECT_MAGIC, tc) > 0 ) {
+@@ -8030,48 +8000,50 @@
+ 								dmghp tc, dmg, cc, ele, elep
+ 								if ( efid == SKILL_SPELL_BUBBLE_STORM ) {
+ 									wet tc, 5
+ 								}
+ 								if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
+-									if ( fusifc > 0 ) {
+-										if ( ele == SKILL_RES_FIRE ) {
+-											snd SOUNDLIST_ATK_ICE
+-											dmghp tc, limit(dmg * fusifc / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_COLD, elep
+-										}
+-										if ( ele == SKILL_RES_COLD ) {
+-											snd SOUNDLIST_ATK_FIRE
+-											dmghp tc, limit(dmg * fusifc / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_FIRE, elep
+-										}
+-									}
+-									if ( fusims > 0 ) {
+-										if ( ele == SKILL_RES_MIND ) {
+-											snd SOUNDLIST_ATK_SOUND
+-											dmghp tc, limit(dmg * fusims / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_SOUND, elep
+-										}
+-										if ( ele == SKILL_RES_SOUND ) {
+-											snd SOUNDLIST_ATK_MIND
+-											dmghp tc, limit(dmg * fusims / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_MIND, elep
+-										}
+-									}
+-									if ( fusipn > 0 ) {
+-										if ( ele == SKILL_RES_POISON ) {
+-											snd SOUNDLIST_ATK_NERVE
+-											dmghp tc, limit(dmg * fusipn / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_NERVE, elep
++									if ( dmg >= 5 ) {
++										if ( fusifc > 0 ) {
++											if ( ele == SKILL_RES_FIRE ) {
++												snd SOUNDLIST_ATK_ICE
++												dmghp tc, dmg / 5 * fusifc + 1, cc, SKILL_RES_COLD, elep
++											}
++											if ( ele == SKILL_RES_COLD ) {
++												snd SOUNDLIST_ATK_FIRE
++												dmghp tc, dmg / 5 * fusifc + 1, cc, SKILL_RES_FIRE, elep
++											}
+ 										}
+-										if ( ele == SKILL_RES_NERVE ) {
+-											snd SOUNDLIST_ATK_POISON
+-											dmghp tc, limit(dmg * fusipn / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_POISON, elep
++										if ( fusims > 0 ) {
++											if ( ele == SKILL_RES_MIND ) {
++												snd SOUNDLIST_ATK_SOUND
++												dmghp tc, dmg / 5 * fusims + 1, cc, SKILL_RES_SOUND, elep
++											}
++											if ( ele == SKILL_RES_SOUND ) {
++												snd SOUNDLIST_ATK_MIND
++												dmghp tc, dmg / 5 * fusims + 1, cc, SKILL_RES_MIND, elep
++											}
+ 										}
+-									}
+-									if ( fusidne > 0 ) {
+-										if ( ele == SKILL_RES_DARKNESS ) {
+-											snd SOUNDLIST_ATK_HELL
+-											dmghp tc, limit(dmg * fusidne / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_NETHER, elep
++										if ( fusipn > 0 ) {
++											if ( ele == SKILL_RES_POISON ) {
++												snd SOUNDLIST_ATK_NERVE
++												dmghp tc, dmg / 5 * fusipn + 1, cc, SKILL_RES_NERVE, elep
++											}
++											if ( ele == SKILL_RES_NERVE ) {
++												snd SOUNDLIST_ATK_POISON
++												dmghp tc, dmg / 5 * fusipn + 1, cc, SKILL_RES_POISON, elep
++											}
+ 										}
+-										if ( ele == SKILL_RES_NETHER ) {
+-											snd SOUNDLIST_ATK_DARK
+-											dmghp tc, limit(dmg * fusidne / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_DARKNESS, elep
++										if ( fusidne > 0 ) {
++											if ( ele == SKILL_RES_DARKNESS ) {
++												snd SOUNDLIST_ATK_HELL
++												dmghp tc, dmg / 5 * fusidne + 1, cc, SKILL_RES_NETHER, elep
++											}
++											if ( ele == SKILL_RES_NETHER ) {
++												snd SOUNDLIST_ATK_DARK
++												dmghp tc, dmg / 5 * fusidne + 1, cc, SKILL_RES_DARKNESS, elep
++											}
+ 										}
+ 									}
+ 								}
+ 								if ( cdata(CDATA_REFLECT_MAGIC, tc) > 0 ) {
+ 									if ( efid != SKILL_SPACT_GRENADE ) {
+@@ -8199,48 +8171,50 @@
+ 				dmghp tc, dmg, cc, ele, elep
+ 				if ( efid == SKILL_SPELL_HYDRO_FANG ) {
+ 					wet tc, 5
+ 				}
+ 				if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
+-					if ( fusifc > 0 ) {
+-						if ( ele == SKILL_RES_FIRE ) {
+-							snd SOUNDLIST_ATK_ICE
+-							dmghp tc, limit(dmg * fusifc / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_COLD, elep
+-						}
+-						if ( ele == SKILL_RES_COLD ) {
+-							snd SOUNDLIST_ATK_FIRE
+-							dmghp tc, limit(dmg * fusifc / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_FIRE, elep
+-						}
+-					}
+-					if ( fusims > 0 ) {
+-						if ( ele == SKILL_RES_MIND ) {
+-							snd SOUNDLIST_ATK_SOUND
+-							dmghp tc, limit(dmg * fusims / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_SOUND, elep
+-						}
+-						if ( ele == SKILL_RES_SOUND ) {
+-							snd SOUNDLIST_ATK_MIND
+-							dmghp tc, limit(dmg * fusims / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_MIND, elep
+-						}
+-					}
+-					if ( fusipn > 0 ) {
+-						if ( ele == SKILL_RES_POISON ) {
+-							snd SOUNDLIST_ATK_NERVE
+-							dmghp tc, limit(dmg * fusipn / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_NERVE, elep
++					if ( dmg >= 5 ) {
++						if ( fusifc > 0 ) {
++							if ( ele == SKILL_RES_FIRE ) {
++								snd SOUNDLIST_ATK_ICE
++								dmghp tc, dmg / 5 * fusifc + 1, cc, SKILL_RES_COLD, elep
++							}
++							if ( ele == SKILL_RES_COLD ) {
++								snd SOUNDLIST_ATK_FIRE
++								dmghp tc, dmg / 5 * fusifc + 1, cc, SKILL_RES_FIRE, elep
++							}
+ 						}
+-						if ( ele == SKILL_RES_NERVE ) {
+-							snd SOUNDLIST_ATK_POISON
+-							dmghp tc, limit(dmg * fusipn / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_POISON, elep
++						if ( fusims > 0 ) {
++							if ( ele == SKILL_RES_MIND ) {
++								snd SOUNDLIST_ATK_SOUND
++								dmghp tc, dmg / 5 * fusims + 1, cc, SKILL_RES_SOUND, elep
++							}
++							if ( ele == SKILL_RES_SOUND ) {
++								snd SOUNDLIST_ATK_MIND
++								dmghp tc, dmg / 5 * fusims + 1, cc, SKILL_RES_MIND, elep
++							}
+ 						}
+-					}
+-					if ( fusidne > 0 ) {
+-						if ( ele == SKILL_RES_DARKNESS ) {
+-							snd SOUNDLIST_ATK_HELL
+-							dmghp tc, limit(dmg * fusidne / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_NETHER, elep
++						if ( fusipn > 0 ) {
++							if ( ele == SKILL_RES_POISON ) {
++								snd SOUNDLIST_ATK_NERVE
++								dmghp tc, dmg / 5 * fusipn + 1, cc, SKILL_RES_NERVE, elep
++							}
++							if ( ele == SKILL_RES_NERVE ) {
++								snd SOUNDLIST_ATK_POISON
++								dmghp tc, dmg / 5 * fusipn + 1, cc, SKILL_RES_POISON, elep
++							}
+ 						}
+-						if ( ele == SKILL_RES_NETHER ) {
+-							snd SOUNDLIST_ATK_DARK
+-							dmghp tc, limit(dmg * fusidne / 500 + rnd(dmg / 4 + 1), 1, dmg * 3 / 2), cc, SKILL_RES_DARKNESS, elep
++						if ( fusidne > 0 ) {
++							if ( ele == SKILL_RES_DARKNESS ) {
++								snd SOUNDLIST_ATK_HELL
++								dmghp tc, dmg / 5 * fusidne + 1, cc, SKILL_RES_NETHER, elep
++							}
++							if ( ele == SKILL_RES_NETHER ) {
++								snd SOUNDLIST_ATK_DARK
++								dmghp tc, dmg / 5 * fusidne + 1, cc, SKILL_RES_DARKNESS, elep
++							}
+ 						}
+ 					}
+ 				}
+ 				if ( cdata(CDATA_REFLECT_MAGIC, tc) > 0 ) {
+ 					dmghp cc, limit(dmg * cdata(CDATA_REFLECT_MAGIC, tc) / 200 + 1, 1, cdata(CDATA_MAX_HP, cc) / 10), tc, ele, elep
+@@ -8352,15 +8326,10 @@
  							}
  						}
  						if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_INTERCEPT ) {
@@ -2694,7 +3178,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  								if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
  									if ( efid == SKILL_SPACT_MEMORY_POISON ) {
  										efid = SKILL_SPACT_DATA_DELETE
-@@ -8472,17 +8435,42 @@
+@@ -8472,17 +8441,42 @@
  					}
  					else {
  						dmghp tc, role(dice1, dice2, bonus), cc, ele, elep
@@ -2737,7 +3221,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  					if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
  						if ( cdata(CDATA_QUALITY, tc) >= FIX_QUALITY_MIRACLE ) {
  							goto *effect_SWEND1
-@@ -8603,15 +8591,10 @@
+@@ -8603,15 +8597,10 @@
  							}
  						}
  						if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_INTERCEPT ) {
@@ -2753,7 +3237,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  								if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
  									if ( efid != SKILL_SPACT_MEMORY_POISON ) {
  										efid = SKILL_SPACT_HAND_OF_SPLENDOR
-@@ -8801,18 +8784,21 @@
+@@ -8801,18 +8790,21 @@
  						}
  						if ( cdata(CDATA_ID, cc) == CREATURE_ID_YAYAUHQUI_TEZCATLIPOCA ) {
  							dbid = 909
@@ -2776,36 +3260,26 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  						initlv = limit(efp * 1 / 3 + 2, 1, gdata(GDATA_DEEPEST_LEVEL))
  						novoidlv = 1
  						fltn "spirit"
-@@ -8844,10 +8830,28 @@
+@@ -8844,15 +8836,17 @@
  								characreate -1, CREATURE_ID_YOMAGNTHO, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
  								cbitmod CHARA_BIT_SUMMONED, rc, TRUE
  							}
  						}
  						if ( 0 ) {
-+							flt
-+							characreate -1, CREATURE_ID_RAT, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
-+							flt
-+							characreate -1, CREATURE_ID_SAIKYO_NEZUMI, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
-+							flt
-+							characreate -1, CREATURE_ID_ULTIMATE_EXPERIMENTAL, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
-+							flt
-+							characreate -1, CREATURE_ID_MOUNTAIN_SHAKER, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
-+							flt
-+							characreate -1, CREATURE_ID_DOPING_GUINEA_PIG, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
-+							flt
-+							characreate -1, CREATURE_ID_GUNDEGU, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
-+							flt
-+							characreate -1, CREATURE_ID_RUSH_RAT, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
-+							flt
-+							characreate -1, CREATURE_ID_HIGH_JUMP_RAT, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
-+							flt
-+							characreate -1, CREATURE_ID_HUGE_CHINCHILLA, cdata(CDATA_X, tc), cdata(CDATA_Y, tc)
++							if ( cc == CHARA_PLAYER ) {
++							}
  						}
  					}
  					if ( efid != SKILL_SPACT_SUMMON_SISTER ) {
  						if ( cdata(CDATA_ID, rc) == cdata(CDATA_ID, cc) ) {
- 							if ( cdata(CDATA_ID, cc) != CREATURE_ID_POWERFUL_GREAT_WYRM ) {
-@@ -9249,15 +9253,10 @@
+-							if ( cdata(CDATA_ID, cc) != CREATURE_ID_POWERFUL_GREAT_WYRM ) {
++							if ( cdata(CDATA_ID, cc) != CREATURE_ID_POWERFUL_GREAT_WYRM & cdata(CDATA_ID, cc) != CREATURE_ID_RUSH_RAT ) {
+ 								chara_vanquish rc
+ 								continue cnt
+ 							}
+ 						}
+ 					}
+@@ -9249,15 +9243,10 @@
  					}
  				}
  				if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_INTERCEPT ) {
@@ -2821,7 +3295,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  				}
  				if ( powsel == 100 ) {
  					if ( cdata(CDATA_POWER_GAUGE, cc) >= 100 ) {
-@@ -9342,41 +9341,41 @@
+@@ -9342,41 +9331,41 @@
  						if ( mef(MEF_TYPE, map(dx, dy, MAP_MEF_INDEX_PLUS_ONE) - 1) == MEF_TYPE_KEMURIDAMA ) {
  							delmef map(dx, dy, MAP_MEF_INDEX_PLUS_ONE) - 1
  						}
@@ -2874,7 +3348,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  						tc = map(dx, dy, MAP_CHARA_INDEX_PLUS_ONE) - 1
  						if ( cc != tc ) {
  							if ( cdata(CDATA_ROW_ACT, tc) == ACTION_JUMPING_DROP | cdata(CDATA_ROW_ACT, tc) == ACTION_DIVING_DRILL ) {
-@@ -9522,15 +9521,10 @@
+@@ -9522,15 +9511,10 @@
  			}
  		}
  		if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_INTERCEPT ) {
@@ -2890,7 +3364,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  				if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
  					efid = SKILL_SPACT_MIND_BREAK
  					gosub *effect
-@@ -9740,12 +9734,63 @@
+@@ -9740,12 +9724,63 @@
  			dmgcon tc, CONDITION_DIM, 500
  		}
  		goto *effect_end
@@ -2954,7 +3428,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  				if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
  					continue
  				}
-@@ -12560,25 +12605,21 @@
+@@ -12560,25 +12595,21 @@
  	if ( _switch_val == 750 | _switch_sw ) {
  		_switch_sw = 0
  		if ( cc != CHARA_PLAYER ) {
@@ -2988,7 +3462,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  		_switch_sw++
  	}
  	if ( _switch_val == 731 | _switch_sw ) {
-@@ -19525,10 +19566,19 @@
+@@ -19525,10 +19556,19 @@
  			repeat p
  				snd SOUNDLIST_CARD1
  				await 20
@@ -3008,7 +3482,21 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  			}
  			if ( necrolv > 1000 ) {
  				necrolv = 1000
-@@ -23675,19 +23725,19 @@
+@@ -22919,13 +22959,10 @@
+ 					cdata(CDATA_SKILLPOINT, cnt) += 100
+ 					cdata(CDATA_AP_CURRENT, cnt) += 1000
+ 					cdata(CDATA_SALES_EXP, cnt) = 1000
+ 					cdata(CDATA_LIVESTOCK_QUALITY, cnt) = rnd(12) + 1
+ 					cdata(CDATA_LIVESTOCK_PRODUCE_QUALITY, cnt) = rnd(12) + 1
+-					if ( cnt != 0 ) {
+-						cdata(CDATA_SP, cnt) = 0
+-					}
+ 					txt lang("deru" + gdata(GDATA_FLAG_RARE_DROP) + "、" + gdata(GDATA_FLAG_REALTIME_MINUTES) + "だ。運勢は" + sdata(SKILL_ATTR_LUC, CHARA_PLAYER) + "。", "*" + skillname(efid) + "* ")
+ 				loop
+ 			}
+ 		}
+ 		goto *effect_end
+@@ -23675,19 +23712,19 @@
  		}
  		txt lang(name(cc) + "は" + name(tc) + "を聖なる力を込めて斬りつけた。", name(tc) + " slashed " + name(tc) + " with holy power.")
  		snd SOUNDLIST_ENC
@@ -3030,7 +3518,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  		}
  		goto *effect_end
  		_switch_sw++
-@@ -24047,15 +24097,10 @@
+@@ -24047,15 +24084,10 @@
  				}
  			}
  			if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_INTERCEPT ) {
@@ -3046,7 +3534,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  			}
  			if ( cdata(CDATA_POWER_GAUGE, cc) >= 100 ) {
  				if ( powsel == 100 ) {
-@@ -24330,15 +24375,10 @@
+@@ -24330,15 +24362,10 @@
  			}
  		}
  		if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_INTERCEPT ) {
@@ -3062,7 +3550,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  				if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
  					efid = SKILL_SPACT_MIND_BREAK
  					gosub *effect
-@@ -24408,15 +24448,10 @@
+@@ -24408,15 +24435,10 @@
  			}
  		}
  		if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_INTERCEPT ) {
@@ -3078,7 +3566,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  				if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
  					efid = SKILL_SPACT_MIND_BREAK
  					gosub *effect
-@@ -24532,15 +24567,10 @@
+@@ -24532,15 +24554,10 @@
  			}
  		}
  		if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_INTERCEPT ) {
@@ -3094,7 +3582,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  				if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
  					efid = SKILL_SPACT_MIND_BREAK
  					gosub *effect
-@@ -24651,15 +24681,10 @@
+@@ -24651,15 +24668,10 @@
  				}
  			}
  			if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_INTERCEPT ) {
@@ -3110,7 +3598,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  					if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
  						efid = SKILL_SPACT_MIND_BREAK
  						gosub *effect
-@@ -24730,15 +24755,10 @@
+@@ -24730,15 +24742,10 @@
  			}
  		}
  		if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_INTERCEPT ) {
@@ -3126,7 +3614,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  				if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
  					efid = SKILL_SPACT_MIND_BREAK
  					gosub *effect
-@@ -24806,15 +24826,10 @@
+@@ -24806,15 +24813,10 @@
  			}
  		}
  		if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_INTERCEPT ) {
@@ -3142,7 +3630,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  				if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
  					efid = SKILL_SPACT_MIND_BREAK
  					gosub *effect
-@@ -24889,15 +24904,10 @@
+@@ -24889,15 +24891,10 @@
  			}
  		}
  		if ( cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_DEFENSIVE | cdata(CDATA_DIRECTIVE_MODE, cc) == DIRECTIVE_MODE_INTERCEPT ) {
@@ -3160,7 +3648,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  					gosub *effect
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/screen.hsp ../2.24-borscht/screen.hsp
 --- ../2.23-borscht/screen.hsp	2024-08-17 23:34:25.182091300 +0800
-+++ ../2.24-borscht/screen.hsp	2024-08-17 23:35:45.459273400 +0800
++++ ../2.24-borscht/screen.hsp	2024-08-17 23:38:44.781828900 +0800
 @@ -417,17 +417,33 @@
  			pos sx + 6, sy + 1
  			mes _hunger(0)
@@ -3323,7 +3811,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  		if ( sdata(10 + cnt, r1) < 1 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borscht/system.hsp ../2.24-borscht/system.hsp
 --- ../2.23-borscht/system.hsp	2024-08-17 23:34:25.183091300 +0800
-+++ ../2.24-borscht/system.hsp	2024-08-17 23:35:45.471310600 +0800
++++ ../2.24-borscht/system.hsp	2024-08-17 23:38:44.795333400 +0800
 @@ -38,11 +38,11 @@
  	}
  	gdata(GDATA_TEMPORARY_FLAGS2) = 0
@@ -3383,7 +3871,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  		gfini dx - 1, 35
  		gfdec 60, 60, 60
 -		aplsel "ElonaPlus 2.23"
-+		aplsel "ElonaPlus 2.24"
++		aplsel "ElonaPlus 2.24fix"
  		if ( stat == 1 ) {
  			dialog "Failed to get WINDOW ID", 1
  			clrobj 1
@@ -3396,7 +3884,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  	buff = ""
  	if ( dbm == "" ) {
 -		noteadd "ElonaPlus 2.23" + " v" + "6.33" + " Debug Console    Type \"?\" for help. Hit ESC to exit."
-+		noteadd "ElonaPlus 2.24" + " v" + "6.34" + " Debug Console    Type \"?\" for help. Hit ESC to exit."
++		noteadd "ElonaPlus 2.24fix" + " v" + "6.34" + " Debug Console    Type \"?\" for help. Hit ESC to exit."
  		noteadd ""
  	}
  	font lang(cfg_font1, cfg_font2), 14 - en * 2, 0
@@ -3422,7 +3910,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.23-borsch
  
  *mutexobj
 -	CreateMutexA 0, 0, "ElonaPlus 2.23"
-+	CreateMutexA 0, 0, "ElonaPlus 2.24"
++	CreateMutexA 0, 0, "ElonaPlus 2.24fix"
  	mutex_handle = stat
  	func_3
  	if ( stat == 183 ) {

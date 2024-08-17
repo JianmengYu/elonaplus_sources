@@ -2340,7 +2340,9 @@
 						txt lang("植物の栽培に適していそうだ。", "It seems suitable for growing plants.")
 					}
 					else {
-						txt lang("それは畑でのみ機能する。", "It only works on the Crop.")
+						if ( mdata(MDATA_TYPE) == MAP_TYPE_HOME ) {
+							txt lang("それは畑でのみ機能する。", "It only works on the Crop.")
+						}
 					}
 				}
 			}
@@ -2350,7 +2352,9 @@
 						txt lang("有機物を置いておくと肥料に変わりそうだ。", "If organic matter is left, it will turn into fertilizer.")
 					}
 					else {
-						txt lang("それは畑でのみ機能する。", "It only works on the Crop.")
+						if ( mdata(MDATA_TYPE) == MAP_TYPE_HOME ) {
+							txt lang("それは畑でのみ機能する。", "It only works on the Crop.")
+						}
 					}
 				}
 			}
@@ -2360,7 +2364,9 @@
 						txt lang("料理素材を置いておくと乾物に変わりそうだ。", "If cooking ingredients is left, it will turn into dry food.")
 					}
 					else {
-						txt lang("それは牧場でのみ機能する。", "It only works on the Ranch.")
+						if ( mdata(MDATA_TYPE) == MAP_TYPE_HOME ) {
+							txt lang("それは牧場でのみ機能する。", "It only works on the Ranch.")
+						}
 					}
 				}
 			}

@@ -2009,36 +2009,50 @@
 		cic = -1
 		inv_find ITEM_ID_ALPHA_SHIFT_CORE, cc
 		if ( stat != (-1) ) {
-			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) ) {
+			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) | cc >= MAX_CHARA_FOLLOWER ) {
 				cic = stat
 			}
 		}
 		inv_find ITEM_ID_BETA_SHIFT_CORE, cc
 		if ( stat != (-1) ) {
-			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) ) {
+			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) | cc >= MAX_CHARA_FOLLOWER ) {
 				cic = stat
 			}
 		}
 		inv_find ITEM_ID_GAMMA_SHIFT_CORE, cc
 		if ( stat != (-1) ) {
-			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) ) {
+			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) | cc >= MAX_CHARA_FOLLOWER ) {
 				cic = stat
 			}
 		}
 		inv_find ITEM_ID_DELTA_SHIFT_CORE, cc
 		if ( stat != (-1) ) {
-			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) ) {
+			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) | cc >= MAX_CHARA_FOLLOWER ) {
 				cic = stat
 			}
 		}
 		inv_find ITEM_ID_OMEGA_SHIFT_CORE, cc
 		if ( stat != (-1) ) {
-			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) ) {
+			if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), stat) | cc >= MAX_CHARA_FOLLOWER ) {
 				cic = stat
 			}
 		}
 		if ( cic != (-1) ) {
 			inv(INV_ITEM_NUM, cic) > 0
+			if ( inv(INV_ITEM_ID, cic) >= ITEM_ID_DELTA_SHIFT_CORE ) {
+				addbuff cc, BUFF_SPEED, cdata(CDATA_LEVEL, cc) * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 200
+				addbuff cc, BUFF_HERO, cdata(CDATA_LEVEL, cc) * 5 * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 200
+				addbuff cc, BUFF_GEM_POWER, cdata(CDATA_LEVEL, cc) * 5 * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 200
+				addbuff cc, BUFF_CONCENTRATION, cdata(CDATA_LEVEL, cc) * 5 * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 200
+				addbuff cc, BUFF_DIVINE_WISDOM, cdata(CDATA_LEVEL, cc) * 5 * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 200
+			}
+			if ( inv(INV_ITEM_ID, cic) == ITEM_ID_OMEGA_SHIFT_CORE ) {
+				addbuff cc, BUFF_SPEED, cdata(CDATA_LEVEL, cc) * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 150
+				addbuff cc, BUFF_HERO, cdata(CDATA_LEVEL, cc) * 5 * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 150
+				addbuff cc, BUFF_GEM_POWER, cdata(CDATA_LEVEL, cc) * 5 * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 150
+				addbuff cc, BUFF_CONCENTRATION, cdata(CDATA_LEVEL, cc) * 5 * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 150
+				addbuff cc, BUFF_DIVINE_WISDOM, cdata(CDATA_LEVEL, cc) * 5 * sqrt(cdata(CDATA_LEVEL, cc) + 1) + 10, 150
+			}
 			inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), cic) = gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 + inv(INV_ITEM_PARAM3, cic)
 			hikae = cdatan(CDATAN_NAME, cc)
 			cdatan(CDATAN_NAME, cc) = cdatan(CDATAN_FORM_SHIFT_NAME, cc)
@@ -2046,49 +2060,54 @@
 			if ( cdatan(CDATAN_NAME, cc) == "" ) {
 				cdatan(CDATAN_NAME, cc) = cdatan(CDATAN_FORM_SHIFT_NAME, cc) + lang("／アルター", "-altered")
 			}
-			hikae = cdata(CDATA_PORTRAIT, cc)
-			cdata(CDATA_PORTRAIT, cc) = cdata(CDATA_FORM_SHIFT_PORTRAIT, cc)
-			cdata(CDATA_FORM_SHIFT_PORTRAIT, cc) = hikae
-			hikae = cdata(CDATA_FACE, cc)
-			cdata(CDATA_FACE, cc) = cdata(CDATA_FORM_SHIFT_FACE, cc)
-			cdata(CDATA_FORM_SHIFT_FACE, cc) = hikae
-			hikae = pcc(PCC_HAIR, cc)
-			pcc(PCC_HAIR, cc) = cdata(CDATA_FORM_SHIFT_PCC_HAIR, cc)
-			cdata(CDATA_FORM_SHIFT_PCC_HAIR, cc) = hikae
-			hikae = pcc(PCC_SUB_HAIR, cc)
-			pcc(PCC_SUB_HAIR, cc) = cdata(CDATA_FORM_SHIFT_PCC_SUB_HAIR, cc)
-			cdata(CDATA_FORM_SHIFT_PCC_SUB_HAIR, cc) = hikae
-			hikae = pcc(PCC_BODY, cc)
-			pcc(PCC_BODY, cc) = cdata(CDATA_FORM_SHIFT_PCC_BODY, cc)
-			cdata(CDATA_FORM_SHIFT_PCC_BODY, cc) = hikae
-			hikae = pcc(PCC_CLOTH, cc)
-			pcc(PCC_CLOTH, cc) = cdata(CDATA_FORM_SHIFT_PCC_CLOTH, cc)
-			cdata(CDATA_FORM_SHIFT_PCC_CLOTH, cc) = hikae
-			hikae = pcc(PCC_PANTS, cc)
-			pcc(PCC_PANTS, cc) = cdata(CDATA_FORM_SHIFT_PCC_PANTS, cc)
-			cdata(CDATA_FORM_SHIFT_PCC_PANTS, cc) = hikae
-			hikae = pcc(PCC_ETC1, cc)
-			pcc(PCC_ETC1, cc) = cdata(CDATA_FORM_SHIFT_PCC_ETC1, cc)
-			cdata(CDATA_FORM_SHIFT_PCC_ETC1, cc) = hikae
-			hikae = pcc(PCC_ETC2, cc)
-			pcc(PCC_ETC2, cc) = cdata(CDATA_FORM_SHIFT_PCC_ETC2, cc)
-			cdata(CDATA_FORM_SHIFT_PCC_ETC2, cc) = hikae
-			hikae = pcc(PCC_ETC3, cc)
-			pcc(PCC_ETC3, cc) = cdata(CDATA_FORM_SHIFT_PCC_ETC3, cc)
-			cdata(CDATA_FORM_SHIFT_PCC_ETC3, cc) = hikae
-			hikae = pcc(PCC_EYE, cc)
-			pcc(PCC_EYE, cc) = cdata(CDATA_FORM_SHIFT_PCC_EYE, cc)
-			cdata(CDATA_FORM_SHIFT_PCC_EYE, cc) = hikae
-			hikae = pcc(PCC_RIDE, cc)
-			pcc(PCC_RIDE, cc) = cdata(CDATA_FORM_SHIFT_PCC_RIDE, cc)
-			cdata(CDATA_FORM_SHIFT_PCC_RIDE, cc) = hikae
-			if ( pcc(PCC_BODY, cc) == 0 ) {
-				pcc(PCC_BODY, cc) = 1
+			if ( cc < MAX_CHARA_FOLLOWER ) {
+				hikae = cdata(CDATA_PORTRAIT, cc)
+				cdata(CDATA_PORTRAIT, cc) = cdata(CDATA_FORM_SHIFT_PORTRAIT, cc)
+				cdata(CDATA_FORM_SHIFT_PORTRAIT, cc) = hikae
+				hikae = cdata(CDATA_FACE, cc)
+				cdata(CDATA_FACE, cc) = cdata(CDATA_FORM_SHIFT_FACE, cc)
+				cdata(CDATA_FORM_SHIFT_FACE, cc) = hikae
+				hikae = pcc(PCC_HAIR, cc)
+				pcc(PCC_HAIR, cc) = cdata(CDATA_FORM_SHIFT_PCC_HAIR, cc)
+				cdata(CDATA_FORM_SHIFT_PCC_HAIR, cc) = hikae
+				hikae = pcc(PCC_SUB_HAIR, cc)
+				pcc(PCC_SUB_HAIR, cc) = cdata(CDATA_FORM_SHIFT_PCC_SUB_HAIR, cc)
+				cdata(CDATA_FORM_SHIFT_PCC_SUB_HAIR, cc) = hikae
+				hikae = pcc(PCC_BODY, cc)
+				pcc(PCC_BODY, cc) = cdata(CDATA_FORM_SHIFT_PCC_BODY, cc)
+				cdata(CDATA_FORM_SHIFT_PCC_BODY, cc) = hikae
+				hikae = pcc(PCC_CLOTH, cc)
+				pcc(PCC_CLOTH, cc) = cdata(CDATA_FORM_SHIFT_PCC_CLOTH, cc)
+				cdata(CDATA_FORM_SHIFT_PCC_CLOTH, cc) = hikae
+				hikae = pcc(PCC_PANTS, cc)
+				pcc(PCC_PANTS, cc) = cdata(CDATA_FORM_SHIFT_PCC_PANTS, cc)
+				cdata(CDATA_FORM_SHIFT_PCC_PANTS, cc) = hikae
+				hikae = pcc(PCC_ETC1, cc)
+				pcc(PCC_ETC1, cc) = cdata(CDATA_FORM_SHIFT_PCC_ETC1, cc)
+				cdata(CDATA_FORM_SHIFT_PCC_ETC1, cc) = hikae
+				hikae = pcc(PCC_ETC2, cc)
+				pcc(PCC_ETC2, cc) = cdata(CDATA_FORM_SHIFT_PCC_ETC2, cc)
+				cdata(CDATA_FORM_SHIFT_PCC_ETC2, cc) = hikae
+				hikae = pcc(PCC_ETC3, cc)
+				pcc(PCC_ETC3, cc) = cdata(CDATA_FORM_SHIFT_PCC_ETC3, cc)
+				cdata(CDATA_FORM_SHIFT_PCC_ETC3, cc) = hikae
+				hikae = pcc(PCC_EYE, cc)
+				pcc(PCC_EYE, cc) = cdata(CDATA_FORM_SHIFT_PCC_EYE, cc)
+				cdata(CDATA_FORM_SHIFT_PCC_EYE, cc) = hikae
+				hikae = pcc(PCC_RIDE, cc)
+				pcc(PCC_RIDE, cc) = cdata(CDATA_FORM_SHIFT_PCC_RIDE, cc)
+				cdata(CDATA_FORM_SHIFT_PCC_RIDE, cc) = hikae
+				if ( pcc(PCC_BODY, cc) == 0 ) {
+					pcc(PCC_BODY, cc) = 1
+				}
+				hikae = cdata(CDATA_PIC, cc)
+				cdata(CDATA_PIC, cc) = cdata(CDATA_FORM_SHIFT_PIC, cc)
+				cdata(CDATA_FORM_SHIFT_PIC, cc) = hikae
+				create_pcpic cc, 0
 			}
-			hikae = cdata(CDATA_PIC, cc)
-			cdata(CDATA_PIC, cc) = cdata(CDATA_FORM_SHIFT_PIC, cc)
-			cdata(CDATA_FORM_SHIFT_PIC, cc) = hikae
-			create_pcpic cc, 0
+			if ( 0 ) {
+				snd SOUNDLIST_AMMO
+			}
 			customtalk cc, DBMODE_FLAVOR_SHIFT
 			gosub *convert_word
 			if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
@@ -3078,7 +3097,7 @@
 			}
 		}
 	}
-	if ( cdata(CDATA_ID, cc) == CREATURE_ID_JUMP_LANDMINE_GIRL | cdata(CDATA_ID, cc) == CREATURE_ID_SPEED_HACK_CHEATAH | cdata(CDATA_ID, cc) == CREATURE_ID_BLACK_HOPPER_X | cdata(CDATA_ID, cc) == CREATURE_ID_FLIGHT_FISH | cdata(CDATA_ID, cc) == CREATURE_ID_FLYING_LEECH | cdata(CDATA_ID, cc) == CREATURE_ID_SUZAKU | cdata(CDATA_ID, cc) == CREATURE_ID_STRIKE_EAGLE | cdata(CDATA_ID, cc) == 1152 ) {
+	if ( cdata(CDATA_ID, cc) == CREATURE_ID_JUMP_LANDMINE_GIRL | cdata(CDATA_ID, cc) == CREATURE_ID_SPEED_HACK_CHEATAH | cdata(CDATA_ID, cc) == CREATURE_ID_BLACK_HOPPER_X | cdata(CDATA_ID, cc) == CREATURE_ID_FLIGHT_FISH | cdata(CDATA_ID, cc) == CREATURE_ID_FLYING_LEECH | cdata(CDATA_ID, cc) == CREATURE_ID_SUZAKU | cdata(CDATA_ID, cc) == CREATURE_ID_STRIKE_EAGLE | cdata(CDATA_ID, cc) == CREATURE_ID_HIGH_JUMP_RAT ) {
 		if ( cdata(CDATA_CONDITION_POISON, cc) == 0 & cdata(CDATA_CONDITION_BLEED, cc) == 0 & cdata(CDATA_CONDITION_SUFFOCATION, cc) == 0 ) {
 			if ( rnd(5) == 0 ) {
 				act = SKILL_SPACT_JUMPING_DROP
