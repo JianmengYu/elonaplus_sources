@@ -1,0 +1,239 @@
+--- ../2.24-borscht/db_item.hsp	2024-08-17 23:38:44.299112500 +0800
++++ ../2.25-borscht/db_item.hsp	2024-12-16 10:56:30.799913000 +0800
+@@ -2,10 +2,43 @@
+ 	if ( dbmode != DBMODE_FIND ) {
+ 		goto *db_item_set
+ 	}
+ 	dbmax = 0
+ 	dbsum = 0
++	if ( 40 > objlv ) {
++		goto *db_item_TRAINING_TICKET
++	}
++	if ( fltselect != 3 ) {
++		goto *db_item_TRAINING_TICKET
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_RANGE ) {
++			goto *db_item_TRAINING_TICKET
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_RANGE_ROCK_THROW ) {
++			goto *db_item_TRAINING_TICKET
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_HIDEN_MASHI), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_TRAINING_TICKET
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 40) * 10) + 1
++	dblist(0, dbmax) = 1301, dbsum
++	dbmax++
++
++*db_item_TRAINING_TICKET
+ 	if ( 1 > objlv ) {
+ 		goto *db_item_POTION_PLUG
+ 	}
+ 	if ( fltselect != 1 ) {
+ 		goto *db_item_POTION_PLUG
+@@ -42950,10 +42983,83 @@
+ 		dbid = 25
+ 	}
+ 	return
+ 
+ *db_item_set
++	if ( dbid == 1301 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_DICE1, ci) = 1
++			inv(INV_ITEM_DICE2, ci) = 30
++			inv(INV_ITEM_DAMAGE, ci) = 15
++			inv(INV_ITEM_DV, ci) = 30
++			inv(INV_ITEM_MATERIAL, ci) = ITEM_MATERIAL_PAPER
++			inv(INV_ITEM_VALUE, ci) = 120000
++			inv(INV_ITEM_WEIGHT, ci) = 600
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_SKILL_REF, ci) = SKILL_WEAPON_THROWING
++			inv(INV_ITEM_ID, ci) = ITEM_ID_HIDEN_MASHI
++			inv(INV_ITEM_PIC, ci) = xy2pic(24, 38)
++			reftype = FILTER_RANGE
++			reftypeminor = FILTER_RANGE_ROCK_THROW
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = ENCHANT_ELEMENTAL_DMG * EXT_ENCHANTMENT + SKILL_RESDMG_CUT, 100, ENCHANT_SKILL * EXT_ENCHANTMENT + SKILL_NORMAL_STEALTH, 900, ENCHANT_ATTRIBUTE * EXT_ENCHANTMENT + SKILL_ATTR_MAG, 700, ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_MAGIC, 600, 25, 100, 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_HIDEN_MASHI
++			ibitmod ITEM_BIT_PRECIOUS, ci, TRUE
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 500
++			fixlv = FIX_QUALITY_UNIQUE
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_RANGE
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 24000
++			}
++			if ( dbspec == 9 ) {
++				return 24030
++			}
++			if ( dbspec == 20 ) {
++				return 120000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 40
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "謎の古めかしい紙。秘伝の魔術と特殊繊維が編み込まれており、投擲暗器として使える程度の強度を持つ。しかし真の能力は別にあり、魔法紙を操る古の魔術の習得者だけがそれを解放できるとされている。\n#～イルヴァ幻想辞典～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "何度でも使用することができる。投擲用武器にもなる。\n#～鑑定報告書：＜武器＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
+ 	if ( dbid == 1300 ) {
+ 		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_VALUE, ci) = 30
+ 			inv(INV_ITEM_WEIGHT, ci) = 1
+ 		}
+@@ -43000,11 +43106,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "しつけのなっていないペットが増えて社会問題になっていたため、その解決策として導入された。ペットに持たせると、券と引き換えに訓練を受けることができる。各家庭に無料配布されており、ペットを飼っていない人は飼っている人にプレゼントして酒をおごってもらうなどの使い方をしているようだ。\n#～パルミア広報～"
+ 				description(1) = "「訓練券で受けられるのは基本コースまでです。それ以上は所持金払いじゃないと割に合わないので」\n#～ペットトレイナーの言葉～"
+ 				description(2) = "「訓練券も使えますが手続きが面倒なので所持金払い歓迎！」\n#～訓練所の張り紙～"
+-				description(3) = "ペットを訓練する際に所持金の代わりに使える紙だ。\n#～鑑定報告書：＜紙片＞カテゴリ～"
++				description(3) = "LV以下のペットに持たせると所持金の代わりに訓練で使う紙だ。\n#～鑑定報告書：＜紙片＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = "A ticket that can be used instead of platinum when teaching skills."
+@@ -47894,13 +48000,13 @@
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "一生に一度もモテなかったセミ。土の中に何年も引きこもっていたが、このままではいけないと意を決して街コンに参加。慣れないなりに求愛に挑戦し続けたが、報われることなく力尽きてしまった。どうせ死ぬなら最期まで前のめりでありたい、と必死に足掻いている。\n#～イルヴァ昆虫大百科～"
+-				description(1) = ""
++				description(1) = "ぶつけるとびっくりして生化学と投擲とレベル依存の轟音の波動を発生させる。衝撃に耐えられずに絶命することもある。\n#～イルヴァ昆虫大百科注釈～"
+ 				description(2) = "「夕暮れの　暑さ残りし　道端に　のたうつ蝉の　声が消えゆく」\n#～無名吟遊詩人の短歌～"
+-				description(3) = "ぶつけると相手が怯む虫だ。\n#～鑑定報告書：＜廃品＞カテゴリ～"
++				description(3) = "死にかけのセミだ。\n#～鑑定報告書：＜廃品＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -129197,10 +129303,12 @@
+ 		return 0
+ 	}
+ 	return -999
+ 
+ *db_setFilterItem
++	filter_item(ITEM_ID_HIDEN_MASHI) = ""
++	rffilter_item(ITEM_ID_HIDEN_MASHI) = ""
+ 	filter_item(ITEM_ID_TRAINING_TICKET) = "/noshop/"
+ 	rffilter_item(ITEM_ID_TRAINING_TICKET) = ""
+ 	filter_item(ITEM_ID_POTION_PLUG) = ""
+ 	rffilter_item(ITEM_ID_POTION_PLUG) = ""
+ 	filter_item(ITEM_ID_TOIL_ENERGY_DRINK) = ""
+@@ -131802,10 +131910,28 @@
+ 	filter_item(ITEM_ID_DUMMY) = ""
+ 	rffilter_item(ITEM_ID_DUMMY) = ""
+ 	return
+ 
+ *db_setItem
++	ilight(ITEM_ID_HIDEN_MASHI) = LIGHT_TYPE_ITEM
++	ialphanameref(ITEM_ID_HIDEN_MASHI) = ""
++	iorgweight(ITEM_ID_HIDEN_MASHI) = 600
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_HIDEN_MASHI) = "《秘伝魔紙》"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_HIDEN_MASHI) = "<Hiden Mashi>"
++		ioriginalnameref2(ITEM_ID_HIDEN_MASHI) = ""
++	}
++	ipicref(ITEM_ID_HIDEN_MASHI) = xy2pic(24, 38)
++	if ( jp ) {
++		iknownnameref(ITEM_ID_HIDEN_MASHI) = "古き紙々"
++	}
++	else {
++		iknownnameref(ITEM_ID_HIDEN_MASHI) = "ancient papers"
++	}
++	icolref(ITEM_ID_HIDEN_MASHI) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_TRAINING_TICKET) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_TRAINING_TICKET) = ""
+ 	iorgweight(ITEM_ID_TRAINING_TICKET) = 1
+ 	if ( jp ) {
+ 		ioriginalnameref(ITEM_ID_TRAINING_TICKET) = "ペット訓練券"
+@@ -150411,17 +150537,22 @@
+ 		ioriginalnameref2(ITEM_ID_DUMMY) = ""
+ 	}
+ 	ipicref(ITEM_ID_DUMMY) = xy2pic(0, 1)
+ 	iknownnameref(ITEM_ID_DUMMY) = ioriginalnameref(ITEM_ID_DUMMY)
+ 	icolref(ITEM_ID_DUMMY) = COLOR_DEFAULT
+-	maxitemid = 1303
++	maxitemid = 1304
+ 	return
+ 	goto *recipe_ref
+ 
+ #deffunc calcweaponfix int calcweaponfix_itemid
+ 	pierce = 0
+ 	rangemap = 100, 20, 20, 20, 20, 20, 20, 20, 20, 20
++	if ( calcweaponfix_itemid == ITEM_ID_HIDEN_MASHI ) {
++		pierce = 15
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
++		return 1
++	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_RAVENBRAND ) {
+ 		pierce = 15
+ 		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+@@ -151733,11 +151864,12 @@
+ 		matval = SKILL_NORMAL_JEWELER, 1, 100
+ 		matneed = MATERIAL_PAPER, 2, MATERIAL_MEMORY_FRAGMENT, 1
+ 		return 1
+ 	}
+ 	return -1
+-	goto *label_3619
++	goto *label_3621
++
+ 
+ 
+ 
+ 
+ 
