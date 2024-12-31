@@ -2151,7 +2151,7 @@
 					s = "[ｴｰﾃﾙ病]"
 				}
 				else {
-					s = "[Disease]"
+					s = "[Ether]"
 				}
 			}
 			s += traitrefn(2 + abs(trait(tid)))

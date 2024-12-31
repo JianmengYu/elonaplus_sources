@@ -223,6 +223,7 @@
 						goto *turn_end
 					}
 					if ( inv(INV_ITEM_ID, ci) == ITEM_ID_DYING_CICADA ) {
+						cibks = ci
 						txtef COLOR_BLUE
 						txt lang(" *必殺セミファイナル！* ", " *Semi Final*")
 						txtvalid = 0
@@ -247,7 +248,7 @@
 						dmghp tc, dmg, (0 /*!!!@[CHARA_PLAYER @@@ DAMAGE_FROM_CHARA]@!!! */), SKILL_RES_SOUND, 1000
 						if ( rnd(10) == 0 ) {
 							txt lang("「死ぬなら…せめて前のめりで…！」喪蝉は絶命した。", "The cicada's life is over!")
-							inv(INV_ITEM_NUM, ci)--
+							inv(INV_ITEM_NUM, cibks)--
 							flt
 							itemcreate -1, ITEM_ID_BAIT, cdata(CDATA_X, tc), cdata(CDATA_Y, tc), 0
 							inv(INV_ITEM_PARAM1, ci) = 4

@@ -3422,7 +3422,7 @@
 		pos x + 4, y + 4
 		gfini dx - 1, 35
 		gfdec 60, 60, 60
-		aplsel "ElonaPlus 2.25"
+		aplsel "ElonaPlus 2.25R"
 		if ( stat == 1 ) {
 			dialog "Failed to get WINDOW ID", 1
 			clrobj 1
@@ -3785,7 +3785,7 @@
 	notesel dbm
 	buff = ""
 	if ( dbm == "" ) {
-		noteadd "ElonaPlus 2.25" + " v" + "6.35" + " Debug Console    Type \"?\" for help. Hit ESC to exit."
+		noteadd "ElonaPlus 2.25R" + " v" + "6.35" + " Debug Console    Type \"?\" for help. Hit ESC to exit."
 		noteadd ""
 	}
 	font lang(cfg_font1, cfg_font2), 14 - en * 2, 0
@@ -4196,7 +4196,7 @@
 	return
 
 *mutexobj
-	CreateMutexA 0, 0, "ElonaPlus 2.25"
+	CreateMutexA 0, 0, "ElonaPlus 2.25R"
 	mutex_handle = stat
 	func_3
 	if ( stat == 183 ) {

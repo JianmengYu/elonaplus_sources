@@ -172,6 +172,7 @@
 #define global	ANIMATION_LASER_BAZOOKA	62
 #define global	ANIMATION_HYPER_PLUG_BURST	63
 #define global	ANIMATION_GOD_CHARGE_ROD	64
+#define global	ANIMATION_SHIKIKAMI_BREATH	65
 
 // Group: area_id
 #define global	MAX_AREA_COUNT	500

@@ -1,6 +1,18 @@
---- ./2.24.hsp	2024-12-16 10:56:08.823254700 +0800
-+++ ./2.25.hsp	2024-12-16 10:56:08.853436000 +0800
-@@ -890,10 +890,12 @@
+--- ./2.24.hsp	2025-01-01 00:14:09.590434400 +0800
++++ ./2.25.hsp	2025-01-01 00:14:09.619810500 +0800
+@@ -170,10 +170,11 @@
+ #define global	ANIMATION_SHINING_THROW	60
+ #define global	ANIMATION_POLLEN_CANNON	61
+ #define global	ANIMATION_LASER_BAZOOKA	62
+ #define global	ANIMATION_HYPER_PLUG_BURST	63
+ #define global	ANIMATION_GOD_CHARGE_ROD	64
++#define global	ANIMATION_SHIKIKAMI_BREATH	65
+ 
+ // Group: area_id
+ #define global	MAX_AREA_COUNT	500
+ #define global	MAX_AREA_OLD	200
+ #define global	MAX_AREA_DATA	40
+@@ -890,10 +891,12 @@
  #define global	CHARA_BIT_LABOR_CAMP	1041
  #define global	CHARA_BIT_TOIL_ENERGY_DRINK	1042
  #define global	CHARA_BIT_QUICK_RESTORE	1043
@@ -13,7 +25,7 @@
  #define global	CREATURE_ID_BUG	0
  #define global	CREATURE_ID_SHOPKEEPER	1
  #define global	CREATURE_ID_ZEOME_THE_FALSE_PROPHET	2
-@@ -1246,11 +1248,11 @@
+@@ -1246,11 +1249,11 @@
  #define global	CREATURE_ID_HOLY_BEAST	349
  #define global	CREATURE_ID_FESTIVAL_TOURIST	350
  #define global	CREATURE_ID_THE_LEOPARD_WARRIOR	351
@@ -26,7 +38,7 @@
  #define global	CREATURE_ID_DEVASTATE_LULWY	356
  #define global	CREATURE_ID_BUILDUP_OPATOS	357
  #define global	CREATURE_ID_DEUS_EX_MANINA	358
-@@ -2017,10 +2019,11 @@
+@@ -2017,10 +2020,11 @@
  #define global	CREATURE_ID_GUNDEGU	1119
  #define global	CREATURE_ID_DOPING_GUINEA_PIG	1120
  #define global	CREATURE_ID_MOUNTAIN_SHAKER	1121
@@ -38,7 +50,7 @@
  #define global	CHAR_STATE_DEAD	0
  #define global	CHAR_STATE_ALIVE	1
  #define global	CHAR_STATE_SPIRIT	2
-@@ -3678,10 +3681,11 @@
+@@ -3678,10 +3682,11 @@
  #define global	EFFECT_WHITE_DARK_ORB	144
  #define global	EFFECT_AWAKE_DESTONE	145
  #define global	EFFECT_FLOAT_CAGE	146
@@ -50,7 +62,7 @@
  #define global	ITEM_ROLE_FILE_NONE2	-1
  #define global	ITEM_ROLE_FILE_NONE	0
  #define global	ITEM_ROLE_FILE_WANDER	1
-@@ -4503,11 +4507,11 @@
+@@ -4503,11 +4508,11 @@
  #define global	ITEM_ID_SKULL_BOW	788
  #define global	ITEM_ID_POT_FOR_FUSION	789
  #define global	ITEM_ID_POT_OF_ALCHEMIST	790
@@ -63,7 +75,7 @@
  #define global	ITEM_ID_NEGATIVE_EDGE	794
  #define global	ITEM_ID_GAU_17_CUSTOM	795
  #define global	ITEM_ID_KANEITUUHOU	796
-@@ -5013,10 +5017,11 @@
+@@ -5013,10 +5018,11 @@
  #define global	ITEM_ID_DEED_CAMP	1296
  #define global	ITEM_ID_SPLENDID_CHAIN	1297
  #define global	ITEM_ID_TOIL_ENERGY_DRINK	1298
@@ -75,7 +87,7 @@
  #define global	ITEM_KNOWN_NONE	0
  #define global	ITEM_KNOWN_NAME	1
  #define global	ITEM_KNOWN_QUALITY	2
-@@ -5345,10 +5350,11 @@
+@@ -5345,10 +5351,11 @@
  #define global	MDATA_CITY_COMPLAINTS	29
  #define global	MDATA_CITY_MAINTENANCE_COST	30
  #define global	MDATA_CITY_TAXES	31
@@ -87,7 +99,7 @@
  #define global	MDATAN_NAME	0
  
  // Group: mef
-@@ -6208,11 +6214,11 @@
+@@ -6208,11 +6215,11 @@
  #define global	SKILL_SPACT_CHEER	656
  #define global	SKILL_SPACT_MEWMEWMEW	657
  #define global	SKILL_SPACT_DECAPITATION	658
@@ -100,7 +112,7 @@
  #define global	SKILL_SPACT_TEMPEST_ARROW	663
  #define global	SKILL_SPACT_EXCESSIVE_HEAL	664
  #define global	SKILL_SPACT_SHINE_SNAIL	665
-@@ -6414,10 +6420,12 @@
+@@ -6414,10 +6421,12 @@
  #define global	SKILL_SPACT_REPRIMAND	861
  #define global	SKILL_SPACT_SHIKIORIGAMI_CRANE	862
  #define global	SKILL_SPACT_SHIKIORIGAMI_SHURIKEN	863

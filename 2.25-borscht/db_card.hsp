@@ -7258,7 +7258,7 @@
 		cardrefskill = lang("第一紀文明において奴隷として用いられていた粘性生物。反旗を翻して激戦の末に鎮圧されたものの、生存能力の高さから今日まで生き残っている個体も多い。", "A viscous creature that was used as a slave in the early First Age civilizations. Although they revolted and were subdued after a fierce battle many individuals have survived to this day due to their high survival ability.")
 		cardrefdomain = 3
 		cardrefrare = 30
-		cardrefcost = 1
+		cardrefcost = 0
 		cardrefattack = 690
 		cardrefhp = 3
 		cardrefn = lang("ショゴス", "shoggoth")

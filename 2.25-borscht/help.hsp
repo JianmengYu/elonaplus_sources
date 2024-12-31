@@ -5376,7 +5376,7 @@
 		gdata(GDATA_LEVEL_START_ON) = 7
 		mapstartx = 10
 		mapstarty = 23
-		initlv = 3000
+		initlv = 5000
 		rc = CHARA_PLAYER
 		flt 100
 		characreate CHARA_PLAYER, CREATURE_ID_BLACK_GAUNTLET_LEOLD, -3, 0
@@ -6228,7 +6228,7 @@
 				if ( gdata(GDATA_FLAG_NEFIA_FEVER_MONTH) != gdata(GDATA_MONTH) ) {
 					gdata(GDATA_FLAG_NEFIA_FEVER_MONTH) = gdata(GDATA_MONTH)
 					gdata(GDATA_FLAG_NEFIA_FEVER_ACTIVE) = 100
-					gdata(GDATA_FLAG_NEFIA_FEVER_HOURS_REMAINING) = rnd(24) + 96
+					gdata(GDATA_FLAG_NEFIA_FEVER_HOURS_REMAINING) = rnd(12) + 48
 					snd SOUNDLIST_FIRE1
 					snd SOUNDLIST_ATK_FIRE
 					txtef COLOR_GREEN
@@ -6266,7 +6266,7 @@
 							txtef COLOR_RED
 							txt lang("エーテルの風が吹き始めた。すぐに避難しなくては。", "Ether Wind starts to blow. You need to find a shelter!")
 							gdata(GDATA_LAST_ETHER) = gdata(GDATA_MONTH)
-							gdata(GDATA_NEXT_WEATHER) = rnd(24) + limit(24 - gdata(GDATA_YEARS_AFTER_VICTORY) * 2, 1, 24)
+							gdata(GDATA_NEXT_WEATHER) = rnd(12) + limit(12 - gdata(GDATA_YEARS_AFTER_VICTORY) * 2, 1, 12)
 							break
 						}
 					}
@@ -6326,7 +6326,7 @@
 				}
 			}
 			if ( p == 1 ) {
-				if ( rnd(2) == 0 ) {
+				if ( rnd(4) != 0 ) {
 					gdata(GDATA_WEATHER) = WEATHER_CLEAR
 					txt lang("エーテルの風は止んだ。", "The Ether Wind dissipates.")
 					break
@@ -6630,17 +6630,15 @@
 			loop
 			if ( kitune == 10 ) {
 				if ( detect < 2 ) {
-					if ( rnd(2) == 0 ) {
-						txtef COLOR_YELLOW
-						txt lang("探偵がやってきたようだ。「クン…こ、これは事件の匂い！！！」", "Detective seems to have come.")
-						if ( rnd(3) == 0 ) {
-							flt
-							characreate -1, CREATURE_ID_WEREWOLF_DETECTIVE, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER)
-						}
-						else {
-							flt
-							characreate -1, CREATURE_ID_DETECTIVE, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER)
-						}
+					txtef COLOR_YELLOW
+					txt lang("探偵がやってきたようだ。「クン…こ、これは事件の匂い！！！」", "Detective seems to have come.")
+					if ( rnd(3) == 0 ) {
+						flt
+						characreate -1, CREATURE_ID_WEREWOLF_DETECTIVE, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER)
+					}
+					else {
+						flt
+						characreate -1, CREATURE_ID_DETECTIVE, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER)
 					}
 				}
 			}
@@ -7977,7 +7975,7 @@
 
 *pc_turn_init_WEND1
 	if ( dbg_titleinfo ) {
-		title "ElonaPlus 2.25" + " ver " + "6.35" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
+		title "ElonaPlus 2.25R" + " ver " + "6.35" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
 	}
 	if ( trait(TRAIT_ETHER_ADDICTED_POTION) != 0 ) {
 		if ( rnd(5) == 0 ) {

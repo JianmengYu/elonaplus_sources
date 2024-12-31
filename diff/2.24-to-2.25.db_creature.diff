@@ -1,5 +1,5 @@
 --- ../2.24-borscht/db_creature.hsp	2024-08-17 23:38:43.856395000 +0800
-+++ ../2.25-borscht/db_creature.hsp	2024-12-16 10:56:30.388234800 +0800
++++ ../2.25-borscht/db_creature.hsp	2025-01-01 00:14:22.395302000 +0800
 @@ -2,10 +2,43 @@
  	if ( dbmode != DBMODE_FIND ) {
  		goto *db_creature2
