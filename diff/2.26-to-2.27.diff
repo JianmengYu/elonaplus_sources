@@ -1,0 +1,4615 @@
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/action.hsp ../2.27-borscht/action.hsp
+--- ../2.26-borscht/action.hsp	2025-03-17 02:14:34.984814800 +0800
++++ ../2.27-borscht/action.hsp	2025-05-19 06:35:55.620352000 +0800
+@@ -645,11 +645,11 @@
+ 						cdata(CDATA_CONDITION_SUFFOCATION, tc) = 10
+ 					}
+ 				}
+ 			}
+ 			else {
+-				if ( inv(INV_ITEM_ID, ci) != ITEM_ID_BOMB_BARREL & inv(INV_ITEM_ID, ci) != ITEM_ID_MAGISTUS & inv(INV_ITEM_ID, ci) != ITEM_ID_TRISMAGISTUS & inv(INV_ITEM_ID, ci) != ITEM_ID_OHUDA & inv(INV_ITEM_ID, ci) != ITEM_ID_PRESENT & inv(INV_ITEM_ID, ci) != ITEM_ID_WILD_FLOWER & inv(INV_ITEM_ID, ci) != ITEM_ID_ECHINOBOX & inv(INV_ITEM_ID, ci) != ITEM_ID_LIGHTNING_DISCHARGER ) {
++				if ( inv(INV_ITEM_ID, ci) != ITEM_ID_BOMB_BARREL & inv(INV_ITEM_ID, ci) != ITEM_ID_MAGISTUS & inv(INV_ITEM_ID, ci) != ITEM_ID_TRISMAGISTUS & inv(INV_ITEM_ID, ci) != ITEM_ID_OHUDA & inv(INV_ITEM_ID, ci) != ITEM_ID_PRESENT & inv(INV_ITEM_ID, ci) != ITEM_ID_WILD_FLOWER & inv(INV_ITEM_ID, ci) != ITEM_ID_ECHINOBOX & inv(INV_ITEM_ID, ci) != ITEM_ID_LIGHTNING_DISCHARGER & inv(INV_ITEM_ID, ci) != ITEM_ID_DARKNESSBANG & inv(INV_ITEM_ID, ci) != ITEM_ID_SNOW_CRYSTAL ) {
+ 					dmghp tc, limit(sdata(SKILL_WEAPON_THROWING, cc) / 5, 1, 200) * limit(inv(INV_ITEM_WEIGHT, ci) / 1000, 1, 500) + rnd(inv(INV_ITEM_WEIGHT, ci) / 1000 + sdata(SKILL_WEAPON_THROWING, cc) + 1), cc
+ 				}
+ 				if ( inv(INV_ITEM_ID, ci) == ITEM_ID_SKULL_SWORD | inv(INV_ITEM_ID, ci) == ITEM_ID_VIOLENT_SKULL_SWORD ) {
+ 					if ( inv(INV_ITEM_PARAM2, ci) != 0 ) {
+ 						inv(INV_ITEM_PARAM2, ci) = 0
+@@ -719,26 +719,47 @@
+ 					efid = SKILL_SPELL_FIRE_BALL
+ 					efp = (sdata(SKILL_NORMAL_CARPENTRY, CHARA_PLAYER) + sdata(SKILL_NORMAL_GENE_ENGINEER, CHARA_PLAYER) + cdata(CDATA_LEVEL, CHARA_PLAYER)) * 6 + 5
+ 					gosub *effect
+ 					tc = tcbk
+ 				}
++				if ( inv(INV_ITEM_ID, ci) == ITEM_ID_SNOW_CRYSTAL ) {
++					tcbk = tc
++					efpori = (sdata(SKILL_NORMAL_JEWELER, CHARA_PLAYER) + sdata(SKILL_NORMAL_MEDITATION, CHARA_PLAYER) + cdata(CDATA_LEVEL, CHARA_PLAYER)) * 6 + 5
++					efid = SKILL_SPELL_ICE_BALL
++					efp = efpori
++					gosub *effect
++					tc = tcbk
++					if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
++						addbuff tc, BUFF_ELEMENT_SCAR, efpori / 3, 30
++					}
++				}
++				if ( inv(INV_ITEM_ID, ci) == ITEM_ID_DARKNESSBANG ) {
++					tcbk = tc
++					efpori = (sdata(SKILL_NORMAL_TACTICS, CHARA_PLAYER) + sdata(SKILL_NORMAL_MARKSMAN, CHARA_PLAYER) + cdata(CDATA_LEVEL, CHARA_PLAYER)) * 6 + 5
++					gdata(GDATA_TEMPORARY_FLAGS2) = 4771
++					efid = SKILL_SPELL_ECLIPSE
++					efp = efpori
++					gosub *effect
++					tc = tcbk
++					gdata(GDATA_TEMPORARY_FLAGS2) = 0
++				}
+ 				if ( inv(INV_ITEM_ID, ci) == ITEM_ID_LIGHTNING_DISCHARGER ) {
+ 					tcbk = tc
+ 					efpori = (sdata(SKILL_NORMAL_MAGIC_CAPACITY, CHARA_PLAYER) + sdata(SKILL_NORMAL_CONTROL_MAGIC, CHARA_PLAYER) + cdata(CDATA_LEVEL, CHARA_PLAYER)) * 6 + 5
+ 					efid = SKILL_SPELL_THUNDER_VORTEX
+-					efp = (sdata(SKILL_NORMAL_MAGIC_CAPACITY, CHARA_PLAYER) + sdata(SKILL_NORMAL_CONTROL_MAGIC, CHARA_PLAYER) + cdata(CDATA_LEVEL, CHARA_PLAYER)) * 6 + 5
++					efp = efpori
+ 					gosub *effect
+ 					tc = tcbk
+ 					if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
+ 						dmghp tc, (sdata(SKILL_WEAPON_THROWING, cc) / 5 + 5) * ((sdata(SKILL_NORMAL_MAGIC_CAPACITY, cc) + 1) / 5 + 5) + rnd(sdata(SKILL_NORMAL_CONTROL_MAGIC, cc) * 2 + 5) + ((limit(cdata(CDATA_LEVEL, cc) - 50, 1, 2000) + limit(cdata(CDATA_LEVEL, cc) - 100, 1, 2000)) * 4 * sqrt(limit(cdata(CDATA_LEVEL, cc), 1, 2000) * 3) + 30 + 1) / 2, cc, SKILL_RESDMG_CRUSH, 1000
+ 					}
+ 				}
+ 				if ( inv(INV_ITEM_ID, ci) == ITEM_ID_ECHINOBOX ) {
+ 					tcbk = tc
+ 					efpori = (sdata(SKILL_NORMAL_DISARM_TRAP, CHARA_PLAYER) + sdata(SKILL_NORMAL_GENE_ENGINEER, CHARA_PLAYER) + cdata(CDATA_LEVEL, CHARA_PLAYER)) * 6 + 5
+ 					efid = SKILL_SPELL_ILLUSION_ROAR
+-					efp = (sdata(SKILL_NORMAL_DISARM_TRAP, CHARA_PLAYER) + sdata(SKILL_NORMAL_GENE_ENGINEER, CHARA_PLAYER) + cdata(CDATA_LEVEL, CHARA_PLAYER)) * 6 + 5
++					efp = efpori
+ 					gosub *effect
+ 					tc = tcbk
+ 					if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
+ 						txt lang(name(tc) + "の脳で何かがうごめきだした！", "Something began to stir in " + name(tc) + "'s brain!")
+ 						gosub *brainParasite_effect
+@@ -1889,28 +1910,34 @@
+ 		if ( running ) {
+ 			if ( cdata(CDATA_RELATION, tc) >= RELATION_HATE | keybd_wait >= 40 ) {
+ 				goto *pc_turn
+ 			}
+ 		}
+-		if ( cdata(CDATA_RELATION, tc) <= RELATION_DISLIKE ) {
+-			cdata(CDATA_TARGET, CHARA_PLAYER) = tc
+-			if ( cbit(CHARA_BIT_INVISIBLE, tc) == TRUE ) {
+-				if ( cbit(CHARA_BIT_SEE_INVISIBLE, CHARA_PLAYER) == FALSE ) {
+-					if ( cdata(CDATA_CONDITION_WET, tc) == 0 ) {
+-						cdata(CDATA_TARGET, CHARA_PLAYER) = 0
++		if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, tc) == TRUE ) {
++			gosub *chat
++			goto *turn_end
++		}
++		else {
++			if ( cdata(CDATA_RELATION, tc) <= RELATION_DISLIKE ) {
++				cdata(CDATA_TARGET, CHARA_PLAYER) = tc
++				if ( cbit(CHARA_BIT_INVISIBLE, tc) == TRUE ) {
++					if ( cbit(CHARA_BIT_SEE_INVISIBLE, CHARA_PLAYER) == FALSE ) {
++						if ( cdata(CDATA_CONDITION_WET, tc) == 0 ) {
++							cdata(CDATA_TARGET, CHARA_PLAYER) = 0
++						}
+ 					}
+ 				}
++				if ( cdata(CDATA_ROW_ACT, tc) == ACTION_JUMPING_DROP | cdata(CDATA_ROW_ACT, tc) == ACTION_DIVING_DRILL ) {
++					cdata(CDATA_TARGET, CHARA_PLAYER) = 0
++				}
++				if ( keybd_attacking == 0 ) {
++					keybd_wait = 1
++					keybd_attacking = 1
++				}
++				gosub *act_melee
++				goto *turn_end
+ 			}
+-			if ( cdata(CDATA_ROW_ACT, tc) == ACTION_JUMPING_DROP | cdata(CDATA_ROW_ACT, tc) == ACTION_DIVING_DRILL ) {
+-				cdata(CDATA_TARGET, CHARA_PLAYER) = 0
+-			}
+-			if ( keybd_attacking == 0 ) {
+-				keybd_wait = 1
+-				keybd_attacking = 1
+-			}
+-			gosub *act_melee
+-			goto *turn_end
+ 		}
+ 		gosub *chat
+ 		if ( chatteleport == 1 ) {
+ 			chatteleport = 0
+ 			goto *map_exit
+@@ -7671,21 +7698,21 @@
+ 			txt lang("床に置かないと使えない。", "You need to put it on the ground.")
+ 			gosub *screen_draw
+ 			goto *pc_turn
+ 		}
+ 		if ( 0 ) {
+-			gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) += 60
++			gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) += 500
+ 		}
+-		if ( gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) > 100 ) {
+-			gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) = 100
++		if ( gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) > 999 ) {
++			gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) = 999
+ 		}
+ 		if ( gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) <= 0 ) {
+ 			gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) = 0
+ 		}
+ 		promptl(0, promptmax) = lang("何もしない", "Cancel"), "null", "" + 0
+ 		promptmax++
+-		promptl(0, promptmax) = lang("原稿の制作(ネタ：" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + ")", "Manuscript production (" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + " ideas) "), "null", "" + 1
++		promptl(0, promptmax) = lang("原稿の制作(インスピレーション：" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + ")", "Manuscript production (" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + " inspiration) "), "null", "" + 1
+ 		promptmax++
+ 		promptl(0, promptmax) = lang("限定自費出版(指定原稿＋30000gold)", "Self-publishing (30000 gold) "), "null", "" + 2
+ 		promptmax++
+ 		promptl(0, promptmax) = lang("魔法書変換(指定ストック半減)", "Spellbook conversion (stock halve) "), "null", "" + 3
+ 		promptmax++
+@@ -7696,12 +7723,12 @@
+ 		}
+ 		if ( rtval == 0 ) {
+ 			goto *act_use_SWEND1
+ 		}
+ 		if ( rtval == 1 ) {
+-			if ( gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) <= 0 ) {
+-				txt lang("ネタが切れている…。", "You couldn't think of writing...")
++			if ( gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) < 5 ) {
++				txt lang("インスピレーションが足りない…。", "You don't have enough inspiration...")
+ 				goto *act_use_SWEND1
+ 			}
+ 			snd SOUNDLIST_ATK_FIRE
+ 			animeload 20, 0
+ 			gosub *start_writing
+@@ -9176,82 +9203,55 @@
+ 	if ( _switch_val == 110 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		if ( mdata(MDATA_TYPE) == MAP_TYPE_WORLD ) {
+ 			goto *act_use_SWEND1
+ 		}
+-		txt lang("誰に使用させる？", "Who is user?")
+-		gosub *screen_draw
+-		val = 0
+-		gosub *prompt_direction
+-		if ( stat == 0 ) {
+-			txt lang("それは無理だ。", "It's impossible.")
+-			gosub *screen_draw
+-			goto *pc_turn
+-		}
+-		if ( map(x, y, MAP_CHARA_INDEX_PLUS_ONE) > 0 ) {
+-			tc = map(x, y, MAP_CHARA_INDEX_PLUS_ONE) - 1
+-		}
+-		else {
+-			txt lang("それは無理だ。", "It's impossible.")
+-			gosub *screen_draw
+-			goto *pc_turn
+-		}
+-		if ( cdata(CDATA_IN_TAGTEAM, tc) != 0 ) {
+-			txtselecttc 2
+-			repeat 2
+-				promptl(0, promptmax) = s(cnt), key_select(cnt), "" + promptmax
+-				promptmax++
+-			loop
+-			val = promptx, prompty, 200, 1
+-			gosub *prompt_key
+-			if ( stat == 0 ) {
+-				gosub *screen_draw
+-				goto *pc_turn
+-			}
+-			if ( rtval == 1 ) {
+-				tc = cdata(CDATA_TAGTEAM_PARTNER, tc)
+-			}
+-		}
+-		if ( tc >= MAX_CHARA_FOLLOWER ) {
+-			txt lang("それは無理だ。", "It's impossible.")
+-			gosub *screen_draw
+-			goto *pc_turn
+-		}
+ 		if ( inv(INV_ITEM_PARAM1, ci) == 0 ) {
+ 			inv(INV_ITEM_PARAM1, ci) = 165
+ 		}
+ 		if ( inv(INV_ITEM_PARAM2, ci) == 0 ) {
+ 			inv(INV_ITEM_PARAM2, ci) = 1
+ 		}
+-		if ( sorg(inv(INV_ITEM_PARAM1, ci), tc) == 0 ) {
++		repeat 16
++			if ( cnt >= 16 ) {
++				continue
++			}
++			if ( cdata(CDATA_EXIST, cnt) == CHAR_STATE_DEAD ) {
++				continue
++			}
++			tc = cnt
++			if ( sorg(inv(INV_ITEM_PARAM1, ci), tc) == 0 ) {
++				snd SOUNDLIST_OFFER2
++				animeload 23, tc
++				txtef COLOR_PINK
++				txt lang(cdatan(CDATAN_NAME, tc) + "の頭に守護者だった者の知識が流れ込んだ…。", "Memories flow in " + cdatan(CDATAN_NAME, tc) + "!")
++				p = inv(INV_ITEM_PARAM1, ci)
++				skillgain tc, p, 1
++				modgrowth tc, p, limit(inv(INV_ITEM_PARAM2, ci), 1, 300)
++				txtef COLOR_GREEN
++				txt lang("" + cdatan(CDATAN_NAME, tc) + "は" + skillname(p) + "の技術を獲得した！", cdatan(CDATAN_NAME, tc) + " gain" + _s(tc) + " a skill of " + skillname(p) + "!")
++				dmgsan tc, 5
++				inv(INV_ITEM_NUM, ci)--
++				cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
++				r1 = tc
++				gosub *charaRefresh
++				gosub *calcBurdenPc
++				continue
++			}
++			modgrowth tc, inv(INV_ITEM_PARAM1, ci), sqrt(inv(INV_ITEM_PARAM2, ci) + 1) + 10
+ 			snd SOUNDLIST_OFFER2
+-			animeload 23, tc
++			if ( synccheck(tc, -1) ) {
++				animeload 23, tc
++			}
+ 			txtef COLOR_PINK
+-			txt lang(name(tc) + "の頭に情報が流れ込んだ。", "Memories flow in!")
+-			p = inv(INV_ITEM_PARAM1, ci)
+-			skillgain tc, p, 1
+-			modgrowth tc, p, limit(inv(INV_ITEM_PARAM2, ci), 1, 300)
+-			txtef COLOR_GREEN
+-			txt lang("" + name(tc) + "は" + skillname(p) + "の技術を獲得した！", name(tc) + " gain" + _s(tc) + " a skill of " + skillname(p) + "!")
++			txt lang(cdatan(CDATAN_NAME, tc) + "の頭に守護者だった者の知識が流れ込んだ…。", "Memories flow in " + cdatan(CDATAN_NAME, tc) + "!")
++			gdata(GDATA_SENSE_OBJECT) = 1
++			skillexp inv(INV_ITEM_PARAM1, ci), tc, 200 + (sqrt(inv(INV_ITEM_PARAM2, ci) * 2000) + limit(sdata(SKILL_NORMAL_MEMORIZATION, tc) / 2, 0, 500)) * 2
++			skillexp SKILL_NORMAL_MEMORIZATION, tc, 200 + sqrt(inv(INV_ITEM_PARAM2, ci) * 1000) * 2
+ 			dmgsan tc, 5
+-			inv(INV_ITEM_NUM, ci)--
+-			cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
+-			r1 = tc
+-			gosub *charaRefresh
+-			gosub *calcBurdenPc
+-			goto *act_use_SWEND1
+-		}
+-		modgrowth tc, inv(INV_ITEM_PARAM1, ci), sqrt(inv(INV_ITEM_PARAM2, ci) + 1) + 10
+-		snd SOUNDLIST_OFFER2
+-		animeload 23, tc
+-		txtef COLOR_PINK
+-		txt lang(name(tc) + "の頭に情報が流れ込んだ。", "Memories flow in!")
+-		gdata(GDATA_SENSE_OBJECT) = 1
+-		skillexp inv(INV_ITEM_PARAM1, ci), tc, 200 + (sqrt(inv(INV_ITEM_PARAM2, ci) * 2000) + limit(sdata(SKILL_NORMAL_MEMORIZATION, tc) / 2, 0, 500)) * 2
+-		skillexp SKILL_NORMAL_MEMORIZATION, tc, 200 + sqrt(inv(INV_ITEM_PARAM2, ci) * 1000) * 2
+-		dmgsan tc, 5
+-		gdata(GDATA_SENSE_OBJECT) = 0
++			gdata(GDATA_SENSE_OBJECT) = 0
++		loop
+ 		inv(INV_ITEM_NUM, ci)--
+ 		cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
+ 		r1 = tc
+ 		gosub *charaRefresh
+ 		gosub *calcBurdenPc
+@@ -10306,11 +10306,11 @@
+ 			if ( cdata(CDATA_ENVIRONMENT_EFFECT, cnt) == ENVIRONMENT_EFFECT_FIRE2 ) {
+ 				txt lang(name(cnt) + "は炎に包まれた。", name(cnt) + " was surrounded by flames.")
+ 				cdata(CDATA_ENVIRONMENT_EFFECT, cnt) = ENVIRONMENT_EFFECT_NONE
+ 				hostileaction cc, cnt
+ 				dmghp cnt, rnd(efp / 10 + 1) + efp / 2 + 1, DAMAGE_FROM_FIRE, SKILL_RES_FIRE, efp
+-				addbuff cnt, BUFF_ELEMENT_SCAR, 500, 5
++				addbuff cnt, BUFF_ELEMENT_SCAR, sdata(SKILL_NORMAL_MARKSMAN, cc) * 10 + 40, 15
+ 			}
+ 			cdata(CDATA_ENVIRONMENT_EFFECT, cnt) = ENVIRONMENT_EFFECT_NONE
+ 		loop
+ 		if ( cdata(CDATA_EXIST, cc) == CHAR_STATE_ALIVE ) {
+ 			skillexp SKILL_ATTR_CON, cc, 80
+@@ -10627,10 +10627,11 @@
+ 					cbitmod CHARA_BIT_SANDBAG, tc, TRUE
+ 					txt lang("あなたは" + name(tc) + "を吊るした。", "You hang up " + name(tc) + ".")
+ 					txtvalid = 0
+ 					txt lang(name(tc) + "は呻き声を洩らした。「アン…♪」", name(tc) + " gasp" + _s(tc) + ", " + cnvtalk("Pervert!"))
+ 					animeload 8, tc
++					cbitmod CHARA_BIT_BEGGING_FOR_LIFE, tc, FALSE
+ 					inv(INV_ITEM_NUM, ci)--
+ 					cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
+ 					gosub *calcBurdenPc
+ 				}
+ 				f = 1
+@@ -14910,17 +14911,21 @@
+ 			txtmore
+ 			txtef COLOR_YELLOW
+ 			txt lang("あなたは「" + skillname(SKILL_SPACT_POKER_FORCE) + "」の能力を得た。", "You have learned new ability, " + skillname(SKILL_SPACT_POKER_FORCE) + ".")
+ 		}
+ 		np = 0
++		joker = 0
+ 		repeat 245
+ 			if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
+ 				continue
+ 			}
+ 			if ( cdata(CDATA_ALLIED, cnt) != 0 ) {
+ 				continue
+ 			}
++			if ( cdata(CDATA_PIC, cnt) == xy2pic(18, 35) ) {
++				joker = 1
++			}
+ 			if ( cdata(CDATA_ID, cnt) >= CREATURE_ID_SPADE_WARRIOR & cdata(CDATA_ID, cnt) <= CREATURE_ID_HEART_WITCH ) {
+ 				np++
+ 			}
+ 		loop
+ 		if ( np >= 5 ) {
+@@ -14949,10 +14954,13 @@
+ 				if ( inv(INV_ITEM_ID, ci) == ITEM_ID_MASTER_OF_SPADE ) {
+ 					if ( cdata(CDATA_ID, cnt) != CREATURE_ID_SPADE_WARRIOR ) {
+ 						continue
+ 					}
+ 				}
++				if ( cdata(CDATA_PIC, cnt) == xy2pic(18, 35) ) {
++					continue
++				}
+ 				tc = cnt
+ 				cdata(CDATA_EVOLUTION_STAGE, tc)++
+ 				if ( cdata(CDATA_EVOLUTION_STAGE, tc) >= 13 ) {
+ 					cdata(CDATA_EVOLUTION_STAGE, tc) = 13
+ 				}
+@@ -15083,12 +15091,19 @@
+ 					}
+ 					if ( cdata(CDATA_EVOLUTION_STAGE, rc) > 10 ) {
+ 						cdata(CDATA_PIC, rc) = xy2pic(17, 35)
+ 					}
+ 				}
+-				if ( np == 5 ) {
+-					break
++				if ( joker == 1 ) {
++					if ( np >= 4 ) {
++						break
++					}
++				}
++				if ( joker != 1 ) {
++					if ( np >= 5 ) {
++						break
++					}
+ 				}
+ 			loop
+ 		}
+ 		dmgmp CHARA_PLAYER, cdata(CDATA_MAX_MP, CHARA_PLAYER) / 10 + 1
+ 		goto *act_use_SWEND1
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/adv.hsp ../2.27-borscht/adv.hsp
+--- ../2.26-borscht/adv.hsp	2025-03-17 02:14:34.989231900 +0800
++++ ../2.27-borscht/adv.hsp	2025-05-19 06:35:55.625157100 +0800
+@@ -174,11 +174,14 @@
+ 	cbitmod CHARA_BIT_SUMMONED, rc, FALSE
+ 	cbitmod CHARA_BIT_FESTIVAL, rc, FALSE
+ 	cbitmod CHARA_BIT_BRUSHED, rc, FALSE
+ 	cbitmod CHARA_BIT_LIVESTOCK, rc, FALSE
+ 	cbitmod CHARA_BIT_LABOR_CAMP, rc, FALSE
++	cbitmod CHARA_BIT_HAS_CLEMENTIAD, rc, FALSE
++	cbitmod CHARA_BIT_BEGGING_FOR_LIFE, rc, FALSE
+ 	cdata(CDATA_ALLIED, rc) = 100
++	cdata(CDATA_MATERIAL1_COUNTER, rc) = 0
+ 	if ( cdata(CDATA_JOIN_DATE_MONTH, rc) == 0 ) {
+ 		cdata(CDATA_JOIN_DATE_MONTH, rc) = gdata(GDATA_MONTH)
+ 	}
+ 	if ( cdata(CDATA_JOIN_DATE_DAY, rc) == 0 ) {
+ 		cdata(CDATA_JOIN_DATE_DAY, rc) = gdata(GDATA_DAY)
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/ai.hsp ../2.27-borscht/ai.hsp
+--- ../2.26-borscht/ai.hsp	2025-03-17 02:14:35.005247000 +0800
++++ ../2.27-borscht/ai.hsp	2025-05-19 06:35:55.640765300 +0800
+@@ -465,25 +465,32 @@
+ 			cdata(CDATA_AI_AGGRO, cc) = 0
+ 		}
+ 	}
+ 	if ( cdata(CDATA_RELATION, cc) >= RELATION_ALLY ) {
+ 		cdata(CDATA_AI_AGGRO, cc)--
++		if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, cdata(CDATA_TARGET, cc)) == TRUE ) {
++			cdata(CDATA_TARGET, cc) = 0
++		}
+ 		if ( cdata(CDATA_TARGET, cc) == 0 | cdata(CDATA_AI_AGGRO, cc) <= 0 | (cdata(CDATA_RELATION, cdata(CDATA_TARGET, cc)) >= RELATION_HATE & cdata(CDATA_TARGET, cdata(CDATA_TARGET, cc)) != cc) ) {
+ 			cdata(CDATA_TARGET, cc) = 0
+ 			if ( pcattacker != 0 ) {
+ 				if ( cdata(CDATA_RELATION, pcattacker) <= RELATION_ENEMY ) {
+ 					if ( cdata(CDATA_EXIST, pcattacker) == CHAR_STATE_ALIVE ) {
+-						if ( fov_los(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), cdata(CDATA_X, pcattacker), cdata(CDATA_Y, pcattacker)) ) {
+-							cdata(CDATA_AI_AGGRO, cc) = 5
+-							cdata(CDATA_TARGET, cc) = pcattacker
++						if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, pcattacker) != TRUE ) {
++							if ( fov_los(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), cdata(CDATA_X, pcattacker), cdata(CDATA_Y, pcattacker)) ) {
++								cdata(CDATA_AI_AGGRO, cc) = 5
++								cdata(CDATA_TARGET, cc) = pcattacker
++							}
+ 						}
+ 					}
+ 				}
+ 			}
+ 			if ( cdata(CDATA_TARGET, CHARA_PLAYER) != 0 ) {
+ 				if ( cdata(CDATA_EXIST, cdata(CDATA_TARGET, CHARA_PLAYER)) == CHAR_STATE_ALIVE ) {
+-					cdata(CDATA_TARGET, cc) = cdata(CDATA_TARGET, CHARA_PLAYER)
++					if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, tc) != TRUE ) {
++						cdata(CDATA_TARGET, cc) = cdata(CDATA_TARGET, CHARA_PLAYER)
++					}
+ 				}
+ 			}
+ 			if ( cdata(CDATA_TARGET, cc) == 0 ) {
+ 				if ( cc < MAX_CHARA_FOLLOWER | cdata(CDATA_ALLIED, cc) == 100 ) {
+ 					if ( cdata(CDATA_DIRECTIVE_MODE, cc) != DIRECTIVE_MODE_DEFENSIVE & cdata(CDATA_DIRECTIVE_MODE, cc) != DIRECTIVE_MODE_TALKING ) {
+@@ -492,16 +499,21 @@
+ 				}
+ 			}
+ 			if ( cdata(CDATA_RELATION, cdata(CDATA_TARGET, cc)) > RELATION_ENEMY ) {
+ 				cdata(CDATA_TARGET, cc) = 0
+ 			}
++			if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, cc) != TRUE ) {
++				cdata(CDATA_TARGET, cc) = 0
++			}
+ 			if ( cdata(CDATA_TARGET, cc) == 0 ) {
+ 				if ( cdata(CDATA_TARGET, CHARA_PLAYER) != 0 & cdata(CDATA_RELATION, cdata(CDATA_TARGET, CHARA_PLAYER)) <= RELATION_ENEMY ) {
+ 					if ( cdata(CDATA_EXIST, cdata(CDATA_TARGET, CHARA_PLAYER)) == CHAR_STATE_ALIVE ) {
+-						if ( fov_los(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), cdata(CDATA_X, cdata(CDATA_TARGET, CHARA_PLAYER)), cdata(CDATA_Y, cdata(CDATA_TARGET, CHARA_PLAYER))) ) {
+-							cdata(CDATA_AI_AGGRO, cc) = 5
+-							cdata(CDATA_TARGET, cc) = cdata(CDATA_TARGET, CHARA_PLAYER)
++						if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, cdata(CDATA_TARGET, CHARA_PLAYER)) != TRUE ) {
++							if ( fov_los(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), cdata(CDATA_X, cdata(CDATA_TARGET, CHARA_PLAYER)), cdata(CDATA_Y, cdata(CDATA_TARGET, CHARA_PLAYER))) ) {
++								cdata(CDATA_AI_AGGRO, cc) = 5
++								cdata(CDATA_TARGET, cc) = cdata(CDATA_TARGET, CHARA_PLAYER)
++							}
+ 						}
+ 					}
+ 				}
+ 			}
+ 		}
+@@ -652,19 +664,52 @@
+ 			if ( cdata(CDATA_TURN, cc) \ 5 == 0 ) {
+ 				if ( rnd(4) == 0 ) {
+ 					if ( cdata(CDATA_X, CHARA_PLAYER) > cdata(CDATA_X, cc) - 10 & cdata(CDATA_X, CHARA_PLAYER) < cdata(CDATA_X, cc) + 10 ) {
+ 						if ( cdata(CDATA_Y, CHARA_PLAYER) > cdata(CDATA_Y, cc) - 10 & cdata(CDATA_Y, CHARA_PLAYER) < cdata(CDATA_Y, cc) + 10 ) {
+ 							if ( cdata(CDATA_ROW_ACT, CHARA_PLAYER) != ACTION_PERFORM ) {
+-								if ( cdata(CDATA_AI_AGGRO, cc) <= 0 ) {
+-									customtalk cc, DBMODE_FLAVOR_PASSIVE
+-									gosub *convert_word
+-								}
+-								if ( findbuff(cc, BUFF_RUN_WILDLY) == (-1) ) {
+-									if ( cdata(CDATA_AI_AGGRO, cc) > 0 ) {
+-										customtalk cc, DBMODE_FLAVOR_ANGERED
++								if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, cc) == FALSE ) {
++									if ( cdata(CDATA_AI_AGGRO, cc) <= 0 ) {
++										customtalk cc, DBMODE_FLAVOR_PASSIVE
+ 										gosub *convert_word
+ 									}
++									if ( findbuff(cc, BUFF_RUN_WILDLY) == (-1) ) {
++										if ( cdata(CDATA_AI_AGGRO, cc) > 0 ) {
++											customtalk cc, DBMODE_FLAVOR_ANGERED
++											gosub *convert_word
++										}
++									}
++								}
++								else {
++									customtalk cc, DBMODE_FLAVOR_CLEMENTIA
++									gosub *convert_word
++									if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
++										kaiwa = rnd(3)
++										if ( kaiwa == 0 ) {
++											if ( jp ) {
++												txt "「カネなら渡すから、許して" + _kure(3) + "！」", "「か、カネが欲しいん" + _dana(3) + "！？」"
++											}
++											else {
++												txt cnvtalk("I'll do anything, please don't kill me....!"), cnvtalk("You can do whatever you want, so please forgive me...")
++											}
++										}
++										if ( kaiwa == 1 ) {
++											if ( jp ) {
++												txt "「な、なんでもするから殺さないで" + _kure(3) + "」", "「" + _ore(3) + "の身体は好きにしていいから、見逃して" + _kure(3) + "…」"
++											}
++											else {
++												txt cnvtalk("I'll do anything, please don't kill me....!"), cnvtalk("You can do whatever you want, so please forgive me...")
++											}
++										}
++										if ( kaiwa == 2 ) {
++											if ( jp ) {
++												txt "「許してクレメンティア」", "「謝る" + _yo(3) + "！どうか、このとおり！」"
++											}
++											else {
++												txt cnvtalk("Forgive me...!"), cnvtalk("I am reflecting on my actions!")
++											}
++										}
++									}
+ 								}
+ 							}
+ 						}
+ 					}
+ 				}
+@@ -743,23 +788,18 @@
+ 				}
+ 			}
+ 		}
+ 	}
+ 	if ( cdata(CDATA_AI_ITEM, cc) <= 0 ) {
+-		goto *ai_action
++		goto *ai_item_combat
+ 	}
+ 	ci = cdata(CDATA_AI_ITEM, cc)
+-	if ( inv(INV_ITEM_NUM, ci) == 0 | (refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ITEM_ROD & inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) <= 0) ) {
++	if ( inv(INV_ITEM_NUM, ci) == 0 ) {
+ 		cdata(CDATA_AI_ITEM, cc) = 0
+-		goto *ai_action
++		goto *ai_item_combat
+ 	}
+ 	a = refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE)
+-	if ( a != 56000 ) {
+-		if ( cdata(CDATA_RELATION, cc) != RELATION_NEUTRAL ) {
+-			cdata(CDATA_AI_ITEM, cc) = 0
+-		}
+-	}
+ 	if ( a == 57000 ) {
+ 		if ( cdata(CDATA_RELATION, cc) == RELATION_ALLY & cdata(CDATA_HUNGER, cc) > 10000 ) {
+ 		}
+ 		else {
+ 			if ( cbit(CHARA_BIT_PROHIBIT_EATING_FROM_GROUND, cc) == TRUE ) {
+@@ -782,20 +822,32 @@
+ 	if ( a == 53000 ) {
+ 		if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE_MINOR) != FILTER_ITEM_DEED ) {
+ 			goto *act_read
+ 		}
+ 	}
++	cdata(CDATA_AI_ITEM, cc) = 0
++
++*ai_item_combat
++	if ( cdata(CDATA_MATERIAL1_COUNTER, cc) <= 0 ) {
++		goto *ai_action
++	}
++	ci = cdata(CDATA_MATERIAL1_COUNTER, cc)
++	if ( inv(INV_ITEM_NUM, ci) == 0 | (refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ITEM_ROD & inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) <= 0) ) {
++		cdata(CDATA_MATERIAL1_COUNTER, cc) = 0
++		goto *ai_action
++	}
++	a = refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE)
+ 	if ( a == 56000 ) {
+ 		goto *act_zap
+ 	}
+ 	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_LASER_BAZOOKA | inv(INV_ITEM_ID, ci) == ITEM_ID_M202_SPECIAL | inv(INV_ITEM_ID, ci) == ITEM_ID_PANZERFAUST_X ) {
+ 		goto *act_use
+ 	}
+ 	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_CF_POTIOMAN | inv(INV_ITEM_ID, ci) == ITEM_ID_CRUSH_POTIOMAN | inv(INV_ITEM_ID, ci) == ITEM_ID_BATTLE_POTIOMAN | inv(INV_ITEM_ID, ci) == ITEM_ID_SUPER_POTIOMAN ) {
+ 		goto *act_use
+ 	}
+-	cdata(CDATA_AI_ITEM, cc) = 0
++	cdata(CDATA_MATERIAL1_COUNTER, cc) = 0
+ 
+ *ai_action
+ 	retreat = 0
+ 	if ( cdata(CDATA_AI_AGGRO, cc) > 0 | cdata(CDATA_RELATION, cc) == RELATION_ALLY ) {
+ 		distance = dist(cdata(CDATA_X, tc), cdata(CDATA_Y, tc), cdata(CDATA_X, cc), cdata(CDATA_Y, cc))
+@@ -948,11 +1000,11 @@
+ 				else {
+ 					goto *ai_calmMove
+ 				}
+ 			}
+ 		}
+-		if ( cdata(CDATA_CONDITION_FEAR, cc) != 0 ) {
++		if ( cdata(CDATA_CONDITION_FEAR, cc) != 0 | cbit(CHARA_BIT_BEGGING_FOR_LIFE, cc) == TRUE ) {
+ 			retreat = 1
+ 			goto *ai_followMove
+ 		}
+ 		else {
+ 			retreat = 0
+@@ -979,11 +1031,11 @@
+ 			}
+ 		}
+ 		goto *ai_actMain
+ 	}
+ 	if ( cdata(CDATA_RELATION, cc) < RELATION_ALLY ) {
+-		if ( cbit(CHARA_BIT_SANDBAG, tc) ) {
++		if ( cbit(CHARA_BIT_SANDBAG, tc) | cbit(CHARA_BIT_BEGGING_FOR_LIFE, tc) ) {
+ 			cdata(CDATA_TARGET, cc) = 0
+ 			caggro(cc) = 0
+ 		}
+ 	}
+ 	if ( cdata(CDATA_TURN, cc) \ 10 == 1 ) {
+@@ -1064,10 +1116,22 @@
+ 	if ( cdata(CDATA_AI_CALM, cc) == 4 | (cbit(CHARA_BIT_BRUSHED, cc) == FALSE & cdata(CDATA_BRUSH_LEVEL, cc) != 0 & cbit(CHARA_BIT_LIVESTOCK, cc) == TRUE) ) {
+ 		tc = CHARA_PLAYER
+ 		distance = dist(cdata(CDATA_X, tc), cdata(CDATA_Y, tc), cdata(CDATA_X, cc), cdata(CDATA_Y, cc))
+ 		goto *ai_followMove
+ 	}
++	if ( cbit(CHARA_BIT_HAS_CLEMENTIAD, cc) == TRUE ) {
++		cdata(CDATA_TARGET, cc) = 0
++		tc = CHARA_PLAYER
++		distance = dist(cdata(CDATA_X, tc), cdata(CDATA_Y, tc), cdata(CDATA_X, cc), cdata(CDATA_Y, cc))
++		if ( distance == 1 ) {
++			gosub *sexsex2
++			goto *turn_end
++		}
++		if ( distance < 6 ) {
++			goto *ai_followMove
++		}
++	}
+ 	if ( cc > MAX_CHARA_FOLLOWER ) {
+ 		if ( rnd(5) != 0 ) {
+ 			goto *turn_end
+ 		}
+ 	}
+@@ -3083,10 +3147,21 @@
+ 			if ( rnd(10) == 0 ) {
+ 				act = SKILL_SPACT_DRAIN_BLOOD
+ 			}
+ 		}
+ 	}
++	if ( cdata(CDATA_ID, cc) >= CREATURE_ID_SPADE_WARRIOR & cdata(CDATA_ID, cc) <= CREATURE_ID_HEART_WITCH ) {
++		if ( cdata(CDATA_PIC, cc) == xy2pic(18, 35) ) {
++			act = SKILL_SPACT_INTENSIVE_POWER
++			if ( rnd(2) == 0 ) {
++				act = SKILL_SPACT_PECULIAR_JOKE
++			}
++			if ( cdata(CDATA_POWER_GAUGE, cc) >= 100 ) {
++				act = SKILL_SPACT_UNISON_IMPACT
++			}
++		}
++	}
+ 	if ( cdata(CDATA_ID, cc) == CREATURE_ID_KING_COCKROACH | cdata(CDATA_ID, cc) == CREATURE_ID_GODA_THE_CAPTAIN_OF_ORC ) {
+ 		if ( cdata(CDATA_POWER_GAUGE, cc) < 95 ) {
+ 			if ( cdata(CDATA_POWER_GAUGE, cc) >= 75 ) {
+ 				if ( rnd(4) == 0 ) {
+ 					act = SKILL_SPACT_SHADOW_RUSH
+@@ -3122,10 +3197,19 @@
+ 			if ( findbuff(cc, BUFF_KILLING_DANCE) == (-1) ) {
+ 				act = SKILL_SPACT_KILLING_DANCE
+ 			}
+ 		}
+ 	}
++	if ( cdata(CDATA_TARGET, cc) > (-1) ) {
++		if ( cdata(CDATA_ID, cc) == CREATURE_ID_ARCH_WRAITH | cdata(CDATA_ID, cc) == CREATURE_ID_13TH_STEP_GHOST | cdata(CDATA_ID, cc) == CREATURE_ID_OSIRIS | cdata(CDATA_ID, cc) == CREATURE_ID_HELRAUNE | cdata(CDATA_ID, cc) == CREATURE_ID_STORMBLING | cdata(CDATA_ID, cc) == CREATURE_ID_ROATONIS_THE_INFECTIONS | cdata(CDATA_ID, cc) == CREATURE_ID_NETHER_IMP | cdata(CDATA_ID, cc) == CREATURE_ID_OCHIMUSHA_ARMOR ) {
++			if ( rnd(5) == 0 ) {
++				if ( findbuff(cdata(CDATA_TARGET, cc), BUFF_MIASMA_OF_HELL) == (-1) ) {
++					act = SKILL_SPACT_MIASMA_OF_HELL
++				}
++			}
++		}
++	}
+ 	if ( cdata(CDATA_ID, cc) == CREATURE_ID_13TH_STEP_GHOST | cdata(CDATA_ID, cc) == CREATURE_ID_GHOST | cdata(CDATA_ID, cc) == CREATURE_ID_NINJA ) {
+ 		if ( cdata(CDATA_TARGET, cc) > (-1) ) {
+ 			if ( rnd(15) == 0 ) {
+ 				act = SKILL_SPACT_SHADOW_JUMP
+ 			}
+@@ -4173,10 +4257,11 @@
+ 
+ 
+ 
+ 
+ 
++
+ 
+ 
+ 
+ 
+ 
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/calculation.hsp ../2.27-borscht/calculation.hsp
+--- ../2.26-borscht/calculation.hsp	2025-03-17 02:14:35.031256900 +0800
++++ ../2.27-borscht/calculation.hsp	2025-05-19 06:35:55.665983200 +0800
+@@ -1461,11 +1461,11 @@
+ 	}
+ 	spact(SKILL_SPACT_DRAIN_BLOOD - STARTING_SKILL_SPACT) = 1
+ 	spact(SKILL_SPACT_FIRE_BREATH - STARTING_SKILL_SPACT) = 1
+ 	spact(SKILL_SPACT_TOUCH_OF_WEAKNESS - STARTING_SKILL_SPACT) = 1
+ 	spact(SKILL_SPACT_PSYCHOANALYSIS - STARTING_SKILL_SPACT) = 1
+-	repeat 869 - 600
++	repeat 871 - 600
+ 		spact(cnt + STARTING_SKILL_SPACT - STARTING_SKILL_SPACT) = 1
+ 	loop
+ 	skillinit SKILL_NORMAL_CASTING, r1, 6
+ 	skillinit SKILL_NORMAL_SHIELD, r1, 2
+ 	skillinit SKILL_WEAPON_FIREARM, r1, 2
+@@ -1660,10 +1660,13 @@
+ 
+ *calcStealth
+ 	if ( cbit(CHARA_BIT_HAS_SEPPUKUED, r2) == TRUE ) {
+ 		return 0
+ 	}
++	if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, r2) == TRUE ) {
++		return 0
++	}
+ 	if ( map(cdata(CDATA_X, r2), cdata(CDATA_Y, r2), MAP_ITEM_CHIPS_MEMORY) != 0 ) {
+ 		if ( mapitemfind(cdata(CDATA_X, r2), cdata(CDATA_Y, r2), ITEM_ID_LULWYS_PHOTO_COLLECTION) != (-1) ) {
+ 			if ( cdata(CDATA_ID, cc) != CREATURE_ID_LULWY & cdata(CDATA_ID, cc) != CREATURE_ID_DEVASTATE_LULWY ) {
+ 				return 0
+ 			}
+@@ -1846,10 +1849,29 @@
+ 	if ( cdata(CDATA_CONDITION_POISON, r1) > 0 ) {
+ 		if ( cdata(CDATA_CONDITION_POISON, r1) > 100 ) {
+ 			cdata(CDATA_CONDITION_POISON, r1) = 100
+ 		}
+ 		dmghp r1, cdata(CDATA_MAX_HP, r1) / 15 + 2, DAMAGE_FROM_POISON
++		if ( findbuff(r1, BUFF_MIASMA_OF_HELL) != (-1) ) {
++			if ( cdata(CDATA_EXIST, r1) == CHAR_STATE_ALIVE & cdata(CDATA_QUALITY, r1) < FIX_QUALITY_MIRACLE ) {
++				p = 10, 11, 12, 17, 18, 14, 13, 16, 15, 19, -1
++				repeat
++					if ( p(cnt) == (-1) ) {
++						break
++					}
++					i = p(cnt) + 240 - 10
++					cdata(i, r1) -= sorg(p(cnt), r1) / 100 + 1
++				loop
++				if ( synccheck(r1, -1) ) {
++					txtmore
++					txtef COLOR_LIGHT_GREEN
++					txt lang(name(r1) + "は瘴気の毒で弱くなった。", name(r1) + " " + is(r1) + " weakened.")
++				}
++				r1 = r1
++				gosub *charaRefresh
++			}
++		}
+ 		healcon r1, CONDITION_POISON, 1
+ 		if ( cdata(CDATA_CONDITION_POISON, r1) > 0 ) {
+ 			cdata(CDATA_EMO_ICON, r1) = 8 + 100
+ 		}
+ 		regen = 0
+@@ -1857,10 +1879,32 @@
+ 	if ( cdata(CDATA_CONDITION_MPOISON, r1) > 0 ) {
+ 		if ( cdata(CDATA_CONDITION_MPOISON, r1) > 100 ) {
+ 			cdata(CDATA_CONDITION_MPOISON, r1) = 100
+ 		}
+ 		dmgmp r1, rnd(2 + sdata(SKILL_ATTR_MAG, r1) / 10)
++		if ( cdata(CDATA_SP, r1) > 0 ) {
++			cdata(CDATA_SP, r1)--
++		}
++		if ( findbuff(r1, BUFF_MIASMA_OF_HELL) != (-1) ) {
++			if ( cdata(CDATA_EXIST, r1) == CHAR_STATE_ALIVE & cdata(CDATA_QUALITY, r1) < FIX_QUALITY_MIRACLE ) {
++				p = 10, 11, 12, 17, 18, 14, 13, 16, 15, 19, -1
++				repeat
++					if ( p(cnt) == (-1) ) {
++						break
++					}
++					i = p(cnt) + 240 - 10
++					cdata(i, r1) -= sorg(p(cnt), r1) / 100 + 1
++				loop
++				if ( synccheck(r1, -1) ) {
++					txtmore
++					txtef COLOR_BLUE
++					txt lang(name(r1) + "は瘴気に蝕まれて弱くなった。", name(r1) + " " + is(r1) + " weakened.")
++				}
++				r1 = r1
++				gosub *charaRefresh
++			}
++		}
+ 		healcon r1, CONDITION_MPOISON, 1
+ 		if ( cdata(CDATA_CONDITION_MPOISON, r1) > 0 ) {
+ 			cdata(CDATA_EMO_ICON, r1) = 27 + 100
+ 		}
+ 		regen = 0
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/chara_func.hsp ../2.27-borscht/chara_func.hsp
+--- ../2.26-borscht/chara_func.hsp	2025-03-17 02:14:35.083394600 +0800
++++ ../2.27-borscht/chara_func.hsp	2025-05-19 06:35:55.718616400 +0800
+@@ -365,10 +365,13 @@
+ 			locvar_customtalk_s = "%txtTagEvo"
+ 		}
+ 		if ( customtalk_dbmode == DBMODE_FLAVOR_LEADING ) {
+ 			locvar_customtalk_s = "%txtLeading"
+ 		}
++		if ( customtalk_dbmode == DBMODE_FLAVOR_CLEMENTIA ) {
++			locvar_customtalk_s = "%txtClementia"
++		}
+ 		locvar_customtalk_p = instr(locvar_customtalk_buff, 0, locvar_customtalk_s + "," + lang("JP", "EN"))
+ 		locvar_customtalk_buff = strmid(locvar_customtalk_buff, locvar_customtalk_p, instr(locvar_customtalk_buff, locvar_customtalk_p + 1, "%"))
+ 		if ( noteinfo(0) > 1 ) {
+ 			if ( gdata(GDATA_AREA) == AREA_SHOW_HOUSE & customtalk_dbmode == DBMODE_FLAVOR_DIALOG & customtalk_charid > MAX_CHARA_FOLLOWER & cdata(CDATA_ID, customtalk_charid) == CREATURE_ID_USER ) {
+ 				if ( cdata(CDATA_CUSTOM_TALK_LINE, customtalk_charid) > 100 ) {
+@@ -5932,11 +5935,13 @@
+ 				}
+ 			}
+ 		}
+ 		if ( cdata(CDATA_ID, dmghp_source) == CREATURE_ID_SPADE_WARRIOR | cdata(CDATA_ID, dmghp_source) == CREATURE_ID_CLUB_FEATHER | cdata(CDATA_ID, dmghp_source) == CREATURE_ID_DIAMOND_EYES | cdata(CDATA_ID, dmghp_source) == CREATURE_ID_HEART_WITCH ) {
+ 			if ( cdata(CDATA_ALLIED, dmghp_source) == 0 ) {
+-				cdata(CDATA_DIRECTIVE_MODE, dmghp_source) = DIRECTIVE_MODE_DEFENSIVE
++				if ( cdata(CDATA_PIC, dmghp_source) != xy2pic(18, 35) ) {
++					cdata(CDATA_DIRECTIVE_MODE, dmghp_source) = DIRECTIVE_MODE_DEFENSIVE
++				}
+ 			}
+ 		}
+ 	}
+ 	if ( cdata(CDATA_ID, dmghp_charid) == CREATURE_ID_DIAMOND_EYES ) {
+ 		if ( cdata(CDATA_ALLIED, dmghp_charid) == 0 ) {
+@@ -6339,15 +6344,18 @@
+ 						}
+ 					}
+ 				}
+ 			}
+ 		}
+-		rowact_check dmghp_charid
++		rowact_check locvar_dmghp_tcia
+ 		if ( cdata(CDATA_HP, dmghp_charid) < cdata(CDATA_MAX_HP, dmghp_charid) / 5 ) {
+ 			if ( dmghp_charid != CHARA_PLAYER ) {
+ 				if ( cdata(CDATA_CONDITION_FEAR, dmghp_charid) == 0 ) {
+ 					if ( cbit(CHARA_BIT_RES_FEAR, dmghp_charid) == FALSE ) {
++						if ( cdata(CDATA_QUALITY, dmghp_charid) >= FIX_QUALITY_MIRACLE ) {
++							locvar_dmghp_f = 0
++						}
+ 						if ( locvar_dmghp_dmg * 100 / cdata(CDATA_MAX_HP, dmghp_charid) + 10 > rnd(200) ) {
+ 							locvar_dmghp_f = 1
+ 						}
+ 						else {
+ 							locvar_dmghp_f = 0
+@@ -6389,10 +6397,29 @@
+ 						}
+ 					}
+ 				}
+ 			}
+ 		}
++		if ( cdata(CDATA_HP, dmghp_charid) < cdata(CDATA_MAX_HP, dmghp_charid) / 10 ) {
++			if ( dmghp_charid != CHARA_PLAYER ) {
++				if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, dmghp_charid) == FALSE ) {
++					locvar_dmghp_f = 1
++					if ( cdata(CDATA_RELATION, dmghp_charid) == RELATION_ALLY | dmghp_charid < MAX_CHARA_FOLLOWER | cbit(CHARA_BIT_NECRO, dmghp_charid) == TRUE | cdata(CDATA_QUALITY, dmghp_charid) >= FIX_QUALITY_MIRACLE | cdata(CDATA_ROLE, dmghp_charid) != ROLE_NONE | cbit(CHARA_BIT_PRECIOUS, dmghp_charid) == TRUE | cdata(CDATA_CHARACTER_TIER, dmghp_charid) == CHARACTER_TIER_SUMMONED_NORMAL | cbit(CHARA_BIT_BODYGUARD, dmghp_charid) == TRUE | gdata(GDATA_FLAG_DUEL_TARGET) == dmghp_charid ) {
++						locvar_dmghp_f = 0
++					}
++					if ( locvar_dmghp_f ) {
++						if ( cbit(CHARA_BIT_SANDBAG, dmghp_charid) != TRUE ) {
++							cdata(CDATA_CONDITION_FEAR, dmghp_charid) = rnd(20) + 50
++							txtmore
++							txtef COLOR_SKY_BLUE
++							txt lang(name(dmghp_charid) + "は恐怖のあまり命乞いを始めた。話を聞いてやろうか？", name(dmghp_charid) + " was frightened and began to ask for forgiveness. Maybe I could talk to " + name(dmghp_charid) + " now.")
++							cbitmod CHARA_BIT_BEGGING_FOR_LIFE, dmghp_charid, TRUE
++						}
++					}
++				}
++			}
++		}
+ 		if ( locvar_dmghp_ele ) {
+ 			if ( locvar_dmghp_ele == 59 ) {
+ 				dmgcon dmghp_charid, CONDITION_WINCE, limit(rnd(dmghp_element_power / 9 * 2 + 1), 1, 9000)
+ 				dmgcon dmghp_charid, CONDITION_CHILLS, limit(rnd(dmghp_element_power / 9 * 2 + 1), 1, 9000)
+ 				dmgcon dmghp_charid, CONDITION_BLIND, limit(rnd(dmghp_element_power / 18 + 1), 1, 4500)
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/chat.hsp ../2.27-borscht/chat.hsp
+--- ../2.26-borscht/chat.hsp	2025-03-17 02:14:35.289198900 +0800
++++ ../2.27-borscht/chat.hsp	2025-05-19 06:35:55.925309300 +0800
+@@ -148,14 +148,16 @@
+ 		}
+ 	}
+ 	if ( cdata(CDATA_RELATION, tc) <= RELATION_DISLIKE ) {
+ 		if ( evnum == 0 ) {
+ 			if ( cbit(CHARA_BIT_LIVESTOCK, tc) != TRUE ) {
+-				txt lang(name(tc) + "は耳を貸さない。", name(tc) + " won't listen.")
+-				questteleport = 0
+-				gosub *screen_draw
+-				return
++				if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, tc) != TRUE ) {
++					txt lang(name(tc) + "は耳を貸さない。", name(tc) + " won't listen.")
++					questteleport = 0
++					gosub *screen_draw
++					return
++				}
+ 			}
+ 		}
+ 	}
+ 	if ( gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 >= cdata(CDATA_INTEREST_RENEW, tc) ) {
+ 		cdata(CDATA_INTEREST, tc) = 100
+@@ -46446,10 +46448,36 @@
+ 					listmax++
+ 				}
+ 			}
+ 		}
+ 	}
++	if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, tc) == TRUE ) {
++		list(0, listmax) = 149
++		listn(0, listmax) = lang("餌付けする", "I'll give you something delicious.")
++		listmax++
++		list(0, listmax) = 150
++		listn(0, listmax) = lang("高速で屈伸しながら煽る", "You are such a wimp!")
++		listmax++
++		list(0, listmax) = 151
++		listn(0, listmax) = lang("同胞と殺し合え", "Kill your fellow countrymen!")
++		listmax++
++		list(0, listmax) = 144
++		listn(0, listmax) = lang("カツアゲする", "Leave your money behind!")
++		listmax++
++		list(0, listmax) = 145
++		listn(0, listmax) = lang("激しく気持ちいいことさせろ", "Make me feel good...")
++		listmax++
++		list(0, listmax) = 146
++		listn(0, listmax) = lang("トドメを刺す", "I'll let you die without pain!")
++		listmax++
++		list(0, listmax) = 147
++		listn(0, listmax) = lang("見逃してやる", "I forgive you...")
++		listmax++
++		list(0, listmax) = 148
++		listn(0, listmax) = lang("見逃してやるフリをしてトドメを刺す", "I forgive you...It's a lie!")
++		listmax++
++	}
+ 	if ( cdata(CDATA_ID, tc) == CREATURE_ID_DETECTIVE | cdata(CDATA_ID, tc) == CREATURE_ID_WEREWOLF_DETECTIVE ) {
+ 		if ( tc > MAX_CHARA_FOLLOWER ) {
+ 			list(0, listmax) = 70
+ 			listn(0, listmax) = lang("身辺調査", "Background checks")
+ 			listmax++
+@@ -46866,10 +46894,353 @@
+ 			}
+ 		}
+ 		buff = lang("冷やかし" + _ka(1), "You kidding? ")
+ 		goto *chat_default
+ 	}
++	if ( chatval == 149 ) {
++		invsubroutine = 1
++		invctrl = INVCTRL_MATERIAL_ENCHANT, 17
++		snd SOUNDLIST_INV
++		gosub *com_inventory
++		if ( stat == 1 ) {
++			listmax = 0
++			snd SOUNDLIST_GET1
++			inv(INV_ITEM_NUM, ci)--
++			modimp2 tc, inv(INV_ITEM_PARAM2, ci)
++			if ( cdata(CDATA_MASTER_SERVANT, tc) <= 65 ) {
++				listmax = 0
++				buff = lang("(警戒しながら匂いを嗅いでいる…)", "It smells suspicious...")
++				tc = tc * (0 == 0) + (0 != 0) * 0
++				list(0, listmax) = 0
++				listn(0, listmax) = strmore
++				listmax++
++				chatesc = 1
++				gosub *chat_select
++				if ( scenemode ) {
++					if ( scene_cut == 1 ) {
++						goto *chat_end
++					}
++				}
++			}
++			if ( cdata(CDATA_MASTER_SERVANT, tc) > 65 & cdata(CDATA_MASTER_SERVANT, tc) <= 85 ) {
++				listmax = 0
++				buff = lang("(じっと餌を見つめたまま、ヨダレを垂らしている…)", "It looks a little delicious...")
++				tc = tc * (0 == 0) + (0 != 0) * 0
++				list(0, listmax) = 0
++				listn(0, listmax) = strmore
++				listmax++
++				chatesc = 1
++				gosub *chat_select
++				if ( scenemode ) {
++					if ( scene_cut == 1 ) {
++						goto *chat_end
++					}
++				}
++			}
++			if ( cdata(CDATA_MASTER_SERVANT, tc) > 85 & cdata(CDATA_MASTER_SERVANT, tc) <= 100 ) {
++				listmax = 0
++				buff = lang("(怯えながらも餌を少しだけ口に運んだ…)", "Let's try eating just a little bit...")
++				tc = tc * (0 == 0) + (0 != 0) * 0
++				list(0, listmax) = 0
++				listn(0, listmax) = strmore
++				listmax++
++				chatesc = 1
++				gosub *chat_select
++				if ( scenemode ) {
++					if ( scene_cut == 1 ) {
++						goto *chat_end
++					}
++				}
++			}
++			if ( cdata(CDATA_MASTER_SERVANT, tc) >= 100 ) {
++				snd SOUNDLIST_COMPLETE1
++				listmax = 0
++				buff = lang("(どうやら、与えられた餌を気に入ったようだ！)", "It's not bad to be fed by you...")
++				tc = tc * (0 == 0) + (0 != 0) * 0
++				list(0, listmax) = 0
++				listn(0, listmax) = strmore
++				listmax++
++				chatesc = 1
++				gosub *chat_select
++				if ( scenemode ) {
++					if ( scene_cut == 1 ) {
++						goto *chat_end
++					}
++				}
++				rc = tc
++				gosub *add_ally
++				check_quest
++				goto *chat_end
++			}
++		}
++		goto *chat_default
++	}
++	if ( chatval == 150 ) {
++		txt lang("あなたは高速で屈伸しながら" + cdatan(CDATAN_NAME, tc) + "を煽り、気持ち良くなった。", "You insulted the other person while jumping up and down at high speed.")
++		snd SOUNDLIST_CARD1
++		await 50
++		snd SOUNDLIST_CARD1
++		await 50
++		snd SOUNDLIST_CARD1
++		cdata(CDATA_POWER_GAUGE, CHARA_PLAYER) += 16
++		if ( cdata(CDATA_POWER_GAUGE, CHARA_PLAYER) > 100 ) {
++			if ( cdata(CDATA_SHIFT_FORM, CHARA_PLAYER) <= SHIFT_FORM_NONE & cdata(CDATA_EVOLUTION_STAGE, CHARA_PLAYER) <= 0 ) {
++				cdata(CDATA_POWER_GAUGE, CHARA_PLAYER) = 100
++			}
++		}
++		if ( cdata(CDATA_POWER_GAUGE, CHARA_PLAYER) > 200 ) {
++			cdata(CDATA_POWER_GAUGE, CHARA_PLAYER) = 200
++		}
++		kaiwa = rnd(3)
++		if ( kaiwa == 0 ) {
++			txt lang("「ざーこｗざーこｗ」", cnvtalk("Zaaaaako!"))
++		}
++		if ( kaiwa == 1 ) {
++			txt lang("「はい、勝ちーｗ」", cnvtalk("I wiiiiiin!"))
++		}
++		if ( kaiwa == 2 ) {
++			txt lang("「うぇええええいｗｗｗ」", cnvtalk("Weeeeeee!"))
++		}
++		listmax = 0
++		buff = lang("嫌われるからやめたほうがいい" + _yo(3) + "、そういうの…。", "You should stop doing that because people will dislike you...")
++		tc = tc * (0 == 0) + (0 != 0) * 0
++		list(0, listmax) = 0
++		listn(0, listmax) = strmore
++		listmax++
++		chatesc = 1
++		gosub *chat_select
++		if ( scenemode ) {
++			if ( scene_cut == 1 ) {
++				goto *chat_end
++			}
++		}
++		repeat 245
++			if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
++				continue
++			}
++			if ( 0 == cnt ) {
++				continue
++			}
++			dx = cdata(CDATA_X, cnt)
++			dy = cdata(CDATA_Y, cnt)
++			if ( dist(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), dx, dy) > sdataref(SKILL_DATAREF_TG, SKILL_SPACT_CHEER) \ 1000 + 1 ) {
++				continue
++			}
++			if ( fov_los(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), dx, dy) == 0 ) {
++				continue
++			}
++			modimp cnt, -5
++		loop
++		goto *chat_default
++	}
++	if ( chatval == 151 ) {
++		azuke = 0
++		repeat 245
++			if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
++				continue
++			}
++			if ( cnt < maxfollwer ) {
++				continue
++			}
++			if ( cdata(CDATA_RELATION, cnt) != RELATION_ALLY ) {
++				continue
++			}
++			if ( cbit(CHARA_BIT_NECRO, cnt) != TRUE ) {
++				continue
++			}
++			azuke++
++		loop
++		if ( azuke >= 5 ) {
++			snd SOUNDLIST_FAIL1
++			txtef COLOR_RED
++			txt lang("連れている味方が多すぎて、監視が行き届かないだろう…。", "It's hard to keep an eye on this surrenderer, since you have so many allies...")
++			goto *chat_default
++		}
++		modimp tc, -20
++		modkarma 0, -5
++		if ( rnd(cdata(CDATA_MASTER_SERVANT, tc) + sdata(SKILL_ATTR_WIL, CHARA_PLAYER)) < rnd(sdata(SKILL_ATTR_WIL, tc) + 200) ) {
++			listmax = 0
++			buff = lang("その命令は聞けない" + _ga(3) + "見逃して" + _kure(3) + "…。", "I cannot follow that order, but please forgive me...")
++			tc = tc * (0 == 0) + (0 != 0) * 0
++			list(0, listmax) = 0
++			listn(0, listmax) = strmore
++			listmax++
++			chatesc = 1
++			gosub *chat_select
++			if ( scenemode ) {
++				if ( scene_cut == 1 ) {
++					goto *chat_end
++				}
++			}
++			txtef COLOR_PURPLE
++			txt lang(cdatan(CDATAN_NAME, tc) + "は自分の立場を分かっていないようだ。", cdatan(CDATAN_NAME, tc) + " doesn't seem to understand own current position.")
++			goto *chat_default
++		}
++		else {
++			listmax = 0
++			buff = lang("ッ…！皆、" + _gomen(3) + "…。", "Sorry everyone...")
++			tc = tc * (0 == 0) + (0 != 0) * 0
++			list(0, listmax) = 0
++			listn(0, listmax) = strmore
++			listmax++
++			chatesc = 1
++			gosub *chat_select
++			if ( scenemode ) {
++				if ( scene_cut == 1 ) {
++					goto *chat_end
++				}
++			}
++			snd SOUNDLIST_LOCKED1
++			cdata(CDATA_RELATION, tc) = RELATION_ALLY
++			cdata(CDATA_RELATION_ORG, tc) = RELATION_ALLY
++			cbitmod CHARA_BIT_NECRO, tc, TRUE
++			cbitmod CHARA_BIT_SHADOW_CLONE, tc, TRUE
++			cbitmod CHARA_BIT_BEGGING_FOR_LIFE, tc, FALSE
++			goto *chat_end
++		}
++	}
++	if ( chatval == 144 ) {
++		flt
++		itemcreate -1, ITEM_ID_GOLD_PIECE, cdata(CDATA_X, tc), cdata(CDATA_Y, tc), (cdata(CDATA_GOLD, tc) + 1) / 100 + 1
++		if ( gdata(GDATA_FLAG_RARE_DROP) == 100 ) {
++			if ( rnd(4) == 0 ) {
++				flt
++				itemcreate -1, ITEM_ID_FIGHTING_DESTONE, cdata(CDATA_X, tc), cdata(CDATA_Y, tc), 0
++				inv(INV_ITEM_PARAM2, ci) = limit((cdata(CDATA_LEVEL, tc) / 10 + 1) * 10, 1, 999)
++				inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_NORMAL
++			}
++		}
++		snd SOUNDLIST_PAYGOLD1
++		listmax = 0
++		buff = lang("ヒィッ！", "Eeeek!")
++		tc = tc * (0 == 0) + (0 != 0) * 0
++		list(0, listmax) = 0
++		listn(0, listmax) = strbye
++		listmax++
++		chatesc = 1
++		gosub *chat_select
++		if ( scenemode ) {
++			if ( scene_cut == 1 ) {
++				goto *chat_end
++			}
++		}
++		txt lang(cdatan(CDATAN_NAME, tc) + "は金貨を置いて逃げ去った。", cdatan(CDATAN_NAME, tc) + " left gold pieces and ran away.")
++		chara_vanquish tc
++		snd SOUNDLIST_EXITMAP1
++		goto *chat_end
++	}
++	if ( chatval == 145 ) {
++		modimp tc, -10
++		listmax = 0
++		buff = lang("ううっ…！", "Ugh...!")
++		tc = tc * (0 == 0) + (0 != 0) * 0
++		list(0, listmax) = 0
++		listn(0, listmax) = strmore
++		listmax++
++		chatesc = 1
++		gosub *chat_select
++		if ( scenemode ) {
++			if ( scene_cut == 1 ) {
++				goto *chat_end
++			}
++		}
++		gosub *sexsex2
++		goto *chat_end
++	}
++	if ( chatval == 146 ) {
++		listmax = 0
++		buff = lang("し、死にたくな――", "I don't want to die! Plea...")
++		tc = tc * (0 == 0) + (0 != 0) * 0
++		list(0, listmax) = 0
++		listn(0, listmax) = strbye
++		listmax++
++		chatesc = 1
++		gosub *chat_select
++		if ( scenemode ) {
++			if ( scene_cut == 1 ) {
++				goto *chat_end
++			}
++		}
++		snd SOUNDLIST_ATKSWORD
++		txtef COLOR_RED
++		txt lang(" *ブシュッ* ", "*Gash*")
++		txtvalid = 0
++		txt lang(name(0) + "は" + name(tc) + "の首をちょんぎった。", name(0) + " cut" + _s(CHARA_PLAYER) + " " + name(tc) + your(tc) + " head.")
++		cdata(CDATA_HP, tc) = 0
++		dmghp tc, cdata(CDATA_MAX_HP, tc), (0 /*!!!@[CHARA_PLAYER @@@ DAMAGE_FROM_CHARA]@!!! */), SKILL_SPACT_DECAPITATION
++		goto *chat_end
++	}
++	if ( chatval == 147 ) {
++		if ( gdata(GDATA_FLAG_RARE_DROP) == 100 ) {
++			if ( rnd(2) == 0 ) {
++				flt
++				itemcreate -1, ITEM_ID_FIGHTING_DESTONE, cdata(CDATA_X, tc), cdata(CDATA_Y, tc), 0
++				inv(INV_ITEM_PARAM2, ci) = limit((cdata(CDATA_LEVEL, tc) / 10 + 1) * 10, 1, 999)
++				inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_NORMAL
++			}
++		}
++		if ( gdata(GDATA_FLAG_RARE_DROP) == 100 ) {
++			if ( rnd(4) == 0 ) {
++				if ( cdata(CDATA_INIT_ATTR, tc) + cdata(CDATA_INIT_LIFEMANA, tc) >= 1000 ) {
++					flt
++					itemcreate -1, ITEM_ID_AWAKE_DESTONE, cdata(CDATA_X, tc), cdata(CDATA_Y, tc), 0
++					inv(INV_ITEM_PARAM2, ci) = cdata(CDATA_INIT_ATTR, tc)
++					inv(INV_ITEM_PARAM3, ci) = cdata(CDATA_INIT_LIFEMANA, tc)
++					inv(INV_ITEM_AMUR_CAGE, ci) = cdata(CDATA_INIT_SPEED, tc)
++					inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_NORMAL
++				}
++			}
++		}
++		listmax = 0
++		buff = lang("はは、助かったぁ…。", "I was saved! Hahaha...!")
++		tc = tc * (0 == 0) + (0 != 0) * 0
++		list(0, listmax) = 0
++		listn(0, listmax) = strbye
++		listmax++
++		chatesc = 1
++		gosub *chat_select
++		if ( scenemode ) {
++			if ( scene_cut == 1 ) {
++				goto *chat_end
++			}
++		}
++		chara_vanquish tc
++		snd SOUNDLIST_EXITMAP1
++		goto *chat_end
++	}
++	if ( chatval == 148 ) {
++		if ( gdata(GDATA_FLAG_RARE_DROP) == 100 ) {
++			if ( rnd(4) == 0 ) {
++				flt
++				itemcreate -1, ITEM_ID_FIGHTING_DESTONE, cdata(CDATA_X, tc), cdata(CDATA_Y, tc), 0
++				inv(INV_ITEM_PARAM2, ci) = limit((cdata(CDATA_LEVEL, tc) / 10 + 1) * 10, 1, 999)
++				inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_NORMAL
++			}
++		}
++		listmax = 0
++		buff = lang("はは、助かっ――", "I was saved! Hahah...")
++		tc = tc * (0 == 0) + (0 != 0) * 0
++		list(0, listmax) = 0
++		listn(0, listmax) = strbye
++		listmax++
++		chatesc = 1
++		gosub *chat_select
++		if ( scenemode ) {
++			if ( scene_cut == 1 ) {
++				goto *chat_end
++			}
++		}
++		snd SOUNDLIST_ATKSWORD
++		txtef COLOR_RED
++		txt lang(" *ブシュッ* ", "*Gash*")
++		txtvalid = 0
++		txt lang(name(0) + "は" + name(tc) + "の首をちょんぎった。", name(0) + " cut" + _s(CHARA_PLAYER) + " " + name(tc) + your(tc) + " head.")
++		cdata(CDATA_HP, tc) = 0
++		dmghp tc, cdata(CDATA_MAX_HP, tc), (0 /*!!!@[CHARA_PLAYER @@@ DAMAGE_FROM_CHARA]@!!! */), SKILL_SPACT_DECAPITATION
++		modkarma 0, -5
++		goto *chat_end
++	}
+ 	if ( chatval == 94 ) {
+ 		list(0, listmax) = 0
+ 		listn(0, listmax) = lang("別行動時は(遠距離)散策", "Roam while breaking apart.")
+ 		listmax++
+ 		list(0, listmax) = 1
+@@ -55571,11 +55942,11 @@
+ 			mes "(" + s(1) + ")" + s
+ 			if ( cbit(CHARA_BIT_HIRED, tc) != FALSE ) {
+ 				pos wx + 32, wy + 310
+ 				mes "" + cnvdate(cdata(CDATA_HIRE_DATE, tc), 2)
+ 			}
+-			if ( tc < MAX_CHARA_FOLLOWER | cbit(CHARA_BIT_LIVESTOCK, tc) == TRUE | cbit(CHARA_BIT_LABOR_CAMP, tc) == TRUE ) {
++			if ( tc < MAX_CHARA_FOLLOWER | cbit(CHARA_BIT_LIVESTOCK, tc) == TRUE | cbit(CHARA_BIT_LABOR_CAMP, tc) == TRUE | cbit(CHARA_BIT_BEGGING_FOR_LIFE, tc) == TRUE ) {
+ 				s = _impressionb(implevel2(cdata(CDATA_MASTER_SERVANT, tc)))
+ 				if ( cdata(CDATA_HEART_LOCK_RELATION, tc) == (-11) ) {
+ 					s = _impressionb1(implevel2(cdata(CDATA_MASTER_SERVANT, tc)))
+ 				}
+ 				if ( cdata(CDATA_HEART_LOCK_RELATION, tc) == (-12) ) {
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/chips.hsp ../2.27-borscht/chips.hsp
+--- ../2.26-borscht/chips.hsp	2025-03-17 02:14:35.299705600 +0800
++++ ../2.27-borscht/chips.hsp	2025-05-19 06:35:55.935394800 +0800
+@@ -795,15 +795,10 @@
+ 		chipm(CHIPM_ROLE, xy2pic(19, 13)) = MAP_CHIP_ROLE_DISPLAY_SPACE
+ 		chipm(CHIPM_ROLE, xy2pic(20, 13)) = MAP_CHIP_ROLE_DISPLAY_SPACE
+ 		chipm(CHIPM_ATTRIB, xy2pic(7, 22)) = CHIPM_ATTRIB_CANT_PASS
+ 		chipm(CHIPM_ANIM, xy2pic(22, 16)) = 2
+ 		chipm(CHIPM_WALL, xy2pic(22, 16)) = 1
+-		chipm(CHIPM_ROLE, xy2pic(19, 9)) = MAP_CHIP_ROLE_WATER
+-		chipm(CHIPM_ANIM, xy2pic(19, 9)) = 3
+-		chipm(CHIPM_ROLE, xy2pic(20, 9)) = MAP_CHIP_ROLE_WATER
+-		chipm(CHIPM_ANIM, xy2pic(20, 9)) = 2
+-		chipm(CHIPM_ROLE, xy2pic(21, 9)) = MAP_CHIP_ROLE_WATER
+ 		chipm(CHIPM_ROLE, xy2pic(0, 5)) = MAP_CHIP_ROLE_WATER
+ 		chipm(CHIPM_ANIM, xy2pic(0, 5)) = 3
+ 		chipm(CHIPM_ROLE, xy2pic(1, 5)) = MAP_CHIP_ROLE_WATER
+ 		chipm(CHIPM_ANIM, xy2pic(1, 5)) = 2
+ 		chipm(CHIPM_ROLE, xy2pic(2, 5)) = MAP_CHIP_ROLE_WATER
+@@ -1648,10 +1643,11 @@
+ 	chipc(CHIPC_HEIGHT, xy2pic(9, 35)) = inf_tiles * 2, inf_tiles + 16
+ 	chipc(CHIPC_HEIGHT, xy2pic(11, 35)) = inf_tiles * 2, inf_tiles + 16
+ 	chipc(CHIPC_HEIGHT, xy2pic(13, 35)) = inf_tiles * 2, inf_tiles + 16
+ 	chipc(CHIPC_HEIGHT, xy2pic(15, 35)) = inf_tiles * 2, inf_tiles + 16
+ 	chipc(CHIPC_HEIGHT, xy2pic(17, 35)) = inf_tiles * 2, inf_tiles + 16
++	chipc(CHIPC_HEIGHT, xy2pic(18, 35)) = inf_tiles * 2, inf_tiles + 16
+ 	dim deco, 3, 300
+ 	repeat 16
+ 		deco(0, 1 + cnt * 16) = 0, 1
+ 		deco(0, 2 + cnt * 16) = 1, 2
+ 		deco(0, 4 + cnt * 16) = 1, 0
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/command.hsp ../2.27-borscht/command.hsp
+--- ../2.26-borscht/command.hsp	2025-03-17 02:14:35.347067900 +0800
++++ ../2.27-borscht/command.hsp	2025-05-19 06:35:55.983089500 +0800
+@@ -3464,10 +3464,13 @@
+ 				continue
+ 			}
+ 			if ( cdata(CDATA_ID, cnt) != CREATURE_ID_SPADE_WARRIOR & cdata(CDATA_ID, cnt) != CREATURE_ID_CLUB_FEATHER & cdata(CDATA_ID, cnt) != CREATURE_ID_DIAMOND_EYES & cdata(CDATA_ID, cnt) != CREATURE_ID_HEART_WITCH ) {
+ 				continue
+ 			}
++			if ( cdata(CDATA_PIC, cnt) == xy2pic(18, 35) ) {
++				continue
++			}
+ 		}
+ 		if ( allyctrl != 5 ) {
+ 			if ( cnt == 0 ) {
+ 				continue
+ 			}
+@@ -5305,11 +5308,11 @@
+ 				list(0, listmax) = cnt, 15
+ 				listmax++
+ 			}
+ 		}
+ 	loop
+-	repeat 869 - 600
++	repeat 871 - 600
+ 		if ( spact(cnt) == 1 ) {
+ 			if ( sdataref(SKILL_DATAREF_TG, cnt + 600) / 1000 * 1000 != 3000 & cnt + 600 != 746 & cnt + 600 != 667 & cnt + 600 != 693 & cnt + 600 != 740 ) {
+ 				list(0, listmax) = cnt + 600, sdataref(SKILL_DATAREF_USE, 600 + cnt)
+ 				listmax++
+ 			}
+@@ -5451,11 +5454,11 @@
+ 	}
+ 	if ( key == key_msglog ) {
+ 		snd SOUNDLIST_CHEST1
+ 		txtef COLOR_GREEN
+ 		txt lang("【技能・全表示】", "[Sealed skills release]")
+-		repeat 869 - 600
++		repeat 871 - 600
+ 			if ( spact(cnt) == 2 ) {
+ 				if ( sdataref(SKILL_DATAREF_TG, cnt + 600) / 1000 * 1000 != 3000 & cnt + 600 != 746 & cnt + 600 != 667 & cnt + 600 != 693 & cnt + 600 != 740 ) {
+ 					spact(cnt) = 1
+ 				}
+ 			}
+@@ -5524,11 +5527,11 @@
+ 	cc = CHARA_PLAYER
+ 	cs_bk = -1
+ 	cs = commark(2) \ 1000
+ 	page = commark(2) / 1000
+ 	curmenu = 2
+-	repeat 869 - 600
++	repeat 871 - 600
+ 		if ( spact(cnt) == 1 ) {
+ 			if ( sdataref(SKILL_DATAREF_TG, cnt + 600) / 1000 * 1000 == 3000 | cnt + 600 == 746 | cnt + 600 == 667 | cnt + 600 == 693 | cnt + 600 == 740 ) {
+ 				list(0, listmax) = cnt + 600, sdataref(SKILL_DATAREF_USE, 600 + cnt)
+ 				listmax++
+ 			}
+@@ -5663,11 +5666,11 @@
+ 	}
+ 	if ( key == key_msglog ) {
+ 		snd SOUNDLIST_CHEST1
+ 		txtef COLOR_GREEN
+ 		txt lang("【広域技能・全表示】", "[Sealed skills release]")
+-		repeat 869 - 600
++		repeat 871 - 600
+ 			if ( spact(cnt) == 2 ) {
+ 				if ( sdataref(SKILL_DATAREF_TG, cnt + 600) / 1000 * 1000 == 3000 | cnt + 600 == 746 | cnt + 600 == 667 | cnt + 600 == 693 | cnt + 600 == 740 ) {
+ 					spact(cnt) = 1
+ 				}
+ 			}
+@@ -5984,11 +5987,11 @@
+ 		if ( cdatan(CDATAN_RACE, tc) == "catsister" ) {
+ 			cdata(CDATA_DV_FIX, tc) = 200
+ 		}
+ 	}
+ 	if ( 0 ) {
+-		txt lang(name(tc) + "のDV補正は" + cdata(CDATA_DV_FIX, tc) + "でPV補正は" + cdata(CDATA_PV_FIX, tc) + "。そして使用中のアイテムは" + itemname(cdata(CDATA_AI_ITEM, tc)) + "。関係は" + cdata(CDATA_RELATION, tc) + "、orgは" + cdata(CDATA_RELATION_ORG, tc) + "。", name(cc) + " fainted after failing to suffer from severe pain.")
++		txt lang(name(tc) + "のDV補正は" + cdata(CDATA_DV_FIX, tc) + "でPV補正は" + cdata(CDATA_PV_FIX, tc) + "。そして使用中のアイテムは" + itemname(cdata(CDATA_AI_ITEM, tc)) + "、" + itemname(cdata(CDATA_MATERIAL1_COUNTER, tc)) + "。関係は" + cdata(CDATA_RELATION, tc) + "、orgは" + cdata(CDATA_RELATION_ORG, tc) + "。", name(cc) + " fainted after failing to suffer from severe pain.")
+ 	}
+ 	if ( cdata(CDATA_ID, tc) == CREATURE_ID_POPPY_THE_LITTLE_DOG ) {
+ 		if ( gdata(GDATA_FLAG_SUB_DOG) >= 1000 ) {
+ 			if ( cbit(CHARA_BIT_GUARD_TEMP, tc) ) {
+ 				cbitmod CHARA_BIT_GUARD_TEMP, tc, FALSE
+@@ -6002,10 +6005,32 @@
+ 			}
+ 		}
+ 	}
+ 	p = 0
+ 	if ( tc != CHARA_PLAYER ) {
++		if ( cdata(CDATA_PIC, tc) == xy2pic(18, 35) ) {
++			if ( cdata(CDATA_ALLIED, tc) == 0 ) {
++				promptl(0, promptmax) = lang("【ランクチェンジ】", "<Rank Change>"), "null", "" + 31
++				promptmax++
++				if ( cdata(CDATA_ID, tc) != CREATURE_ID_SPADE_WARRIOR ) {
++					promptl(0, promptmax) = lang("[スペードチェンジ]", "[Spade Change]"), "null", "" + 32
++					promptmax++
++				}
++				if ( cdata(CDATA_ID, tc) != CREATURE_ID_CLUB_FEATHER ) {
++					promptl(0, promptmax) = lang("[クラブチェンジ]", "[Club Change]"), "null", "" + 33
++					promptmax++
++				}
++				if ( cdata(CDATA_ID, tc) != CREATURE_ID_DIAMOND_EYES ) {
++					promptl(0, promptmax) = lang("[ダイヤチェンジ]", "[Diamond Change]"), "null", "" + 34
++					promptmax++
++				}
++				if ( cdata(CDATA_ID, tc) != CREATURE_ID_HEART_WITCH ) {
++					promptl(0, promptmax) = lang("[ハートチェンジ]", "[Heart Change]"), "null", "" + 35
++					promptmax++
++				}
++			}
++		}
+ 		if ( cdata(CDATA_CONDITION_CONFUSE, CHARA_PLAYER) == 0 ) {
+ 			promptl(0, promptmax) = lang("話しかける", "Talk"), "null", "" + 0
+ 			promptmax++
+ 			if ( tc >= MAX_CHARA_FOLLOWER ) {
+ 				if ( cfg_atk_select == 0 | (cfg_atk_select == 1 & cdata(CDATA_RELATION, tc) != RELATION_ALLY) ) {
+@@ -6263,10 +6288,57 @@
+ 		itemcreate -1, ITEM_ID_SAND_BAG, cdata(CDATA_X, tc), cdata(CDATA_Y, tc), 0
+ 	}
+ 	if ( p == 10 ) {
+ 		gosub *com_tone
+ 	}
++	if ( p == 31 ) {
++		txt lang("変化後のランクは？", "Which rank?")
++		display_msg screenmsgy, 1
++		val = (windoww - 200) / 2 + inf_screenx, winposy(60), 8, 1, 13
++		inputlog = "" + cdata(CDATA_EVOLUTION_STAGE, tc)
++		gosub *prompt_word
++		in = int(inputlog)
++		if ( in > 13 ) {
++			in = 13
++		}
++		if ( in == 0 | rtval == (-1) ) {
++			gosub *screen_draw
++			goto *pc_turn
++		}
++		cdata(CDATA_EVOLUTION_STAGE, tc) = in
++		snd SOUNDLIST_POWER07
++		gosub *screen_draw
++		goto *pc_turn
++	}
++	if ( p == 32 ) {
++		snd SOUNDLIST_POWER07
++		txt lang(cdatan(CDATAN_NAME, tc) + "の効果を発動。このカード精霊は「スペード・ウォリアー」として扱う。", cdatan(CDATAN_NAME, tc) + " is treated as a spade warrior.")
++		cdata(CDATA_ID, tc) = CREATURE_ID_SPADE_WARRIOR
++		gosub *screen_draw
++		goto *pc_turn
++	}
++	if ( p == 33 ) {
++		snd SOUNDLIST_POWER07
++		txt lang(cdatan(CDATAN_NAME, tc) + "の効果を発動。このカード精霊は「クラブフェザー」として扱う。", cdatan(CDATAN_NAME, tc) + " is treated as a club feather.")
++		cdata(CDATA_ID, tc) = CREATURE_ID_CLUB_FEATHER
++		gosub *screen_draw
++		goto *pc_turn
++	}
++	if ( p == 34 ) {
++		snd SOUNDLIST_POWER07
++		txt lang(cdatan(CDATAN_NAME, tc) + "の効果を発動。このカード精霊は「ダイヤアイズ」として扱う。", cdatan(CDATAN_NAME, tc) + " is treated as a diamond eyes.")
++		cdata(CDATA_ID, tc) = CREATURE_ID_DIAMOND_EYES
++		gosub *screen_draw
++		goto *pc_turn
++	}
++	if ( p == 35 ) {
++		snd SOUNDLIST_POWER07
++		txt lang(cdatan(CDATAN_NAME, tc) + "の効果を発動。このカード精霊は「ハート・ウィッチ」として扱う。", cdatan(CDATAN_NAME, tc) + " is treated as a heart witch.")
++		cdata(CDATA_ID, tc) = CREATURE_ID_HEART_WITCH
++		gosub *screen_draw
++		goto *pc_turn
++	}
+ 	if ( p == 23 ) {
+ 		gosub *screen_draw
+ 		invctrl = INVCTRL_MARK_ITEM
+ 		snd SOUNDLIST_INV
+ 		goto *com_inventory
+@@ -13418,17 +13490,17 @@
+ 				item_stack tc, ti, 1
+ 				ci = ti
+ 				rc = tc
+ 				gosub *chara_item
+ 				if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ITEM_ROD ) {
+-					cdata(CDATA_AI_ITEM, tc) = ci
++					cdata(CDATA_MATERIAL1_COUNTER, tc) = ci
+ 				}
+ 				if ( inv(INV_ITEM_ID, ci) == ITEM_ID_LASER_BAZOOKA | inv(INV_ITEM_ID, ci) == ITEM_ID_M202_SPECIAL | inv(INV_ITEM_ID, ci) == ITEM_ID_PANZERFAUST_X ) {
+-					cdata(CDATA_AI_ITEM, tc) = ci
++					cdata(CDATA_MATERIAL1_COUNTER, tc) = ci
+ 				}
+ 				if ( inv(INV_ITEM_ID, ci) == ITEM_ID_CF_POTIOMAN | inv(INV_ITEM_ID, ci) == ITEM_ID_CRUSH_POTIOMAN | inv(INV_ITEM_ID, ci) == ITEM_ID_BATTLE_POTIOMAN | inv(INV_ITEM_ID, ci) == ITEM_ID_SUPER_POTIOMAN ) {
+-					cdata(CDATA_AI_ITEM, tc) = ci
++					cdata(CDATA_MATERIAL1_COUNTER, tc) = ci
+ 				}
+ 				if ( inv(INV_ITEM_KNOWN, ci) == ITEM_KNOWN_FULL ) {
+ 					inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
+ 				}
+ 				locationweap = 0
+@@ -15526,11 +15598,11 @@
+ 	gosub *db_class
+ 	buff = ""
+ 	notesel buff
+ 	procid = (procid + 1) \ 4
+ 	proclist(procid) = "Dump:1" + " ct:" + ct
+-	noteadd "Elona Version " + "6.36" + " キャラクター情報 " + gdata(GDATA_YEAR) + "年" + gdata(GDATA_MONTH) + "月" + gdata(GDATA_DAY) + "日 " + gdata(GDATA_HOUR) + "時" + gdata(GDATA_MIN) + "分  " + mdatan(0)
++	noteadd "Elona Version " + "6.37" + " キャラクター情報 " + gdata(GDATA_YEAR) + "年" + gdata(GDATA_MONTH) + "月" + gdata(GDATA_DAY) + "日 " + gdata(GDATA_HOUR) + "時" + gdata(GDATA_MIN) + "分  " + mdatan(0)
+ 	noteadd ""
+ 	noteadd "  " + fixtxt("" + cdatan(CDATAN_AKA, CHARA_PLAYER) + cdatan(CDATAN_NAME, CHARA_PLAYER), 34) + _sex(cdata(CDATA_SEX, CHARA_PLAYER)) + " " + calcage(0) + "歳" + "  " + cdata(CDATA_HEIGHT, CHARA_PLAYER) + "cm" + " " + cdata(CDATA_WEIGHT, CHARA_PLAYER) + "kg"
+ 	noteadd ""
+ 	noteadd fixtxt("種族       : " + racename, 30) + fixtxt("信仰      : " + godname(cdata(CDATA_GOD, CHARA_PLAYER)), 32)
+ 	noteadd fixtxt("職業       : " + classname, 30) + fixtxt("所属      : " + guildname(), 32)
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/event.hsp ../2.27-borscht/event.hsp
+--- ../2.26-borscht/event.hsp	2025-03-17 02:14:36.227726700 +0800
++++ ../2.27-borscht/event.hsp	2025-05-19 06:35:56.866506100 +0800
+@@ -396,10 +396,16 @@
+ 		dmghp tc, 44444, DAMAGE_FROM_EXECUTION
+ 		mdata(MDATA_WEREWOLF_STAGE) = 0
+ 		mdata(MDATA_CITY_PROPERTY_VALUE) += 5
+ 		txtef COLOR_GREEN
+ 		txt lang("街属性値が5上昇した（現在" + mdata(MDATA_CITY_PROPERTY_VALUE) + "）", "Security of this area was increased 5.")
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("処刑の時間", "Time of execution")
+ 		file = "bg_re7"
+ 		buff = lang("街のどこかから、処刑対象の微かな悲鳴が聞こえてきた。", "From somewhere in the town, a faint scream could be heard from the person being executed.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("南無", "Sorry for you.")
+@@ -499,10 +505,16 @@
+ 		}
+ 		snd SOUNDLIST_SCREAM
+ 		mdata(MDATA_WEREWOLF_STAGE) = 1
+ 		txtef COLOR_RED2
+ 		txt lang("[人狼による被害が出ました。有権者の皆さんは怪しい人物に処刑投票してください] ", "[It came out the damage by werewolf. Voters should be executed vote for suspicious person] ")
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("狼の襲撃", "Werewolf")
+ 		file = "bg_re9"
+ 		buff = lang("街のどこかから、狼の遠吠えと微かな悲鳴が聞こえてきた。", "From somewhere in the town came the howling of a wolf and faint screams. You see several guards hastily run by.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("狼が出たぞー！", "It's the work of a werewolf!")
+@@ -618,10 +630,16 @@
+ 				txt lang(name(p) + "「ぎゃぁーー！」", name(p) + " screams, " + cnvtalk("Ahhhhhhh!"))
+ 				dmghp p, 99999, DAMAGE_FROM_UNSEEN
+ 				break
+ 			}
+ 		loop
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("殺人鬼", "Murderer")
+ 		file = "bg_re9"
+ 		buff = lang("街のどこかで悲鳴があがった。あなたはガードが慌しく走っていくのを目撃した。「人殺し、人殺しだ！！」", "Suddenly, a painful shriek rises from somewhere in the town. You see several guards hastily run by.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("なむ…", "Sorry for you.")
+@@ -696,10 +714,13 @@
+ 			}
+ 		}
+ 		if ( sorg(SKILL_NORMAL_COOKING, tc) != 0 ) {
+ 			skillexp SKILL_NORMAL_COOKING, tc, 1000
+ 		}
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("朝のひととき", "Breakfast")
+ 		file = "bg_re10"
+ 		if ( mtc == 0 ) {
+ 			buff = lang("どうやら" + cdatan(CDATAN_NAME, tc) + "が朝食を準備しているようだ。", "It seems that " + cdatan(CDATAN_NAME, tc) + " is preparing breakfast.")
+ 		}
+@@ -864,10 +885,13 @@
+ 			cre2 += rnd(sdata(SKILL_NORMAL_CARPENTRY, cnt) / 2 + 5) + 1
+ 			if ( sorg(cre1, cnt) != 0 ) {
+ 				skillexp cre1, cnt, 500
+ 			}
+ 		loop
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("手作りのプレゼント", "Handmade gifts")
+ 		file = "bg_re3"
+ 		if ( mtc == 0 ) {
+ 			buff = lang(cdatan(CDATAN_NAME, tc) + "が夜なべをして防具を作ってくれたようだ。", cdatan(CDATAN_NAME, tc) + " made for you the armors to the night work.")
+ 		}
+@@ -1042,10 +1066,13 @@
+ 			cre2 += rnd(sdata(SKILL_NORMAL_TAILORING, tc) / 2 + 5) + 1
+ 			if ( sorg(cre1, cnt) != 0 ) {
+ 				skillexp cre1, cnt, 500
+ 			}
+ 		loop
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("手編みのプレゼント", "Hand-knitted gifts")
+ 		file = "bg_re14"
+ 		if ( mtc == 0 ) {
+ 			buff = lang(cdatan(CDATAN_NAME, tc) + "が夜なべをして防具を編んでくれたようだ。", cdatan(CDATAN_NAME, tc) + " made for you the armors to the night work.")
+ 		}
+@@ -1154,10 +1181,16 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 13 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("ご馳走の匂い", "Smell of Food")
+ 		file = "bg_re10"
+ 		buff = lang("どこからともなく漂うご馳走の匂いで、あなたの胃は不満を叫び始めた。", "A sweet smell of food floats from nowhere. Your stomach growls but you can't find out where it comes from.")
+ 		cdata(CDATA_HUNGER, CHARA_PLAYER) -= 5000
+ 		list(0, listmax) = 1
+@@ -1167,10 +1200,16 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 1 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("不運の回避", "Avoiding Misfortune")
+ 		file = "bg_re8"
+ 		buff = lang("あなたは一瞬嫌な予感がしたが、それはやがて消えた。", "You sense a bad feeling for a moment but it fades away quickly.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("よし", "Good.")
+@@ -1179,10 +1218,13 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 24 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		efid = SKILL_EFFECT_POTION_POTENTIAL
+ 		tc = CHARA_PLAYER
+ 		gosub *effect
+ 		s = lang("才能の開花", "Your Potential")
+ 		file = "bg_re4"
+@@ -1194,10 +1236,13 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 18 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		skillexp SKILL_NORMAL_FAITH, CHARA_PLAYER, 1000, 6, 1000
+ 		s = lang("信仰の深まり", "Gaining Faith")
+ 		file = "bg_re12"
+ 		if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_MANI ) {
+ 			file = "god1"
+@@ -1232,10 +1277,16 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 12 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("マテリアルの発見", "Small Luck")
+ 		file = "bg_re3"
+ 		buff = lang("石ころにつまずいて転んだ拍子に、あなたは幾つかのマテリアルを見つけた。", "You stumble over a stone and find some materials on the ground. ")
+ 		efid = SKILL_EFFECT_CREATE_MATERIAL
+ 		efp = 100
+@@ -1248,10 +1299,13 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 23 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		efid = SKILL_EFFECT_CREATE_MATERIAL
+ 		efp = 200
+ 		tc = CHARA_PLAYER
+ 		gosub *effect
+ 		s = lang("夢の中の収穫", "Dream Harvest")
+@@ -1275,10 +1329,13 @@
+ 		}
+ 		else {
+ 			milk = 0
+ 		}
+ 		snd SOUNDLIST_CHANDLER23
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("原因は何だ？", "Cause Unknown")
+ 		file = "bg_re21"
+ 		buff = lang(cdatan(CDATAN_NAME, child) + "が突然泣き始めた！", cdatan(CDATAN_NAME, child) + " suddenly started crying out loud!")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("そっとしておく", "(Leave alone)")
+@@ -1382,10 +1439,13 @@
+ 	}
+ 	if ( _switch_val == 37 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		tc = child
+ 		snd SOUNDLIST_CHANDLER23
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("子供の自己表現", "Child Self-Expression")
+ 		file = "bg_re21"
+ 		buff = lang(cdatan(CDATAN_NAME, child) + "が突然座り込んで、駄々をこね始めた！", cdatan(CDATAN_NAME, child) + " suddenly sat down and started whining!")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("放置する", "(Leave alone)")
+@@ -1496,10 +1556,13 @@
+ 			yume = lang("お花屋さん", "a florist")
+ 		}
+ 		if ( pvar == 17 ) {
+ 			yume = lang("カッパ巻き", "a california roll")
+ 		}
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("将来の夢", "Dream for the Future")
+ 		file = "bg_re21"
+ 		buff = lang(cdatan(CDATAN_NAME, child) + "は将来、" + yume + "になりたいと言っている…。", cdatan(CDATAN_NAME, child) + " seems to want to be " + yume + " in the future.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("素敵な夢だね", "Nice dream...")
+@@ -1580,33 +1643,36 @@
+ 		if ( sdata(SKILL_ATTR_CHA, child) > bvar ) {
+ 			pvar = 17
+ 		}
+ 		bvar = 0
+ 		if ( pvar == 10 ) {
+-			yume = lang("ツルツルな石ころ", "the smooth stone")
++			yume = lang("ツルツルな石ころ", "a smooth stone")
+ 		}
+ 		if ( pvar == 11 ) {
+-			yume = lang("何かのネジ", "the screw of something")
++			yume = lang("何かのネジ", "a screw of something")
+ 		}
+ 		if ( pvar == 12 ) {
+-			yume = lang("セミの抜け殻", "the cicada shell")
++			yume = lang("セミの抜け殻", "a cicada shell")
+ 		}
+ 		if ( pvar == 13 ) {
+-			yume = lang("鮮やかな落ち葉", "the vivid leave")
++			yume = lang("鮮やかな落ち葉", "a vivid leave")
+ 		}
+ 		if ( pvar == 14 ) {
+-			yume = lang("謎の綿毛", "the mystery fluff")
++			yume = lang("謎の綿毛", "a mystery fluff")
+ 		}
+ 		if ( pvar == 15 ) {
+-			yume = lang("抜け羽根", "the fallen feather")
++			yume = lang("抜け羽根", "a fallen feather")
+ 		}
+ 		if ( pvar == 16 ) {
+-			yume = lang("むしった花びら", "the small petal")
++			yume = lang("むしった花びら", "a small petal")
+ 		}
+ 		if ( pvar == 17 ) {
+-			yume = lang("ダンゴムシ", "the wood lousel")
++			yume = lang("ダンゴムシ", "a wood lousel")
+ 		}
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("お宝発見", "Treasure Discovery")
+ 		file = "bg_re21"
+ 		buff = lang(cdatan(CDATAN_NAME, child) + "は満面の笑みで" + yume + "を差し出してきた…。", cdatan(CDATAN_NAME, child) + " handed you " + yume + " with a big smile...")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("コレクションに加える", "I'll add it to my collection!")
+@@ -1656,10 +1722,13 @@
+ 	}
+ 	if ( _switch_val == 40 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		tc = child
+ 		snd SOUNDLIST_PORT
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("自分のルーツ", "Roots")
+ 		file = "bg_re21"
+ 		buff = lang(cdatan(CDATAN_NAME, child) + "は、自分がどこから来たのかを知りたがっている…。", cdatan(CDATAN_NAME, child) + " wants to know where a baby came from...")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("遺伝子を組み合わせて産まれたんだよ", "It is produced by a combination of genes.")
+@@ -1708,10 +1777,13 @@
+ 	}
+ 	if ( _switch_val == 41 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		tc = child
+ 		snd SOUNDLIST_PORT
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("脳内バトル", "Battle in the brain")
+ 		file = "bg_re21"
+ 		buff = lang(cdatan(CDATAN_NAME, child) + "は、空想上の敵と戦っているようだ…。", cdatan(CDATAN_NAME, child) + " seems to be fighting an imaginary enemy...")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("まぁイメトレの一種か…", "Image training?")
+@@ -1760,10 +1832,13 @@
+ 	}
+ 	if ( _switch_val == 42 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		tc = child
+ 		snd SOUNDLIST_PORT
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("この世はキャンバス", "This world is canvas")
+ 		file = "bg_re21"
+ 		buff = lang(cdatan(CDATAN_NAME, child) + "は、黙々と地面に絵を描いている…。", cdatan(CDATAN_NAME, child) + " silently draws on the ground...")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("いいセンスだ", "You're pretty good.")
+@@ -1813,10 +1888,13 @@
+ 	}
+ 	if ( _switch_val == 43 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		tc = child
+ 		snd SOUNDLIST_PORT
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("勉強の意味", "Meaning of Study")
+ 		file = "bg_re21"
+ 		buff = lang(cdatan(CDATAN_NAME, child) + "が、どうして子供は勉強しないといけないのか問い詰めてきた！", cdatan(CDATAN_NAME, child) + " asked why children should study!")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("将来の選択肢を増やすため", "Studying increases future options.")
+@@ -1865,10 +1943,13 @@
+ 	}
+ 	if ( _switch_val == 44 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		tc = child
+ 		snd SOUNDLIST_PORT
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("自己顕示", "Self Revelation")
+ 		file = "bg_re21"
+ 		buff = lang(cdatan(CDATAN_NAME, child) + "は、自分の異名を自分で考えているようだ…。", cdatan(CDATAN_NAME, child) + " seems to be thinking of own aka...")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("呼ばれ方より先に自分を変えよう", "Change yourself before your aka.")
+@@ -1917,10 +1998,13 @@
+ 	}
+ 	if ( _switch_val == 45 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		tc = child
+ 		snd SOUNDLIST_PORT
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("自意識", "Self Awareness")
+ 		file = "bg_re21"
+ 		buff = lang(cdatan(CDATAN_NAME, child) + "は、自分の格好が周りと比べてダサいのではないかと気にしている…。", cdatan(CDATAN_NAME, child) + " worried that own clothes aren't as good as those arounds...")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("そんなに変？", "Is it so weird?")
+@@ -1970,10 +2054,13 @@
+ 	}
+ 	if ( _switch_val == 46 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		tc = child
+ 		snd SOUNDLIST_PORT
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("マージナルマン", "Marginal Man")
+ 		file = "bg_re21"
+ 		buff = lang(cdatan(CDATAN_NAME, child) + "は、子供扱いしないでほしいと強く主張している！", cdatan(CDATAN_NAME, child) + " doesn't like being treated like a child by you...")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("大人には相応の責任と義務が発生する", "Adults have responsibilities and obligations.")
+@@ -2020,10 +2107,16 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 10 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("野営跡の発見", "Camping Site")
+ 		file = "bg_re3"
+ 		buff = lang("あなたは何者かが野営した跡を見つけた。辺りには食べ残しやがらくたが散らばっている。もしかしたら、何か役に立つものがあるかもしれない。", "You discover a camping site someone left behind. Chunks of leftovers and junks remain here. You may possibly find some usefull items.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("調べる", "(Search)")
+@@ -2081,10 +2174,13 @@
+ 					cdata(STARTING_CDATA_ATTR + p, tc) -= sorg(10 + p, tc) / 3 + 5
+ 				}
+ 				f++
+ 			}
+ 		}
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("不気味な夢", "Creepy Dream")
+ 		file = "bg_re5"
+ 		buff = lang("あなたは不気味な夢をみた。陰気な幾つもの瞳があなたを凝視し、どこからともなく笑い声がこだました。「ケラケラケラ…ミツケタヨ…ケラケラ」あなたが二度寝返りをうった後、その夢は終わった。", "In your dreams, several pairs of gloomy eyes stare at you and laughter seemingly from nowhere echos around you.  \"Keh-la keh-la keh-la I found you...I found you.. keh-la keh-la keh-la\" After tossing around a couple times, the dream is gone.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("おかしな夢だ", "Strange...")
+@@ -2107,10 +2203,13 @@
+ 		snd SOUNDLIST_CURSE2
+ 		efid = SKILL_EFFECT_MUTATE
+ 		efp = 100
+ 		tc = CHARA_PLAYER
+ 		gosub *effect
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("怪物の夢", "Monster Dream")
+ 		file = "bg_re2"
+ 		buff = lang("あなたは怪物と戦っていた。醜い化け物に斬りかかろうとした時、怪物は悲鳴をあげた。「オレハオマエダ！オマエハオレダ！」あなたは自分の呻き声に起こされた。", "You are fighting an ugly monster. You are about to thrust a dagger into the neck of the monster. And the monster screams. \"You are me! I am you!\" You are awakened by your own low moan.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("ううぅん…", "Urrgh..hh..")
+@@ -2119,10 +2218,13 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 35 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		if ( gdata(GDATA_FLAG_STRANGE_STAIRS_DREAM) == 0 ) {
+ 			s = lang("奇妙な階段の夢", "Strange Stairs Dream")
+ 			file = "bg_re18"
+ 			buff = lang("あなたは布一枚身に着けていない状態で、薄暗い階段の途中に一人立っていた。階段の上には闇が広がっておりその先は見えない…。階段のずっと下には、焔のような灯りが小さくゆらめいているのが見える。", "You were standing alone on the dim stairs without a piece of cloth. The darkness spreads on the top of the stairs and you cannot see beyond it. At the bottom of the stairs, you can see small flickering lights.")
+ 			list(0, listmax) = 1
+@@ -2268,10 +2370,13 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 34 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("羊の悪夢", "Sheep Nightmare")
+ 		file = "bg_re5"
+ 		buff = lang("あなたは羊の群れに取り囲まれていた。辺りは見渡す限り、妙にカラフルな羊で埋め尽くされている。あちこちでメェメェと鳴き声が響き、死ぬほどうるさい…。", "You were surrounded by a flock of sheep.As far as the eye can see, filled with strangely colorful sheeps. Here and there in the noisy echoing the sheep cry...")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("羊を数える", "(Counting sheeps)")
+@@ -2329,10 +2434,13 @@
+ 		if ( tc <= CHARA_PLAYER ) {
+ 			goto *random_eventProc_SWEND1
+ 		}
+ 		snd SOUNDLIST_OFFER2
+ 		modimp tc, 20
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("繋がる夢廻廊", "Dream Connect")
+ 		file = "bg_re14"
+ 		buff = lang("あなたの夢に、" + cdatan(CDATAN_AKA, tc) + cdatan(CDATAN_NAME, tc) + "が出てきた。夢なので、普段は話せないようなことを話したり、普段はできないようなことをして盛り上がった。", cdatan(CDATAN_AKA, tc) + cdatan(CDATAN_NAME, tc) + " came out in your dream. Because it was your dream, You talked about things you couldn't usually talk about, and did something that you couldn't usually do.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("楽しい！", "Fun!")
+@@ -2341,10 +2449,13 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 32 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("胡蝶の夢", "Dream?")
+ 		file = "bg_re17"
+ 		buff = lang("夢の中のあなたは違う姿をしていた。あなたがあなたの生活を眺めていた。夢の中のあなたは、今いる場所が現実だと思い込んでいた。あなたはコンピュータの画面を見て文章を読んでいる…。それを見ている、もう一人のあなたには気づかずに。", "In the dream you had a different appearance. You were watching your life. In a dream you convinced that it is reality. You are reading the text on the computer screen. You are unaware that you are being seen by another you.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("これは現実だ", "This is reality.")
+@@ -2430,10 +2541,13 @@
+ 					txt lang(cdatan(CDATAN_NAME, cnt) + "「ぐぬぬ…」", "You heard the chagrined voice of " + cdatan(CDATAN_NAME, cnt) + ".")
+ 					break
+ 				}
+ 			loop
+ 		}
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("添い寝", "Sleep Sharing")
+ 		file = "bg_re16"
+ 		buff = lang("添い寝中だ…。", "You noticed " + name(tc) + " was sleeping next to you indistinguishably.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("気にせず寝る", "(Sleep without minding)")
+@@ -2650,10 +2764,13 @@
+ 			goto *random_eventProc_SWEND1
+ 		}
+ 		cbitmod CHARA_BIT_MAKE_GENE, tc, FALSE
+ 		cdata(CDATA_POWER_GAUGE, tc) = 0
+ 		cdata(CDATA_POWER_GAUGE, CHARA_PLAYER) = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("強制添い寝", "Force Sleep Sharing")
+ 		file = "bg_re16"
+ 		buff = lang("どうしてやろうか。", "What do you try...")
+ 		txt lang("ベッドに" + cdatan(CDATAN_NAME, tc) + "を無理矢理寝かせている。", "You're laid forced " + cdatan(CDATAN_NAME, tc) + " to bed.")
+ 		if ( cdata(CDATA_MASTER_SERVANT, tc) < 200 ) {
+@@ -2866,10 +2983,13 @@
+ 	if ( _switch_val == 19 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		flt
+ 		itemcreate CHARA_PLAYER, ITEM_ID_TREASURE_MAP, -1, -1, 0
+ 		txt lang(itemname(ci, 1) + "をバックパックに入れた。", "You put " + itemname(ci, 1) + " in your backpack.")
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("宝を埋める夢", "Treasure of Dream")
+ 		file = "bg_re15"
+ 		buff = lang("あなたは夢の中で宝を埋めた。あなたはすぐに飛び起き、その場所を紙に書き留めた", "You buried treasure in your dream. You quickly get up and write down the location.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("ワァオー", "Woohoo!")
+@@ -2879,10 +2999,13 @@
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 20 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		addbuff tc, BUFF_LUCK, 777, 1500
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("幸運の日", "Lucky Day")
+ 		file = "bg_re12"
+ 		buff = lang("うみみゃぁ！", "Mewmewmew!")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("ワァオー", "Woohoo!")
+@@ -2891,10 +3014,13 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 21 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("運命の気まぐれ", "Quirk of Fate")
+ 		file = "bg_re15"
+ 		buff = lang("うみみゃっ、見つけたね！", "Mewmew? You've found me!")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("ワァオー", "Woohoo!")
+@@ -2906,10 +3032,13 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 5 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("呪いのつぶやき", "Cursed Whispering")
+ 		file = "bg_re5"
+ 		buff = lang("どこからともなく聞こえる呪いのつぶやきが、あなたの眠りを妨げた。", "Your sleep is disturbed by a harshly whispering that comes from nowhere.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("眠れない…", "Can't...sleep...")
+@@ -2943,10 +3072,16 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 8 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("悪意ある手", "Malicious Hand")
+ 		file = "bg_re9"
+ 		buff = lang("悪意のある手が忍び寄り、あなたが気付かない間に金貨を奪って逃げた。", "A malicious hand slips and steals your money.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("盗人め…", "Bloody thieves...")
+@@ -2966,10 +3101,16 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 11 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("冒険者の遺骸", "Corpse")
+ 		file = "bg_re7"
+ 		buff = lang("この場所で力尽きた冒険者の遺骸を見つけた。既に朽ちかけている骨と、身に着けていたと思われる幾つかの装備が散らばっている。", "You find a corpse of an adventurer. There're bones and equipment scatters on the ground waiting to decay.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("あさる", "(Loot)")
+@@ -3000,10 +3141,13 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 2 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("魔法使いの夢", "Wizard's Dream")
+ 		file = "bg_re6"
+ 		buff = lang("夢の中であなたは赤い髪の魔法使いに出会った。「誰じゃ、お主は？ふむ、間違った者の夢に現れてしまったようじゃ。すまぬな。お詫びといってはなんじゃが…」魔法使いは指をくるりと回した。あなたは軽い頭痛を覚えた。", "In your dream, you meet a wizard with a red mustache. \"Who are you? Hmm, I guess I picked up the wrong man's dream. My apology for disturbing your sleep. To make up for this...\" The wizard draws a circle in the air and vanishs. You feel the effects of a faint headache.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("おかしな夢だ", "A weird dream.")
+@@ -3025,10 +3169,13 @@
+ 					continue
+ 				}
+ 				modgrowth CHARA_PLAYER, cnt, 15
+ 			}
+ 		loop
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("成長のきざし", "Development")
+ 		file = "bg_re4"
+ 		buff = lang("長年の鍛錬の成果が実ったようだ。なかなか眠りにつけず考えごとをしていたあなたは、ふと、自らの技術に関する新しいアイデアを思いついた。", "You lie awake, sunk deep into thought. As memories of your journey flow from one into another, you chance upon a new theory to improve one of your skills.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("よし！", "Good!")
+@@ -3045,10 +3192,13 @@
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 6 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		skillexp SKILL_NORMAL_HEALING, CHARA_PLAYER, 1000
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("自然治癒力の向上", "Regeneration")
+ 		file = "bg_re4"
+ 		buff = lang("身体が妙に火照ってあなたは目を覚ました。気がつくと、腕にあった傷跡が完全に消えていた。", "Your entire body flushs. When you wake up, a scar in your arm is gone.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("よし", "Good.")
+@@ -3058,10 +3208,13 @@
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 7 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		skillexp SKILL_NORMAL_MEDITATION, CHARA_PLAYER, 1000
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+ 		s = lang("瞑想力の向上", "Meditation")
+ 		file = "bg_re4"
+ 		buff = lang("あなたは、夢の中でも驚くほど理性を保っていた。まるで瞑想を行っている時のように、あなたは心の平和を感じた。", "In your dream, you meditate and feel inner peace.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("よし", "Good.")
+@@ -3071,10 +3224,16 @@
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 9 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		cdata(CDATA_PLATINUM, CHARA_PLAYER)++
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("路上に転がる幸運", "Great Luck")
+ 		file = "bg_re1"
+ 		buff = lang("下を向いて歩いていると、幸運にもプラチナ硬貨を見つけた。", "You stumble over a stone and find a platinum coin.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("ラッキー！", "What a luck!")
+@@ -3083,10 +3242,16 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 16 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("発狂した金持ち", "Mad Millionaire")
+ 		file = "bg_re1"
+ 		buff = lang("発狂した金持ちが、何か叫びながら金貨をばらまいている…", "A rich mad man is scattering his money all over the ground.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("ラッキー！", "What a luck!")
+@@ -3102,10 +3267,16 @@
+ 		_switch_sw = 0
+ 		efid = SKILL_SPELL_HOLY_VEIL
+ 		efp = 800
+ 		tc = CHARA_PLAYER
+ 		gosub *effect
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("辻プリースト", "Wandering Priest")
+ 		file = "bg_re11"
+ 		buff = lang("突然、向かいからやって来た一人の神官が、すれ違いざまにあなたに魔法をかけた。「ノープロブレム」", "A priest comes up to you and casts a spell on you. \"No problem.\"")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("ありがとう", "Thanks.")
+@@ -3114,10 +3285,16 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 47 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("荒れ狂う海", "Raging Sea")
+ 		file = "bg_re22"
+ 		buff = lang("悲鳴のような轟音、身体をゆさぶる波の振動…まるで悪魔がもたらしたような突風の中であなたは呟いた。", "The sound of sky-shattering thunder and violent waves slam you... You mutter a faint curse under your breath.")
+ 		if ( gdata(GDATA_WEATHER) != WEATHER_ETHER ) {
+ 			list(0, listmax) = 1
+@@ -3157,10 +3334,16 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 55 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("大漁の予感", "Premonition of big catch")
+ 		file = "bg_re23"
+ 		buff = lang("魚群が見える…今なら魚が大量に獲れそうだ！", "You saw a school of fish...now you can catch a lot of fish!")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("漁を始める", "(Start fishing)")
+@@ -3250,10 +3433,16 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 53 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("謎の船影", "Shadow of a Ship")
+ 		file = "bg_re24"
+ 		buff = lang("前方に船影を発見した。ここからでは何の船かよく分からない。", "You spot a ship's shadow ahead. You don't quite know what ship it is from here.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("近づいてみる", "(Get closer)")
+@@ -3337,10 +3526,16 @@
+ 			ci = stat
+ 			if ( inv(INV_ITEM_NUM, ci) >= 1 ) {
+ 				tabikate = 1
+ 			}
+ 		}
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("流される者", "Swept Away")
+ 		file = "bg_re4"
+ 		buff = lang("波間にもがいている漂流者を発見した。「高波にさらわれてこんなところまで流されてしまったよ！」", "You found a drifter drowning in the waves.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("見捨てる", "(Abandon)")
+@@ -3390,10 +3585,16 @@
+ 			ci = stat
+ 			if ( inv(INV_ITEM_NUM, ci) >= 1 ) {
+ 				tabikate = 1
+ 			}
+ 		}
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("脱出、その後", "After Escape")
+ 		file = "bg_re4"
+ 		buff = lang("小さなイカダに乗った漂流者を発見した。「無人島から自力で脱出してきたけれど、もう限界…」", "You found a drifter on a small raft that escaped from an uninhabited island.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("見捨てる", "(Abandon)")
+@@ -3443,10 +3644,16 @@
+ 			ci = stat
+ 			if ( inv(INV_ITEM_NUM, ci) >= 1 ) {
+ 				tabikate = 1
+ 			}
+ 		}
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("漂流者たち", "Drifters")
+ 		file = "bg_re4"
+ 		buff = lang("漂流者複数名を発見した。「船が沈んでこのザマです…」", "You found drifters thrown out of the wrecked ship.")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("まとめて見捨てる", "(Abandon collectively)")
+@@ -3492,10 +3699,16 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 51 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("上空の脅威", "Aerial Threat")
+ 		file = "bg_re5"
+ 		buff = lang("急に空が薄暗くなり、船が何度も衝撃を受ける…。外を見たあなたの視界に飛び込んできたのは…海鳥だ。巨大な海鳥達が、群れをなして船を襲ってきたのだ！", "The sky suddenly darkens, and your ship receives repeated shocks... When you look outside, what jumps into your sight is...seabirds. A flock of giant seabirds is attacking your ship!")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("うむっ、緊急離脱だ", "(Emergency withdrawal)")
+@@ -3540,10 +3753,16 @@
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 52 | _switch_sw ) {
+ 		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
++		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE)++
++		txt lang("旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
+ 		s = lang("海中の脅威", "Undersea Threat")
+ 		file = "bg_re23"
+ 		buff = lang("突如、海中から突き上げられるように船が大きく揺れた…。何事かと海中に目を凝らしたあなたは、サメが船底に体当たりしているのを目撃した！", "Suddenly, your ship shook violently as if it was pushed up from the sea... As you peek into the sea, you see a shark ramming the bottom of the ship!")
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("シャクだが逃げよう", "(Emergency withdrawal)")
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/help.hsp ../2.27-borscht/help.hsp
+--- ../2.26-borscht/help.hsp	2025-03-17 02:14:36.271962600 +0800
++++ ../2.27-borscht/help.hsp	2025-05-19 06:35:56.911209900 +0800
+@@ -3453,10 +3453,50 @@
+ 				i++
+ 			loop
+ 			cfg_dust_select = int(rtvaln)
+ 			continue
+ 		}
++		if ( instr(s, 0, "cutin_select.") != (-1) ) {
++			i = 0
++			p = 0
++			repeat
++				p(2) = instr(s, p, "\"")
++				if ( p(2) == (-1) ) {
++					break
++				}
++				p += p(2)
++				p(1) = instr(s, p + 1, "\"")
++				if ( p(1) == (-1) ) {
++					break
++				}
++				rtvaln(i) = strmid(s, p + 1, p(1))
++				p += strlen(rtvaln(i)) + 2
++				i++
++			loop
++			cfg_cutin_select = int(rtvaln)
++			continue
++		}
++		if ( instr(s, 0, "travelExp_select.") != (-1) ) {
++			i = 0
++			p = 0
++			repeat
++				p(2) = instr(s, p, "\"")
++				if ( p(2) == (-1) ) {
++					break
++				}
++				p += p(2)
++				p(1) = instr(s, p + 1, "\"")
++				if ( p(1) == (-1) ) {
++					break
++				}
++				rtvaln(i) = strmid(s, p + 1, p(1))
++				p += strlen(rtvaln(i)) + 2
++				i++
++			loop
++			cfg_travelexp_select = int(rtvaln)
++			continue
++		}
+ 		key_prev = key_northwest
+ 		key_next = key_northeast
+ 		if ( instr(s, 0, "key_set.") != (-1) ) {
+ 			p = 0
+ 			p(1) = 0
+@@ -3758,15 +3798,15 @@
+ 		dy = 270
+ 	}
+ 	if ( submenu == 1 ) {
+ 		if ( jp ) {
+ 			q = "ゲームの設定"
+-			s = "ノルンの冒険ガイド", "非好戦的NPCを無視", "zキーの割当て", "xキーの割当て", "走り始める歩数", "歩きの速さ", "攻撃の間隔", "レコード表示", "「攻撃する」選択肢", "汚物生成の阻止", ""
++			s = "ノルンの冒険ガイド", "非好戦的NPCを無視", "zキーの割当て", "xキーの割当て", "走り始める歩数", "歩きの速さ", "攻撃の間隔", "レコード表示", "「攻撃する」選択肢", "汚物生成の阻止", "ゲージ技演出", "旅経験の整理確認", ""
+ 		}
+ 		if ( en ) {
+ 			q = "Game Setting"
+-			s = "Extra Help", "Neutral Npcs", "Assign z key", "Assign x key", "Start Running After", "Walk Speed", "Attack Interval", "Record", "Attack Select", "Block dust generation", ""
++			s = "Extra Help", "Neutral Npcs", "Assign z key", "Assign x key", "Start Running After", "Walk Speed", "Attack Interval", "Record", "Attack Select", "Block dust generation", "Gauge action staging", "Confirmation of travelExp", ""
+ 		}
+ 		dx = 440
+ 		dy = 370
+ 	}
+ 	if ( submenu == 2 ) {
+@@ -4054,10 +4094,28 @@
+ 				else {
+ 					s = "No Block", "Block"
+ 				}
+ 				mes s(cfg_dust_select)
+ 			}
++			if ( cnt == 10 ) {
++				if ( jp ) {
++					s = "全表示", "省略"
++				}
++				else {
++					s = "Show", "Don't show"
++				}
++				mes s(cfg_cutin_select)
++			}
++			if ( cnt == 11 ) {
++				if ( jp ) {
++					s = "条件達成時", "確認なし"
++				}
++				else {
++					s = "Confirm", "No confirm"
++				}
++				mes s(cfg_travelexp_select)
++			}
+ 		}
+ 		if ( submenu == 2 ) {
+ 			if ( cnt == 0 ) {
+ 				if ( jp ) {
+ 					s = "なし", "direct sound", "MCI"
+@@ -4605,10 +4663,44 @@
+ 					valn = "dust_select.", str(cfg_dust_select)
+ 					gosub *cfg_write
+ 					goto *com_config_loop
+ 				}
+ 			}
++			if ( cs == 10 ) {
++				if ( 1 ) {
++					cfg_cutin_select += p
++					if ( cfg_cutin_select > 1 ) {
++						cfg_cutin_select = 1
++					}
++					else {
++						if ( cfg_cutin_select < 0 ) {
++							cfg_cutin_select = 0
++						}
++					}
++					snd SOUNDLIST_OK1
++					valn = "cutin_select.", str(cfg_cutin_select)
++					gosub *cfg_write
++					goto *com_config_loop
++				}
++			}
++			if ( cs == 11 ) {
++				if ( 1 ) {
++					cfg_travelexp_select += p
++					if ( cfg_travelexp_select > 1 ) {
++						cfg_travelexp_select = 1
++					}
++					else {
++						if ( cfg_travelexp_select < 0 ) {
++							cfg_travelexp_select = 0
++						}
++					}
++					snd SOUNDLIST_OK1
++					valn = "travelExp_select.", str(cfg_travelexp_select)
++					gosub *cfg_write
++					goto *com_config_loop
++				}
++			}
+ 		}
+ 		if ( submenu == 2 ) {
+ 			if ( cs == 0 ) {
+ 				if ( 1 ) {
+ 					cfg_sound2 += p
+@@ -5351,11 +5443,11 @@
+ 	}
+ 	if ( mode == MODELIST_QUICK_START ) {
+ 		repeat 9
+ 			gdata(STARTING_GDATA_RANK + cnt) = 5000
+ 		loop
+-		gdata(GDATA_VERSION) = int(double("6.36") * 1000)
++		gdata(GDATA_VERSION) = int(double("6.37") * 1000)
+ 		gdata(STARTING_GDATA_SHORTCUT + 1) = 424
+ 		gdata(STARTING_GDATA_SHORTCUT + 2) = 300
+ 		gdata(STARTING_GDATA_SHORTCUT + 3) = 631
+ 		gdata(GDATA_COUNT_SHOP) = 1000
+ 		gdata(GDATA_COUNT_SHELTER) = 100
+@@ -5374,11 +5466,11 @@
+ 		gdata(GDATA_AREA) = AREA_VERNIS
+ 		gdata(GDATA_LEVEL) = 1
+ 		gdata(GDATA_LEVEL_START_ON) = 7
+ 		mapstartx = 10
+ 		mapstarty = 23
+-		initlv = 5000
++		initlv = 1000
+ 		rc = CHARA_PLAYER
+ 		flt 100
+ 		characreate CHARA_PLAYER, CREATURE_ID_BLACK_GAUNTLET_LEOLD, -3, 0
+ 		gosub *cm_finishPC
+ 		repeat 3
+@@ -5597,11 +5689,11 @@
+ 		inv(INV_ITEM_NUM, ci) = 100
+ 		flt
+ 		itemcreate CHARA_PLAYER, ITEM_ID_TOKEN_FRIENDSHIP, -1, -1, 0
+ 		inv(INV_ITEM_NUM, ci) = 10
+ 		flt
+-		itemcreate CHARA_PLAYER, ITEM_ID_GIFT, -1, -1, 0
++		itemcreate CHARA_PLAYER, ITEM_ID_MEMORY_FRAGMENT, -1, -1, 0
+ 		inv(INV_ITEM_NUM, ci) = 10
+ 		flt
+ 		itemcreate CHARA_PLAYER, ITEM_ID_STETHOSCOPE, -1, -1, 0
+ 		flt
+ 		itemcreate CHARA_PLAYER, ITEM_ID_ASTRAL_LIGHT_PEN, -1, -1, 0
+@@ -5954,11 +6046,11 @@
+ 		gdata(GDATA_AREA) = AREA_HOME
+ 		gdata(GDATA_HOME_LEVEL) = 0
+ 		gosub *setArea
+ 		gdata(GDATA_LEVEL) = 1
+ 		gdata(GDATA_LEVEL_START_ON) = 4
+-		gdata(GDATA_VERSION) = int(double("6.36") * 1000)
++		gdata(GDATA_VERSION) = int(double("6.37") * 1000)
+ 		gdata(GDATA_WEATHER) = WEATHER_RAIN, 6
+ 		repeat 20
+ 			gdata(STARTING_GDATA_RANK + cnt) = 10000
+ 		loop
+ 		gosub *adv_init
+@@ -7416,10 +7508,14 @@
+ 		}
+ 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_SEX ) {
+ 			at 50
+ 			gosub *sexsex
+ 		}
++		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_SEX_2 ) {
++			at 50
++			gosub *sexsex2
++		}
+ 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_TUIN_DER_LUSTEN ) {
+ 			at 50
+ 			gosub *skill_tuin_der_lusten
+ 		}
+ 		if ( cdata(CDATA_ROW_ACT, cc) == ACTION_CHARGE ) {
+@@ -7979,11 +8075,11 @@
+ 		goto *pc_turn_init_WHILE1
+ 	}
+ 
+ *pc_turn_init_WEND1
+ 	if ( dbg_titleinfo ) {
+-		title "ElonaPlus 2.26" + " ver " + "6.36" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
++		title "ElonaPlus 2.27" + " ver " + "6.37" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
+ 	}
+ 	if ( trait(TRAIT_ETHER_ADDICTED_POTION) != 0 ) {
+ 		if ( rnd(5) == 0 ) {
+ 			inv_getheader 0
+ 			ci = rnd(invrange) + invhead
+@@ -8078,10 +8174,20 @@
+ 	await cfg_wait1
+ 	key_check 1
+ 	if ( ginfo(2) != 0 ) {
+ 		goto *pc_turn
+ 	}
++	if ( cdata(CDATA_HP, CHARA_PLAYER) < cdata(CDATA_MAX_HP, CHARA_PLAYER) / 5 ) {
++		if ( spact(SKILL_SPACT_CLEMENTIA - STARTING_SKILL_SPACT) == 0 ) {
++			if ( spact(SKILL_SPACT_CLEMENTIA - STARTING_SKILL_SPACT) == 0 ) {
++				spact(SKILL_SPACT_CLEMENTIA - STARTING_SKILL_SPACT) = 1
++				txtmore
++				txtef COLOR_YELLOW
++				txt lang("あなたは「" + skillname(SKILL_SPACT_CLEMENTIA) + "」の能力を得た。", "You have learned new ability, " + skillname(SKILL_SPACT_CLEMENTIA) + ".")
++			}
++		}
++	}
+ 	if ( gdata(GDATA_FLAG_GAME_MODE) == 5 ) {
+ 		getkey a, 113
+ 		if ( a ) {
+ 			msg_newline
+ 			msgtemp = "  "
+@@ -11820,11 +11926,11 @@
+ 			}
+ 			if ( gdata(GDATA_FLAG_NEFIA_FEVER_ACTIVE) == 100 ) {
+ 				kazu++
+ 			}
+ 			flt
+-			itemcreate -1, ITEM_ID_MEMORY_FRAGMENT, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), 5 + kazu
++			itemcreate -1, ITEM_ID_MEMORY_FRAGMENT, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), 1 + kazu
+ 			inv(INV_ITEM_PARAM1, ci) = gskill
+ 			inv(INV_ITEM_PARAM2, ci) = limit(gdata(GDATA_LEVEL), 1, 999)
+ 			inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_NORMAL
+ 			flt
+ 			itemcreate -1, ITEM_ID_MEMORY_CONVERTER, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), limit(gdata(GDATA_LEVEL) / 50 + 1, 1, 5) + kazu
+@@ -11930,13 +12036,33 @@
+ 			txtef COLOR_RED
+ 			txt lang("あなたの身体に死紋が刻まれた！", "Death-Crest was carved on your body!")
+ 		}
+ 		txtef COLOR_RED2
+ 		txt lang("【 刻死紋状態で死亡すると能力値が永続低下する。睡眠を取るまで消えない。 】", "< If you die with the Death-Crest engraved, your stats will permanently drop. It doesn't go away until you sleep. >")
++		if ( spact(SKILL_SPACT_CLEMENTIA - STARTING_SKILL_SPACT) == 0 ) {
++			spact(SKILL_SPACT_CLEMENTIA - STARTING_SKILL_SPACT) = 1
++			txtmore
++			txtef COLOR_YELLOW
++			txt lang("あなたは「" + skillname(SKILL_SPACT_CLEMENTIA) + "」の能力を得た。", "You have learned new ability, " + skillname(SKILL_SPACT_CLEMENTIA) + ".")
++		}
+ 		if ( gdata(GDATA_CORRUPTION) >= 20000 ) {
+ 			modcorrupt -2000
+ 		}
++		inv_getheader 0
++		repeat invrange, invhead
++			if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_TRAVELERS_FOOD ) {
++				continue
++			}
++			if ( inv(INV_ITEM_NUM, cnt) > 0 ) {
++				if ( refitem(inv(INV_ITEM_ID, cnt), DBSPEC_CARGO) == 1 ) {
++					txtmore
++					txt lang(itemname(cnt) + "を失った。", "You lost " + itemname(cnt) + ".")
++					inv(INV_ITEM_NUM, cnt) = 0
++				}
++			}
++		loop
++		gosub *calcBurdenPc
+ 		decfame CHARA_PLAYER, 10
+ 		r1 = 0
+ 		gosub *charaRefresh
+ 		autosave = 1 * (gdata(GDATA_AREA) != AREA_SHOW_HOUSE)
+ 		goto *event_SWEND1
+@@ -13379,10 +13505,68 @@
+ 			}
+ 			if ( en ) {
+ 				txt cnvtalk("Welcome home!"), cnvtalk("Hey, dear."), cnvtalk("You're back!"), cnvtalk("I was waiting for you."), cnvtalk("Nice to see you again.")
+ 			}
+ 		loop
++		if ( gdata(GDATA_TRAVEL_DISTANCE) > 99999 ) {
++			gdata(GDATA_TRAVEL_DISTANCE) = 99999
++		}
++		if ( cfg_travelexp_select == 0 ) {
++			if ( gdata(GDATA_TRAVEL_DISTANCE) >= 10 ) {
++				if ( gdata(GDATA_TRAVEL_DISTANCE) * 10 + sdata(SKILL_NORMAL_TRAVELING, CHARA_PLAYER) * 30 + sdata(SKILL_ATTR_LER, CHARA_PLAYER) * 10 > cdata(CDATA_SEALED_MAGIC, CHARA_PLAYER) + 900 ) {
++					snd SOUNDLIST_LOG
++					txtef COLOR_LIGHT_GREEN
++					txt lang("蓄積した" + gdata(GDATA_TRAVEL_DISTANCE) + "の旅経験を整理・共有しようか？", "Organize and share your accumulated " + gdata(GDATA_TRAVEL_DISTANCE) + " travelExp?")
++					promptl(0, 0) = stryes, "y", "0"
++					promptl(0, 1) = strno, "n", "1"
++					promptmax = 2
++					val = promptx, prompty, 160, 1
++					gosub *prompt_key
++					if ( rtval == 0 ) {
++						p = 0
++						repeat 16
++							if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
++								continue
++							}
++							if ( cdata(CDATA_EXIST, cnt) == CHAR_STATE_ALLY_WORK ) {
++								continue
++							}
++							tc = cnt
++							gain1 = gdata(GDATA_TRAVEL_DISTANCE) * 10 + sdata(SKILL_NORMAL_TRAVELING, tc) * 30 + sdata(SKILL_ATTR_LER, tc) * 10
++							gain2 = gain1 - cdata(CDATA_SEALED_MAGIC, tc)
++							if ( 0 ) {
++								txt lang(name(tc) + "は、" + gain1 + "で" + gain2 + "だ。", name(tc) + " didn't seem to have anything to gain from the travel.")
++							}
++							if ( gain2 < 900 ) {
++								txt lang(name(tc) + "は特に得るものが無かったようだ。", name(tc) + " didn't seem to have anything to gain from the travel.")
++								continue
++							}
++							repeat 112 - 100, 100
++								if ( sorg(cnt, tc) == 0 ) {
++									continue
++								}
++								skillexp cnt, tc, gain2, 9999
++							loop
++							repeat 191 - 150, 150
++								if ( sorg(cnt, tc) == 0 ) {
++									continue
++								}
++								skillexp cnt, tc, gain2, 9999
++							loop
++							repeat 302 - 300, 300
++								if ( sorg(cnt, tc) == 0 ) {
++									continue
++								}
++								skillexp cnt, tc, gain2, 9999
++							loop
++							snd SOUNDLIST_WRITE1
++							cdata(CDATA_SEALED_MAGIC, tc) = gain1
++						loop
++					}
++				}
++			}
++		}
+ 		if ( gdata(GDATA_GUEST) > 0 ) {
+ 			tc = CHARA_PLAYER
+ 			repeat 245
+ 				if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
+ 					continue
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/init.hsp ../2.27-borscht/init.hsp
+--- ../2.26-borscht/init.hsp	2025-03-17 02:14:36.352482800 +0800
++++ ../2.27-borscht/init.hsp	2025-05-19 06:35:56.991193600 +0800
+@@ -234,13 +234,13 @@
+ 	bdrefn(5) = lang("盗賊の隠れ家", "Smuggler's Hideout")
+ 	bdrefn(6) = lang("灯台", "Light House")
+ 	return
+ 
+ *bRefDefine
+-	dim bdataref, 7, 71
+-	sdim buffname, 20, 71
+-	sdim bufftxt, 30, 2, 71
++	dim bdataref, 7, 72
++	sdim buffname, 20, 72
++	sdim bufftxt, 30, 2, 72
+ 	sdim buffdesc, 200
+ 	bdataref(BDATAREF_BUFF_TYPE, BUFF_HOLY_SHIELD) = BUFF_TYPE_BUFF, 1, 0
+ 	buffname(BUFF_HOLY_SHIELD) = lang("聖なる盾", "Holy Shield")
+ 	bufftxt(0, BUFF_HOLY_SHIELD) = lang("は光り輝いた。", "begin"), " to shine."
+ 	bdataref(BDATAREF_BUFF_TYPE, BUFF_GEM_POWER) = BUFF_TYPE_BUFF, 1, 0
+@@ -298,10 +298,13 @@
+ 	buffname(BUFF_GRAVITY_ACCEL) = lang("重力偏向", "Gravity Accel")
+ 	bufftxt(0, BUFF_GRAVITY_ACCEL) = lang("の重力の向きが変わった。", "accel"), " by gravity."
+ 	bdataref(BDATAREF_BUFF_TYPE, BUFF_CONCENTRATION) = BUFF_TYPE_BUFF, 1, 0
+ 	buffname(BUFF_CONCENTRATION) = lang("集中", "Concentration")
+ 	bufftxt(0, BUFF_CONCENTRATION) = lang("の集中力が向上した。", "feel"), " concentration."
++	bdataref(BDATAREF_BUFF_TYPE, BUFF_MIASMA_OF_HELL) = BUFF_TYPE_HEX, 1, 0
++	buffname(BUFF_MIASMA_OF_HELL) = lang("冥界の瘴気", "Miasma of Hell")
++	bufftxt(0, BUFF_MIASMA_OF_HELL) = lang("は瘴気に包み込まれた。", "surrounded"), " in miasma."
+ 	bdataref(BDATAREF_BUFF_TYPE, BUFF_MIST_OF_FRAILNESS) = BUFF_TYPE_HEX, 1, 0
+ 	buffname(BUFF_MIST_OF_FRAILNESS) = lang("脆弱の霧", "Mist of Frailness")
+ 	bufftxt(0, BUFF_MIST_OF_FRAILNESS) = lang("は脆くなった。", "feel"), " weak."
+ 	bdataref(BDATAREF_BUFF_TYPE, BUFF_CURSE_OF_HUNGER) = BUFF_TYPE_HEX, 1, 0
+ 	buffname(BUFF_CURSE_OF_HUNGER) = lang("飢餓の呪い", "Curse of Hunger")
+@@ -1022,10 +1025,24 @@
+ 				return
+ 			}
+ 		}
+ 		return
+ 	}
++	if ( calcbuff_buffid == BUFF_MIASMA_OF_HELL ) {
++		dur = 100
++		locvar_calcbuff_p = calcbuff_power
++		if ( calcbuff_charid < CHARA_PLAYER ) {
++			if ( calcbuff_charid == CALCBUFF_DURATION ) {
++				return
++			}
++			else {
++				buffdesc = lang("毒や侵蝕によって弱体化する", "Weakened by Poison and Erosion")
++				return
++			}
++		}
++		return
++	}
+ 	if ( calcbuff_buffid == BUFF_MIST_OF_FRAILNESS ) {
+ 		dur = 8 + calcbuff_power / 20
+ 		if ( calcbuff_charid < CHARA_PLAYER ) {
+ 			if ( calcbuff_charid == CALCBUFF_DURATION ) {
+ 				return
+@@ -1518,13 +1535,13 @@
+ 		return
+ 	}
+ 	return
+ 
+ *sRefDefine
+-	dim sdataref, 7, 869
+-	sdim skillname, 16, 869
+-	sdim skilldesc, 40, 869
++	dim sdataref, 7, 871
++	sdim skillname, 16, 871
++	sdim skilldesc, 40, 871
+ 	sdim skillencdesc, 40, 600
+ 	sdataref(SKILL_DATAREF_USE, SKILL_ATTR_LIFE) = SKILL_NONE, SKILL_TYPE_SP, 0, TARGET_TYPE_NONE, 0
+ 	skillname(SKILL_ATTR_LIFE) = lang("生命力", "Life")
+ 	skilldesc(SKILL_ATTR_LIFE) = lang("", "")
+ 	if ( 2 < 600 ) {
+@@ -3526,10 +3543,16 @@
+ 	skillname(SKILL_SPACT_TAG_FORCE) = lang("タッグフォース", "Tag Force")
+ 	skilldesc(SKILL_SPACT_TAG_FORCE) = lang("タッグ強化回復/ゲージ50％消費", "Strengthen tag/gauge50")
+ 	if ( 741 < 600 ) {
+ 		skillencdesc(SKILL_SPACT_TAG_FORCE) = lang("", "")
+ 	}
++	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_CLEMENTIA) = SKILL_ATTR_WIL, SKILL_TYPE_SP, 10, 3000 + 6, 500
++	skillname(SKILL_SPACT_CLEMENTIA) = lang("【命乞い】", "<Clementia>")
++	skilldesc(SKILL_SPACT_CLEMENTIA) = lang("どうにかして見逃してもらう", "Somehow ask for forgiveness")
++	if ( 869 < 600 ) {
++		skillencdesc(SKILL_SPACT_CLEMENTIA) = lang("", "")
++	}
+ 	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_POKER_FORCE) = SKILL_ATTR_MAG, SKILL_TYPE_SP, 0, 3000 + 6, 500
+ 	skillname(SKILL_SPACT_POKER_FORCE) = lang("ポーカーフォース", "Poker Force")
+ 	skilldesc(SKILL_SPACT_POKER_FORCE) = lang("カード精霊制御", "Control card spirits")
+ 	if ( 868 < 600 ) {
+ 		skillencdesc(SKILL_SPACT_POKER_FORCE) = lang("", "")
+@@ -4072,10 +4095,16 @@
+ 	skillname(SKILL_SPACT_ANAPHYLAXIS) = lang("アナフィラキシー", "Anaphylaxis")
+ 	skilldesc(SKILL_SPACT_ANAPHYLAXIS) = lang("視界内毒状態の敵に大ダメージ", "Attack enemies of the poison state")
+ 	if ( 813 < 600 ) {
+ 		skillencdesc(SKILL_SPACT_ANAPHYLAXIS) = lang("", "")
+ 	}
++	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_MIASMA_OF_HELL) = SKILL_ATTR_MAG, SKILL_TYPE_SP, 20, 3000 + 6, 500
++	skillname(SKILL_SPACT_MIASMA_OF_HELL) = lang("冥界の瘴気", "Miasma of Hell")
++	skilldesc(SKILL_SPACT_MIASMA_OF_HELL) = lang("視界内の敵を毒と侵蝕で弱らせる", "Weakens enemies with poison and erosion")
++	if ( 870 < 600 ) {
++		skillencdesc(SKILL_SPACT_MIASMA_OF_HELL) = lang("", "")
++	}
+ 	sdataref(SKILL_DATAREF_USE, SKILL_SPACT_DESTINY_DICE) = SKILL_ATTR_LUC, SKILL_TYPE_SP, 9, 3000 + 6, 500
+ 	skillname(SKILL_SPACT_DESTINY_DICE) = lang("荒ぶるダイス", "Destiny dice")
+ 	skilldesc(SKILL_SPACT_DESTINY_DICE) = lang("判定に応じて視界内投擲ダメージ", "Attack enemies when successful")
+ 	if ( 823 < 600 ) {
+ 		skillencdesc(SKILL_SPACT_DESTINY_DICE) = lang("", "")
+@@ -8949,11 +8978,11 @@
+ 		strmore = "(続く)"
+ 		strnogold = "(所持金が足りない！)"
+ 		strinteractfail = "その方向には、操作できる対象はない。"
+ 		invtitle = "", "調べる", "置く", "拾う", "", "食べる", "装備する", "読む", "飲む", "振る", "渡す", "購入する", "売却する", "鑑定する", "使う", "開く", "料理する", "調合", "混ぜる対象", "捧げる", "交換する", "提示する", "取る", "対象の", "入れる", "もらう", "投げる", "盗む", "交換する", "予約する", "　", "　", "画像付与"
+ 		bodyn = "", "頭", "首", "背中", "胴体", "手", "指", "腕", "腰", "足", "遠隔", "矢弾"
+-		actlistn = "行動", "食事", "読書", "移動", "休息", "採掘", "演奏", "釣り", "採取", "穴掘り", "行動", "行動", "合成", "チャージ", "伐採", "説法", "食事", "舞", "食事", "説得", "ギャグ", "嘘", "脅迫", "歌", "", "執筆", "仕事", "仕事", "仕事", "物乞い", "飛跳殺法", "奇襲穿孔"
++		actlistn = "行動", "食事", "読書", "移動", "休息", "採掘", "演奏", "釣り", "採取", "穴掘り", "行動", "行動", "合成", "チャージ", "伐採", "説法", "食事", "舞", "食事", "説得", "ギャグ", "嘘", "脅迫", "歌", "", "執筆", "仕事", "仕事", "仕事", "物乞い", "飛跳殺法", "奇襲穿孔", "行動"
+ 	}
+ 	else {
+ 		strhint1 = "Cursor [Select]  "
+ 		strhint2 = "" + key_pageup + "," + key_pagedown + " [Page]  "
+ 		strhint3 = "Shift,Esc [Close]  "
+@@ -11074,10 +11103,36 @@
+ 			s(cnt) = lang("魔力を吸わせる", "Give magical power")
+ 		}
+ 	loop
+ 	return
+ 
++#deffunc txtsetclementia int txtsetclementia_arg1
++	repeat 5
++		i = cnt
++		p(cnt) = p(i)
++		p(i) = cnt
++	loop
++	kane = limit((cdata(CDATA_GOLD, CHARA_PLAYER) + 1) / 100, 100, 100000)
++	repeat txtsetclementia_arg1
++		if ( p(cnt) == 0 ) {
++			s(cnt) = lang("キャンセル", "Cancel")
++		}
++		if ( p(cnt) == 1 ) {
++			s(cnt) = lang("金貨" + kane + "枚を差し出す", "I will offer you " + kane + " gold pieces!")
++		}
++		if ( p(cnt) == 2 ) {
++			s(cnt) = lang("激しく気持ちいいことしてあげる", "You can do whatever you want with my body...")
++		}
++		if ( p(cnt) == 3 ) {
++			s(cnt) = lang("勢いよく土下座する", "Look at my dogeza!!!")
++		}
++		if ( p(cnt) == 4 ) {
++			s(cnt) = lang("勢いよく土下座するフリをして奇襲する", "Dogeza is a lie. Die!")
++		}
++	loop
++	return
++
+ #deffunc txtsetnecro int txtsetnecro_arg1
+ 	repeat 6
+ 		i = cnt
+ 		p(cnt) = p(i)
+ 		p(i) = cnt
+@@ -14516,10 +14571,97 @@
+ 			locvar__yoro__tone = locvar__yoro__tone(rnd(locvar__yoro_p)) + _mark(_miruna_arg1)
+ 		}
+ 	}
+ 	return locvar__yoro__tone
+ 
++#defcfunc _gomen int _gomen_arg1
++	if ( cdata(CDATA_TONE, tc) == 0 ) {
++		if ( cdata(CDATA_TONE_SEX, tc) == 1 ) {
++			locvar__yoro__tone = "ごめんなさい", "", "", "", ""
++			locvar__yoro_p = 1 + ("" != "") + ("" != "") + ("" != "") + ("" != "")
++			locvar__yoro__tone = locvar__yoro__tone(rnd(locvar__yoro_p)) + _mark(_gomen_arg1)
++		}
++		else {
++			locvar__yoro__tone = "ゴメンなさい", "", "", "", ""
++			locvar__yoro_p = 1 + ("" != "") + ("" != "") + ("" != "") + ("" != "")
++			locvar__yoro__tone = locvar__yoro__tone(rnd(locvar__yoro_p)) + _mark(_gomen_arg1)
++		}
++	}
++	if ( cdata(CDATA_TONE, tc) == 1 ) {
++		if ( cdata(CDATA_TONE_SEX, tc) == 1 ) {
++			locvar__yoro__tone = "ワリィ", "", "", "", ""
++			locvar__yoro_p = 1 + ("" != "") + ("" != "") + ("" != "") + ("" != "")
++			locvar__yoro__tone = locvar__yoro__tone(rnd(locvar__yoro_p)) + _mark(_gomen_arg1)
++		}
++		else {
++			locvar__yoro__tone = "わりぃ", "", "", "", ""
++			locvar__yoro_p = 1 + ("" != "") + ("" != "") + ("" != "") + ("" != "")
++			locvar__yoro__tone = locvar__yoro__tone(rnd(locvar__yoro_p)) + _mark(_gomen_arg1)
++		}
++	}
++	if ( cdata(CDATA_TONE, tc) == 2 ) {
++		if ( cdata(CDATA_TONE_SEX, tc) == 1 ) {
++			locvar__yoro__tone = "ごめん", "", "", "", ""
++			locvar__yoro_p = 1 + ("" != "") + ("" != "") + ("" != "") + ("" != "")
++			locvar__yoro__tone = locvar__yoro__tone(rnd(locvar__yoro_p)) + _mark(_gomen_arg1)
++		}
++		else {
++			locvar__yoro__tone = "ゴメン", "", "", "", ""
++			locvar__yoro_p = 1 + ("" != "") + ("" != "") + ("" != "") + ("" != "")
++			locvar__yoro__tone = locvar__yoro__tone(rnd(locvar__yoro_p)) + _mark(_gomen_arg1)
++		}
++	}
++	if ( cdata(CDATA_TONE, tc) == 3 ) {
++		if ( cdata(CDATA_TONE_SEX, tc) == 1 ) {
++			locvar__yoro__tone = "すみません", "", "", "", ""
++			locvar__yoro_p = 1 + ("" != "") + ("" != "") + ("" != "") + ("" != "")
++			locvar__yoro__tone = locvar__yoro__tone(rnd(locvar__yoro_p)) + _mark(_gomen_arg1)
++		}
++		else {
++			locvar__yoro__tone = "すみません", "", "", "", ""
++			locvar__yoro_p = 1 + ("" != "") + ("" != "") + ("" != "") + ("" != "")
++			locvar__yoro__tone = locvar__yoro__tone(rnd(locvar__yoro_p)) + _mark(_gomen_arg1)
++		}
++	}
++	if ( cdata(CDATA_TONE, tc) == 4 ) {
++		if ( cdata(CDATA_TONE_SEX, tc) == 1 ) {
++			locvar__yoro__tone = "すまぬ", "", "", "", ""
++			locvar__yoro_p = 1 + ("" != "") + ("" != "") + ("" != "") + ("" != "")
++			locvar__yoro__tone = locvar__yoro__tone(rnd(locvar__yoro_p)) + _mark(_gomen_arg1)
++		}
++		else {
++			locvar__yoro__tone = "すまぬ", "", "", "", ""
++			locvar__yoro_p = 1 + ("" != "") + ("" != "") + ("" != "") + ("" != "")
++			locvar__yoro__tone = locvar__yoro__tone(rnd(locvar__yoro_p)) + _mark(_gomen_arg1)
++		}
++	}
++	if ( cdata(CDATA_TONE, tc) == 5 ) {
++		if ( cdata(CDATA_TONE_SEX, tc) == 1 ) {
++			locvar__yoro__tone = "すまぬ", "", "", "", ""
++			locvar__yoro_p = 1 + ("" != "") + ("" != "") + ("" != "") + ("" != "")
++			locvar__yoro__tone = locvar__yoro__tone(rnd(locvar__yoro_p)) + _mark(_gomen_arg1)
++		}
++		else {
++			locvar__yoro__tone = "すみませぬ", "", "", "", ""
++			locvar__yoro_p = 1 + ("" != "") + ("" != "") + ("" != "") + ("" != "")
++			locvar__yoro__tone = locvar__yoro__tone(rnd(locvar__yoro_p)) + _mark(_gomen_arg1)
++		}
++	}
++	if ( cdata(CDATA_TONE, tc) == 6 ) {
++		if ( cdata(CDATA_TONE_SEX, tc) == 1 ) {
++			locvar__yoro__tone = "ごめんッス", "", "", "", ""
++			locvar__yoro_p = 1 + ("" != "") + ("" != "") + ("" != "") + ("" != "")
++			locvar__yoro__tone = locvar__yoro__tone(rnd(locvar__yoro_p)) + _mark(_gomen_arg1)
++		}
++		else {
++			locvar__yoro__tone = "ごめんにゃさい", "", "", "", ""
++			locvar__yoro_p = 1 + ("" != "") + ("" != "") + ("" != "") + ("" != "")
++			locvar__yoro__tone = locvar__yoro__tone(rnd(locvar__yoro_p)) + _mark(_gomen_arg1)
++		}
++	}
++	return locvar__yoro__tone
++
+ #defcfunc _aisite int _aisite_puncmark
+ 	if ( cdata(CDATA_TONE, tc) == 0 ) {
+ 		if ( cdata(CDATA_TONE_SEX, tc) == 1 ) {
+ 			locvar__yoro__tone = "無言で優しく微笑んだ", "", "", "", ""
+ 			locvar__yoro_p = 1 + ("" != "") + ("" != "") + ("" != "") + ("" != "")
+@@ -15924,10 +16066,14 @@
+ 			}
+ 			if ( s == "見るな" ) {
+ 				s = _miruna(3)
+ 				break
+ 			}
++			if ( s == "ごめん" ) {
++				s = _gomen(3)
++				break
++			}
+ 			if ( s == "onii" ) {
+ 				if ( jp ) {
+ 					if ( cdata(CDATA_SEX, CHARA_PLAYER) == 0 ) {
+ 						s = "お兄"
+ 					}
+@@ -17202,10 +17348,14 @@
+ 	buff = ""
+ 	notesel buff
+ 	noteload exedir + "data\\talk.txt"
+ 	p = -1
+ 	repeat 1
++		if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, tc) == TRUE ) {
++			p = instr(buff, 0, "%INOTIGOI," + lang("JP", "EN"))
++			break
++		}
+ 		if ( cdata(CDATA_ROLE, tc) == ROLE_MAID ) {
+ 			if ( gdata(GDATA_GUEST) > 0 ) {
+ 				talkref = 1
+ 				p = instr(buff, 0, "%MAID," + lang("JP", "EN"))
+ 				break
+@@ -19766,10 +19916,14 @@
+ 			}
+ 			if ( s == "見るな" ) {
+ 				s = _miruna(3)
+ 				break
+ 			}
++			if ( s == "ごめん" ) {
++				s = _gomen(3)
++				break
++			}
+ 			if ( s == "onii" ) {
+ 				if ( jp ) {
+ 					if ( cdata(CDATA_SEX, CHARA_PLAYER) == 0 ) {
+ 						s = "お兄"
+ 					}
+@@ -20651,11 +20805,11 @@
+ 		goto *exit_game
+ 	}
+ 	else {
+ 		errorhack++
+ 	}
+-	buf = "HspError " + wparam + " WinError " + GetLastError() + " Ver " + int(double("6.36") * 1000) + " Mode " + mode + "\n"
++	buf = "HspError " + wparam + " WinError " + GetLastError() + " Ver " + int(double("6.37") * 1000) + " Mode " + mode + "\n"
+ 	buf += "efId " + efid + " efP " + efp + " Area " + gdata(GDATA_AREA) + "/" + gdata(GDATA_LEVEL) + "\n"
+ 	buf += "ci "
+ 	if ( ci < 200 ) {
+ 		buf += "0"
+ 		if ( ci >= 0 ) {
+@@ -20791,11 +20945,13 @@
+ 	}
+ 	else {
+ 		exec exedir + "error.txt", 16
+ 	}
+ 	goto *exit_game
+-	goto *label_0477
++	goto *label_0481
++
++
+ 
+ 
+ 
+ 
+ 
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/item.hsp ../2.27-borscht/item.hsp
+--- ../2.26-borscht/item.hsp	2025-03-17 02:14:36.370608900 +0800
++++ ../2.27-borscht/item.hsp	2025-05-19 06:35:57.009310200 +0800
+@@ -1411,10 +1411,26 @@
+ 				flt
+ 				itemcreate -1, ITEM_ID_SECRET_EXP_KUMIROMI, cdata(CDATA_X, rc), cdata(CDATA_Y, rc), 0
+ 			}
+ 		}
+ 	}
++	if ( cdatan(CDATAN_CLASS, rc) == "wizard" ) {
++		if ( rnd(100) == 0 ) {
++			if ( gdata(GDATA_FLAG_RARE_DROP) == 100 ) {
++				flt
++				itemcreate -1, ITEM_ID_SNOW_CRYSTAL, cdata(CDATA_X, rc), cdata(CDATA_Y, rc), 0
++			}
++		}
++	}
++	if ( cdatan(CDATAN_CLASS, rc) == "gunner" ) {
++		if ( rnd(100) == 0 ) {
++			if ( gdata(GDATA_FLAG_RARE_DROP) == 100 ) {
++				flt
++				itemcreate -1, ITEM_ID_DARKNESSBANG, cdata(CDATA_X, rc), cdata(CDATA_Y, rc), 0
++			}
++		}
++	}
+ 	if ( cdata(CDATA_ID, rc) == CREATURE_ID_FOX_SPIRIT ) {
+ 		if ( rnd(9) == 0 ) {
+ 			flt
+ 			itemcreate -1, ITEM_ID_ECHINOBOX, cdata(CDATA_X, rc), cdata(CDATA_Y, rc), 0
+ 		}
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/item_func.hsp ../2.27-borscht/item_func.hsp
+--- ../2.26-borscht/item_func.hsp	2025-03-17 02:14:36.392654300 +0800
++++ ../2.27-borscht/item_func.hsp	2025-05-19 06:35:57.030901500 +0800
+@@ -227,11 +227,11 @@
+ 		if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
+ 			continue
+ 		}
+ 		if ( cdata(CDATA_ROW_ACT, cnt) != ACTION_NONE ) {
+ 			if ( cdata(CDATA_ACTION_PERIOD, cnt) > 0 ) {
+-				if ( cdata(CDATA_ROW_ACT, cnt) != ACTION_SEX & cdata(CDATA_ROW_ACT, cnt) != ACTION_CHARGE & cdata(CDATA_ROW_ACT, cnt) != ACTION_PERFORM_PREACH & cdata(CDATA_ROW_ACT, cnt) != ACTION_MEAL & cdata(CDATA_ROW_ACT, cnt) != ACTION_PERFORM_DANCE & cdata(CDATA_ROW_ACT, cnt) != ACTION_XMAS_CAKE & cdata(CDATA_ROW_ACT, cnt) != ACTION_PERSUASION & cdata(CDATA_ROW_ACT, cnt) != ACTION_PECULIAR_JOKE & cdata(CDATA_ROW_ACT, cnt) != ACTION_BLENDED_LIE & cdata(CDATA_ROW_ACT, cnt) != ACTION_INTIMIDATION & cdata(CDATA_ROW_ACT, cnt) != ACTION_MYSTERIOUS_SONG & cdata(CDATA_ROW_ACT, cnt) != ACTION_TUIN_DER_LUSTEN & cdata(CDATA_ROW_ACT, cnt) != ACTION_BEGGING ) {
++				if ( cdata(CDATA_ROW_ACT, cnt) != ACTION_SEX & cdata(CDATA_ROW_ACT, cnt) != ACTION_CHARGE & cdata(CDATA_ROW_ACT, cnt) != ACTION_PERFORM_PREACH & cdata(CDATA_ROW_ACT, cnt) != ACTION_MEAL & cdata(CDATA_ROW_ACT, cnt) != ACTION_PERFORM_DANCE & cdata(CDATA_ROW_ACT, cnt) != ACTION_XMAS_CAKE & cdata(CDATA_ROW_ACT, cnt) != ACTION_PERSUASION & cdata(CDATA_ROW_ACT, cnt) != ACTION_PECULIAR_JOKE & cdata(CDATA_ROW_ACT, cnt) != ACTION_BLENDED_LIE & cdata(CDATA_ROW_ACT, cnt) != ACTION_INTIMIDATION & cdata(CDATA_ROW_ACT, cnt) != ACTION_MYSTERIOUS_SONG & cdata(CDATA_ROW_ACT, cnt) != ACTION_TUIN_DER_LUSTEN & cdata(CDATA_ROW_ACT, cnt) != ACTION_BEGGING & cdata(CDATA_ROW_ACT, cnt) != ACTION_SEX_2 ) {
+ 					if ( cdata(CDATA_ITEM_USING, cnt) == itemusingfind_itemid ) {
+ 						if ( itemusingfind_arg2 == FALSE | (itemusingfind_arg2 == TRUE & cnt != 0) ) {
+ 							locvar_itemusingfind_f = cnt
+ 							break
+ 						}
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/main.hsp ../2.27-borscht/main.hsp
+--- ../2.26-borscht/main.hsp	2025-03-17 02:14:36.394158000 +0800
++++ ../2.27-borscht/main.hsp	2025-05-19 06:35:57.032903300 +0800
+@@ -182,11 +182,11 @@
+ 	if ( dbg_randseed != 0 ) {
+ 		randseed = dbg_randseed
+ 	}
+ 	randomize randseed
+ 	exrand_randomize randseed
+-	title "ElonaPlus 2.26"
++	title "ElonaPlus 2.27"
+ 	goto *system_init
+ 	goto *label_0003
+ 
+ #deffunc netload str netload_filename
+ 	netrequest netload_filename
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/map.hsp ../2.27-borscht/map.hsp
+--- ../2.26-borscht/map.hsp	2025-03-17 02:14:36.446475600 +0800
++++ ../2.27-borscht/map.hsp	2025-05-19 06:35:57.085348400 +0800
+@@ -12041,11 +12041,11 @@
+ 				}
+ 			}
+ 		}
+ 	}
+ 	if ( mdata(MDATA_TYPE) == MAP_TYPE_TOWN | gdata(GDATA_AREA) == AREA_HOME | mdata(MDATA_TYPE) == MAP_TYPE_VILLAGE ) {
+-		if ( gdata(GDATA_TRAVEL_DISTANCE) >= 300 ) {
++		if ( gdata(GDATA_TRAVEL_DISTANCE) < (-300) ) {
+ 			p = gdata(GDATA_HOUR) + gdata(GDATA_DAY) * 24 + gdata(GDATA_MONTH) * 24 * 30 + gdata(GDATA_YEAR) * 24 * 30 * 12 - gdata(GDATA_TRAVEL_TIME)
+ 			txtmore
+ 			txt lang(cnvdate(gdata(GDATA_TRAVEL_TIME)) + "に" + mapname(gdata(GDATA_LAST_TOWN)) + "を発ってから、" + p / 24 + "日と" + p \ 24 + "時間の旅を終えた。", "" + p / 24 + " days and " + p \ 24 + " hours have passed since you left " + mapname(gdata(GDATA_LAST_TOWN)) + ".")
+ 			p = 0
+ 			repeat 16
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/map_user.hsp ../2.27-borscht/map_user.hsp
+--- ../2.26-borscht/map_user.hsp	2025-03-17 02:14:36.477571800 +0800
++++ ../2.27-borscht/map_user.hsp	2025-05-19 06:35:57.122915400 +0800
+@@ -434,10 +434,12 @@
+ 		txt lang("現在" + p + "人の滞在者がいる(最大" + (gdata(GDATA_HOME_LEVEL) + 2) + "人) ", "" + p + " members are staying at your home. (Max: " + (gdata(GDATA_HOME_LEVEL) + 2) + ").")
+ 	}
+ 	txtnew
+ 	txt lang("何をする？", "What do you want to do?")
+ 	p = 0
++	promptl(0, promptmax) = lang("旅経験の整理・共有", "Organize and share travelExp"), "null", "" + 27
++	promptmax++
+ 	if ( adata(ADATA_ID, gdata(GDATA_AREA)) == AREA_SHOP ) {
+ 		if ( getworker(gdata(GDATA_AREA)) != (-1) ) {
+ 			kunren = 0
+ 			sc = getworker(gdata(GDATA_AREA))
+ 			kunren = limit((sdata(SKILL_NORMAL_NEGOTIATION, sc) + sdata(SKILL_ATTR_CHA, sc)) / 100 + 1, 1, 20)
+@@ -608,10 +610,67 @@
+ 		loop
+ 		goto *turn_end
+ 		goto *com_home_SWEND1
+ 		_switch_sw++
+ 	}
++	if ( _switch_val == 27 | _switch_sw ) {
++		_switch_sw = 0
++		if ( gdata(GDATA_TRAVEL_DISTANCE) > 99999 ) {
++			gdata(GDATA_TRAVEL_DISTANCE) = 99999
++		}
++		snd SOUNDLIST_LOG
++		txtef COLOR_LIGHT_GREEN
++		txt lang("蓄積した" + gdata(GDATA_TRAVEL_DISTANCE) + "の旅経験を整理・共有しようか？", "Organize and share your accumulated " + gdata(GDATA_TRAVEL_DISTANCE) + " travelExp?")
++		promptl(0, 0) = stryes, "y", "0"
++		promptl(0, 1) = strno, "n", "1"
++		promptmax = 2
++		val = promptx, prompty, 160, 1
++		gosub *prompt_key
++		if ( rtval == 0 ) {
++			p = 0
++			repeat 16
++				if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
++					continue
++				}
++				if ( cdata(CDATA_EXIST, cnt) == CHAR_STATE_ALLY_WORK ) {
++					continue
++				}
++				tc = cnt
++				gain1 = gdata(GDATA_TRAVEL_DISTANCE) * 10 + sdata(SKILL_NORMAL_TRAVELING, tc) * 30 + sdata(SKILL_ATTR_LER, tc) * 10
++				gain2 = gain1 - cdata(CDATA_SEALED_MAGIC, tc)
++				if ( 0 ) {
++					txt lang(name(tc) + "は、" + gain1 + "で" + gain2 + "だ。", name(tc) + " didn't seem to have anything to gain from the travel.")
++				}
++				if ( gain2 < 900 ) {
++					txt lang(name(tc) + "は特に得るものが無かったようだ。", name(tc) + " didn't seem to have anything to gain from the travel.")
++					continue
++				}
++				repeat 112 - 100, 100
++					if ( sorg(cnt, tc) == 0 ) {
++						continue
++					}
++					skillexp cnt, tc, gain2, 9999
++				loop
++				repeat 191 - 150, 150
++					if ( sorg(cnt, tc) == 0 ) {
++						continue
++					}
++					skillexp cnt, tc, gain2, 9999
++				loop
++				repeat 302 - 300, 300
++					if ( sorg(cnt, tc) == 0 ) {
++						continue
++					}
++					skillexp cnt, tc, gain2, 9999
++				loop
++				snd SOUNDLIST_WRITE1
++				cdata(CDATA_SEALED_MAGIC, tc) = gain1
++			loop
++		}
++		goto *com_home_SWEND1
++		_switch_sw++
++	}
+ 	if ( _switch_val == 10 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		txt lang(mdatan(0) + "を何と呼ぶ？ ", "What do you want to call " + mdatan(0) + "? ")
+ 		val = (windoww - 290) / 2 + inf_screenx, winposy(90), 16, 1, 0
+ 		inputlog = ""
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/module.hsp ../2.27-borscht/module.hsp
+--- ../2.26-borscht/module.hsp	2025-03-17 02:14:36.514821300 +0800
++++ ../2.27-borscht/module.hsp	2025-05-19 06:35:57.159336600 +0800
+@@ -407,26 +407,40 @@
+ 		return 0
+ 	}
+ 	if ( skillexp_amount == 0 ) {
+ 		return
+ 	}
+-	if ( sdataref(SKILL_DATAREF_USE, skillexp_skillid) != SKILL_NONE ) {
+-		skillexp sdataref(SKILL_DATAREF_USE, skillexp_skillid), skillexp_charid, skillexp_amount / (2 + skillexp_arg4)
++	if ( skillexp_arg4 != 9999 ) {
++		if ( sdataref(SKILL_DATAREF_USE, skillexp_skillid) != SKILL_NONE ) {
++			skillexp sdataref(SKILL_DATAREF_USE, skillexp_skillid), skillexp_charid, skillexp_amount / (2 + skillexp_arg4)
++		}
+ 	}
+ 	locvar_skillmod_lv = sorg(skillexp_skillid, skillexp_charid)
+ 	locvar_skillexp_lvs = limit(sorg(skillexp_skillid, skillexp_charid), 1, 400)
+ 	locvar_skillexp_lvli = sqrt(locvar_skillexp_lvs * 10) * 2
+ 	locvar_skillmod_growth = sgrowth(skillexp_skillid, skillexp_charid)
+-	if ( locvar_skillmod_growth == 0 ) {
+-		return
++	if ( skillexp_arg4 != 9999 ) {
++		if ( locvar_skillmod_growth == 0 ) {
++			return
++		}
+ 	}
+ 	if ( skillexp_amount > 0 ) {
+-		if ( locvar_skillmod_lv >= cdata(CDATA_INIT_SPEED, skillexp_charid) + 100 ) {
+-			locvar_skillmod_exp = (skillexp_amount + 16000 / (cdata(CDATA_INIT_LIFEMANA, skillexp_charid) + cdata(CDATA_INIT_ATTR, skillexp_charid) + 500) + 1) * locvar_skillmod_growth / (100 + locvar_skillexp_lvli * 10)
++		if ( skillexp_arg4 == 9999 ) {
++			if ( locvar_skillmod_lv >= cdata(CDATA_INIT_SPEED, skillexp_charid) + 100 ) {
++				locvar_skillmod_exp = (skillexp_amount + 16000 / (cdata(CDATA_INIT_LIFEMANA, skillexp_charid) + cdata(CDATA_INIT_ATTR, skillexp_charid) + 500) + 1) * 100 / (100 + locvar_skillexp_lvli * 10)
++			}
++			else {
++				locvar_skillmod_exp = skillexp_amount * 100 / (100 + locvar_skillexp_lvli * 10)
++			}
+ 		}
+ 		else {
+-			locvar_skillmod_exp = skillexp_amount * locvar_skillmod_growth / (100 + locvar_skillexp_lvli * 10)
++			if ( locvar_skillmod_lv >= cdata(CDATA_INIT_SPEED, skillexp_charid) + 100 ) {
++				locvar_skillmod_exp = (skillexp_amount + 16000 / (cdata(CDATA_INIT_LIFEMANA, skillexp_charid) + cdata(CDATA_INIT_ATTR, skillexp_charid) + 500) + 1) * locvar_skillmod_growth / (100 + locvar_skillexp_lvli * 10)
++			}
++			else {
++				locvar_skillmod_exp = skillexp_amount * locvar_skillmod_growth / (100 + locvar_skillexp_lvli * 10)
++			}
+ 		}
+ 		if ( skillexp_skillid >= SKILL_ATTR_STR ) {
+ 			if ( skillexp_skillid < SKILL_ATTR_LUC ) {
+ 				if ( cdata(STARTING_CDATA_FOOD_EXP + skillexp_skillid - 10, skillexp_charid) > 0 ) {
+ 					locvar_skillmod_exp = locvar_skillmod_exp * (100 + cdata(STARTING_CDATA_FOOD_EXP + skillexp_skillid - 10, skillexp_charid)) / 100
+@@ -464,41 +478,43 @@
+ 	if ( cbit(CHARA_BIT_SANDBAG, skillexp_charid) ) {
+ 		locvar_skillmod_exp = 0
+ 	}
+ 	if ( gdata(GDATA_SENSE_OBJECT) == 0 ) {
+ 		if ( skillexp_charid < MAX_CHARA_FOLLOWER ) {
+-			if ( gdata(GDATA_FLAG_STUDY_BONUS_KIND) == 0 ) {
+-				if ( skillexp_skillid == SKILL_NORMAL_WEIGHT_LIFTING | skillexp_skillid == SKILL_NORMAL_HEALING | skillexp_skillid == SKILL_NORMAL_MEDITATION | skillexp_skillid == SKILL_NORMAL_MAGIC_CAPACITY | skillexp_skillid == SKILL_NORMAL_HEAVY_ARMOR | skillexp_skillid == SKILL_NORMAL_MEDIUM_ARMOR | skillexp_skillid == SKILL_NORMAL_LIGHT_ARMOR | skillexp_skillid == SKILL_NORMAL_FAITH ) {
+-					locvar_skillmod_exp = locvar_skillmod_exp * 3
+-				}
+-			}
+-			if ( gdata(GDATA_FLAG_STUDY_BONUS_KIND) == 1 ) {
+-				if ( skillexp_skillid == SKILL_NORMAL_TACTICS | skillexp_skillid == SKILL_NORMAL_DUAL_WIELD | skillexp_skillid == SKILL_NORMAL_TWO_HAND | skillexp_skillid == SKILL_NORMAL_SHIELD | skillexp_skillid == SKILL_NORMAL_EVASION | skillexp_skillid == SKILL_NORMAL_EYE_OF_MIND | skillexp_skillid == SKILL_NORMAL_GREATER_EVASION | skillexp_skillid == SKILL_NORMAL_MARKSMAN | (skillexp_skillid >= SKILL_WEAPON_LONGSWORD & skillexp_skillid < MAX_SKILL_WEAPON) ) {
+-					locvar_skillmod_exp = locvar_skillmod_exp * 3
++			if ( skillexp_arg4 != 9999 ) {
++				if ( gdata(GDATA_FLAG_STUDY_BONUS_KIND) == 0 ) {
++					if ( skillexp_skillid == SKILL_NORMAL_WEIGHT_LIFTING | skillexp_skillid == SKILL_NORMAL_HEALING | skillexp_skillid == SKILL_NORMAL_MEDITATION | skillexp_skillid == SKILL_NORMAL_MAGIC_CAPACITY | skillexp_skillid == SKILL_NORMAL_HEAVY_ARMOR | skillexp_skillid == SKILL_NORMAL_MEDIUM_ARMOR | skillexp_skillid == SKILL_NORMAL_LIGHT_ARMOR | skillexp_skillid == SKILL_NORMAL_FAITH ) {
++						locvar_skillmod_exp = locvar_skillmod_exp * 3
++					}
+ 				}
+-			}
+-			if ( gdata(GDATA_FLAG_STUDY_BONUS_KIND) == 2 ) {
+-				if ( skillexp_skillid == SKILL_NORMAL_NEGOTIATION | skillexp_skillid == SKILL_NORMAL_INVESTING | skillexp_skillid == SKILL_NORMAL_CARPENTRY | skillexp_skillid == SKILL_NORMAL_TAILORING | skillexp_skillid == SKILL_NORMAL_ALCHEMY | skillexp_skillid == SKILL_NORMAL_JEWELER | skillexp_skillid == SKILL_NORMAL_GARDENING | skillexp_skillid == SKILL_NORMAL_PERFORMER | skillexp_skillid == SKILL_NORMAL_COOKING | skillexp_skillid == SKILL_NORMAL_FISHING | skillexp_skillid == SKILL_ACTIVE_PICKPOCKET ) {
+-					locvar_skillmod_exp = locvar_skillmod_exp * 3
++				if ( gdata(GDATA_FLAG_STUDY_BONUS_KIND) == 1 ) {
++					if ( skillexp_skillid == SKILL_NORMAL_TACTICS | skillexp_skillid == SKILL_NORMAL_DUAL_WIELD | skillexp_skillid == SKILL_NORMAL_TWO_HAND | skillexp_skillid == SKILL_NORMAL_SHIELD | skillexp_skillid == SKILL_NORMAL_EVASION | skillexp_skillid == SKILL_NORMAL_EYE_OF_MIND | skillexp_skillid == SKILL_NORMAL_GREATER_EVASION | skillexp_skillid == SKILL_NORMAL_MARKSMAN | (skillexp_skillid >= SKILL_WEAPON_LONGSWORD & skillexp_skillid < MAX_SKILL_WEAPON) ) {
++						locvar_skillmod_exp = locvar_skillmod_exp * 3
++					}
+ 				}
+-			}
+-			if ( gdata(GDATA_FLAG_STUDY_BONUS_KIND) == 3 ) {
+-				if ( skillexp_skillid == SKILL_NORMAL_STEALTH | skillexp_skillid == SKILL_NORMAL_LOCK_PICKING | skillexp_skillid == SKILL_NORMAL_DETECTION | skillexp_skillid == SKILL_NORMAL_MINING | skillexp_skillid == SKILL_NORMAL_DISARM_TRAP | skillexp_skillid == SKILL_NORMAL_TRAVELING | skillexp_skillid == SKILL_NORMAL_SWIMMING | skillexp_skillid == SKILL_ACTIVE_RIDING ) {
+-					locvar_skillmod_exp = locvar_skillmod_exp * 3
++				if ( gdata(GDATA_FLAG_STUDY_BONUS_KIND) == 2 ) {
++					if ( skillexp_skillid == SKILL_NORMAL_NEGOTIATION | skillexp_skillid == SKILL_NORMAL_INVESTING | skillexp_skillid == SKILL_NORMAL_CARPENTRY | skillexp_skillid == SKILL_NORMAL_TAILORING | skillexp_skillid == SKILL_NORMAL_ALCHEMY | skillexp_skillid == SKILL_NORMAL_JEWELER | skillexp_skillid == SKILL_NORMAL_GARDENING | skillexp_skillid == SKILL_NORMAL_PERFORMER | skillexp_skillid == SKILL_NORMAL_COOKING | skillexp_skillid == SKILL_NORMAL_FISHING | skillexp_skillid == SKILL_ACTIVE_PICKPOCKET ) {
++						locvar_skillmod_exp = locvar_skillmod_exp * 3
++					}
+ 				}
+-			}
+-			if ( gdata(GDATA_FLAG_STUDY_BONUS_KIND) == 4 ) {
+-				if ( skillexp_skillid == SKILL_NORMAL_LITERACY | skillexp_skillid == SKILL_NORMAL_GENE_ENGINEER | skillexp_skillid == SKILL_NORMAL_ANATOMY | skillexp_skillid == SKILL_NORMAL_SENSE_QUALITY | skillexp_skillid == SKILL_NORMAL_MEMORIZATION | skillexp_skillid == SKILL_NORMAL_CASTING | skillexp_skillid == SKILL_NORMAL_MAGIC_DEVICE | skillexp_skillid == SKILL_NORMAL_CONTROL_MAGIC ) {
+-					locvar_skillmod_exp = locvar_skillmod_exp * 3
++				if ( gdata(GDATA_FLAG_STUDY_BONUS_KIND) == 3 ) {
++					if ( skillexp_skillid == SKILL_NORMAL_STEALTH | skillexp_skillid == SKILL_NORMAL_LOCK_PICKING | skillexp_skillid == SKILL_NORMAL_DETECTION | skillexp_skillid == SKILL_NORMAL_MINING | skillexp_skillid == SKILL_NORMAL_DISARM_TRAP | skillexp_skillid == SKILL_NORMAL_TRAVELING | skillexp_skillid == SKILL_NORMAL_SWIMMING | skillexp_skillid == SKILL_ACTIVE_RIDING ) {
++						locvar_skillmod_exp = locvar_skillmod_exp * 3
++					}
+ 				}
+-			}
+-			if ( skillexp_skillid >= SKILL_SPELL_HEAL_LIGHT & skillexp_skillid < MAX_SPELL ) {
+-				if ( cdata(CDATA_CUSTOM_TALK_LINE, CHARA_PLAYER) == 1 ) {
+-					if ( gdata(GDATA_TEMPORARY_FLAGS) != 11111111 ) {
++				if ( gdata(GDATA_FLAG_STUDY_BONUS_KIND) == 4 ) {
++					if ( skillexp_skillid == SKILL_NORMAL_LITERACY | skillexp_skillid == SKILL_NORMAL_GENE_ENGINEER | skillexp_skillid == SKILL_NORMAL_ANATOMY | skillexp_skillid == SKILL_NORMAL_SENSE_QUALITY | skillexp_skillid == SKILL_NORMAL_MEMORIZATION | skillexp_skillid == SKILL_NORMAL_CASTING | skillexp_skillid == SKILL_NORMAL_MAGIC_DEVICE | skillexp_skillid == SKILL_NORMAL_CONTROL_MAGIC ) {
+ 						locvar_skillmod_exp = locvar_skillmod_exp * 3
+ 					}
+ 				}
++				if ( skillexp_skillid >= SKILL_SPELL_HEAL_LIGHT & skillexp_skillid < MAX_SPELL ) {
++					if ( cdata(CDATA_CUSTOM_TALK_LINE, CHARA_PLAYER) == 1 ) {
++						if ( gdata(GDATA_TEMPORARY_FLAGS) != 11111111 ) {
++							locvar_skillmod_exp = locvar_skillmod_exp * 3
++						}
++					}
++				}
+ 			}
+ 		}
+ 	}
+ 	if ( cdata(STARTING_CDATA_FOOD_EXP + 19 - 10, skillexp_charid) > 0 ) {
+ 		if ( skillexp_skillid >= SKILL_WEAPON_LONGSWORD & skillexp_skillid < MAX_SKILL_ACTIVE ) {
+@@ -603,19 +619,21 @@
+ 	if ( locvar_skillmod_exp >= 1000 ) {
+ 		locvar_skillmod_lvchange = locvar_skillmod_exp / 1000
+ 		locvar_skillmod_exp = locvar_skillmod_exp \ 1000
+ 		locvar_skillmod_lv += locvar_skillmod_lvchange
+ 		repeat locvar_skillmod_lvchange
+-			if ( gdata(GDATA_FLAG_GAME_MODE) != 2 & gdata(GDATA_FLAG_GAME_MODE) != 5 ) {
+-				locvar_skillmod_growth = int(double(locvar_skillmod_growth) * 0.9)
+-				locvar_skillmod_growth = int(double(locvar_skillmod_growth) * 0.9)
+-			}
+-			locvar_skillmod_growth -= 5
+-			if ( locvar_skillmod_growth <= 1 ) {
+-				locvar_skillmod_growth = 0
+-				if ( gdata(GDATA_FLAG_GAME_MODE) == 5 ) {
+-					locvar_skillmod_growth = 1
++			if ( skillexp_arg4 != 9999 ) {
++				if ( gdata(GDATA_FLAG_GAME_MODE) != 2 & gdata(GDATA_FLAG_GAME_MODE) != 5 ) {
++					locvar_skillmod_growth = int(double(locvar_skillmod_growth) * 0.9)
++					locvar_skillmod_growth = int(double(locvar_skillmod_growth) * 0.9)
++				}
++				locvar_skillmod_growth -= 5
++				if ( locvar_skillmod_growth <= 1 ) {
++					locvar_skillmod_growth = 0
++					if ( gdata(GDATA_FLAG_GAME_MODE) == 5 ) {
++						locvar_skillmod_growth = 1
++					}
+ 				}
+ 			}
+ 		loop
+ 		sdata(skillexp_skillid + STARTING_SKILL_SPACT, skillexp_charid) = limit(locvar_skillmod_lv, 0, 2000) * 1000000 + locvar_skillmod_exp * 1000 + locvar_skillmod_growth
+ 		if ( synccheck(skillexp_charid, -1) ) {
+@@ -3065,48 +3083,78 @@
+ 						if ( locvar_cell_draw_c >= 16 ) {
+ 							if ( cdata(CDATA_ID, locvar_cell_draw_c) >= CREATURE_ID_SPADE_WARRIOR & cdata(CDATA_ID, locvar_cell_draw_c) <= CREATURE_ID_HEART_WITCH ) {
+ 								pos locvar_cell_draw_dx + 40, locvar_cell_draw_dy - 10
+ 								color 0, 0, 0
+ 								if ( cdata(CDATA_EVOLUTION_STAGE, locvar_cell_draw_c) >= 2 & cdata(CDATA_EVOLUTION_STAGE, locvar_cell_draw_c) <= 10 ) {
+-									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_SPADE_WARRIOR | cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_CLUB_FEATHER ) {
+-										bmes "" + cdata(CDATA_EVOLUTION_STAGE, locvar_cell_draw_c) + "", 100, 100, 100
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_SPADE_WARRIOR ) {
++										bmes "" + cdata(CDATA_EVOLUTION_STAGE, locvar_cell_draw_c) + "", 80, 100, 150
++									}
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_CLUB_FEATHER ) {
++										bmes "" + cdata(CDATA_EVOLUTION_STAGE, locvar_cell_draw_c) + "", 90, 120, 90
+ 									}
+-									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_DIAMOND_EYES | cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_HEART_WITCH ) {
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_DIAMOND_EYES ) {
+ 										bmes "" + cdata(CDATA_EVOLUTION_STAGE, locvar_cell_draw_c) + "", 255, 25, 25
+ 									}
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_HEART_WITCH ) {
++										bmes "" + cdata(CDATA_EVOLUTION_STAGE, locvar_cell_draw_c) + "", 255, 90, 200
++									}
+ 								}
+ 								if ( cdata(CDATA_EVOLUTION_STAGE, locvar_cell_draw_c) == 1 ) {
+-									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_SPADE_WARRIOR | cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_CLUB_FEATHER ) {
+-										bmes "A", 100, 100, 100
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_SPADE_WARRIOR ) {
++										bmes "A", 80, 100, 150
++									}
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_CLUB_FEATHER ) {
++										bmes "A", 90, 120, 90
+ 									}
+-									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_DIAMOND_EYES | cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_HEART_WITCH ) {
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_DIAMOND_EYES ) {
+ 										bmes "A", 255, 25, 25
+ 									}
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_HEART_WITCH ) {
++										bmes "A", 255, 90, 200
++									}
+ 								}
+ 								if ( cdata(CDATA_EVOLUTION_STAGE, locvar_cell_draw_c) == 11 ) {
+-									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_SPADE_WARRIOR | cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_CLUB_FEATHER ) {
+-										bmes "J", 100, 100, 100
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_SPADE_WARRIOR ) {
++										bmes "J", 80, 100, 150
+ 									}
+-									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_DIAMOND_EYES | cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_HEART_WITCH ) {
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_CLUB_FEATHER ) {
++										bmes "J", 90, 120, 90
++									}
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_DIAMOND_EYES ) {
+ 										bmes "J", 255, 25, 25
+ 									}
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_HEART_WITCH ) {
++										bmes "J", 255, 90, 200
++									}
+ 								}
+ 								if ( cdata(CDATA_EVOLUTION_STAGE, locvar_cell_draw_c) == 12 ) {
+-									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_SPADE_WARRIOR | cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_CLUB_FEATHER ) {
+-										bmes "Q", 100, 100, 100
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_SPADE_WARRIOR ) {
++										bmes "Q", 80, 100, 150
+ 									}
+-									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_DIAMOND_EYES | cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_HEART_WITCH ) {
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_CLUB_FEATHER ) {
++										bmes "Q", 90, 120, 90
++									}
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_DIAMOND_EYES ) {
+ 										bmes "Q", 255, 25, 25
+ 									}
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_HEART_WITCH ) {
++										bmes "Q", 255, 90, 200
++									}
+ 								}
+ 								if ( cdata(CDATA_EVOLUTION_STAGE, locvar_cell_draw_c) == 13 ) {
+-									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_SPADE_WARRIOR | cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_CLUB_FEATHER ) {
+-										bmes "K", 100, 100, 100
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_SPADE_WARRIOR ) {
++										bmes "K", 80, 100, 150
++									}
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_CLUB_FEATHER ) {
++										bmes "K", 90, 120, 90
+ 									}
+-									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_DIAMOND_EYES | cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_HEART_WITCH ) {
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_DIAMOND_EYES ) {
+ 										bmes "K", 255, 25, 25
+ 									}
++									if ( cdata(CDATA_ID, locvar_cell_draw_c) == CREATURE_ID_HEART_WITCH ) {
++										bmes "K", 255, 90, 200
++									}
+ 								}
+ 							}
+ 						}
+ 						if ( cbit(CHARA_BIT_MAGNETISM_S_POLE, locvar_cell_draw_c) ) {
+ 							pos locvar_cell_draw_dx + 9, locvar_cell_draw_dy + 25 - 9
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/proc.hsp ../2.27-borscht/proc.hsp
+--- ../2.26-borscht/proc.hsp	2025-03-17 02:14:36.608570100 +0800
++++ ../2.27-borscht/proc.hsp	2025-05-19 06:35:57.257656900 +0800
+@@ -1027,18 +1027,18 @@
+ 	if ( cdata(CDATA_ROW_ACT, cc) == ACTION_NONE ) {
+ 		if ( synccheck(cc, -1) ) {
+ 			txt lang(name(cc) + "は執筆を始めた。", name(cc) + " start" + _s(cc) + " writing.")
+ 		}
+ 		cdata(CDATA_ROW_ACT, cc) = ACTION_WRITING
+-		cdata(CDATA_ACTION_PERIOD, cc) = gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + 1
++		cdata(CDATA_ACTION_PERIOD, cc) = gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) / 5 + 1
+ 		return
+ 	}
+ 	if ( cdata(CDATA_ACTION_PERIOD, cc) > 0 ) {
+ 		if ( cdata(CDATA_ACTION_PERIOD, cc) \ 3 == 1 ) {
+ 			snd SOUNDLIST_WRITE1
+ 		}
+-		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)--
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) -= 5
+ 		booksitu = limit((rnd(sdata(SKILL_NORMAL_LITERACY, CHARA_PLAYER) + sdata(SKILL_ATTR_PER, CHARA_PLAYER) + sdata(SKILL_ATTR_LER, CHARA_PLAYER) + 200) + 1) / 200, 0, 6)
+ 		flt
+ 		itemcreate -1, ITEM_ID_MANUSCRIPT, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), 0
+ 		inv(INV_ITEM_PARAM3, ci) = booksitu
+ 		item_stack -1, ci, 0
+@@ -3359,10 +3359,13 @@
+ 				if ( rnd(3) == 0 ) {
+ 					if ( cc != CHARA_PLAYER ) {
+ 						txt lang(name(cc) + "は激怒した。「なめてんの？」", name(cc) + " gets furious, " + cnvtalk("And you think you can just run away?"))
+ 						cdata(CDATA_TARGET, cc) = tc
+ 						cdata(CDATA_AI_AGGRO, cc) = 20
++						txt lang(name(tc) + "は逆上した。「文句あんの？」", name(tc) + " retorted, " + cnvtalk("Are you complaining?"))
++						cdata(CDATA_TARGET, tc) = cc
++						cdata(CDATA_AI_AGGRO, tc) = 20
+ 					}
+ 				}
+ 			}
+ 			if ( cdata(CDATA_GOLD, tc) <= 0 ) {
+ 				cdata(CDATA_GOLD, tc) = 1
+@@ -3383,10 +3386,119 @@
+ 	}
+ 	rowactend cc
+ 	rowactend tc
+ 	return
+ 
++*sexsex2
++	if ( cdata(CDATA_ROW_ACT, cc) == ACTION_NONE ) {
++		cdata(CDATA_ROW_ACT, cc) = ACTION_SEX_2
++		cdata(CDATA_ACTION_PERIOD, cc) = 25 + rnd(10)
++		cdata(CDATA_ROW_ACT_TC, cc) = tc
++		cdata(CDATA_ROW_ACT, tc) = ACTION_SEX_2, cdata(CDATA_ACTION_PERIOD, cc) * 2
++		cdata(CDATA_ROW_ACT_TC, tc) = cc + 10000
++		if ( synccheck(cc, -1) ) {
++			txt lang(name(cc) + "は服を脱ぎ始めた。", name(cc) + " begin" + _s(cc) + " to take " + his(cc) + " clothes off.")
++		}
++		return
++	}
++	sexhost = 1
++	tc = cdata(CDATA_ROW_ACT_TC, cc)
++	if ( tc >= 10000 ) {
++		tc -= 10000
++		sexhost = 0
++	}
++	if ( cdata(CDATA_EXIST, tc) != CHAR_STATE_ALIVE | cdata(CDATA_ROW_ACT, tc) != ACTION_SEX_2 ) {
++		if ( synccheck(cc, -1) ) {
++			txt lang("「そ、その" + _sex2(cdata(CDATA_SEX, tc)) + "とは体だけの関係" + _da() + _ore(3) + "は何も知らないから、命だけは…！」", "\"I-I don't really know that " + _sex2(cdata(CDATA_SEX, tc)) + ". Please spare my life!\"")
++		}
++		rowactend cc
++		rowactend tc
++		return
++	}
++	if ( cc == CHARA_PLAYER ) {
++		dmgsp CHARA_PLAYER, 10 + rnd(20)
++	}
++	if ( cc != CHARA_PLAYER ) {
++		dmgspt cc, 10 + rnd(20)
++		if ( cdata(CDATA_SP, cc) < cdata(CDATA_MAX_SP, cc) / 3 ) {
++			txtef COLOR_SKY_BLUE
++			if ( synccheck(cc, -1) ) {
++				txt lang(name(cc) + "はあまりの激しさに失神した！", name(cc) + " fainted from the intensity!")
++			}
++			cdata(CDATA_CONDITION_DIM, cc) = 100
++			txt lang("疲労し過ぎて失敗した！", "You are too exhausted!")
++			rowactend cc
++			rowactend tc
++			return
++		}
++	}
++	cdata(CDATA_EMO_ICON, cc) = 17 + 100 * 3
++	if ( cdata(CDATA_ACTION_PERIOD, cc) > 0 ) {
++		if ( sexhost == 0 ) {
++			if ( cdata(CDATA_ACTION_PERIOD, cc) \ 5 == 0 ) {
++				if ( synccheck(cc, -1) ) {
++					txtef COLOR_SKY_BLUE
++					if ( jp ) {
++						txt "「きくぅ」", "「もふもふ」", "「くやしい、でも…」", "「はぁはぁ！」", "「ウフフフ」"
++					}
++					if ( en ) {
++						txt cnvtalk("Yes!"), cnvtalk("Ohhh"), "*gasp*", "*rumble*", cnvtalk("come on!")
++					}
++				}
++			}
++		}
++		return
++	}
++	if ( sexhost == 0 ) {
++		rowactend cc
++		return
++	}
++	repeat 2
++		if ( cnt == 0 ) {
++			c = cc
++		}
++		else {
++			c = tc
++		}
++		cdata(CDATA_CONDITION_DRUNK, cc) = 0
++		if ( cnt == 1 ) {
++			if ( rnd(3) == 0 ) {
++				dmgcon c, CONDITION_INSANE, 500
++			}
++			if ( rnd(5) == 0 ) {
++				dmgcon c, CONDITION_PARALYZE, 500
++			}
++			dmgcon c, CONDITION_INSANE, 300
++			healsan c, 10
++			skillexp SKILL_ATTR_CON, c, 250 * 5 + (c >= 57) * 1000
++			skillexp SKILL_ATTR_WIL, c, 250 * 5 + (c >= 57) * 1000
++		}
++		skillexp SKILL_ATTR_CHA, c, 250 * 5 + (c >= 57) * 1000
++	loop
++	sexvalue = sdata(SKILL_ATTR_CHA, cc) * (50 + rnd(50)) + 100
++	if ( cc == CHARA_PLAYER | tc == CHARA_PLAYER ) {
++		gdata(GDATA_FLAG_PROSTITUTION_COUNTER)++
++	}
++	gain_iden tc, cc, 10
++	gain_iden cc, tc, 10
++	if ( synccheck(cc, -1) ) {
++		txtef COLOR_SKY_BLUE
++		if ( jp ) {
++			txt "「よかった" + _yo(3) + "」", "「す、すごい" + _yo(3) + "」", "「も、もうだめ" + _da(3) + "」", "「は、激しかった" + _yo(3) + "」", "「か、完敗" + _da(3) + "」"
++		}
++		if ( en ) {
++			txt "\"You are awesome!", "\"Oh my god....", "\"Okay, okay, you win!", "\"Holy...!"
++		}
++		txtef COLOR_TALK
++		if ( tc == CHARA_PLAYER ) {
++			txt lang("」", "\"")
++		}
++	}
++	rowactend cc
++	rowactend tc
++	return
++
+ *skill_tuin_der_lusten
+ 	if ( cdata(CDATA_ROW_ACT, cc) == ACTION_NONE ) {
+ 		cdata(CDATA_ROW_ACT, cc) = ACTION_TUIN_DER_LUSTEN
+ 		cdata(CDATA_ACTION_PERIOD, cc) = limit(sdata(SKILL_ATTR_SPD, cc) / 10, 10, 50)
+ 		cdata(CDATA_ROW_ACT_TC, cc) = tc
+@@ -4781,23 +4893,16 @@
+ 	}
+ 	if ( cdata(CDATA_ACTION_PERIOD, cc) > 0 ) {
+ 		gdata(GDATA_MIN)++
+ 		return
+ 	}
+-	if ( gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) < 100 ) {
+-		if ( rnd(10000) > rnd(sdata(SKILL_NORMAL_TRAVELING, CHARA_PLAYER) + 1000) ) {
+-			gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
+-		}
+-	}
+ 	if ( gdata(GDATA_WORLD) == AREA_OCEAN ) {
+ 		traveldone = 1
+-		gdata(GDATA_TRAVEL_DISTANCE) += 1
+ 		gdata(GDATA_FLAG_MILES_TRAVELED) += 1
+ 	}
+ 	else {
+ 		traveldone = 1
+-		gdata(GDATA_TRAVEL_DISTANCE) += 4
+ 		gdata(GDATA_FLAG_MILES_TRAVELED) += 4
+ 	}
+ 	if ( gdata(GDATA_FLAG_MILES_TRAVELED) >= 1000000000 ) {
+ 		gdata(GDATA_FLAG_MILES_TRAVELED) = 0
+ 	}
+@@ -7443,10 +7548,13 @@
+ 						if ( gdata(GDATA_RIDER) != 0 ) {
+ 							tc = gdata(GDATA_RIDER)
+ 						}
+ 					}
+ 				}
++				if ( efid == SKILL_SPACT_DEATH_WORD ) {
++					efp += (sdata(SKILL_NORMAL_FAITH, cc) * 11 + 1) / 10
++				}
+ 				calcbuff CALCBUFF_DURATION, p, efp
+ 				addbuff tc, p, efp, dur
+ 				if ( efid == SKILL_SPELL_SLOW ) {
+ 					if ( efstatus >= 1 ) {
+ 						cdata(CDATA_AGE, tc) += rnd(3) + 1
+@@ -8500,11 +8608,11 @@
+ 					if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
+ 						p = 11 - 10
+ 						if ( cdata(CDATA_QUALITY, tc) >= FIX_QUALITY_MIRACLE | encfind(tc, 6 * 10000 + 10 + p) != (-1) ) {
+ 							p = -1
+ 						}
+-						if ( sdata(SKILL_ATTR_CON, tc) < sorg(SKILL_ATTR_PER, tc) / 2 ) {
++						if ( sdata(SKILL_ATTR_CON, tc) < sorg(SKILL_ATTR_CON, tc) / 2 ) {
+ 							p = -1
+ 						}
+ 						if ( p != (-1) ) {
+ 							i = sorg(10 + p, tc) - cdata(STARTING_CDATA_ATTR + p, tc)
+ 							if ( i > 0 ) {
+@@ -12833,26 +12941,20 @@
+ 		}
+ 		txtef COLOR_GREEN
+ 		txt lang(name(cc) + "は鎌で大きく薙ぎ払った！", name(cc) + " swept away with the sickle!")
+ 		if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 7 ) {
+ 			if ( cbit(CHARA_BIT_SANDBAG, tc) != TRUE ) {
+-				if ( rnd(sdata(SKILL_NORMAL_GREATER_EVASION, tc) + 1000) > rnd(2000) ) {
+-					txtef COLOR_YELLOW
+-					txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を弾いた！", name(cc) + " hit the attack with weapon in a hurry!")
+-					snd SOUNDLIST_AMMO
+-					goto *effect_end
++				if ( sdata(SKILL_NORMAL_GREATER_EVASION, tc) > 0 ) {
++					if ( rnd(sdata(SKILL_NORMAL_GREATER_EVASION, tc) + 500) > rnd(sdata(SKILL_NORMAL_GREATER_EVASION, cc) + 500) ) {
++						txtef COLOR_YELLOW
++						txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を弾いた！", name(cc) + " hit the attack with weapon in a hurry!")
++						snd SOUNDLIST_AMMO
++						weap = limit(weap - sdata(SKILL_NORMAL_GREATER_EVASION, tc), 1, 2000)
++					}
+ 				}
+ 			}
+ 		}
+-		if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 7 ) {
+-			if ( cbit(CHARA_BIT_SANDBAG, tc) != TRUE ) {
+-				txtef COLOR_RED
+-				txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を防いだ！", name(cc) + " bluntly prevented the attack with weapon!")
+-				snd SOUNDLIST_AMMO
+-				weap = limit(weap - sdata(SKILL_NORMAL_GREATER_EVASION, tc), 1, 2000)
+-			}
+-		}
+ 		snd SOUNDLIST_BOLT1
+ 		inv_getheader cc
+ 		eqlv = 1
+ 		eqbui = 0
+ 		repeat invrange, invhead
+@@ -12946,26 +13048,20 @@
+ 		txtef COLOR_GREEN
+ 		txt lang(name(cc) + "は目にもとまらぬ速さで" + name(tc) + "を斬りつけた！", name(cc) + " slashed at an unbelievable speed!")
+ 		snd SOUNDLIST_THROW1
+ 		if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 1 | cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 101 | cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 1001 ) {
+ 			if ( cbit(CHARA_BIT_SANDBAG, tc) != TRUE ) {
+-				if ( rnd(sdata(SKILL_NORMAL_GREATER_EVASION, tc) + 1000) > rnd(2000) ) {
+-					txtef COLOR_YELLOW
+-					txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を弾いた！", name(cc) + " hit the attack with weapon in a hurry!")
+-					snd SOUNDLIST_AMMO
+-					goto *effect_end
++				if ( sdata(SKILL_NORMAL_GREATER_EVASION, tc) > 0 ) {
++					if ( rnd(sdata(SKILL_NORMAL_GREATER_EVASION, tc) + 500) > rnd(sdata(SKILL_NORMAL_GREATER_EVASION, cc) + 500) ) {
++						txtef COLOR_YELLOW
++						txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を弾いた！", name(cc) + " hit the attack with weapon in a hurry!")
++						snd SOUNDLIST_AMMO
++						weap = limit(weap - sdata(SKILL_NORMAL_GREATER_EVASION, tc), 1, 2000)
++					}
+ 				}
+ 			}
+ 		}
+-		if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 1 | cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 101 | cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 1001 ) {
+-			if ( cbit(CHARA_BIT_SANDBAG, tc) != TRUE ) {
+-				txtef COLOR_RED
+-				txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を防いだ！", name(cc) + " bluntly prevented the attack with weapon!")
+-				snd SOUNDLIST_AMMO
+-				weap = limit(weap - sdata(SKILL_NORMAL_GREATER_EVASION, tc), 1, 2000)
+-			}
+-		}
+ 		snd SOUNDLIST_PUNISH1
+ 		inv_getheader cc
+ 		eqlv = 1
+ 		eqbui = 0
+ 		repeat invrange, invhead
+@@ -13071,26 +13167,20 @@
+ 		txtef COLOR_GREEN
+ 		txt lang(name(cc) + "は武器を逆手で振り上げると" + name(tc) + "に勢いよく突き刺した！", name(cc) + " swung the weapon upside down and stabbed it vigorously!")
+ 		snd SOUNDLIST_THROW1
+ 		if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 2 ) {
+ 			if ( cbit(CHARA_BIT_SANDBAG, tc) != TRUE ) {
+-				if ( rnd(sdata(SKILL_NORMAL_GREATER_EVASION, tc) + 1000) > rnd(2000) ) {
+-					txtef COLOR_YELLOW
+-					txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を弾いた！", name(cc) + " hit the attack with weapon in a hurry!")
+-					snd SOUNDLIST_AMMO
+-					goto *effect_end
++				if ( sdata(SKILL_NORMAL_GREATER_EVASION, tc) > 0 ) {
++					if ( rnd(sdata(SKILL_NORMAL_GREATER_EVASION, tc) + 500) > rnd(sdata(SKILL_NORMAL_GREATER_EVASION, cc) + 500) ) {
++						txtef COLOR_YELLOW
++						txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を弾いた！", name(cc) + " hit the attack with weapon in a hurry!")
++						snd SOUNDLIST_AMMO
++						weap = limit(weap - sdata(SKILL_NORMAL_GREATER_EVASION, tc), 1, 2000)
++					}
+ 				}
+ 			}
+ 		}
+-		if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 2 ) {
+-			if ( cbit(CHARA_BIT_SANDBAG, tc) != TRUE ) {
+-				txtef COLOR_RED
+-				txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を防いだ！", name(cc) + " bluntly prevented the attack with weapon!")
+-				snd SOUNDLIST_AMMO
+-				weap = limit(weap - sdata(SKILL_NORMAL_GREATER_EVASION, tc), 1, 2000)
+-			}
+-		}
+ 		snd SOUNDLIST_STAB
+ 		inv_getheader cc
+ 		eqlv = 1
+ 		eqbui = 0
+ 		repeat invrange, invhead
+@@ -13185,26 +13275,20 @@
+ 		}
+ 		txtef COLOR_GREEN
+ 		txt lang(name(cc) + "は重さを乗せた斬撃を" + name(tc) + "に叩き込んだ！", name(cc) + " slammed a heavy slash!")
+ 		if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 3 | cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 103 ) {
+ 			if ( cbit(CHARA_BIT_SANDBAG, tc) != TRUE ) {
+-				if ( rnd(sdata(SKILL_NORMAL_GREATER_EVASION, tc) + 1000) > rnd(2000) ) {
+-					txtef COLOR_YELLOW
+-					txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を弾いた！", name(cc) + " hit the attack with weapon in a hurry!")
+-					snd SOUNDLIST_AMMO
+-					goto *effect_end
++				if ( sdata(SKILL_NORMAL_GREATER_EVASION, tc) > 0 ) {
++					if ( rnd(sdata(SKILL_NORMAL_GREATER_EVASION, tc) + 500) > rnd(sdata(SKILL_NORMAL_GREATER_EVASION, cc) + 500) ) {
++						txtef COLOR_YELLOW
++						txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を弾いた！", name(cc) + " hit the attack with weapon in a hurry!")
++						snd SOUNDLIST_AMMO
++						weap = limit(weap - sdata(SKILL_NORMAL_GREATER_EVASION, tc), 1, 2000)
++					}
+ 				}
+ 			}
+ 		}
+-		if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 3 | cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 103 ) {
+-			if ( cbit(CHARA_BIT_SANDBAG, tc) != TRUE ) {
+-				txtef COLOR_RED
+-				txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を防いだ！", name(cc) + " bluntly prevented the attack with weapon!")
+-				snd SOUNDLIST_AMMO
+-				weap = limit(weap - sdata(SKILL_NORMAL_GREATER_EVASION, tc), 1, 2000)
+-			}
+-		}
+ 		snd SOUNDLIST_BOLT1
+ 		inv_getheader cc
+ 		eqlv = 1
+ 		eqbui = 0
+ 		repeat invrange, invhead
+@@ -14334,26 +14418,20 @@
+ 		txtef COLOR_GREEN
+ 		txt lang(name(cc) + "は力任せの豪快な一撃を" + name(tc) + "に叩き込んだ！", name(cc) + " hit a brilliant blow with brute force!")
+ 		snd SOUNDLIST_THROW1
+ 		if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 4 ) {
+ 			if ( cbit(CHARA_BIT_SANDBAG, tc) != TRUE ) {
+-				if ( rnd(sdata(SKILL_NORMAL_GREATER_EVASION, tc) + 1000) > rnd(2000) ) {
+-					txtef COLOR_YELLOW
+-					txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を弾いた！", name(cc) + " hit the attack with weapon in a hurry!")
+-					snd SOUNDLIST_AMMO
+-					goto *effect_end
++				if ( sdata(SKILL_NORMAL_GREATER_EVASION, tc) > 0 ) {
++					if ( rnd(sdata(SKILL_NORMAL_GREATER_EVASION, tc) + 500) > rnd(sdata(SKILL_NORMAL_GREATER_EVASION, cc) + 500) ) {
++						txtef COLOR_YELLOW
++						txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を弾いた！", name(cc) + " hit the attack with weapon in a hurry!")
++						snd SOUNDLIST_AMMO
++						weap = limit(weap - sdata(SKILL_NORMAL_GREATER_EVASION, tc), 1, 2000)
++					}
+ 				}
+ 			}
+ 		}
+-		if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 4 ) {
+-			if ( cbit(CHARA_BIT_SANDBAG, tc) != TRUE ) {
+-				txtef COLOR_RED
+-				txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を防いだ！", name(cc) + " bluntly prevented the attack with weapon!")
+-				snd SOUNDLIST_AMMO
+-				weap = limit(weap - sdata(SKILL_NORMAL_GREATER_EVASION, tc), 1, 2000)
+-			}
+-		}
+ 		snd SOUNDLIST_CRUSH1
+ 		inv_getheader cc
+ 		eqlv = 1
+ 		eqbui = 0
+ 		repeat invrange, invhead
+@@ -14446,26 +14524,20 @@
+ 		}
+ 		txtef COLOR_GREEN
+ 		txt lang(name(cc) + "は一点に狙いを定め" + name(tc) + "を突き刺した！", name(cc) + " aimed at one point and stabbed the enemy!")
+ 		if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 5 | cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 105 ) {
+ 			if ( cbit(CHARA_BIT_SANDBAG, tc) != TRUE ) {
+-				if ( rnd(sdata(SKILL_NORMAL_GREATER_EVASION, tc) + 1000) > rnd(2000) ) {
+-					txtef COLOR_YELLOW
+-					txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を弾いた！", name(cc) + " hit the attack with weapon in a hurry!")
+-					snd SOUNDLIST_AMMO
+-					goto *effect_end
++				if ( sdata(SKILL_NORMAL_GREATER_EVASION, tc) > 0 ) {
++					if ( rnd(sdata(SKILL_NORMAL_GREATER_EVASION, tc) + 500) > rnd(sdata(SKILL_NORMAL_GREATER_EVASION, cc) + 500) ) {
++						txtef COLOR_YELLOW
++						txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を弾いた！", name(cc) + " hit the attack with weapon in a hurry!")
++						snd SOUNDLIST_AMMO
++						weap = limit(weap - sdata(SKILL_NORMAL_GREATER_EVASION, tc), 1, 2000)
++					}
+ 				}
+ 			}
+ 		}
+-		if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 5 | cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 105 ) {
+-			if ( cbit(CHARA_BIT_SANDBAG, tc) != TRUE ) {
+-				txtef COLOR_RED
+-				txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を防いだ！", name(cc) + " bluntly prevented the attack with weapon!")
+-				snd SOUNDLIST_AMMO
+-				weap = limit(weap - sdata(SKILL_NORMAL_GREATER_EVASION, tc), 1, 2000)
+-			}
+-		}
+ 		snd SOUNDLIST_PUNISH1
+ 		inv_getheader cc
+ 		eqlv = 1
+ 		eqbui = 0
+ 		repeat invrange, invhead
+@@ -14566,26 +14638,20 @@
+ 		}
+ 		txtef COLOR_GREEN
+ 		txt lang(name(cc) + "は" + name(tc) + "に怒涛の連続攻撃を仕掛けた！", name(cc) + " made a tremendous continuous attack!")
+ 		if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 6 ) {
+ 			if ( cbit(CHARA_BIT_SANDBAG, tc) != TRUE ) {
+-				if ( rnd(sdata(SKILL_NORMAL_GREATER_EVASION, tc) + 1000) > rnd(2000) ) {
+-					txtef COLOR_YELLOW
+-					txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を弾いた！", name(cc) + " hit the attack with weapon in a hurry!")
+-					snd SOUNDLIST_AMMO
+-					goto *effect_end
++				if ( sdata(SKILL_NORMAL_GREATER_EVASION, tc) > 0 ) {
++					if ( rnd(sdata(SKILL_NORMAL_GREATER_EVASION, tc) + 500) > rnd(sdata(SKILL_NORMAL_GREATER_EVASION, cc) + 500) ) {
++						txtef COLOR_YELLOW
++						txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を弾いた！", name(cc) + " hit the attack with weapon in a hurry!")
++						snd SOUNDLIST_AMMO
++						weap = limit(weap - sdata(SKILL_NORMAL_GREATER_EVASION, tc), 1, 2000)
++					}
+ 				}
+ 			}
+ 		}
+-		if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 6 ) {
+-			if ( cbit(CHARA_BIT_SANDBAG, tc) != TRUE ) {
+-				txtef COLOR_RED
+-				txt lang(name(tc) + "は咄嗟に武器で" + name(cc) + "の攻撃を防いだ！", name(cc) + " bluntly prevented the attack with weapon!")
+-				snd SOUNDLIST_AMMO
+-				weap = limit(weap - sdata(SKILL_NORMAL_GREATER_EVASION, tc), 1, 2000)
+-			}
+-		}
+ 		gdata(GDATA_TEMPORARY_FLAGS2) = 1000
+ 		inv_getheader cc
+ 		eqlv = 1
+ 		eqbui = 0
+ 		repeat invrange, invhead
+@@ -14793,32 +14859,22 @@
+ 		txt lang(name(cc) + "は闘志を極限にまで高め" + name(tc) + "に打ち込んだ！", name(cc) + " attacked with the ultimate fighting spirit!")
+ 		if ( exgauge != 100 ) {
+ 			if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 0 ) {
+ 				if ( cdata(CDATA_SHIELD_STYLE_TYPE, tc) == 0 ) {
+ 					if ( cbit(CHARA_BIT_SANDBAG, tc) != TRUE ) {
+-						if ( rnd(sdata(SKILL_NORMAL_GREATER_EVASION, tc) + 1000) > rnd(2000) ) {
+-							txtef COLOR_YELLOW
+-							txt lang(name(tc) + "は咄嗟に闘気をぶつけ" + name(cc) + "の攻撃を逸らした！", name(cc) + " diverts the attack by hitting fighting spirit!")
+-							snd SOUNDLIST_PUNISH1
+-							goto *effect_end
++						if ( sdata(SKILL_NORMAL_GREATER_EVASION, tc) > 0 ) {
++							if ( rnd(sdata(SKILL_NORMAL_GREATER_EVASION, tc) + 500) > rnd(sdata(SKILL_NORMAL_GREATER_EVASION, cc) + 500) ) {
++								txtef COLOR_YELLOW
++								txt lang(name(tc) + "は咄嗟に闘気をぶつけ" + name(cc) + "の攻撃を逸らした！", name(cc) + " diverts the attack by hitting fighting spirit!")
++								snd SOUNDLIST_PUNISH1
++								weap = limit(weap - sdata(SKILL_NORMAL_GREATER_EVASION, tc), 1, 2000)
++							}
+ 						}
+ 					}
+ 				}
+ 			}
+ 		}
+-		if ( exgauge != 100 ) {
+-			if ( cdata(CDATA_WEAPON_STYLE_TYPE, tc) == 0 ) {
+-				if ( cdata(CDATA_SHIELD_STYLE_TYPE, tc) == 0 ) {
+-					if ( cbit(CHARA_BIT_SANDBAG, tc) != TRUE ) {
+-						txtef COLOR_RED
+-						txt lang(name(tc) + "は咄嗟に闘気をぶつけ" + name(cc) + "の攻撃を受け止めた！", name(cc) + " defended the attack by hitting fighting spirit!")
+-						snd SOUNDLIST_PUNISH1
+-						weap = limit(weap - sdata(SKILL_NORMAL_GREATER_EVASION, tc), 1, 2000)
+-					}
+-				}
+-			}
+-		}
+ 		snd SOUNDLIST_PUNISH1
+ 		animeload 39, tc
+ 		inv_getheader cc
+ 		eqlv = 1
+ 		eqbui = 0
+@@ -19018,10 +19074,50 @@
+ 			}
+ 		loop
+ 		goto *effect_end
+ 		_switch_sw++
+ 	}
++	if ( _switch_val == 870 | _switch_sw ) {
++		_switch_sw = 0
++		txtef COLOR_YELLOW
++		txt lang(name(cc) + "は冥界の瘴気を放った。", name(tc) + " emanated miasma of hell.")
++		animeid = ANIMATION_HEALING_RAIN
++		animode = 10
++		gosub *anime
++		repeat 245
++			if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
++				continue
++			}
++			if ( cc == cnt ) {
++				continue
++			}
++			if ( cc < MAX_CHARA_FOLLOWER ) {
++				if ( cdata(CDATA_RELATION, cnt) != RELATION_ENEMY ) {
++					continue
++				}
++			}
++			if ( cc >= MAX_CHARA_FOLLOWER ) {
++				if ( cdata(CDATA_RELATION_ORG, cnt) == cdata(CDATA_RELATION_ORG, cc) | cdata(CDATA_RELATION, cnt) == cdata(CDATA_RELATION, cc) | (cdata(CDATA_RELATION, cc) >= RELATION_DISLIKE & cdata(CDATA_RELATION, cnt) >= RELATION_DISLIKE) ) {
++					continue
++				}
++			}
++			tc = cnt
++			dx = cdata(CDATA_X, tc)
++			dy = cdata(CDATA_Y, tc)
++			if ( dist(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), dx, dy) > sdataref(SKILL_DATAREF_TG, SKILL_SPACT_CHEER) \ 1000 + 1 ) {
++				continue
++			}
++			if ( fov_los(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), dx, dy) == 0 ) {
++				continue
++			}
++			dmgcon tc, CONDITION_MPOISON, 50 + limit(sdata(SKILL_NORMAL_FAITH, cc) / 5, 1, 200) + limit(sdata(SKILL_ATTR_MAG, cc) / 10, 1, 200)
++			dmgcon tc, CONDITION_POISON, 50 + limit(sdata(SKILL_NORMAL_FAITH, cc) / 5, 1, 200) + limit(sdata(SKILL_ATTR_MAG, cc) / 10, 1, 200)
++			addbuff tc, BUFF_MIASMA_OF_HELL, sdata(SKILL_NORMAL_FAITH, cc) * 2 + sdata(SKILL_ATTR_MAG, cc) / 2, 50
++		loop
++		goto *effect_end
++		_switch_sw++
++	}
+ 	if ( _switch_val == 759 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		txtef COLOR_YELLOW
+ 		txt lang(name(cc) + "は風の刃を放った。", name(tc) + " emanated blades of wind.")
+ 		if ( synccheck(cc, -1) ) {
+@@ -20554,17 +20650,43 @@
+ 			if ( cdata(CDATA_POWER_GAUGE, CHARA_PLAYER) < 50 ) {
+ 				snd SOUNDLIST_FAIL1
+ 				txt lang("パワーゲージが足りない。", "Your power gauge is insufficient.")
+ 				goto *effect_end
+ 			}
++			joker = 0
++			repeat 245
++				if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
++					continue
++				}
++				if ( cdata(CDATA_ALLIED, cnt) != 0 ) {
++					continue
++				}
++				if ( cdata(CDATA_PIC, cnt) == xy2pic(18, 35) ) {
++					joker = 1
++					break
++				}
++			loop
++			if ( joker == 1 ) {
++				snd SOUNDLIST_FAIL1
++				txt lang("1体しかジョーカーになれない。", "Only one can be the Joker.")
++				goto *effect_end
++			}
+ 			allyctrl = 6
+ 			gosub *com_listNpc
+ 			if ( stat != (-1) ) {
+ 				tc = stat
++				cdata(CDATA_POWER_GAUGE, CHARA_PLAYER) -= 50
+ 				animeid = ANIMATION_GENE
+ 				anic = tc
+ 				gosub *anime
++				cdata(CDATA_PIC, tc) = xy2pic(18, 35)
++				cdata(CDATA_HEIGHT, tc) = rnd(10) + 180
++				cdata(CDATA_DIRECTIVE_MODE, tc) = DIRECTIVE_MODE_OFFENSIVE
++				cdata(CDATA_QUALITY, tc) = FIX_QUALITY_MIRACLE
++				txtef COLOR_YELLOW2
++				txt lang(cdatan(CDATAN_NAME, tc) + "は《ヴァリアブルジョーカー》に変化した。ジョーカーは干渉メニューからスートとランクを任意に変化せることができる。この効果を使用した時、ターンは経過しない。", cdatan(CDATAN_NAME, tc) + " transformed into the {Variable Joker}. You can change the suit and rank of the joker at will in the interaction menu. When you use this effect, no turn passes.")
++				cdatan(CDATAN_NAME, tc) = lang("《ヴァリアブルジョーカー》", "{Variable Joker}") + " Lv" + cdata(CDATA_LEVEL, tc)
+ 				txt lang("何もおきない… ", "Nothing happens...")
+ 			}
+ 			raise = 0
+ 			pair = 0
+ 			straight = 0
+@@ -20811,17 +20933,22 @@
+ 				dmghp tc, dmg, cc, SKILL_RESDMG_CONSTITUTION, 1000
+ 			loop
+ 		}
+ 		if ( rtval < 5 ) {
+ 			snd SOUNDLIST_CARD1
++			joker = 0
+ 			repeat 245
+ 				if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
+ 					continue
+ 				}
+ 				if ( cdata(CDATA_ALLIED, cnt) != 0 ) {
+ 					continue
+ 				}
++				if ( cdata(CDATA_PIC, cnt) == xy2pic(18, 35) ) {
++					joker = 1
++					continue
++				}
+ 				if ( cdata(CDATA_ID, cnt) >= CREATURE_ID_SPADE_WARRIOR & cdata(CDATA_ID, cnt) <= CREATURE_ID_HEART_WITCH ) {
+ 					chara_vanquish cnt
+ 				}
+ 			loop
+ 			necrolv = sdata(SKILL_NORMAL_MAGIC_DEVICE, CHARA_PLAYER) + (sdata(SKILL_NORMAL_MEMORIZATION, CHARA_PLAYER) + 10) / 2
+@@ -20891,12 +21018,19 @@
+ 					}
+ 					if ( cdata(CDATA_EVOLUTION_STAGE, rc) > 10 ) {
+ 						cdata(CDATA_PIC, rc) = xy2pic(17, 35)
+ 					}
+ 				}
+-				if ( np == 5 ) {
+-					break
++				if ( joker == 1 ) {
++					if ( np >= 4 ) {
++						break
++					}
++				}
++				if ( joker != 1 ) {
++					if ( np >= 5 ) {
++						break
++					}
+ 				}
+ 			loop
+ 		}
+ 		raise = 0
+ 		pair = 0
+@@ -20904,10 +21038,330 @@
+ 		flash = 0
+ 		high = 0
+ 		goto *effect_end
+ 		_switch_sw++
+ 	}
++	if ( _switch_val == 869 | _switch_sw ) {
++		_switch_sw = 0
++		txtsetclementia 5
++		repeat 5
++			promptl(0, promptmax) = s(cnt), key_select(cnt), "" + promptmax
++			promptmax++
++		loop
++		val = promptx, prompty, 380, 1
++		gosub *prompt_key
++		if ( stat == 0 ) {
++			return 0
++		}
++		if ( rtval == 0 ) {
++			return 0
++		}
++		if ( rtval >= 1 & rtval <= 3 ) {
++			repeat 245
++				if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
++					continue
++				}
++				if ( cc == cnt ) {
++					continue
++				}
++				if ( cdata(CDATA_RELATION, cnt) != RELATION_ALLY ) {
++					continue
++				}
++				if ( cdata(CDATA_CONDITION_BRAINWASH, cnt) > 0 ) {
++					continue
++				}
++				tc = cnt
++				dx = cdata(CDATA_X, tc)
++				dy = cdata(CDATA_Y, tc)
++				if ( dist(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), dx, dy) > sdataref(SKILL_DATAREF_TG, SKILL_SPACT_CHEER) \ 1000 + 1 ) {
++					continue
++				}
++				if ( fov_los(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), dx, dy) == 0 ) {
++					continue
++				}
++				cdata(CDATA_DIRECTIVE_MODE, tc) = DIRECTIVE_MODE_DEFENSIVE
++				txt lang(name(tc) + "は攻撃をやめた…。", name(tc) + " stopped attacking...")
++			loop
++		}
++		if ( rtval == 1 ) {
++			if ( cdata(CDATA_GOLD, CHARA_PLAYER) < 100 ) {
++				snd SOUNDLIST_FAIL1
++				txt lang("こんな所持金ではさすがに無理だ。", "It's simply not possible with this amount of money.")
++				goto *effect_end
++			}
++			kane = limit((cdata(CDATA_GOLD, CHARA_PLAYER) + 1) / 100, 100, 100000)
++			cdata(CDATA_GOLD, CHARA_PLAYER) -= kane
++			snd SOUNDLIST_PAYGOLD1
++			customtalk cc, DBMODE_FLAVOR_CLEMENTIA
++			gosub *convert_word
++			if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
++				if ( jp ) {
++					txt "「カネなら渡すから、許して" + _kure(3) + "！」", "「か、カネが欲しいん" + _dana(3) + "！？」"
++				}
++				else {
++					txt cnvtalk("I'll do anything, please don't kill me....!"), cnvtalk("You can do whatever you want, so please forgive me...")
++				}
++			}
++			repeat 245
++				if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
++					continue
++				}
++				if ( cc == cnt ) {
++					continue
++				}
++				if ( cc < MAX_CHARA_FOLLOWER ) {
++					if ( cdata(CDATA_RELATION, cnt) != RELATION_ENEMY ) {
++						continue
++					}
++				}
++				if ( cc >= MAX_CHARA_FOLLOWER ) {
++					if ( cdata(CDATA_RELATION, cnt) == cdata(CDATA_RELATION, cc) ) {
++						continue
++					}
++				}
++				if ( cbit(CHARA_BIT_HAS_SEPPUKUED, cnt) == TRUE ) {
++					continue
++				}
++				if ( cdata(CDATA_AI_AGGRO, cnt) == 0 ) {
++					continue
++				}
++				tc = cnt
++				dx = cdata(CDATA_X, tc)
++				dy = cdata(CDATA_Y, tc)
++				if ( dist(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), dx, dy) > sdataref(SKILL_DATAREF_TG, SKILL_SPACT_CHEER) \ 1000 + 1 ) {
++					continue
++				}
++				if ( fov_los(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), dx, dy) == 0 ) {
++					continue
++				}
++				aggro = limit(rnd(kane) - rnd(cdata(CDATA_GOLD, cnt) + 1000), 0, 1000)
++				if ( cdata(CDATA_AI_AGGRO, cnt) == 0 ) {
++					continue
++				}
++				if ( aggro > 0 ) {
++					snd SOUNDLIST_ENC
++					cdata(CDATA_EMO_ICON, cnt) = 6 + 100 * 3
++					aggro = aggro / 10 + 1
++				}
++				if ( cdata(CDATA_QUALITY, cnt) >= FIX_QUALITY_MIRACLE ) {
++					aggro = 0
++				}
++				if ( aggro == 0 ) {
++					if ( jp ) {
++						txt "「ちょっとジャンプしてみろよ」", "「絶対もっと持ってる" + _daro(3) + "」"
++					}
++					else {
++						txt cnvtalk("Hey, try jumping!"), cnvtalk("You definitely have more money!")
++					}
++				}
++				cdata(CDATA_AI_AGGRO, cnt) -= aggro
++				cdata(CDATA_TARGET, cnt) = cc
++				if ( cdata(CDATA_AI_AGGRO, cnt) < 0 ) {
++					cbitmod CHARA_BIT_HAS_SEPPUKUED, cnt, TRUE
++					txt lang(name(cnt) + "は攻撃をやめた…。", name(cnt) + " stopped attacking...")
++					snd SOUNDLIST_DING2
++					if ( jp ) {
++						txt "「こりゃ儲けた" + _na(3) + "」", "「" + _kimi(3) + "、もう行っていい" + _yo(3) + "」"
++					}
++					else {
++						txt cnvtalk("It's money, it's money..."), cnvtalk("You can go now!")
++					}
++				}
++			loop
++			goto *effect_end
++		}
++		if ( rtval == 2 ) {
++			snd SOUNDLIST_PRAY1
++			animeload 30, cc
++			customtalk cc, DBMODE_FLAVOR_CLEMENTIA
++			gosub *convert_word
++			if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
++				if ( jp ) {
++					txt "「な、なんでもするから殺さないで" + _kure(3) + "」", "「" + _ore(3) + "の身体は好きにしていいから、見逃して" + _kure(3) + "…」"
++				}
++				else {
++					txt cnvtalk("I'll do anything, please don't kill me....!"), cnvtalk("You can do whatever you want, so please forgive me...")
++				}
++			}
++			repeat 245
++				if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
++					continue
++				}
++				if ( cc == cnt ) {
++					continue
++				}
++				if ( cc < MAX_CHARA_FOLLOWER ) {
++					if ( cdata(CDATA_RELATION, cnt) != RELATION_ENEMY ) {
++						continue
++					}
++				}
++				if ( cc >= MAX_CHARA_FOLLOWER ) {
++					if ( cdata(CDATA_RELATION, cnt) == cdata(CDATA_RELATION, cc) ) {
++						continue
++					}
++				}
++				if ( cbit(CHARA_BIT_HAS_SEPPUKUED, cnt) == TRUE ) {
++					continue
++				}
++				if ( cdata(CDATA_AI_AGGRO, cnt) == 0 ) {
++					continue
++				}
++				tc = cnt
++				dx = cdata(CDATA_X, tc)
++				dy = cdata(CDATA_Y, tc)
++				if ( dist(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), dx, dy) > sdataref(SKILL_DATAREF_TG, SKILL_SPACT_CHEER) \ 1000 + 1 ) {
++					continue
++				}
++				if ( fov_los(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), dx, dy) == 0 ) {
++					continue
++				}
++				aggro = limit(rnd(sdata(SKILL_ATTR_CHA, cc) + 50) - rnd(sdata(SKILL_ATTR_WIL, cnt) + 50), 0, 300)
++				if ( aggro > 0 ) {
++					snd SOUNDLIST_ENC
++					cdata(CDATA_EMO_ICON, cnt) = 6 + 100 * 3
++					aggro = aggro / 10 + 1
++				}
++				if ( cdata(CDATA_QUALITY, cnt) >= FIX_QUALITY_MIRACLE ) {
++					aggro = 0
++				}
++				if ( aggro == 0 ) {
++					if ( jp ) {
++						txt "「興味ない" + _yo(3) + "」", "「キモッ」"
++					}
++					else {
++						txt cnvtalk("I'm not interested..."), cnvtalk("Gross!")
++					}
++				}
++				cdata(CDATA_AI_AGGRO, cnt) -= aggro
++				cdata(CDATA_TARGET, cnt) = cc
++				if ( cdata(CDATA_AI_AGGRO, cnt) < 0 ) {
++					cbitmod CHARA_BIT_HAS_SEPPUKUED, cnt, TRUE
++					cdata(CDATA_ROW_ACT_TC, cnt) = cc
++					cbitmod CHARA_BIT_HAS_CLEMENTIAD, cnt, TRUE
++					txt lang(name(cnt) + "は攻撃をやめた…。", name(cnt) + " stopped attacking...")
++					snd SOUNDLIST_DING2
++					if ( jp ) {
++						txt "「滅茶苦茶にしてやる" + _yo(3) + "」", "「ぐへへ…」"
++					}
++					else {
++						txt cnvtalk("I'll make a mess of you!"), cnvtalk("Guhehe...")
++					}
++				}
++			loop
++			goto *effect_end
++		}
++		if ( rtval == 3 ) {
++			snd SOUNDLIST_BUSH1
++			customtalk cc, DBMODE_FLAVOR_CLEMENTIA
++			gosub *convert_word
++			if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
++				if ( jp ) {
++					txt "「許してクレメンティア」", "「謝る" + _yo(3) + "！" + _gomen(3) + "！」"
++				}
++				else {
++					txt cnvtalk("Forgive me...!"), cnvtalk("I am reflecting on my actions!")
++				}
++			}
++			repeat 245
++				if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
++					continue
++				}
++				if ( cc == cnt ) {
++					continue
++				}
++				if ( cc < MAX_CHARA_FOLLOWER ) {
++					if ( cdata(CDATA_RELATION, cnt) != RELATION_ENEMY ) {
++						continue
++					}
++				}
++				if ( cc >= MAX_CHARA_FOLLOWER ) {
++					if ( cdata(CDATA_RELATION, cnt) == cdata(CDATA_RELATION, cc) ) {
++						continue
++					}
++				}
++				if ( cbit(CHARA_BIT_HAS_SEPPUKUED, cnt) == TRUE ) {
++					continue
++				}
++				if ( cdata(CDATA_AI_AGGRO, cnt) == 0 ) {
++					continue
++				}
++				tc = cnt
++				dx = cdata(CDATA_X, tc)
++				dy = cdata(CDATA_Y, tc)
++				if ( dist(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), dx, dy) > sdataref(SKILL_DATAREF_TG, SKILL_SPACT_CHEER) \ 1000 + 1 ) {
++					continue
++				}
++				if ( fov_los(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), dx, dy) == 0 ) {
++					continue
++				}
++				aggro = limit(rnd(sdata(SKILL_ATTR_WIL, cc) + 50) - rnd(sdata(SKILL_ATTR_WIL, cnt) + 500), 0, 200)
++				if ( aggro > 0 ) {
++					snd SOUNDLIST_ENC
++					cdata(CDATA_EMO_ICON, cnt) = 6 + 100 * 3
++					aggro = aggro / 10 + 1
++				}
++				if ( cdata(CDATA_QUALITY, cnt) >= FIX_QUALITY_MIRACLE ) {
++					aggro = 0
++				}
++				if ( aggro == 0 ) {
++					if ( jp ) {
++						txt "「駄目" + _da(3) + "」", "「焼けた鉄板の上でやれ」"
++					}
++					else {
++						txt cnvtalk("No good..."), cnvtalk("Do it on a hot iron plate!")
++					}
++				}
++				cdata(CDATA_AI_AGGRO, cnt) -= aggro
++				cdata(CDATA_TARGET, cnt) = cc
++				if ( cdata(CDATA_AI_AGGRO, cnt) < 0 ) {
++					cbitmod CHARA_BIT_HAS_SEPPUKUED, cnt, TRUE
++					txt lang(name(cnt) + "は攻撃をやめた…。", name(cnt) + " stopped attacking...")
++					snd SOUNDLIST_DING2
++					if ( jp ) {
++						txt "「見事な土下座" + _da(3) + "…」", "「二度と逆らうなよ」"
++					}
++					else {
++						txt cnvtalk("That was a magnificent dogeza..."), cnvtalk("Don't ever disobey me again!")
++					}
++				}
++			loop
++			goto *effect_end
++		}
++		if ( rtval == 4 ) {
++			if ( cdata(CDATA_TARGET, CHARA_PLAYER) == 0 ) {
++				gosub *findTarget
++				gosub *com_findTarget
++				if ( listmax == 0 ) {
++					txt lang("視界内にターゲットは存在しない。", "You look around and find nothing.")
++					goto *effect_end
++				}
++				tc = list(0, rnd(listmax))
++			}
++			else {
++				tc = cdata(CDATA_TARGET, CHARA_PLAYER)
++			}
++			if ( cdata(CDATA_CONDITION_ANGRY, tc) > 0 ) {
++				txt lang(name(tc) + "は怒り狂っており、奇襲する隙が無い…。", name(tc) + " is furious and there is no opportunity for surprise attack...")
++				goto *effect_end
++			}
++			txt lang(name(cc) + "は土下座するフリをして" + name(tc) + "を奇襲した。", name(cc) + " cut " + name(tc) + " with strings.")
++			modkarma 0, -5
++			animeload 59, tc
++			snd SOUNDLIST_STAB
++			dmghp tc, (sdata(SKILL_ATTR_DEX, cc) / 5 + 5) * ((sdata(SKILL_NORMAL_TACTICS, cc) + 1) / 5 + 5) + rnd(sdata(SKILL_NORMAL_TACTICS, cc) * 2 + 5) + ((limit(cdata(CDATA_LEVEL, cc) - 50, 1, 2000) + limit(cdata(CDATA_LEVEL, cc) - 100, 1, 2000)) * 4 * sqrt(limit(cdata(CDATA_LEVEL, cc), 1, 2000) * 3) + 30 + 1) / 2, cc, SKILL_RESDMG_CRUSH, 1000
++			if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
++				txtef COLOR_BLUE
++				txt lang(name(tc) + "は怒りに体を奮わせた！", name(tc) + " " + is(tc) + " engulfed in fury!")
++				cdata(CDATA_CONDITION_ANGRY, tc) += 10
++				cdata(CDATA_TARGET, tc) = cc
++				cdata(CDATA_AI_AGGRO, cc) += 20
++			}
++			goto *effect_end
++		}
++		goto *effect_end
++		_switch_sw++
++	}
+ 	if ( _switch_val == 743 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		if ( cc == CHARA_PLAYER ) {
+ 			txtsetnecro 6
+ 			repeat 6
+@@ -27329,10 +27783,11 @@
+ 
+ 
+ 
+ 
+ 
++
+ 
+ 
+ 
+ 
+ 
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/screen.hsp ../2.27-borscht/screen.hsp
+--- ../2.26-borscht/screen.hsp	2025-03-17 02:14:36.654620400 +0800
++++ ../2.27-borscht/screen.hsp	2025-05-19 06:35:57.302584200 +0800
+@@ -6119,10 +6119,14 @@
+ 		}
+ 		if ( animode == 9 ) {
+ 			gsel BUFFER_PIC
+ 			picload exedir + "graphic\\anime95.bmp"
+ 		}
++		if ( animode == 10 ) {
++			gsel BUFFER_PIC
++			picload exedir + "graphic\\anime8.bmp"
++		}
+ 		gsel BUFFER_BUF
+ 		gmode 0
+ 		pos 0, 0
+ 		gcopy BUFFER_SCREEN, 0, 0, windoww, windowh
+ 		gmode 2
+@@ -6130,11 +6134,11 @@
+ 		am = 0
+ 		repeat 245
+ 			if ( cdata(CDATA_EXIST, cnt) != CHAR_STATE_ALIVE ) {
+ 				continue
+ 			}
+-			if ( animode == 0 | animode == 2 | animode == 7 | animode == 9 ) {
++			if ( animode == 0 | animode == 2 | animode == 7 | animode == 9 | animode == 10 ) {
+ 				if ( cnt == cc ) {
+ 					continue
+ 				}
+ 				if ( cc < MAX_CHARA_FOLLOWER ) {
+ 					if ( cdata(CDATA_RELATION, cnt) != RELATION_ENEMY ) {
+@@ -6245,10 +6249,13 @@
+ 							snd SOUNDLIST_ATK_MIND
+ 						}
+ 						if ( animode == 9 ) {
+ 							snd SOUNDLIST_ENC
+ 						}
++						if ( animode == 10 ) {
++							snd SOUNDLIST_FIZZLE
++						}
+ 					}
+ 				}
+ 			}
+ 			if ( af == 0 ) {
+ 				break
+@@ -6263,10 +6270,13 @@
+ 				await cfg_animewait + 5
+ 			}
+ 			if ( animode == 9 ) {
+ 				await cfg_animewait + 15
+ 			}
++			if ( animode == 10 ) {
++				await cfg_animewait + 5
++			}
+ 			redraw 1
+ 		loop
+ 		goto *anime_SWEND1
+ 		_switch_sw++
+ 	}
+@@ -7240,10 +7250,13 @@
+ 		goto *anime_SWEND1
+ 		_switch_sw++
+ 	}
+ 	if ( _switch_val == 66 | _switch_sw ) {
+ 		_switch_sw = 0
++		if ( cfg_cutin_select != 0 ) {
++			goto *anime_SWEND1
++		}
+ 		pic = cdata(CDATA_PIC, cc) \ 1000 + cdata(CDATA_CHARA_PIC, cc) * 1000 + refchara(cdata(CDATA_ID, cc), DBSPEC_CHARA_COL) * 10000
+ 		if ( cc == CHARA_PLAYER ) {
+ 			pic = -1
+ 		}
+ 		gsel BUFFER_PIC
+@@ -8073,15 +8086,17 @@
+ 				gosub *screen_snow
+ 			}
+ 			if ( gdata(GDATA_WEATHER) == WEATHER_ETHER ) {
+ 				gosub *screen_ether
+ 			}
+-			if ( waza == 1 ) {
+-				gosub *screen_cutin1
+-			}
+-			if ( waza == (-1) ) {
+-				gosub *screen_cutin2
++			if ( cfg_cutin_select == 0 ) {
++				if ( waza == 1 ) {
++					gosub *screen_cutin1
++				}
++				if ( waza == (-1) ) {
++					gosub *screen_cutin2
++				}
+ 			}
+ 		}
+ 		if ( gdata(GDATA_WORLD) == AREA_OCEAN & gdata(GDATA_AREA) == AREA_WILDERNESS ) {
+ 			gosub *screen_ocean
+ 		}
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.26-borscht/system.hsp ../2.27-borscht/system.hsp
+--- ../2.26-borscht/system.hsp	2025-03-17 02:14:36.667246700 +0800
++++ ../2.27-borscht/system.hsp	2025-05-19 06:35:57.316210700 +0800
+@@ -38,11 +38,11 @@
+ 	}
+ 	gdata(GDATA_TEMPORARY_FLAGS2) = 0
+ 	return
+ 
+ *fixSave
+-	if ( gdata(GDATA_VERSION) != int(double("6.36") * 1000) ) {
++	if ( gdata(GDATA_VERSION) != int(double("6.37") * 1000) ) {
+ 		dialog lang("Ver." + gdata(GDATA_VERSION) + "のセーブデータをアップデートします。", "Updating your save data from Ver." + gdata(GDATA_VERSION) + " now.")
+ 	}
+ 	if ( gdata(GDATA_HEIR_DEED) < 0 ) {
+ 		gdata(GDATA_HEIR_DEED) = 1
+ 	}
+@@ -895,15 +895,22 @@
+ 				cdata(CDATA_SEALED_ABILITY, cnt) = 0
+ 				cbitmod CHARA_BIT_SEALED_ABILITY, cnt, TRUE
+ 			}
+ 		loop
+ 	}
+-	if ( gdata(GDATA_VERSION) != int(double("6.36") * 1000) ) {
++	if ( gdata(GDATA_VERSION) < 6370 ) {
++		gdata(GDATA_TRAVEL_DISTANCE) = 0
++		repeat 245
++			cdata(CDATA_SEALED_MAGIC, cnt) = 0
++			cdata(CDATA_MATERIAL1_COUNTER, cnt) = 0
++		loop
++	}
++	if ( gdata(GDATA_VERSION) != int(double("6.37") * 1000) ) {
+ 		gdata(GDATA_WORLD_RENEW) = TRUE
+ 	}
+ 	del_chara 56
+-	if ( gdata(GDATA_VERSION) > int(double("6.36") * 1000) ) {
++	if ( gdata(GDATA_VERSION) > int(double("6.37") * 1000) ) {
+ 		dialog "invalid version"
+ 		goto *exit_game
+ 	}
+ 	if ( gdata(GDATA_PLAY_TIME) < 0 ) {
+ 		gdata(GDATA_PLAY_TIME) = 0
+@@ -953,11 +960,11 @@
+ 		if ( gdata(GDATA_GAMEMODE_PENALTY) == 1 ) {
+ 			gdata(GDATA_GAMEMODE_PENALTY) = 0
+ 			snd SOUNDLIST_ENC
+ 		}
+ 	}
+-	gdata(GDATA_VERSION) = int(double("6.36") * 1000)
++	gdata(GDATA_VERSION) = int(double("6.37") * 1000)
+ 	cbitmod CHARA_BIT_PCC, CHARA_PLAYER, TRUE
+ 	gdata(GDATA_SPEEDSUM_RESET) = 1
+ 	gosub *initial_recipe
+ 	return
+ 
+@@ -3420,11 +3427,11 @@
+ 		pos x, y
+ 		mesbox inputlog, 600, 0, 5, val(2) * (1 + en)
+ 		pos x + 4, y + 4
+ 		gfini dx - 1, 35
+ 		gfdec 60, 60, 60
+-		aplsel "ElonaPlus 2.26"
++		aplsel "ElonaPlus 2.27"
+ 		if ( stat == 1 ) {
+ 			dialog "Failed to get WINDOW ID", 1
+ 			clrobj 1
+ 			cfg_msg_box = 0
+ 			goto *prompt_word
+@@ -3783,11 +3790,11 @@
+ 
+ *game_debug
+ 	notesel dbm
+ 	buff = ""
+ 	if ( dbm == "" ) {
+-		noteadd "ElonaPlus 2.26" + " v" + "6.36" + " Debug Console    Type \"?\" for help. Hit ESC to exit."
++		noteadd "ElonaPlus 2.27" + " v" + "6.37" + " Debug Console    Type \"?\" for help. Hit ESC to exit."
+ 		noteadd ""
+ 	}
+ 	font lang(cfg_font1, cfg_font2), 14 - en * 2, 0
+ 	objmode 2
+ 	pos 0, 24
+@@ -4136,11 +4143,11 @@
+ 			loop
+ 			noteadd "Done."
+ 			goto *console_write
+ 		}
+ 		if ( instr(buff, 0, "gain_spact") != (-1) ) {
+-			repeat 869 - 600
++			repeat 871 - 600
+ 				spact(cnt + STARTING_SKILL_SPACT - STARTING_SKILL_SPACT) = 1
+ 			loop
+ 			noteadd "Done."
+ 			goto *console_write
+ 		}
+@@ -4194,11 +4201,11 @@
+ 	objprm 1, dbm
+ 	objprm 2, ""
+ 	return
+ 
+ *mutexobj
+-	CreateMutexA 0, 0, "ElonaPlus 2.26"
++	CreateMutexA 0, 0, "ElonaPlus 2.27"
+ 	mutex_handle = stat
+ 	func_4
+ 	if ( stat == 183 ) {
+ 		dialog lang("二重起動のため終了します。", "The program is already running."), 1
+ 		end

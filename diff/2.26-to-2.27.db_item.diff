@@ -1,0 +1,318 @@
+--- ../2.26-borscht/db_item.hsp	2025-03-17 02:14:36.189984400 +0800
++++ ../2.27-borscht/db_item.hsp	2025-05-19 06:35:56.824186700 +0800
+@@ -3,10 +3,76 @@
+ 		goto *db_item_set
+ 	}
+ 	dbmax = 0
+ 	dbsum = 0
+ 	if ( 1 > objlv ) {
++		goto *db_item_DARKNESSBANG
++	}
++	if ( fltselect != 1 ) {
++		goto *db_item_DARKNESSBANG
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_JUNK ) {
++			goto *db_item_DARKNESSBANG
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_DARKNESSBANG
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_SNOW_CRYSTAL), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_DARKNESSBANG
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1307, dbsum
++	dbmax++
++
++*db_item_DARKNESSBANG
++	if ( 1 > objlv ) {
++		goto *db_item_LIGHTNING_DISCHARGER
++	}
++	if ( fltselect != 1 ) {
++		goto *db_item_LIGHTNING_DISCHARGER
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_JUNK ) {
++			goto *db_item_LIGHTNING_DISCHARGER
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_LIGHTNING_DISCHARGER
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_DARKNESSBANG), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_LIGHTNING_DISCHARGER
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1306, dbsum
++	dbmax++
++
++*db_item_LIGHTNING_DISCHARGER
++	if ( 1 > objlv ) {
+ 		goto *db_item_ECHINOBOX
+ 	}
+ 	if ( fltselect != 1 ) {
+ 		goto *db_item_ECHINOBOX
+ 	}
+@@ -43115,10 +43181,132 @@
+ 		dbid = 25
+ 	}
+ 	return
+ 
+ *db_item_set
++	if ( dbid == 1307 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 300
++			inv(INV_ITEM_WEIGHT, ci) = 3000
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_SNOW_CRYSTAL
++			inv(INV_ITEM_PIC, ci) = xy2pic(26, 39)
++			reftype = FILTER_JUNK
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_JUNK
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 64000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 300
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "魔術士が製造したあまりにもでかい雪の結晶。水にやさしい言葉をかけて凍らせると美しい結晶になる、という怪しい学説を検証したらしい。人間に美醜を決められてたまるか、人間の言葉で話しかけてくるな、そもそも勝手に凍らせるな、といった不満によって瞑想と宝石細工の技術に依存した爆発を起こし敵を傷つける。\n#～魔具全典～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "でかすぎる雪の結晶だ。\n#～鑑定報告書：＜廃品＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1306 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 600
++			inv(INV_ITEM_WEIGHT, ci) = 1200
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_DARKNESSBANG
++			inv(INV_ITEM_PIC, ci) = xy2pic(25, 39)
++			reftype = FILTER_JUNK
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_JUNK
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 64000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 600
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "周囲を暗黒で包む不殺兵器。その威力は戦術と射撃の技術に依存するという。文献によると、かつてこの世界には閃光弾というものが溢れていた。しかし突如現れた暗黒弾に敗れ、閃光弾は歴史の闇へと葬り去られたのだとか。\n#～続・明日から使えるあなたの為の武具集～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "暗黒を放つ道具だ。\n#～鑑定報告書：＜用具＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
+ 	if ( dbid == 1305 ) {
+ 		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_VALUE, ci) = 1200
+ 			inv(INV_ITEM_WEIGHT, ci) = 3200
+ 		}
+@@ -43165,11 +43353,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "避雷針から発展した装置。魔力防護によって針自体に落雷のエネルギーを貯めこみ、必要に応じて放電できるようになっている。放電の出力は魔力制御と魔力の限界に依存するらしい。窃盗や破損を恐れて普段は仕舞われているが、雷雨になると魔術士たちが野外に設置し始める。\n#～魔具全典～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "電撃を放つ長い針だ。\n#～鑑定報告書：＜入れ物＞カテゴリ～"
++				description(3) = "電撃を放つ長い針だ。\n#～鑑定報告書：＜器具＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -43226,11 +43414,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "通称、疫の箱。プレゼントに偽装してあるが、狐が相手を化かし殺す際に使う化学兵装。寄生虫を利用して作られており、相手の脳に作用して意識障害をもたらす。その脳波を妖術で周囲の敵に伝播させて二次被害をもたらす。その威力は罠の知識と生化学の技術に依存するという。\n#～もう化かされない！魔物の罠の見抜き方～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "疫が詰め込まれた箱だ。開けないほうがいい。\n#～鑑定報告書：＜入れ物＞カテゴリ～"
++				description(3) = "疫が詰め込まれた箱だ。開けないほうがいい。\n#～鑑定報告書：＜箱＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -129698,10 +129886,14 @@
+ 		return 0
+ 	}
+ 	return -999
+ 
+ *db_setFilterItem
++	filter_item(ITEM_ID_SNOW_CRYSTAL) = ""
++	rffilter_item(ITEM_ID_SNOW_CRYSTAL) = ""
++	filter_item(ITEM_ID_DARKNESSBANG) = ""
++	rffilter_item(ITEM_ID_DARKNESSBANG) = ""
+ 	filter_item(ITEM_ID_LIGHTNING_DISCHARGER) = ""
+ 	rffilter_item(ITEM_ID_LIGHTNING_DISCHARGER) = ""
+ 	filter_item(ITEM_ID_ECHINOBOX) = ""
+ 	rffilter_item(ITEM_ID_ECHINOBOX) = ""
+ 	filter_item(ITEM_ID_HONEGUM) = ""
+@@ -132313,10 +132505,36 @@
+ 	filter_item(ITEM_ID_DUMMY) = ""
+ 	rffilter_item(ITEM_ID_DUMMY) = ""
+ 	return
+ 
+ *db_setItem
++	ilight(ITEM_ID_SNOW_CRYSTAL) = LIGHT_TYPE_CRYSTAL
++	ialphanameref(ITEM_ID_SNOW_CRYSTAL) = ""
++	iorgweight(ITEM_ID_SNOW_CRYSTAL) = 3000
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_SNOW_CRYSTAL) = "雪の大結晶"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_SNOW_CRYSTAL) = "snow crystal"
++		ioriginalnameref2(ITEM_ID_SNOW_CRYSTAL) = ""
++	}
++	ipicref(ITEM_ID_SNOW_CRYSTAL) = xy2pic(26, 39)
++	iknownnameref(ITEM_ID_SNOW_CRYSTAL) = ioriginalnameref(ITEM_ID_SNOW_CRYSTAL)
++	icolref(ITEM_ID_SNOW_CRYSTAL) = COLOR_DEFAULT
++	ilight(ITEM_ID_DARKNESSBANG) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_DARKNESSBANG) = ""
++	iorgweight(ITEM_ID_DARKNESSBANG) = 1200
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_DARKNESSBANG) = "暗黒弾"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_DARKNESSBANG) = "darknessbang"
++		ioriginalnameref2(ITEM_ID_DARKNESSBANG) = ""
++	}
++	ipicref(ITEM_ID_DARKNESSBANG) = xy2pic(25, 39)
++	iknownnameref(ITEM_ID_DARKNESSBANG) = ioriginalnameref(ITEM_ID_DARKNESSBANG)
++	icolref(ITEM_ID_DARKNESSBANG) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_LIGHTNING_DISCHARGER) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_LIGHTNING_DISCHARGER) = ""
+ 	iorgweight(ITEM_ID_LIGHTNING_DISCHARGER) = 3200
+ 	if ( jp ) {
+ 		ioriginalnameref(ITEM_ID_LIGHTNING_DISCHARGER) = "放雷針"
+@@ -151002,11 +151220,11 @@
+ 		ioriginalnameref2(ITEM_ID_DUMMY) = ""
+ 	}
+ 	ipicref(ITEM_ID_DUMMY) = xy2pic(0, 1)
+ 	iknownnameref(ITEM_ID_DUMMY) = ioriginalnameref(ITEM_ID_DUMMY)
+ 	icolref(ITEM_ID_DUMMY) = COLOR_DEFAULT
+-	maxitemid = 1308
++	maxitemid = 1310
+ 	return
+ 	goto *recipe_ref
+ 
+ #deffunc calcweaponfix int calcweaponfix_itemid
+ 	pierce = 0
+@@ -152339,11 +152557,13 @@
+ 		matval = SKILL_NORMAL_JEWELER, 1, 100
+ 		matneed = MATERIAL_PAPER, 2, MATERIAL_MEMORY_FRAGMENT, 1
+ 		return 1
+ 	}
+ 	return -1
+-	goto *label_3632
++	goto *label_3640
++
++
+ 
+ 
+ 
+ 
+ 

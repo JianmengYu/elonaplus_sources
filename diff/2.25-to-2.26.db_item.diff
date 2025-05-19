@@ -1,0 +1,674 @@
+--- ../2.25-borscht/db_item.hsp	2025-01-01 00:14:22.808622400 +0800
++++ ../2.26-borscht/db_item.hsp	2025-03-17 02:14:36.189984400 +0800
+@@ -2,10 +2,142 @@
+ 	if ( dbmode != DBMODE_FIND ) {
+ 		goto *db_item_set
+ 	}
+ 	dbmax = 0
+ 	dbsum = 0
++	if ( 1 > objlv ) {
++		goto *db_item_ECHINOBOX
++	}
++	if ( fltselect != 1 ) {
++		goto *db_item_ECHINOBOX
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_JUNK ) {
++			goto *db_item_ECHINOBOX
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_ECHINOBOX
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_LIGHTNING_DISCHARGER), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_ECHINOBOX
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1305, dbsum
++	dbmax++
++
++*db_item_ECHINOBOX
++	if ( 1 > objlv ) {
++		goto *db_item_HONEGUM
++	}
++	if ( fltselect != 1 ) {
++		goto *db_item_HONEGUM
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_JUNK ) {
++			goto *db_item_HONEGUM
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_HONEGUM
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_ECHINOBOX), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_HONEGUM
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1304, dbsum
++	dbmax++
++
++*db_item_HONEGUM
++	if ( 50 > objlv ) {
++		goto *db_item_KONMOU_HAPPA
++	}
++	if ( fltselect != 3 ) {
++		goto *db_item_KONMOU_HAPPA
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_WEAPON ) {
++			goto *db_item_KONMOU_HAPPA
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_WEAPON_LARGE_AXE ) {
++			goto *db_item_KONMOU_HAPPA
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_HONEGUM), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_KONMOU_HAPPA
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 50) * 10) + 1
++	dblist(0, dbmax) = 1303, dbsum
++	dbmax++
++
++*db_item_KONMOU_HAPPA
++	if ( 50 > objlv ) {
++		goto *db_item_HIDEN_MASHI
++	}
++	if ( fltselect != 3 ) {
++		goto *db_item_HIDEN_MASHI
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_RANGE ) {
++			goto *db_item_HIDEN_MASHI
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_RANGE_ROCK_THROW ) {
++			goto *db_item_HIDEN_MASHI
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_KONMOU_HAPPA), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_HIDEN_MASHI
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 50) * 10) + 1
++	dblist(0, dbmax) = 1302, dbsum
++	dbmax++
++
++*db_item_HIDEN_MASHI
+ 	if ( 40 > objlv ) {
+ 		goto *db_item_TRAINING_TICKET
+ 	}
+ 	if ( fltselect != 3 ) {
+ 		goto *db_item_TRAINING_TICKET
+@@ -42983,10 +43115,273 @@
+ 		dbid = 25
+ 	}
+ 	return
+ 
+ *db_item_set
++	if ( dbid == 1305 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 1200
++			inv(INV_ITEM_WEIGHT, ci) = 3200
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_LIGHTNING_DISCHARGER
++			inv(INV_ITEM_PIC, ci) = xy2pic(27, 38)
++			reftype = FILTER_JUNK
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_JUNK
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 64000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 1200
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "避雷針から発展した装置。魔力防護によって針自体に落雷のエネルギーを貯めこみ、必要に応じて放電できるようになっている。放電の出力は魔力制御と魔力の限界に依存するらしい。窃盗や破損を恐れて普段は仕舞われているが、雷雨になると魔術士たちが野外に設置し始める。\n#～魔具全典～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "電撃を放つ長い針だ。\n#～鑑定報告書：＜入れ物＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1304 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 999
++			inv(INV_ITEM_WEIGHT, ci) = 990
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_ECHINOBOX
++			inv(INV_ITEM_PIC, ci) = xy2pic(5, 29)
++			reftype = FILTER_JUNK
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_JUNK
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 64000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 999
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "通称、疫の箱。プレゼントに偽装してあるが、狐が相手を化かし殺す際に使う化学兵装。寄生虫を利用して作られており、相手の脳に作用して意識障害をもたらす。その脳波を妖術で周囲の敵に伝播させて二次被害をもたらす。その威力は罠の知識と生化学の技術に依存するという。\n#～もう化かされない！魔物の罠の見抜き方～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "疫が詰め込まれた箱だ。開けないほうがいい。\n#～鑑定報告書：＜入れ物＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1303 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_DICE1, ci) = 1
++			inv(INV_ITEM_DICE2, ci) = 45
++			inv(INV_ITEM_ATTACK, ci) = 21
++			inv(INV_ITEM_DAMAGE, ci) = 10
++			inv(INV_ITEM_MATERIAL, ci) = ITEM_MATERIAL_RAW
++			inv(INV_ITEM_VALUE, ci) = 50000
++			inv(INV_ITEM_WEIGHT, ci) = 11000
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_SKILL_REF, ci) = SKILL_WEAPON_AXE
++			inv(INV_ITEM_ID, ci) = ITEM_ID_HONEGUM
++			inv(INV_ITEM_PIC, ci) = xy2pic(26, 38)
++			reftype = FILTER_WEAPON
++			reftypeminor = FILTER_WEAPON_LARGE_AXE
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = ENCHANT_ELEMENTAL_DMG * EXT_ENCHANTMENT + SKILL_RES_MAGIC, 400, ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_MAGIC, 300, ENCHANT_SKILL * EXT_ENCHANTMENT + SKILL_NORMAL_COOKING, 600, 58, 200, 39, 300, 48, 100, 0
++			ibitmod ITEM_BIT_PRECIOUS, ci, TRUE
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 500
++			fixlv = FIX_QUALITY_UNIQUE
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_WEAPON
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 10000
++			}
++			if ( dbspec == 9 ) {
++				return 10010
++			}
++			if ( dbspec == 20 ) {
++				return 50000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 50
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "骨を模して作られた矛。ボーン製ではない。噛み噛みすることでストレスを解消したり、おやつとして食べることができる。武器としては戦斧のような使い方になる。\n#～イルヴァ幻想辞典～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "骨っぽい戦斧だ。\n#～鑑定報告書：＜秘宝＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1302 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_DICE1, ci) = 1
++			inv(INV_ITEM_DICE2, ci) = 6
++			inv(INV_ITEM_ATTACK, ci) = 19
++			inv(INV_ITEM_DAMAGE, ci) = 3
++			inv(INV_ITEM_MATERIAL, ci) = ITEM_MATERIAL_GOLD
++			inv(INV_ITEM_VALUE, ci) = 50000
++			inv(INV_ITEM_WEIGHT, ci) = 50
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_SKILL_REF, ci) = SKILL_WEAPON_THROWING
++			inv(INV_ITEM_ID, ci) = ITEM_ID_KONMOU_HAPPA
++			inv(INV_ITEM_PIC, ci) = xy2pic(25, 38)
++			reftype = FILTER_RANGE
++			reftypeminor = FILTER_RANGE_ROCK_THROW
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = ENCHANT_PROC * EXT_ENCHANTMENT + ENCHANT_PROC_RAGING_ROAR, 300, ENCHANT_PROC * EXT_ENCHANTMENT + ENCHANT_PROC_CHAOS_BALL, 150, ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_MIND, 500, ENCHANT_SKILL * EXT_ENCHANTMENT + SKILL_NORMAL_CONTROL_MAGIC, 700, ENCHANT_ATTRIBUTE * EXT_ENCHANTMENT + SKILL_ATTR_DEX, 500, 25, 100, 0
++			ibitmod ITEM_BIT_PRECIOUS, ci, TRUE
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 500
++			fixlv = FIX_QUALITY_UNIQUE
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_RANGE
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 24000
++			}
++			if ( dbspec == 9 ) {
++				return 24030
++			}
++			if ( dbspec == 20 ) {
++				return 50000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 50
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "金毛九尾が体毛を変化させて作った金色の葉っぱ。特殊な妖気が込められており、爆発する。対になる銀色の葉っぱを揃えて祠に行くと森の守り神が出現する、という伝説が残っている。\n#～イルヴァ幻想辞典～"
++				description(1) = "「おぬしにハッパをかけてやろうぞ…ドカーン！」\n#～金毛九尾の言葉～"
++				description(2) = ""
++				description(3) = "爆発する葉っぱだ。\n#～鑑定報告書：＜秘宝＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
+ 	if ( dbid == 1301 ) {
+ 		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_DICE1, ci) = 1
+ 			inv(INV_ITEM_DICE2, ci) = 30
+ 			inv(INV_ITEM_DAMAGE, ci) = 15
+@@ -43045,11 +43440,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "謎の古めかしい紙。秘伝の魔術と特殊繊維が編み込まれており、投擲暗器として使える程度の強度を持つ。しかし真の能力は別にあり、魔法紙を操る古の魔術の習得者だけがそれを解放できるとされている。\n#～イルヴァ幻想辞典～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "何度でも使用することができる。投擲用武器にもなる。\n#～鑑定報告書：＜武器＞カテゴリ～"
++				description(3) = "何度でも使用することができる。投擲用武器にもなる。\n#～鑑定報告書：＜秘宝＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -45796,11 +46191,11 @@
+ 			inv(INV_ITEM_VALUE, ci) = 10000
+ 			inv(INV_ITEM_WEIGHT, ci) = 100
+ 		}
+ 		if ( dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_ID, ci) = ITEM_ID_MASTER_OF_DIAMOND
+-			inv(INV_ITEM_PIC, ci) = xy2pic(6, 36)
++			inv(INV_ITEM_PIC, ci) = xy2pic(5, 36)
+ 			reftype = FILTER_ITEM_TOOL
+ 			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
+ 			inv(INV_ITEM_NUM, ci) = 1
+ 			fixeditemenc = 0
+ 			inv(INV_ITEM_EFFECT, ci) = EFFECT_MASTER_OF
+@@ -45842,11 +46237,11 @@
+ 			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+-				description(0) = "（未実装）特殊な魔力が込められたカード。使用することで対応したカードの精霊を召喚する。カードの精霊は条件を満たすことでランクアップし、能力や姿名前が変化する。カードの精霊はフィールド上に合計５体までしか存在できず、同一種の精霊は１体しか存在できない。プレイヤーがフィールドを離れた場合、この効果で召喚された精霊を全て除外する。\n#～イルヴァ幻想辞典～"
++				description(0) = "特殊な魔力が込められたカード。プレイヤーのMPを最大値の１０％消費して発動する。①マップ上に仲間ではないカード精霊が５体の場合、アイテムのスートに対応する全てのカード精霊のランクを１つ上げ、攻撃態勢にする。ただし他のカード精霊とスートとランクの両方が一致した場合はランクを元に戻す。ダメージを与えたカード精霊は防御態勢になる。②マップ上に仲間ではないカード精霊が５体未満の場合、ランダムなランク・スートのカード精霊を５体、魔道具と暗記スキル依存のレベルで防御態勢で召喚する。プレイヤーがマップを離れた時、仲間ではないカード精霊は全て除外される。\n#～イルヴァ幻想辞典～"
+ 				description(1) = ""
+ 				description(2) = ""
+ 				description(3) = "精霊を召喚する道具だ。何度でも使用することができる。\n#～鑑定報告書：＜器具＞カテゴリ～"
+ 			}
+ 			else {
+@@ -45863,11 +46258,11 @@
+ 			inv(INV_ITEM_VALUE, ci) = 10000
+ 			inv(INV_ITEM_WEIGHT, ci) = 100
+ 		}
+ 		if ( dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_ID, ci) = ITEM_ID_MASTER_OF_HEART
+-			inv(INV_ITEM_PIC, ci) = xy2pic(5, 36)
++			inv(INV_ITEM_PIC, ci) = xy2pic(6, 36)
+ 			reftype = FILTER_ITEM_TOOL
+ 			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
+ 			inv(INV_ITEM_NUM, ci) = 1
+ 			fixeditemenc = 0
+ 			inv(INV_ITEM_EFFECT, ci) = EFFECT_MASTER_OF
+@@ -45909,11 +46304,11 @@
+ 			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+-				description(0) = "（未実装）特殊な魔力が込められたカード。使用することで対応したカードの精霊を召喚する。カードの精霊は条件を満たすことでランクアップし、能力や姿名前が変化する。カードの精霊はフィールド上に合計５体までしか存在できず、同一種の精霊は１体しか存在できない。プレイヤーがフィールドを離れた場合、この効果で召喚された精霊を全て除外する。\n#～イルヴァ幻想辞典～"
++				description(0) = "特殊な魔力が込められたカード。プレイヤーのMPを最大値の１０％消費して発動する。①マップ上に仲間ではないカード精霊が５体の場合、アイテムのスートに対応する全てのカード精霊のランクを１つ上げ、攻撃態勢にする。ただし他のカード精霊とスートとランクの両方が一致した場合はランクを元に戻す。ダメージを与えたカード精霊は防御態勢になる。②マップ上に仲間ではないカード精霊が５体未満の場合、ランダムなランク・スートのカード精霊を５体、魔道具と暗記スキル依存のレベルで防御態勢で召喚する。プレイヤーがマップを離れた時、仲間ではないカード精霊は全て除外される。\n#～イルヴァ幻想辞典～"
+ 				description(1) = ""
+ 				description(2) = ""
+ 				description(3) = "精霊を召喚する道具だ。何度でも使用することができる。\n#～鑑定報告書：＜器具＞カテゴリ～"
+ 			}
+ 			else {
+@@ -45976,11 +46371,11 @@
+ 			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+-				description(0) = "（未実装）特殊な魔力が込められたカード。使用することで対応したカードの精霊を召喚する。カードの精霊は条件を満たすことでランクアップし、能力や姿名前が変化する。カードの精霊はフィールド上に合計５体までしか存在できず、同一種の精霊は１体しか存在できない。プレイヤーがフィールドを離れた場合、この効果で召喚された精霊を全て除外する。\n#～イルヴァ幻想辞典～"
++				description(0) = "特殊な魔力が込められたカード。プレイヤーのMPを最大値の１０％消費して発動する。①マップ上に仲間ではないカード精霊が５体の場合、アイテムのスートに対応する全てのカード精霊のランクを１つ上げ、攻撃態勢にする。ただし他のカード精霊とスートとランクの両方が一致した場合はランクを元に戻す。ダメージを与えたカード精霊は防御態勢になる。②マップ上に仲間ではないカード精霊が５体未満の場合、ランダムなランク・スートのカード精霊を５体、魔道具と暗記スキル依存のレベルで防御態勢で召喚する。プレイヤーがマップを離れた時、仲間ではないカード精霊は全て除外される。\n#～イルヴァ幻想辞典～"
+ 				description(1) = ""
+ 				description(2) = ""
+ 				description(3) = "精霊を召喚する道具だ。何度でも使用することができる。\n#～鑑定報告書：＜器具＞カテゴリ～"
+ 			}
+ 			else {
+@@ -46043,11 +46438,11 @@
+ 			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+-				description(0) = "（未実装）特殊な魔力が込められたカード。使用することで対応したカードの精霊を召喚する。カードの精霊は条件を満たすことでランクアップし、能力や姿名前が変化する。カードの精霊はフィールド上に合計５体までしか存在できず、同一種の精霊は１体しか存在できない。プレイヤーがフィールドを離れた場合、この効果で召喚された精霊を全て除外する。\n#～イルヴァ幻想辞典～"
++				description(0) = "特殊な魔力が込められたカード。プレイヤーのMPを最大値の１０％消費して発動する。①マップ上に仲間ではないカード精霊が５体の場合、アイテムのスートに対応する全てのカード精霊のランクを１つ上げ、攻撃態勢にする。ただし他のカード精霊とスートとランクの両方が一致した場合はランクを元に戻す。ダメージを与えたカード精霊は防御態勢になる。②マップ上に仲間ではないカード精霊が５体未満の場合、ランダムなランク・スートのカード精霊を５体、魔道具と暗記スキル依存のレベルで防御態勢で召喚する。プレイヤーがマップを離れた時、仲間ではないカード精霊は全て除外される。\n#～イルヴァ幻想辞典～"
+ 				description(1) = ""
+ 				description(2) = ""
+ 				description(3) = "精霊を召喚する道具だ。何度でも使用することができる。\n#～鑑定報告書：＜器具＞カテゴリ～"
+ 			}
+ 			else {
+@@ -129303,10 +129698,18 @@
+ 		return 0
+ 	}
+ 	return -999
+ 
+ *db_setFilterItem
++	filter_item(ITEM_ID_LIGHTNING_DISCHARGER) = ""
++	rffilter_item(ITEM_ID_LIGHTNING_DISCHARGER) = ""
++	filter_item(ITEM_ID_ECHINOBOX) = ""
++	rffilter_item(ITEM_ID_ECHINOBOX) = ""
++	filter_item(ITEM_ID_HONEGUM) = ""
++	rffilter_item(ITEM_ID_HONEGUM) = ""
++	filter_item(ITEM_ID_KONMOU_HAPPA) = ""
++	rffilter_item(ITEM_ID_KONMOU_HAPPA) = ""
+ 	filter_item(ITEM_ID_HIDEN_MASHI) = ""
+ 	rffilter_item(ITEM_ID_HIDEN_MASHI) = ""
+ 	filter_item(ITEM_ID_TRAINING_TICKET) = "/noshop/"
+ 	rffilter_item(ITEM_ID_TRAINING_TICKET) = ""
+ 	filter_item(ITEM_ID_POTION_PLUG) = ""
+@@ -131910,10 +132313,72 @@
+ 	filter_item(ITEM_ID_DUMMY) = ""
+ 	rffilter_item(ITEM_ID_DUMMY) = ""
+ 	return
+ 
+ *db_setItem
++	ilight(ITEM_ID_LIGHTNING_DISCHARGER) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_LIGHTNING_DISCHARGER) = ""
++	iorgweight(ITEM_ID_LIGHTNING_DISCHARGER) = 3200
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_LIGHTNING_DISCHARGER) = "放雷針"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_LIGHTNING_DISCHARGER) = "lightning discharger"
++		ioriginalnameref2(ITEM_ID_LIGHTNING_DISCHARGER) = ""
++	}
++	ipicref(ITEM_ID_LIGHTNING_DISCHARGER) = xy2pic(27, 38)
++	iknownnameref(ITEM_ID_LIGHTNING_DISCHARGER) = ioriginalnameref(ITEM_ID_LIGHTNING_DISCHARGER)
++	icolref(ITEM_ID_LIGHTNING_DISCHARGER) = COLOR_DEFAULT
++	ilight(ITEM_ID_ECHINOBOX) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_ECHINOBOX) = ""
++	iorgweight(ITEM_ID_ECHINOBOX) = 990
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_ECHINOBOX) = "エキノボックス"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_ECHINOBOX) = "echinobox"
++		ioriginalnameref2(ITEM_ID_ECHINOBOX) = ""
++	}
++	ipicref(ITEM_ID_ECHINOBOX) = xy2pic(5, 29)
++	iknownnameref(ITEM_ID_ECHINOBOX) = ioriginalnameref(ITEM_ID_ECHINOBOX)
++	icolref(ITEM_ID_ECHINOBOX) = COLOR_YELLOW2
++	ilight(ITEM_ID_HONEGUM) = LIGHT_TYPE_ITEM
++	ialphanameref(ITEM_ID_HONEGUM) = ""
++	iorgweight(ITEM_ID_HONEGUM) = 11000
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_HONEGUM) = "《骨噛矛》"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_HONEGUM) = "<Honegum>"
++		ioriginalnameref2(ITEM_ID_HONEGUM) = ""
++	}
++	ipicref(ITEM_ID_HONEGUM) = xy2pic(26, 38)
++	if ( jp ) {
++		iknownnameref(ITEM_ID_HONEGUM) = "鋭利な骨"
++	}
++	else {
++		iknownnameref(ITEM_ID_HONEGUM) = "sharp bone"
++	}
++	icolref(ITEM_ID_HONEGUM) = COLOR_DEFAULT
++	ilight(ITEM_ID_KONMOU_HAPPA) = LIGHT_TYPE_ITEM
++	ialphanameref(ITEM_ID_KONMOU_HAPPA) = ""
++	iorgweight(ITEM_ID_KONMOU_HAPPA) = 50
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_KONMOU_HAPPA) = "《金毛発破》"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_KONMOU_HAPPA) = "<Konmou Happa>"
++		ioriginalnameref2(ITEM_ID_KONMOU_HAPPA) = ""
++	}
++	ipicref(ITEM_ID_KONMOU_HAPPA) = xy2pic(25, 38)
++	if ( jp ) {
++		iknownnameref(ITEM_ID_KONMOU_HAPPA) = "金色の葉っぱ"
++	}
++	else {
++		iknownnameref(ITEM_ID_KONMOU_HAPPA) = "golden leave"
++	}
++	icolref(ITEM_ID_KONMOU_HAPPA) = COLOR_YELLOW2
+ 	ilight(ITEM_ID_HIDEN_MASHI) = LIGHT_TYPE_ITEM
+ 	ialphanameref(ITEM_ID_HIDEN_MASHI) = ""
+ 	iorgweight(ITEM_ID_HIDEN_MASHI) = 600
+ 	if ( jp ) {
+ 		ioriginalnameref(ITEM_ID_HIDEN_MASHI) = "《秘伝魔紙》"
+@@ -132505,11 +132970,11 @@
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_MASTER_OF_DIAMOND) = "master of diamond"
+ 		ioriginalnameref2(ITEM_ID_MASTER_OF_DIAMOND) = ""
+ 	}
+-	ipicref(ITEM_ID_MASTER_OF_DIAMOND) = xy2pic(6, 36)
++	ipicref(ITEM_ID_MASTER_OF_DIAMOND) = xy2pic(5, 36)
+ 	iknownnameref(ITEM_ID_MASTER_OF_DIAMOND) = ioriginalnameref(ITEM_ID_MASTER_OF_DIAMOND)
+ 	icolref(ITEM_ID_MASTER_OF_DIAMOND) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_MASTER_OF_HEART) = LIGHT_TYPE_ITEM
+ 	ialphanameref(ITEM_ID_MASTER_OF_HEART) = ""
+ 	iorgweight(ITEM_ID_MASTER_OF_HEART) = 100
+@@ -132518,11 +132983,11 @@
+ 	}
+ 	else {
+ 		ioriginalnameref(ITEM_ID_MASTER_OF_HEART) = "master of heart"
+ 		ioriginalnameref2(ITEM_ID_MASTER_OF_HEART) = ""
+ 	}
+-	ipicref(ITEM_ID_MASTER_OF_HEART) = xy2pic(5, 36)
++	ipicref(ITEM_ID_MASTER_OF_HEART) = xy2pic(6, 36)
+ 	iknownnameref(ITEM_ID_MASTER_OF_HEART) = ioriginalnameref(ITEM_ID_MASTER_OF_HEART)
+ 	icolref(ITEM_ID_MASTER_OF_HEART) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_MASTER_OF_CLUB) = LIGHT_TYPE_ITEM
+ 	ialphanameref(ITEM_ID_MASTER_OF_CLUB) = ""
+ 	iorgweight(ITEM_ID_MASTER_OF_CLUB) = 100
+@@ -150537,17 +151002,27 @@
+ 		ioriginalnameref2(ITEM_ID_DUMMY) = ""
+ 	}
+ 	ipicref(ITEM_ID_DUMMY) = xy2pic(0, 1)
+ 	iknownnameref(ITEM_ID_DUMMY) = ioriginalnameref(ITEM_ID_DUMMY)
+ 	icolref(ITEM_ID_DUMMY) = COLOR_DEFAULT
+-	maxitemid = 1304
++	maxitemid = 1308
+ 	return
+ 	goto *recipe_ref
+ 
+ #deffunc calcweaponfix int calcweaponfix_itemid
+ 	pierce = 0
+ 	rangemap = 100, 20, 20, 20, 20, 20, 20, 20, 20, 20
++	if ( calcweaponfix_itemid == ITEM_ID_HONEGUM ) {
++		pierce = 0
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
++		return 1
++	}
++	if ( calcweaponfix_itemid == ITEM_ID_KONMOU_HAPPA ) {
++		pierce = 0
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
++		return 1
++	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_HIDEN_MASHI ) {
+ 		pierce = 15
+ 		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+@@ -151864,11 +152339,15 @@
+ 		matval = SKILL_NORMAL_JEWELER, 1, 100
+ 		matneed = MATERIAL_PAPER, 2, MATERIAL_MEMORY_FRAGMENT, 1
+ 		return 1
+ 	}
+ 	return -1
+-	goto *label_3621
++	goto *label_3632
++
++
++
++
+ 
+ 
+ 
+ 
+ 
