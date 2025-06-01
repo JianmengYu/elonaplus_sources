@@ -1,0 +1,3277 @@
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27-borscht/adv.hsp ../2.27R-borscht/adv.hsp
+--- ../2.27-borscht/adv.hsp	2025-05-19 06:35:55.625157100 +0800
++++ ../2.27R-borscht/adv.hsp	2025-06-02 04:42:46.246914600 +0800
+@@ -177,11 +177,11 @@
+ 	cbitmod CHARA_BIT_LIVESTOCK, rc, FALSE
+ 	cbitmod CHARA_BIT_LABOR_CAMP, rc, FALSE
+ 	cbitmod CHARA_BIT_HAS_CLEMENTIAD, rc, FALSE
+ 	cbitmod CHARA_BIT_BEGGING_FOR_LIFE, rc, FALSE
+ 	cdata(CDATA_ALLIED, rc) = 100
+-	cdata(CDATA_MATERIAL1_COUNTER, rc) = 0
++	cdata(CDATA_CHARACTER_TIER, rc) = CHARACTER_TIER_NONE
+ 	if ( cdata(CDATA_JOIN_DATE_MONTH, rc) == 0 ) {
+ 		cdata(CDATA_JOIN_DATE_MONTH, rc) = gdata(GDATA_MONTH)
+ 	}
+ 	if ( cdata(CDATA_JOIN_DATE_DAY, rc) == 0 ) {
+ 		cdata(CDATA_JOIN_DATE_DAY, rc) = gdata(GDATA_DAY)
+@@ -225,15 +225,15 @@
+ 	cdata(CDATA_EXIST, rc) = CHAR_STATE_ADV
+ 	cdata(CDATA_PIC, rc) = rnd(33) * 2 + 1 + cdata(CDATA_SEX, rc)
+ 	cdatan(CDATAN_NAME, rc) = randomname()
+ 	cdatan(CDATAN_AKA, rc) = random_title()
+ 	cdata(CDATA_ROLE, rc) = ROLE_ADVENTURER
+-	cdata(CDATA_BACKGROUND_PART_A1, rc) = rnd(32) + 1
+-	cdata(CDATA_BACKGROUND_PART_A2, rc) = rnd(28) + 1
+-	cdata(CDATA_BACKGROUND_PART_B1, rc) = rnd(13) + 1
+-	cdata(CDATA_BACKGROUND_PART_B2, rc) = rnd(41) + 1
+-	cdata(CDATA_BACKGROUND_PART_B3, rc) = rnd(36) + 1
++	cdata(CDATA_BACKGROUND_PART_A1, rc) = rnd(45) + 1
++	cdata(CDATA_BACKGROUND_PART_A2, rc) = rnd(45) + 1
++	cdata(CDATA_BACKGROUND_PART_B1, rc) = rnd(45) + 1
++	cdata(CDATA_BACKGROUND_PART_B2, rc) = rnd(45) + 1
++	cdata(CDATA_BACKGROUND_PART_B3, rc) = rnd(45) + 1
+ 	p = rnd(450)
+ 	if ( adata(ADATA_ID, p) == AREA_NONE | adata(ADATA_ID, p) == AREA_HOME | adata(ADATA_TYPE, p) == MAP_TYPE_QUEST ) {
+ 		p = 4
+ 	}
+ 	if ( adata(ADATA_PARENT, p) == AREA_SOUTH_TYRIS ) {
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27-borscht/ai.hsp ../2.27R-borscht/ai.hsp
+--- ../2.27-borscht/ai.hsp	2025-05-19 06:35:55.640765300 +0800
++++ ../2.27R-borscht/ai.hsp	2025-06-02 04:42:46.264044600 +0800
+@@ -499,11 +499,11 @@
+ 				}
+ 			}
+ 			if ( cdata(CDATA_RELATION, cdata(CDATA_TARGET, cc)) > RELATION_ENEMY ) {
+ 				cdata(CDATA_TARGET, cc) = 0
+ 			}
+-			if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, cc) != TRUE ) {
++			if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, cc) == TRUE ) {
+ 				cdata(CDATA_TARGET, cc) = 0
+ 			}
+ 			if ( cdata(CDATA_TARGET, cc) == 0 ) {
+ 				if ( cdata(CDATA_TARGET, CHARA_PLAYER) != 0 & cdata(CDATA_RELATION, cdata(CDATA_TARGET, CHARA_PLAYER)) <= RELATION_ENEMY ) {
+ 					if ( cdata(CDATA_EXIST, cdata(CDATA_TARGET, CHARA_PLAYER)) == CHAR_STATE_ALIVE ) {
+@@ -670,11 +670,11 @@
+ 									if ( cdata(CDATA_AI_AGGRO, cc) <= 0 ) {
+ 										customtalk cc, DBMODE_FLAVOR_PASSIVE
+ 										gosub *convert_word
+ 									}
+ 									if ( findbuff(cc, BUFF_RUN_WILDLY) == (-1) ) {
+-										if ( cdata(CDATA_AI_AGGRO, cc) > 0 ) {
++										if ( cdata(CDATA_AI_AGGRO, cc) != 0 ) {
+ 											customtalk cc, DBMODE_FLAVOR_ANGERED
+ 											gosub *convert_word
+ 										}
+ 									}
+ 								}
+@@ -825,16 +825,19 @@
+ 		}
+ 	}
+ 	cdata(CDATA_AI_ITEM, cc) = 0
+ 
+ *ai_item_combat
+-	if ( cdata(CDATA_MATERIAL1_COUNTER, cc) <= 0 ) {
++	if ( cdata(CDATA_ALLIED, cc) == 0 ) {
+ 		goto *ai_action
+ 	}
+-	ci = cdata(CDATA_MATERIAL1_COUNTER, cc)
++	if ( cdata(CDATA_CHARACTER_TIER, cc) <= CHARACTER_TIER_NONE ) {
++		goto *ai_action
++	}
++	ci = cdata(CDATA_CHARACTER_TIER, cc)
+ 	if ( inv(INV_ITEM_NUM, ci) == 0 | (refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ITEM_ROD & inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) <= 0) ) {
+-		cdata(CDATA_MATERIAL1_COUNTER, cc) = 0
++		cdata(CDATA_CHARACTER_TIER, cc) = CHARACTER_TIER_NONE
+ 		goto *ai_action
+ 	}
+ 	a = refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE)
+ 	if ( a == 56000 ) {
+ 		goto *act_zap
+@@ -843,11 +846,11 @@
+ 		goto *act_use
+ 	}
+ 	if ( inv(INV_ITEM_ID, ci) == ITEM_ID_CF_POTIOMAN | inv(INV_ITEM_ID, ci) == ITEM_ID_CRUSH_POTIOMAN | inv(INV_ITEM_ID, ci) == ITEM_ID_BATTLE_POTIOMAN | inv(INV_ITEM_ID, ci) == ITEM_ID_SUPER_POTIOMAN ) {
+ 		goto *act_use
+ 	}
+-	cdata(CDATA_MATERIAL1_COUNTER, cc) = 0
++	cdata(CDATA_CHARACTER_TIER, cc) = CHARACTER_TIER_NONE
+ 
+ *ai_action
+ 	retreat = 0
+ 	if ( cdata(CDATA_AI_AGGRO, cc) > 0 | cdata(CDATA_RELATION, cc) == RELATION_ALLY ) {
+ 		distance = dist(cdata(CDATA_X, tc), cdata(CDATA_Y, tc), cdata(CDATA_X, cc), cdata(CDATA_Y, cc))
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27-borscht/chara.hsp ../2.27R-borscht/chara.hsp
+--- ../2.27-borscht/chara.hsp	2025-05-19 06:35:55.685165200 +0800
++++ ../2.27R-borscht/chara.hsp	2025-06-02 04:42:46.308625000 +0800
+@@ -3238,15 +3238,15 @@
+ 		goto *cm_aka
+ 	}
+ 	goto *cm_aka_WHILE1
+ 
+ *cm_aka_WEND1
+-	ohanasi1 = rnd(32) + 1
+-	ohanasi2 = rnd(28) + 1
+-	ohanasi3 = rnd(13) + 1
+-	ohanasi4 = rnd(41) + 1
+-	ohanasi5 = rnd(36) + 1
++	ohanasi1 = rnd(45) + 1
++	ohanasi2 = rnd(45) + 1
++	ohanasi3 = rnd(45) + 1
++	ohanasi4 = rnd(45) + 1
++	ohanasi5 = rnd(45) + 1
+ 
+ *cm_past
+ 	redraw 0
+ 	cs = 0
+ 	cs_bk = -1
+@@ -3349,28 +3349,28 @@
+ 		}
+ 	loop
+ 	if ( p != (-1) ) {
+ 		if ( p == 4 ) {
+ 			snd SOUNDLIST_DICE
+-			ohanasi3 = rnd(13) + 1
+-			ohanasi4 = rnd(41) + 1
+-			ohanasi5 = rnd(36) + 1
++			ohanasi3 = rnd(45) + 1
++			ohanasi4 = rnd(45) + 1
++			ohanasi5 = rnd(45) + 1
+ 			goto *cm_past
+ 		}
+ 		if ( p == 3 ) {
+ 			snd SOUNDLIST_DICE
+-			ohanasi1 = rnd(32) + 1
+-			ohanasi2 = rnd(28) + 1
++			ohanasi1 = rnd(45) + 1
++			ohanasi2 = rnd(45) + 1
+ 			goto *cm_past
+ 		}
+ 		if ( p == 2 ) {
+ 			snd SOUNDLIST_DICE
+-			ohanasi1 = rnd(32) + 1
+-			ohanasi2 = rnd(28) + 1
+-			ohanasi3 = rnd(13) + 1
+-			ohanasi4 = rnd(41) + 1
+-			ohanasi5 = rnd(36) + 1
++			ohanasi1 = rnd(45) + 1
++			ohanasi2 = rnd(45) + 1
++			ohanasi3 = rnd(45) + 1
++			ohanasi4 = rnd(45) + 1
++			ohanasi5 = rnd(45) + 1
+ 			goto *cm_past
+ 		}
+ 		if ( p == 1 ) {
+ 			snd SOUNDLIST_DICE
+ 			ohanasi1 = 0
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27-borscht/chara_func.hsp ../2.27R-borscht/chara_func.hsp
+--- ../2.27-borscht/chara_func.hsp	2025-05-19 06:35:55.718616400 +0800
++++ ../2.27R-borscht/chara_func.hsp	2025-06-02 04:42:46.342230000 +0800
+@@ -6344,11 +6344,11 @@
+ 						}
+ 					}
+ 				}
+ 			}
+ 		}
+-		rowact_check locvar_dmghp_tcia
++		rowact_check dmghp_charid
+ 		if ( cdata(CDATA_HP, dmghp_charid) < cdata(CDATA_MAX_HP, dmghp_charid) / 5 ) {
+ 			if ( dmghp_charid != CHARA_PLAYER ) {
+ 				if ( cdata(CDATA_CONDITION_FEAR, dmghp_charid) == 0 ) {
+ 					if ( cbit(CHARA_BIT_RES_FEAR, dmghp_charid) == FALSE ) {
+ 						if ( cdata(CDATA_QUALITY, dmghp_charid) >= FIX_QUALITY_MIRACLE ) {
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27-borscht/chat.hsp ../2.27R-borscht/chat.hsp
+--- ../2.27-borscht/chat.hsp	2025-05-19 06:35:55.925309300 +0800
++++ ../2.27R-borscht/chat.hsp	2025-06-02 04:42:46.548816800 +0800
+@@ -19201,31 +19201,31 @@
+ 		goto *chat_unique_SWEND1
+ *chat_unique_mizuki
+ 		ohanasi6 = 100
+ 		if ( ohanasi1 != 0 ) {
+ 			list(0, listmax) = 5
+-			listn(0, listmax) = lang("前半再抽選", "Here, take these medals.")
++			listn(0, listmax) = lang("前半再抽選", "First half redraw")
+ 			listmax++
+ 		}
+ 		if ( ohanasi1 != 0 ) {
+ 			list(0, listmax) = 4
+-			listn(0, listmax) = lang("後半再抽選", "Here, take these medals.")
++			listn(0, listmax) = lang("後半再抽選", "Second half redraw")
+ 			listmax++
+ 		}
+ 		list(0, listmax) = 3
+-		listn(0, listmax) = lang("全て再抽選", "Here, take these medals.")
++		listn(0, listmax) = lang("全て再抽選", "All redraws")
+ 		listmax++
+ 		list(0, listmax) = 2
+-		listn(0, listmax) = lang("上記に沿って話す", "Here, take these medals.")
++		listn(0, listmax) = lang("上記に沿って話す", "Talk along the lines above")
+ 		listmax++
+ 		list(0, listmax) = 1
+-		listn(0, listmax) = lang("内緒にする", "I think not.")
++		listn(0, listmax) = lang("内緒にする", "Keep it a secret.")
+ 		listmax++
+ 		list(0, listmax) = 0
+-		listn(0, listmax) = lang("話すのをやめる", "I think not.")
++		listn(0, listmax) = lang("話すのをやめる", "I'll stop talking.")
+ 		listmax++
+-		buff = lang("（内容決定）", "Upgrade your cart? It's not something I get excited about but if you can give me " + calccargoupdatecost() + " small medals, I'll think about it.")
++		buff = lang("（内容決定）", " <Determining the content> ")
+ 		gosub *chat_select
+ 		ohanasi6 = 0
+ 		if ( chatval == 2 ) {
+ 			listmax = 0
+ 			buff = lang("そうじゃったのか…改めて思うが、人それぞれに物語があるんじゃな…。", "Is that so... Thinking about it, each person does have their own story...")
+@@ -19263,26 +19263,26 @@
+ 			cdata(CDATA_BACKGROUND_PART_B2, c) = ohanasi4
+ 			cdata(CDATA_BACKGROUND_PART_B3, c) = ohanasi5
+ 			goto *chat_end
+ 		}
+ 		if ( chatval == 5 ) {
+-			ohanasi1 = rnd(32) + 1
+-			ohanasi2 = rnd(28) + 1
++			ohanasi1 = rnd(45) + 1
++			ohanasi2 = rnd(45) + 1
+ 			goto *chat_unique_mizuki
+ 		}
+ 		if ( chatval == 4 ) {
+-			ohanasi3 = rnd(13) + 1
+-			ohanasi4 = rnd(41) + 1
+-			ohanasi5 = rnd(36) + 1
++			ohanasi3 = rnd(45) + 1
++			ohanasi4 = rnd(45) + 1
++			ohanasi5 = rnd(45) + 1
+ 			goto *chat_unique_mizuki
+ 		}
+ 		if ( chatval == 3 ) {
+-			ohanasi1 = rnd(32) + 1
+-			ohanasi2 = rnd(28) + 1
+-			ohanasi3 = rnd(13) + 1
+-			ohanasi4 = rnd(41) + 1
+-			ohanasi5 = rnd(36) + 1
++			ohanasi1 = rnd(45) + 1
++			ohanasi2 = rnd(45) + 1
++			ohanasi3 = rnd(45) + 1
++			ohanasi4 = rnd(45) + 1
++			ohanasi5 = rnd(45) + 1
+ 			goto *chat_unique_mizuki
+ 		}
+ 		ohanasi1 = 0
+ 		ohanasi2 = 0
+ 		ohanasi3 = 0
+@@ -39508,12 +39508,12 @@
+ 			gdata(GDATA_SLEEP) = 0
+ 			cdata(CDATA_HP, CHARA_PLAYER) = gdata(GDATA_FLAG_COLLECTED_WISHES)
+ 			if ( cdata(CDATA_MP, CHARA_PLAYER) < gdata(GDATA_FLAG_COLLECTED_WISHES) ) {
+ 				cdata(CDATA_MP, CHARA_PLAYER) = gdata(GDATA_FLAG_COLLECTED_WISHES)
+ 			}
+-			if ( cdata(CDATA_SP, CHARA_PLAYER) < gdata(GDATA_FLAG_COLLECTED_WISHES) ) {
+-				cdata(CDATA_SP, CHARA_PLAYER) = gdata(GDATA_FLAG_COLLECTED_WISHES)
++			if ( cdata(CDATA_SP, CHARA_PLAYER) < gdata(GDATA_FLAG_COLLECTED_WISHES) + 50 ) {
++				cdata(CDATA_SP, CHARA_PLAYER) = gdata(GDATA_FLAG_COLLECTED_WISHES) + 50
+ 			}
+ 			cdata(CDATA_POWER_GAUGE, CHARA_PLAYER) = 200
+ 			if ( cdata(CDATA_HUNGER, CHARA_PLAYER) < 9000 ) {
+ 				cdata(CDATA_HUNGER, CHARA_PLAYER) = 9000
+ 			}
+@@ -55805,30 +55805,60 @@
+ 	if ( ohanasi6 == 100 ) {
+ 		font lang(cfg_font1, cfg_font2), 13 - en * 2, 0
+ 		color 20, 10, 5
+ 		if ( ohanasi2 >= 0 ) {
+ 			gosub *setHistory1
++			if ( c != 0 ) {
++				if ( en ) {
++					cnv_str s, "your", his(c, 1)
++					cnv_str s, "you", him(c, 1)
++				}
++			}
+ 			pos wx + 200, wy + 70
+ 			mes s
+ 		}
+ 		if ( ohanasi2 != 0 ) {
+ 			gosub *setHistory2
++			if ( c != 0 ) {
++				if ( en ) {
++					cnv_str s, "your", his(c, 1)
++					cnv_str s, "you", him(c, 1)
++				}
++			}
+ 			pos wx + 200, wy + 70 + 1 * 15
+ 			mes s
+ 		}
+ 		if ( ohanasi3 != 0 ) {
+ 			gosub *setHistory3
++			if ( c != 0 ) {
++				if ( en ) {
++					cnv_str s, "your", his(c, 1)
++					cnv_str s, "you", him(c, 1)
++				}
++			}
+ 			pos wx + 200, wy + 70 + 2 * 15
+ 			mes s
+ 		}
+ 		if ( ohanasi4 != 0 ) {
+ 			gosub *setHistory4
++			if ( c != 0 ) {
++				if ( en ) {
++					cnv_str s, "your", his(c, 1)
++					cnv_str s, "you", him(c, 1)
++				}
++			}
+ 			pos wx + 200, wy + 70 + 3 * 15
+ 			mes s
+ 		}
+ 		if ( ohanasi5 != 0 ) {
+ 			gosub *setHistory5
++			if ( c != 0 ) {
++				if ( en ) {
++					cnv_str s, "your", his(c, 1)
++					cnv_str s, "you", him(c, 1)
++				}
++			}
+ 			pos wx + 200, wy + 70 + 4 * 15
+ 			mes s
+ 		}
+ 	}
+ 	font lang(cfg_font1, cfg_font2), 12 + sizefix - en * 2, 1
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27-borscht/command.hsp ../2.27R-borscht/command.hsp
+--- ../2.27-borscht/command.hsp	2025-05-19 06:35:55.983089500 +0800
++++ ../2.27R-borscht/command.hsp	2025-06-02 04:42:46.607022800 +0800
+@@ -5987,11 +5987,11 @@
+ 		if ( cdatan(CDATAN_RACE, tc) == "catsister" ) {
+ 			cdata(CDATA_DV_FIX, tc) = 200
+ 		}
+ 	}
+ 	if ( 0 ) {
+-		txt lang(name(tc) + "のDV補正は" + cdata(CDATA_DV_FIX, tc) + "でPV補正は" + cdata(CDATA_PV_FIX, tc) + "。そして使用中のアイテムは" + itemname(cdata(CDATA_AI_ITEM, tc)) + "、" + itemname(cdata(CDATA_MATERIAL1_COUNTER, tc)) + "。関係は" + cdata(CDATA_RELATION, tc) + "、orgは" + cdata(CDATA_RELATION_ORG, tc) + "。", name(cc) + " fainted after failing to suffer from severe pain.")
++		txt lang(name(tc) + "のDV補正は" + cdata(CDATA_DV_FIX, tc) + "でPV補正は" + cdata(CDATA_PV_FIX, tc) + "。そして使用中のアイテムは" + itemname(cdata(CDATA_AI_ITEM, tc)) + "、" + itemname(cdata(CDATA_CHARACTER_TIER, tc)) + "。関係は" + cdata(CDATA_RELATION, tc) + "、orgは" + cdata(CDATA_RELATION_ORG, tc) + "。", name(cc) + " fainted after failing to suffer from severe pain.")
+ 	}
+ 	if ( cdata(CDATA_ID, tc) == CREATURE_ID_POPPY_THE_LITTLE_DOG ) {
+ 		if ( gdata(GDATA_FLAG_SUB_DOG) >= 1000 ) {
+ 			if ( cbit(CHARA_BIT_GUARD_TEMP, tc) ) {
+ 				cbitmod CHARA_BIT_GUARD_TEMP, tc, FALSE
+@@ -8379,11 +8379,11 @@
+ 	}
+ 	if ( ohanasi1 == 7 ) {
+ 		s = lang("平穏な日々を過ごしていた。", "You spent your days in peace.")
+ 	}
+ 	if ( ohanasi1 == 8 ) {
+-		s = lang("子供の頃から虐待されていた。", "You've been abused since childhood.")
++		s = lang("子供の頃から虐待されていた。", "You are been abused since childhood.")
+ 	}
+ 	if ( ohanasi1 == 9 ) {
+ 		s = lang("自分の出生を隠している。", "Your birth was a secret.")
+ 	}
+ 	if ( ohanasi1 == 10 ) {
+@@ -8453,10 +8453,49 @@
+ 		s = lang("落ちぶれた武士の家系。", "Your family line is that of famous mages.")
+ 	}
+ 	if ( ohanasi1 == 32 ) {
+ 		s = lang("跡継ぎとして厳しく育てられた。", "You were brought up as the family heir.")
+ 	}
++	if ( ohanasi1 == 33 ) {
++		s = lang("心に傷を負った元軍人。", "You are a traumatized ex-soldier.")
++	}
++	if ( ohanasi1 == 34 ) {
++		s = lang("悪の組織の手先。", "You are a minion of an evil organization.")
++	}
++	if ( ohanasi1 == 35 ) {
++		s = lang("ある人物のクローン。", "You are a clone of a certain person.")
++	}
++	if ( ohanasi1 == 36 ) {
++		s = lang("禁断の技術で生みだされた兵器。", "You are a weapon created with forbidden technology.")
++	}
++	if ( ohanasi1 == 37 ) {
++		s = lang("幼い頃、遺跡で発見・保護された。", "You were discovered and rescued in ruins as a child.")
++	}
++	if ( ohanasi1 == 38 ) {
++		s = lang("おぞましい因習のある村で育った。", "You grew up in a village with horrific customs.")
++	}
++	if ( ohanasi1 == 39 ) {
++		s = lang("バケモノと人の間に生まれた。", "You were born between a monster and a human.")
++	}
++	if ( ohanasi1 == 40 ) {
++		s = lang("浮気で生まれた隠し子。", "You are the illegitimate child of an affair.")
++	}
++	if ( ohanasi1 == 41 ) {
++		s = lang("実は親の仇に育てられていた。", "You were actually being raised by your parents' enemy.")
++	}
++	if ( ohanasi1 == 42 ) {
++		s = lang("秘めた力が原因で隔離されていた。", "You were isolated because of your hidden powers.")
++	}
++	if ( ohanasi1 == 43 ) {
++		s = lang("故郷を大災害で失った。", "You lost your hometown in a great disaster.")
++	}
++	if ( ohanasi1 == 44 ) {
++		s = lang("故郷を魔物に滅ぼされた。", "Your hometown was destroyed by monsters.")
++	}
++	if ( ohanasi1 == 45 ) {
++		s = lang("故郷を悪い冒険者に滅ぼされた。", "Your hometown was destroyed by an evil adventurer.")
++	}
+ 	return s
+ 
+ *setHistory2
+ 	if ( ohanasi2 == 1 ) {
+ 		s = lang("自分を見つめ直すため旅に出る。", "You embark to find yourself.")
+@@ -8543,10 +8582,58 @@
+ 		s = lang("古代文明の謎を追い求め旅に出る。", "You embark to pursue the mysteries of an ancient civilization.")
+ 	}
+ 	if ( ohanasi2 == 29 ) {
+ 		s = lang("なぜ旅しているのかも思い出せない。", "You can not remember the reason of your travel.")
+ 	}
++	if ( ohanasi2 == 30 ) {
++		s = lang("命を落とし気づくと船に乗っていた。", "You lose your life and suddenly find yourself on a ship.")
++	}
++	if ( ohanasi2 == 31 ) {
++		s = lang("知人に勧められて冒険者になった。", "You become an adventurer at the recommendation of an acquaintance.")
++	}
++	if ( ohanasi2 == 32 ) {
++		s = lang("呪いを解く方法を探して旅に出る。", "You set out on a journey to find a way to lift a curse.")
++	}
++	if ( ohanasi2 == 33 ) {
++		s = lang("復讐相手を追って旅に出る。", "You set out on a journey to track down the person you want revenge on.")
++	}
++	if ( ohanasi2 == 34 ) {
++		s = lang("情報収集のため各地の調査を開始。", "You are investigating various locations to gather information.")
++	}
++	if ( ohanasi2 == 35 ) {
++		s = lang("人生失敗し冒険に出るしかなかった。", "You have failed in life and have no choice but to set out on an adventure.")
++	}
++	if ( ohanasi2 == 36 ) {
++		s = lang("謎のゲートを通ってやってきた。", "You have come through a mysterious gate.")
++	}
++	if ( ohanasi2 == 37 ) {
++		s = lang("時空の歪みに呑まれ迷い込んだ。", "You got swallowed up and lost in a distortion in space-time.")
++	}
++	if ( ohanasi2 == 38 ) {
++		s = lang("最悪な未来を変えるために旅に出る。", "You set out on a journey to change a terrible future.")
++	}
++	if ( ohanasi2 == 39 ) {
++		s = lang("まだ見ぬ結婚相手を求めて旅に出る。", "You set out on a journey in search of a marriage partner you have yet to meet.")
++	}
++	if ( ohanasi2 == 40 ) {
++		s = lang("広い世界を見たくて各地を観光中。", "You are traveling around the world, wanting to see a wider world.")
++	}
++	if ( ohanasi2 == 41 ) {
++		s = lang("役立たずと判断されて追放された。", "You were deemed useless and banished.")
++	}
++	if ( ohanasi2 == 42 ) {
++		s = lang("不労所得を夢見て冒険に出る。", "You set out on an adventure, dreaming of passive income.")
++	}
++	if ( ohanasi2 == 43 ) {
++		s = lang("一族再興のため旅に出る。", "You set out on a journey to restore your clan.")
++	}
++	if ( ohanasi2 == 44 ) {
++		s = lang("一発逆転を夢見て冒険者になる。", "You became an adventurer, dreaming of a sudden turnaround.")
++	}
++	if ( ohanasi2 == 45 ) {
++		s = lang("自分をみせびらかすため旅に出る。", "You went on a journey to show yourself off.")
++	}
+ 	return s
+ 
+ *setHistory3
+ 	if ( ohanasi3 == 1 ) {
+ 		s = lang("温厚で慈悲深いが、", "Although gentle and merciful,")
+@@ -8568,27 +8655,123 @@
+ 	}
+ 	if ( ohanasi3 == 7 ) {
+ 		s = lang("冷静沈着で判断力もあるが、", "Although you are calm and collected,")
+ 	}
+ 	if ( ohanasi3 == 8 ) {
+-		s = lang("陽気でムードメーカーだが、", "Although you're the life of the party,")
++		s = lang("陽気でムードメーカーだが、", "Although you are the life of the party,")
+ 	}
+ 	if ( ohanasi3 == 9 ) {
+ 		s = lang("基本的に平凡だが、", "Although you are ordinary,")
+ 	}
+ 	if ( ohanasi3 == 10 ) {
+-		s = lang("強い向上心と挑戦心を持つが、", "Though you are bold and daring,")
++		s = lang("強い向上心と挑戦心を持つが、", "Although have a strong desire to improve,")
+ 	}
+ 	if ( ohanasi3 == 11 ) {
+-		s = lang("どんな時もあきらめないが、", "Although you never give up, ")
++		s = lang("どんな時もあきらめないが、", "Although you never give up,")
+ 	}
+ 	if ( ohanasi3 == 12 ) {
+-		s = lang("真面目で自分に厳しいが、", "Although you're always strict with yourself,")
++		s = lang("真面目で自分に厳しいが、", "Although you are always strict with yourself,")
+ 	}
+ 	if ( ohanasi3 == 13 ) {
+ 		s = lang("根がまっすぐで熱い性格だが、", "Although you are passionate at heart,")
+ 	}
++	if ( ohanasi3 == 14 ) {
++		s = lang("とにかく行動力が高いが、", "Although highly proactive,")
++	}
++	if ( ohanasi3 == 15 ) {
++		s = lang("大胆で度胸もあるが、", "Although bold and courageous,")
++	}
++	if ( ohanasi3 == 16 ) {
++		s = lang("誰かをサポートするのが得意だが、", "Although good at supporting others,")
++	}
++	if ( ohanasi3 == 17 ) {
++		s = lang("苦難に耐え抜く根性があるが、", "Although endure hardships,")
++	}
++	if ( ohanasi3 == 18 ) {
++		s = lang("好奇心旺盛で人懐っこいが、", "Although curious and sociable,")
++	}
++	if ( ohanasi3 == 19 ) {
++		s = lang("バツグンの記憶力を持つが、", "Although have an excellent memory,")
++	}
++	if ( ohanasi3 == 20 ) {
++		s = lang("異なる環境にもすぐ適応できるが、", "Although adapt to different environments,")
++	}
++	if ( ohanasi3 == 21 ) {
++		s = lang("人並外れた発想力を持つが、", "Although have extraordinary imagination,")
++	}
++	if ( ohanasi3 == 22 ) {
++		s = lang("困った人を放っておかないが、", "Although doesn't leave people in trouble alone,")
++	}
++	if ( ohanasi3 == 23 ) {
++		s = lang("ピンチの時でも堂々としているが、", "Although remains confident even in times of crisis,")
++	}
++	if ( ohanasi3 == 24 ) {
++		s = lang("誰よりも責任感が強いが、", "Although have a strong sense of responsibility,")
++	}
++	if ( ohanasi3 == 25 ) {
++		s = lang("皆をまとめあげる統率力があるが、", "Although have the ability to bring everyone together,")
++	}
++	if ( ohanasi3 == 26 ) {
++		s = lang("人徳があり皆から慕われるが、", "Although have virtue and is loved by everyone,")
++	}
++	if ( ohanasi3 == 27 ) {
++		s = lang("義理堅く人情味があるが、", "Although have strong loyalty and kindness,")
++	}
++	if ( ohanasi3 == 28 ) {
++		s = lang("状況に応じて柔軟に思考できるが、", "Although think flexibly according to the situation,")
++	}
++	if ( ohanasi3 == 29 ) {
++		s = lang("いつも飄々としているが、", "Although always easygoing,")
++	}
++	if ( ohanasi3 == 30 ) {
++		s = lang("強い覚悟を秘めているが、", "Although have a strong resolve,")
++	}
++	if ( ohanasi3 == 31 ) {
++		s = lang("裏表がなくさっぱりしているが、", "Although have no ulterior motives and are straightforward,")
++	}
++	if ( ohanasi3 == 32 ) {
++		s = lang("情報収集が得意だが、", "Although good at gathering information,")
++	}
++	if ( ohanasi3 == 33 ) {
++		s = lang("嫌な事があっても落ち込まないが、", "Although doesn't get depressed even when unpleasant things happen,")
++	}
++	if ( ohanasi3 == 34 ) {
++		s = lang("他人の長所を見抜くのが得意だが、", "Although good at identifying the good points of others,")
++	}
++	if ( ohanasi3 == 35 ) {
++		s = lang("強いリーダーシップを持つが、", "Although possesses strong leadership,")
++	}
++	if ( ohanasi3 == 36 ) {
++		s = lang("細かいことは気にしないが、", "Although doesn't sweat the small stuff,")
++	}
++	if ( ohanasi3 == 37 ) {
++		s = lang("なんだかんだで面倒見が良いが、", "Although good at taking care of others,")
++	}
++	if ( ohanasi3 == 38 ) {
++		s = lang("格下相手にも決して油断しないが、", "Although never let guard down,")
++	}
++	if ( ohanasi3 == 39 ) {
++		s = lang("窮地の時こそ真価を発揮するが、", "Although show true worth in times of crisis,")
++	}
++	if ( ohanasi3 == 40 ) {
++		s = lang("優しくて包容力があるが、", "Although kind and tolerant,")
++	}
++	if ( ohanasi3 == 41 ) {
++		s = lang("細かな気づかいが得意だが、", "Although good at paying attention to small details,")
++	}
++	if ( ohanasi3 == 42 ) {
++		s = lang("誰かのためになら頑張れるが、", "Although work hard for others,")
++	}
++	if ( ohanasi3 == 43 ) {
++		s = lang("大局を見る力があるが、", "Although have the ability to see the big picture,")
++	}
++	if ( ohanasi3 == 44 ) {
++		s = lang("他者との絆を大事にしているが、", "Although value bonds with others,")
++	}
++	if ( ohanasi3 == 45 ) {
++		s = lang("誰にも頼らない強さを持つが、", "Although have the strength to not rely on anyone,")
++	}
+ 	return s
+ 
+ *setHistory4
+ 	if ( ohanasi4 == 1 ) {
+ 		s = lang("熱中すると周りが見えなくなる。", "enthusiasm drains from those around you.")
+@@ -8613,11 +8796,11 @@
+ 	}
+ 	if ( ohanasi4 == 8 ) {
+ 		s = lang("刃物を持つと性格が変わる。", "Your personality changes when you hold a knife.")
+ 	}
+ 	if ( ohanasi4 == 9 ) {
+-		s = lang("大きなトラウマを持つ。", "You've experienced major trauma. ")
++		s = lang("大きなトラウマを持つ。", "You have experienced major trauma. ")
+ 	}
+ 	if ( ohanasi4 == 10 ) {
+ 		s = lang("他人を信用していない。", "You do not trust others.")
+ 	}
+ 	if ( ohanasi4 == 11 ) {
+@@ -8631,11 +8814,11 @@
+ 	}
+ 	if ( ohanasi4 == 14 ) {
+ 		s = lang("金銭感覚がおかしい。", "Your grasp of money is poor.")
+ 	}
+ 	if ( ohanasi4 == 15 ) {
+-		s = lang("人付き合いが苦手。", "You're not good at socializing.")
++		s = lang("人付き合いが苦手。", "You are not good at socializing.")
+ 	}
+ 	if ( ohanasi4 == 16 ) {
+ 		s = lang("すぐに調子に乗る。", "You easily get carried away.")
+ 	}
+ 	if ( ohanasi4 == 17 ) {
+@@ -8661,11 +8844,11 @@
+ 	}
+ 	if ( ohanasi4 == 24 ) {
+ 		s = lang("自分に自信が無い。", "You have no confidence in yourself. ")
+ 	}
+ 	if ( ohanasi4 == 25 ) {
+-		s = lang("実はとてつもない変態。", "You're actually a gigantic pervert.")
++		s = lang("実はとてつもない変態。", "You are actually a gigantic pervert.")
+ 	}
+ 	if ( ohanasi4 == 26 ) {
+ 		s = lang("方向音痴ですぐ迷子になる。", "You have no sense of direction.")
+ 	}
+ 	if ( ohanasi4 == 27 ) {
+@@ -8691,30 +8874,42 @@
+ 	}
+ 	if ( ohanasi4 == 34 ) {
+ 		s = lang("勘違いが激しい。", "You make terrible misunderstandings.")
+ 	}
+ 	if ( ohanasi4 == 35 ) {
+-		s = lang("考えていることが顔に出やすい。", "You're easy to read.")
++		s = lang("考えていることが顔に出やすい。", "You are easy to read.")
+ 	}
+ 	if ( ohanasi4 == 36 ) {
+ 		s = lang("周囲からよく誤解される。", "You often misunderstand situations.")
+ 	}
+ 	if ( ohanasi4 == 37 ) {
+-		s = lang("虫が苦手。", "You're bad with insects.")
++		s = lang("虫が苦手。", "You are bad with insects.")
+ 	}
+ 	if ( ohanasi4 == 38 ) {
+ 		s = lang("存在感が薄い。", "You don't have much of a presence.")
+ 	}
+ 	if ( ohanasi4 == 39 ) {
+-		s = lang("極めてプライドが高い。", "You're very prideful.")
++		s = lang("極めてプライドが高い。", "You are very prideful.")
+ 	}
+ 	if ( ohanasi4 == 40 ) {
+ 		s = lang("いかがわしいことが大好き。", "You love shady things.")
+ 	}
+ 	if ( ohanasi4 == 41 ) {
+ 		s = lang("別の人格を隠し持つ。", "You hide your personality from others.")
+ 	}
++	if ( ohanasi4 == 42 ) {
++		s = lang("5行以上の文章が読めない。", "You can't read texts longer than five lines.")
++	}
++	if ( ohanasi4 == 43 ) {
++		s = lang("かなりの食いしん坊。", "You are big foodie.")
++	}
++	if ( ohanasi4 == 44 ) {
++		s = lang("他人の顔と名前を覚えるのは苦手。", "You are bad at remembering other people's names.")
++	}
++	if ( ohanasi4 == 45 ) {
++		s = lang("嫌なことは後回しにしがち。", "You tend to put off things you don't like.")
++	}
+ 	return s
+ 
+ *setHistory5
+ 	if ( ohanasi5 == 1 ) {
+ 		s = lang("趣味は機械いじり。", "You hobby is tinkering with machines.")
+@@ -8736,20 +8931,20 @@
+ 	}
+ 	if ( ohanasi5 == 7 ) {
+ 		s = lang("ぬいぐるみが好き。", "You like stuffed animals.")
+ 	}
+ 	if ( ohanasi5 == 8 ) {
+-		s = lang("自称サディスト。", "You're a self-proclaimed sadist.")
++		s = lang("自称サディスト。", "You are a self-proclaimed sadist.")
+ 	}
+ 	if ( ohanasi5 == 9 ) {
+ 		s = lang("創作活動に命を賭ける。", "You risk your life for creative activities.")
+ 	}
+ 	if ( ohanasi5 == 10 ) {
+ 		s = lang("趣味はハンティング。", "Hunting is your hobby.")
+ 	}
+ 	if ( ohanasi5 == 11 ) {
+-		s = lang("異性の服に興味がある。", "You're interesting in the clothes of the opposite sex.")
++		s = lang("異性の服に興味がある。", "You are interesting in the clothes of the opposite sex.")
+ 	}
+ 	if ( ohanasi5 == 12 ) {
+ 		s = lang("小動物大好き。", "You love small animals.")
+ 	}
+ 	if ( ohanasi5 == 13 ) {
+@@ -8787,26 +8982,26 @@
+ 	}
+ 	if ( ohanasi5 == 24 ) {
+ 		s = lang("誰にも知られたくない秘密がある。", "You have a secret that you can't tell anyone.")
+ 	}
+ 	if ( ohanasi5 == 25 ) {
+-		s = lang("歌が上手い。", "You're good at singing.")
++		s = lang("歌が上手い。", "You are good at singing.")
+ 	}
+ 	if ( ohanasi5 == 26 ) {
+ 		s = lang("騙されやすい。", "You are gullible.")
+ 	}
+ 	if ( ohanasi5 == 27 ) {
+ 		s = lang("趣味は昼寝。", "Your hobby is napping.")
+ 	}
+ 	if ( ohanasi5 == 28 ) {
+-		s = lang("嘘をつくのが下手。", "You're bad at lying.")
++		s = lang("嘘をつくのが下手。", "You are bad at lying.")
+ 	}
+ 	if ( ohanasi5 == 29 ) {
+ 		s = lang("惚れっぽいところがある。", "You fall in love easily.")
+ 	}
+ 	if ( ohanasi5 == 30 ) {
+-		s = lang("仕事熱心。", "You're a hard worker.")
++		s = lang("仕事熱心。", "You are a hard worker.")
+ 	}
+ 	if ( ohanasi5 == 31 ) {
+ 		s = lang("果たせなかった使命がある。", "You had a mission you failed to achieve.")
+ 	}
+ 	if ( ohanasi5 == 32 ) {
+@@ -8822,10 +9017,37 @@
+ 		s = lang("裏切りを何より恐れる。", "You fear betrayal above all else.")
+ 	}
+ 	if ( ohanasi5 == 36 ) {
+ 		s = lang("ガラクタを集めるのが好き。", "You fear betrayal above all else.")
+ 	}
++	if ( ohanasi5 == 37 ) {
++		s = lang("本当は静かに暮らしたい。", "You actually want to live quietly.")
++	}
++	if ( ohanasi5 == 38 ) {
++		s = lang("めちゃくちゃにされたい願望がある。", "You have a desire to be messed up.")
++	}
++	if ( ohanasi5 == 39 ) {
++		s = lang("心臓が複数ある。", "You have multiple hearts.")
++	}
++	if ( ohanasi5 == 40 ) {
++		s = lang("時々不自然に記憶がなくなる。", "You sometimes have unnatural memory loss.")
++	}
++	if ( ohanasi5 == 41 ) {
++		s = lang("食べ物の恨みは忘れない。", "You never forget food grudges.")
++	}
++	if ( ohanasi5 == 42 ) {
++		s = lang("他人の物をすぐに欲しがる。", "You are quick to covet other people's things.")
++	}
++	if ( ohanasi5 == 43 ) {
++		s = lang("人類は滅ぶべきだと思っている。", "You think humanity should be destroyed.")
++	}
++	if ( ohanasi5 == 44 ) {
++		s = lang("きのこよりもたけのこが好き。", "You prefer bamboo shoots to mushrooms.")
++	}
++	if ( ohanasi5 == 45 ) {
++		s = lang("母性に飢えている。", "You are starving for motherhood.")
++	}
+ 	return s
+ 
+ *com_charainfo
+ 	dbg_showallskill = 0
+ 	item_find ITEM_ID_GLASSES_OF_YACATECT, ITEM_FIND_MODE_DBID, ITEM_FIND_LOCATION_CHARAS
+@@ -9207,30 +9429,60 @@
+ 		ohanasi3 = cdata(CDATA_BACKGROUND_PART_B1, cc)
+ 		ohanasi4 = cdata(CDATA_BACKGROUND_PART_B2, cc)
+ 		ohanasi5 = cdata(CDATA_BACKGROUND_PART_B3, cc)
+ 		if ( ohanasi1 >= 0 ) {
+ 			gosub *setHistory1
++			if ( cc != CHARA_PLAYER ) {
++				if ( en ) {
++					cnv_str s, "your", his(cc, 1)
++					cnv_str s, "you", him(cc, 1)
++				}
++			}
+ 			pos wx + 220, wy + 290
+ 			mes s
+ 		}
+ 		if ( ohanasi2 != 0 ) {
+ 			gosub *setHistory2
++			if ( cc != CHARA_PLAYER ) {
++				if ( en ) {
++					cnv_str s, "your", his(cc, 1)
++					cnv_str s, "you", him(cc, 1)
++				}
++			}
+ 			pos wx + 220, wy + 290 + 1 * 15
+ 			mes s
+ 		}
+ 		if ( ohanasi3 != 0 ) {
+ 			gosub *setHistory3
++			if ( cc != CHARA_PLAYER ) {
++				if ( en ) {
++					cnv_str s, "your", his(cc, 1)
++					cnv_str s, "you", him(cc, 1)
++				}
++			}
+ 			pos wx + 220, wy + 290 + 2 * 15
+ 			mes s
+ 		}
+ 		if ( ohanasi4 != 0 ) {
+ 			gosub *setHistory4
++			if ( cc != CHARA_PLAYER ) {
++				if ( en ) {
++					cnv_str s, "your", his(cc, 1)
++					cnv_str s, "you", him(cc, 1)
++				}
++			}
+ 			pos wx + 220, wy + 290 + 3 * 15
+ 			mes s
+ 		}
+ 		if ( ohanasi5 != 0 ) {
+ 			gosub *setHistory5
++			if ( cc != CHARA_PLAYER ) {
++				if ( en ) {
++					cnv_str s, "your", his(cc, 1)
++					cnv_str s, "you", him(cc, 1)
++				}
++			}
+ 			pos wx + 220, wy + 290 + 4 * 15
+ 			mes s
+ 		}
+ 		font lang(cfg_font1, cfg_font2), 14 - en * 2, 0
+ 		color 0, 0, 0
+@@ -13490,17 +13742,17 @@
+ 				item_stack tc, ti, 1
+ 				ci = ti
+ 				rc = tc
+ 				gosub *chara_item
+ 				if ( refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE) == FILTER_ITEM_ROD ) {
+-					cdata(CDATA_MATERIAL1_COUNTER, tc) = ci
++					cdata(CDATA_CHARACTER_TIER, tc) = ci
+ 				}
+ 				if ( inv(INV_ITEM_ID, ci) == ITEM_ID_LASER_BAZOOKA | inv(INV_ITEM_ID, ci) == ITEM_ID_M202_SPECIAL | inv(INV_ITEM_ID, ci) == ITEM_ID_PANZERFAUST_X ) {
+-					cdata(CDATA_MATERIAL1_COUNTER, tc) = ci
++					cdata(CDATA_CHARACTER_TIER, tc) = ci
+ 				}
+ 				if ( inv(INV_ITEM_ID, ci) == ITEM_ID_CF_POTIOMAN | inv(INV_ITEM_ID, ci) == ITEM_ID_CRUSH_POTIOMAN | inv(INV_ITEM_ID, ci) == ITEM_ID_BATTLE_POTIOMAN | inv(INV_ITEM_ID, ci) == ITEM_ID_SUPER_POTIOMAN ) {
+-					cdata(CDATA_MATERIAL1_COUNTER, tc) = ci
++					cdata(CDATA_CHARACTER_TIER, tc) = ci
+ 				}
+ 				if ( inv(INV_ITEM_KNOWN, ci) == ITEM_KNOWN_FULL ) {
+ 					inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
+ 				}
+ 				locationweap = 0
+@@ -15598,11 +15850,11 @@
+ 	gosub *db_class
+ 	buff = ""
+ 	notesel buff
+ 	procid = (procid + 1) \ 4
+ 	proclist(procid) = "Dump:1" + " ct:" + ct
+-	noteadd "Elona Version " + "6.37" + " キャラクター情報 " + gdata(GDATA_YEAR) + "年" + gdata(GDATA_MONTH) + "月" + gdata(GDATA_DAY) + "日 " + gdata(GDATA_HOUR) + "時" + gdata(GDATA_MIN) + "分  " + mdatan(0)
++	noteadd "Elona Version " + "6.38" + " キャラクター情報 " + gdata(GDATA_YEAR) + "年" + gdata(GDATA_MONTH) + "月" + gdata(GDATA_DAY) + "日 " + gdata(GDATA_HOUR) + "時" + gdata(GDATA_MIN) + "分  " + mdatan(0)
+ 	noteadd ""
+ 	noteadd "  " + fixtxt("" + cdatan(CDATAN_AKA, CHARA_PLAYER) + cdatan(CDATAN_NAME, CHARA_PLAYER), 34) + _sex(cdata(CDATA_SEX, CHARA_PLAYER)) + " " + calcage(0) + "歳" + "  " + cdata(CDATA_HEIGHT, CHARA_PLAYER) + "cm" + " " + cdata(CDATA_WEIGHT, CHARA_PLAYER) + "kg"
+ 	noteadd ""
+ 	noteadd fixtxt("種族       : " + racename, 30) + fixtxt("信仰      : " + godname(cdata(CDATA_GOD, CHARA_PLAYER)), 32)
+ 	noteadd fixtxt("職業       : " + classname, 30) + fixtxt("所属      : " + guildname(), 32)
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27-borscht/event.hsp ../2.27R-borscht/event.hsp
+--- ../2.27-borscht/event.hsp	2025-05-19 06:35:56.866506100 +0800
++++ ../2.27R-borscht/event.hsp	2025-06-02 04:42:47.490909000 +0800
+@@ -483,11 +483,11 @@
+ 					}
+ 				}
+ 				cxx = cdata(CDATA_X, p)
+ 				cyy = cdata(CDATA_Y, p)
+ 				if ( cdata(CDATA_EXIST, p) == CHAR_STATE_ALIVE ) {
+-					mdata(MDATA_WEREWOLF_PROGRESS) += cdata(CDATA_LEVEL, p)
++					mdata(MDATA_WEREWOLF_PROGRESS) += limit(cdata(CDATA_LEVEL, p), 1, 50)
+ 					txt lang(name(p) + "「ぎゃぁーー！」", name(p) + " screams, " + cnvtalk("Ahhhhhhh!"))
+ 					dmghp p, 99999, DAMAGE_FROM_UNSEEN
+ 					kitune = 10
+ 					break
+ 				}
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27-borscht/help.hsp ../2.27R-borscht/help.hsp
+--- ../2.27-borscht/help.hsp	2025-05-19 06:35:56.911209900 +0800
++++ ../2.27R-borscht/help.hsp	2025-06-02 04:42:47.536471900 +0800
+@@ -5443,11 +5443,11 @@
+ 	}
+ 	if ( mode == MODELIST_QUICK_START ) {
+ 		repeat 9
+ 			gdata(STARTING_GDATA_RANK + cnt) = 5000
+ 		loop
+-		gdata(GDATA_VERSION) = int(double("6.37") * 1000)
++		gdata(GDATA_VERSION) = int(double("6.38") * 1000)
+ 		gdata(STARTING_GDATA_SHORTCUT + 1) = 424
+ 		gdata(STARTING_GDATA_SHORTCUT + 2) = 300
+ 		gdata(STARTING_GDATA_SHORTCUT + 3) = 631
+ 		gdata(GDATA_COUNT_SHOP) = 1000
+ 		gdata(GDATA_COUNT_SHELTER) = 100
+@@ -6046,11 +6046,11 @@
+ 		gdata(GDATA_AREA) = AREA_HOME
+ 		gdata(GDATA_HOME_LEVEL) = 0
+ 		gosub *setArea
+ 		gdata(GDATA_LEVEL) = 1
+ 		gdata(GDATA_LEVEL_START_ON) = 4
+-		gdata(GDATA_VERSION) = int(double("6.37") * 1000)
++		gdata(GDATA_VERSION) = int(double("6.38") * 1000)
+ 		gdata(GDATA_WEATHER) = WEATHER_RAIN, 6
+ 		repeat 20
+ 			gdata(STARTING_GDATA_RANK + cnt) = 10000
+ 		loop
+ 		gosub *adv_init
+@@ -8075,11 +8075,11 @@
+ 		goto *pc_turn_init_WHILE1
+ 	}
+ 
+ *pc_turn_init_WEND1
+ 	if ( dbg_titleinfo ) {
+-		title "ElonaPlus 2.27" + " ver " + "6.37" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
++		title "ElonaPlus 2.27R" + " ver " + "6.38" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
+ 	}
+ 	if ( trait(TRAIT_ETHER_ADDICTED_POTION) != 0 ) {
+ 		if ( rnd(5) == 0 ) {
+ 			inv_getheader 0
+ 			ci = rnd(invrange) + invhead
+@@ -13538,10 +13538,11 @@
+ 							}
+ 							if ( gain2 < 900 ) {
+ 								txt lang(name(tc) + "は特に得るものが無かったようだ。", name(tc) + " didn't seem to have anything to gain from the travel.")
+ 								continue
+ 							}
++							skillexp SKILL_NORMAL_TRAVELING, tc, limit(gdata(GDATA_TRAVEL_DISTANCE) / 10 + 500, 0, 2000), 9999
+ 							repeat 112 - 100, 100
+ 								if ( sorg(cnt, tc) == 0 ) {
+ 									continue
+ 								}
+ 								skillexp cnt, tc, gain2, 9999
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27-borscht/init.hsp ../2.27R-borscht/init.hsp
+--- ../2.27-borscht/init.hsp	2025-05-19 06:35:56.991193600 +0800
++++ ../2.27R-borscht/init.hsp	2025-06-02 04:42:47.626610800 +0800
+@@ -6559,10 +6559,12 @@
+ 	sndload folder + "uminado.wav", SOUNDLIST_UMINADO
+ 	sndload folder + "mizu2.wav", SOUNDLIST_MIZU2
+ 	sndload folder + "burst00.wav", SOUNDLIST_BURST00
+ 	sndload folder + "goro05.wav", SOUNDLIST_GORO05
+ 	sndload folder + "mecha15.wav", SOUNDLIST_MECHA15
++	sndload folder + "cat03.wav", SOUNDLIST_CAT03
++	sndload folder + "dog02.wav", SOUNDLIST_DOG02
+ 	folder = exedir + "user\\sound\\"
+ 	sndload folder + "se0.wav", SOUNDLIST_USER_SE00
+ 	sndload folder + "se1.wav", SOUNDLIST_USER_SE01
+ 	sndload folder + "se2.wav", SOUNDLIST_USER_SE02
+ 	sndload folder + "se3.wav", SOUNDLIST_USER_SE03
+@@ -16155,10 +16157,940 @@
+ 			if ( s == "Question" ) {
+ 				cdata(CDATA_EMO_ICON, chatc) = 21 + 100 * 3
+ 				s = ""
+ 				break
+ 			}
++			if ( s == "seChangePage" ) {
++				snd SOUNDLIST_POP1
++				s = ""
++				break
++			}
++			if ( s == "seMelee1" ) {
++				snd SOUNDLIST_ATK1
++				s = ""
++				break
++			}
++			if ( s == "seMelee2" ) {
++				snd SOUNDLIST_ATK2
++				s = ""
++				break
++			}
++			if ( s == "seMiss" ) {
++				snd SOUNDLIST_MISS
++				s = ""
++				break
++			}
++			if ( s == "seCursor1" ) {
++				snd SOUNDLIST_CURSOR1
++				s = ""
++				break
++			}
++			if ( s == "seFire" ) {
++				snd SOUNDLIST_FIRE1
++				s = ""
++				break
++			}
++			if ( s == "seKill" ) {
++				snd SOUNDLIST_KILL1
++				s = ""
++				break
++			}
++			if ( s == "seKill2" ) {
++				snd SOUNDLIST_KILL2
++				s = ""
++				break
++			}
++			if ( s == "seMore" ) {
++				snd SOUNDLIST_MORE1
++				s = ""
++				break
++			}
++			if ( s == "seGetGold" ) {
++				snd SOUNDLIST_GETGOLD1
++				s = ""
++				break
++			}
++			if ( s == "sePayGold" ) {
++				snd SOUNDLIST_PAYGOLD1
++				s = ""
++				break
++			}
++			if ( s == "seEquip" ) {
++				snd SOUNDLIST_EQUIP1
++				s = ""
++				break
++			}
++			if ( s == "seGet" ) {
++				snd SOUNDLIST_GET1
++				s = ""
++				break
++			}
++			if ( s == "seGet2" ) {
++				snd SOUNDLIST_GET2
++				s = ""
++				break
++			}
++			if ( s == "seDrop" ) {
++				snd SOUNDLIST_DROP1
++				s = ""
++				break
++			}
++			if ( s == "seDrink" ) {
++				snd SOUNDLIST_DRINK1
++				s = ""
++				break
++			}
++			if ( s == "seEat" ) {
++				snd SOUNDLIST_EAT1
++				s = ""
++				break
++			}
++			if ( s == "seSpend" ) {
++				snd SOUNDLIST_SPEND1
++				s = ""
++				break
++			}
++			if ( s == "seOk" ) {
++				snd SOUNDLIST_OK1
++				s = ""
++				break
++			}
++			if ( s == "seAlert" ) {
++				snd SOUNDLIST_ALERT1
++				s = ""
++				break
++			}
++			if ( s == "seLocked" ) {
++				snd SOUNDLIST_LOCKED1
++				s = ""
++				break
++			}
++			if ( s == "seOpenChest" ) {
++				snd SOUNDLIST_CHEST1
++				s = ""
++				break
++			}
++			if ( s == "seNice" ) {
++				snd SOUNDLIST_DING2
++				s = ""
++				break
++			}
++			if ( s == "seCook" ) {
++				snd SOUNDLIST_COOK1
++				s = ""
++				break
++			}
++			if ( s == "sePop1" ) {
++				snd SOUNDLIST_POP2
++				s = ""
++				break
++			}
++			if ( s == "seFail1" ) {
++				snd SOUNDLIST_FAIL1
++				s = ""
++				break
++			}
++			if ( s == "seFile" ) {
++				snd SOUNDLIST_SCENE_SOUND
++				s = ""
++				break
++			}
++			if ( s == "seBow1" ) {
++				snd SOUNDLIST_BOW1
++				s = ""
++				break
++			}
++			if ( s == "seGun1" ) {
++				snd SOUNDLIST_GUN1
++				s = ""
++				break
++			}
++			if ( s == "seThrow1" ) {
++				snd SOUNDLIST_THROW1
++				s = ""
++				break
++			}
++			if ( s == "seHeart1" ) {
++				snd SOUNDLIST_HEART1
++				s = ""
++				break
++			}
++			if ( s == "seHeal1" ) {
++				snd SOUNDLIST_HEAL1
++				s = ""
++				break
++			}
++			if ( s == "seBall1" ) {
++				snd SOUNDLIST_BALL1
++				s = ""
++				break
++			}
++			if ( s == "seBreath1" ) {
++				snd SOUNDLIST_BREATH1
++				s = ""
++				break
++			}
++			if ( s == "seArrow1" ) {
++				snd SOUNDLIST_ARROW1
++				s = ""
++				break
++			}
++			if ( s == "seBolt1" ) {
++				snd SOUNDLIST_BOLT1
++				s = ""
++				break
++			}
++			if ( s == "seCurse1" ) {
++				snd SOUNDLIST_CURSE1
++				s = ""
++				break
++			}
++			if ( s == "sePop2" ) {
++				snd SOUNDLIST_POP3
++				s = ""
++				break
++			}
++			if ( s == "seClick1" ) {
++				snd SOUNDLIST_CLICK1
++				s = ""
++				break
++			}
++			if ( s == "seGet3" ) {
++				snd SOUNDLIST_GET3
++				s = ""
++				break
++			}
++			if ( s == "seLaser1" ) {
++				snd SOUNDLIST_LASER1
++				s = ""
++				break
++			}
++			if ( s == "seFoot" ) {
++				snd SOUNDLIST_FOOT
++				s = ""
++				break
++			}
++			if ( s == "seSave" ) {
++				snd SOUNDLIST_WRITE1
++				s = ""
++				break
++			}
++			if ( s == "seCrush1" ) {
++				snd SOUNDLIST_CRUSH1
++				s = ""
++				break
++			}
++			if ( s == "seWater" ) {
++				snd SOUNDLIST_WATER2
++				s = ""
++				break
++			}
++			if ( s == "seCrush2" ) {
++				snd SOUNDLIST_CRUSH2
++				s = ""
++				break
++			}
++			if ( s == "seOpenDoor" ) {
++				snd SOUNDLIST_DOOR1
++				s = ""
++				break
++			}
++			if ( s == "seExitMap" ) {
++				snd SOUNDLIST_EXITMAP1
++				s = ""
++				break
++			}
++			if ( s == "seDead" ) {
++				snd SOUNDLIST_DEAD1
++				s = ""
++				break
++			}
++			if ( s == "seComplete" ) {
++				snd SOUNDLIST_COMPLETE1
++				s = ""
++				break
++			}
++			if ( s == "seDig" ) {
++				snd SOUNDLIST_DIG1
++				s = ""
++				break
++			}
++			if ( s == "seChime1" ) {
++				snd SOUNDLIST_CHIME
++				s = ""
++				break
++			}
++			if ( s == "seDig2" ) {
++				snd SOUNDLIST_DIG2
++				s = ""
++				break
++			}
++			if ( s == "seBush1" ) {
++				snd SOUNDLIST_BUSH1
++				s = ""
++				break
++			}
++			if ( s == "seGasha" ) {
++				snd SOUNDLIST_GASHA
++				s = ""
++				break
++			}
++			if ( s == "seFishing1" ) {
++				snd SOUNDLIST_WATER
++				s = ""
++				break
++			}
++			if ( s == "seBuild1" ) {
++				snd SOUNDLIST_BUILD1
++				s = ""
++				break
++			}
++			if ( s == "seOpenBook" ) {
++				snd SOUNDLIST_BOOK1
++				s = ""
++				break
++			}
++			if ( s == "seDing" ) {
++				snd SOUNDLIST_DING1
++				s = ""
++				break
++			}
++			if ( s == "seDing2" ) {
++				snd SOUNDLIST_DING3
++				s = ""
++				break
++			}
++			if ( s == "sePop3" ) {
++				snd SOUNDLIST_POP4
++				s = ""
++				break
++			}
++			if ( s == "sePunish" ) {
++				snd SOUNDLIST_PUNISH1
++				s = ""
++				break
++			}
++			if ( s == "sePray" ) {
++				snd SOUNDLIST_PRAY1
++				s = ""
++				break
++			}
++			if ( s == "seOffer" ) {
++				snd SOUNDLIST_OFFER1
++				s = ""
++				break
++			}
++			if ( s == "seFizzle" ) {
++				snd SOUNDLIST_FIZZLE
++				s = ""
++				break
++			}
++			if ( s == "seOpenDoor2" ) {
++				snd SOUNDLIST_DOOR2
++				s = ""
++				break
++			}
++			if ( s == "seWeb" ) {
++				snd SOUNDLIST_WEB
++				s = ""
++				break
++			}
++			if ( s == "seCheer" ) {
++				snd SOUNDLIST_CHEER
++				s = ""
++				break
++			}
++			if ( s == "seTrap" ) {
++				snd SOUNDLIST_TRAP1
++				s = ""
++				break
++			}
++			if ( s == "seCard1" ) {
++				snd SOUNDLIST_CARD1
++				s = ""
++				break
++			}
++			if ( s == "seTeleport1" ) {
++				snd SOUNDLIST_TELEPORT1
++				s = ""
++				break
++			}
++			if ( s == "seBash" ) {
++				snd SOUNDLIST_BASH1
++				s = ""
++				break
++			}
++			if ( s == "seNight" ) {
++				snd SOUNDLIST_NIGHT
++				s = ""
++				break
++			}
++			if ( s == "seBgRain" ) {
++				snd SOUNDLIST_BG_RAIN
++				s = ""
++				break
++			}
++			if ( s == "seBgThunder" ) {
++				snd SOUNDLIST_BG_THUNDER
++				s = ""
++				break
++			}
++			if ( s == "seBgWind" ) {
++				snd SOUNDLIST_BG_WIND
++				s = ""
++				break
++			}
++			if ( s == "seBgSea" ) {
++				snd SOUNDLIST_BG_SEA
++				s = ""
++				break
++			}
++			if ( s == "seBgTown" ) {
++				snd SOUNDLIST_BG_TOWN
++				s = ""
++				break
++			}
++			if ( s == "seBgFire" ) {
++				snd SOUNDLIST_BG_FIRE
++				s = ""
++				break
++			}
++			if ( s == "seFoot1a" ) {
++				snd SOUNDLIST_FOOT1A
++				s = ""
++				break
++			}
++			if ( s == "seFoot1b" ) {
++				snd SOUNDLIST_FOOT1B
++				s = ""
++				break
++			}
++			if ( s == "seFoot2a" ) {
++				snd SOUNDLIST_FOOT2A
++				s = ""
++				break
++			}
++			if ( s == "seFoot2b" ) {
++				snd SOUNDLIST_FOOT2B
++				s = ""
++				break
++			}
++			if ( s == "seFoot2c" ) {
++				snd SOUNDLIST_FOOT2C
++				s = ""
++				break
++			}
++			if ( s == "seSnow" ) {
++				snd SOUNDLIST_SNOW
++				s = ""
++				break
++			}
++			if ( s == "seFishCast" ) {
++				snd SOUNDLIST_FISH_CAST
++				s = ""
++				break
++			}
++			if ( s == "seFishGet" ) {
++				snd SOUNDLIST_FISH_GET
++				s = ""
++				break
++			}
++			if ( s == "seFishFight" ) {
++				snd SOUNDLIST_FISH_FIGHT
++				s = ""
++				break
++			}
++			if ( s == "seAmmo" ) {
++				snd SOUNDLIST_AMMO
++				s = ""
++				break
++			}
++			if ( s == "seThrow2" ) {
++				snd SOUNDLIST_THROW2
++				s = ""
++				break
++			}
++			if ( s == "seScroll" ) {
++				snd SOUNDLIST_SCROLL
++				s = ""
++				break
++			}
++			if ( s == "seLog" ) {
++				snd SOUNDLIST_LOG
++				s = ""
++				break
++			}
++			if ( s == "seChara" ) {
++				snd SOUNDLIST_CHARA
++				s = ""
++				break
++			}
++			if ( s == "seWear" ) {
++				snd SOUNDLIST_WEAR
++				s = ""
++				break
++			}
++			if ( s == "seFeat" ) {
++				snd SOUNDLIST_FEAT
++				s = ""
++				break
++			}
++			if ( s == "sePort" ) {
++				snd SOUNDLIST_PORT
++				s = ""
++				break
++			}
++			if ( s == "seUnpop1" ) {
++				snd SOUNDLIST_UNPOP1
++				s = ""
++				break
++			}
++			if ( s == "seChat" ) {
++				snd SOUNDLIST_CHAT
++				s = ""
++				break
++			}
++			if ( s == "seInv" ) {
++				snd SOUNDLIST_INV
++				s = ""
++				break
++			}
++			if ( s == "seSkill" ) {
++				snd SOUNDLIST_SKILL
++				s = ""
++				break
++			}
++			if ( s == "seSpell" ) {
++				snd SOUNDLIST_SPELL
++				s = ""
++				break
++			}
++			if ( s == "seDice" ) {
++				snd SOUNDLIST_DICE
++				s = ""
++				break
++			}
++			if ( s == "seVomit" ) {
++				snd SOUNDLIST_VOMIT
++				s = ""
++				break
++			}
++			if ( s == "seAtkSword" ) {
++				snd SOUNDLIST_ATKSWORD
++				s = ""
++				break
++			}
++			if ( s == "seAtkIce" ) {
++				snd SOUNDLIST_ATK_ICE
++				s = ""
++				break
++			}
++			if ( s == "seAtkElec" ) {
++				snd SOUNDLIST_ATK_ELEC
++				s = ""
++				break
++			}
++			if ( s == "seAtkFire" ) {
++				snd SOUNDLIST_ATK_FIRE
++				s = ""
++				break
++			}
++			if ( s == "seAtkHell" ) {
++				snd SOUNDLIST_ATK_HELL
++				s = ""
++				break
++			}
++			if ( s == "seAtkPoison" ) {
++				snd SOUNDLIST_ATK_POISON
++				s = ""
++				break
++			}
++			if ( s == "seAtkNerve" ) {
++				snd SOUNDLIST_ATK_NERVE
++				s = ""
++				break
++			}
++			if ( s == "seAtkSound" ) {
++				snd SOUNDLIST_ATK_SOUND
++				s = ""
++				break
++			}
++			if ( s == "seAtkMind" ) {
++				snd SOUNDLIST_ATK_MIND
++				s = ""
++				break
++			}
++			if ( s == "seAtkChaos" ) {
++				snd SOUNDLIST_ATK_CHAOS
++				s = ""
++				break
++			}
++			if ( s == "seAtkDark" ) {
++				snd SOUNDLIST_ATK_DARK
++				s = ""
++				break
++			}
++			if ( s == "seCurse2" ) {
++				snd SOUNDLIST_CURSE2
++				s = ""
++				break
++			}
++			if ( s == "seCurse3" ) {
++				snd SOUNDLIST_CURSE3
++				s = ""
++				break
++			}
++			if ( s == "seEnc" ) {
++				snd SOUNDLIST_ENC
++				s = ""
++				break
++			}
++			if ( s == "seEnc2" ) {
++				snd SOUNDLIST_ENC2
++				s = ""
++				break
++			}
++			if ( s == "sePray2" ) {
++				snd SOUNDLIST_PRAY2
++				s = ""
++				break
++			}
++			if ( s == "seOffer2" ) {
++				snd SOUNDLIST_OFFER2
++				s = ""
++				break
++			}
++			if ( s == "seGong" ) {
++				snd SOUNDLIST_GONG
++				s = ""
++				break
++			}
++			if ( s == "seSlap" ) {
++				snd SOUNDLIST_SLAP
++				s = ""
++				break
++			}
++			if ( s == "seCeffet" ) {
++				snd SOUNDLIST_CEFFECT
++				s = ""
++				break
++			}
++			if ( s == "seRain" ) {
++				snd SOUNDLIST_RAIN
++				s = ""
++				break
++			}
++			if ( s == "seWave" ) {
++				snd SOUNDLIST_WAVE
++				s = ""
++				break
++			}
++			if ( s == "seWhistle" ) {
++				snd SOUNDLIST_WHISTLE
++				s = ""
++				break
++			}
++			if ( s == "seQuizBad" ) {
++				snd SOUNDLIST_QUIZBAD
++				s = ""
++				break
++			}
++			if ( s == "sePower" ) {
++				snd SOUNDLIST_POWER
++				s = ""
++				break
++			}
++			if ( s == "sePiano1" ) {
++				snd SOUNDLIST_PIANO1
++				s = ""
++				break
++			}
++			if ( s == "sePiano2" ) {
++				snd SOUNDLIST_PIANO2B
++				s = ""
++				break
++			}
++			if ( s == "sePiano3" ) {
++				snd SOUNDLIST_PIANO3
++				s = ""
++				break
++			}
++			if ( s == "sePiano4" ) {
++				snd SOUNDLIST_PIANO4B
++				s = ""
++				break
++			}
++			if ( s == "sePiano5" ) {
++				snd SOUNDLIST_PIANO5
++				s = ""
++				break
++			}
++			if ( s == "sePiano6" ) {
++				snd SOUNDLIST_PIANO6
++				s = ""
++				break
++			}
++			if ( s == "sePiano7" ) {
++				snd SOUNDLIST_PIANO7B
++				s = ""
++				break
++			}
++			if ( s == "sePiano8" ) {
++				snd SOUNDLIST_PIANO8
++				s = ""
++				break
++			}
++			if ( s == "sePiano9" ) {
++				snd SOUNDLIST_PIANO9B
++				s = ""
++				break
++			}
++			if ( s == "sePiano10" ) {
++				snd SOUNDLIST_PIANO10
++				s = ""
++				break
++			}
++			if ( s == "sePiano11" ) {
++				snd SOUNDLIST_PIANO11B
++				s = ""
++				break
++			}
++			if ( s == "sePiano12" ) {
++				snd SOUNDLIST_PIANO12
++				s = ""
++				break
++			}
++			if ( s == "sePiano13" ) {
++				snd SOUNDLIST_PIANO13
++				s = ""
++				break
++			}
++			if ( s == "sePiano14" ) {
++				snd SOUNDLIST_PIANO14B
++				s = ""
++				break
++			}
++			if ( s == "sePiano15" ) {
++				snd SOUNDLIST_PIANO15
++				s = ""
++				break
++			}
++			if ( s == "sePiano16" ) {
++				snd SOUNDLIST_PIANO16B
++				s = ""
++				break
++			}
++			if ( s == "sePiano17" ) {
++				snd SOUNDLIST_PIANO17
++				s = ""
++				break
++			}
++			if ( s == "sePiano18" ) {
++				snd SOUNDLIST_PIANO18
++				s = ""
++				break
++			}
++			if ( s == "sePiano19" ) {
++				snd SOUNDLIST_PIANO19B
++				s = ""
++				break
++			}
++			if ( s == "sePiano20" ) {
++				snd SOUNDLIST_PIANO20
++				s = ""
++				break
++			}
++			if ( s == "sePiano21" ) {
++				snd SOUNDLIST_PIANO21B
++				s = ""
++				break
++			}
++			if ( s == "sePiano22" ) {
++				snd SOUNDLIST_PIANO22
++				s = ""
++				break
++			}
++			if ( s == "sePiano23" ) {
++				snd SOUNDLIST_PIANO23B
++				s = ""
++				break
++			}
++			if ( s == "sePiano24" ) {
++				snd SOUNDLIST_PIANO24
++				s = ""
++				break
++			}
++			if ( s == "seSonic" ) {
++				snd SOUNDLIST_SONIC
++				s = ""
++				break
++			}
++			if ( s == "seShots" ) {
++				snd SOUNDLIST_SHOTS
++				s = ""
++				break
++			}
++			if ( s == "seStab" ) {
++				snd SOUNDLIST_STAB
++				s = ""
++				break
++			}
++			if ( s == "seMizu" ) {
++				snd SOUNDLIST_MIZU
++				s = ""
++				break
++			}
++			if ( s == "seBuble" ) {
++				snd SOUNDLIST_BUBLE
++				s = ""
++				break
++			}
++			if ( s == "seScream" ) {
++				snd SOUNDLIST_SCREAM
++				s = ""
++				break
++			}
++			if ( s == "seSwing" ) {
++				snd SOUNDLIST_SWING
++				s = ""
++				break
++			}
++			if ( s == "seGrowl" ) {
++				snd SOUNDLIST_BEAST02
++				s = ""
++				break
++			}
++			if ( s == "seChatF" ) {
++				snd SOUNDLIST_MIND000
++				s = ""
++				break
++			}
++			if ( s == "seChatH" ) {
++				snd SOUNDLIST_LOAD
++				s = ""
++				break
++			}
++			if ( s == "seHanabi" ) {
++				snd SOUNDLIST_EXPLOSION
++				s = ""
++				break
++			}
++			if ( s == "seClap2f" ) {
++				snd SOUNDLIST_CLAP2F
++				s = ""
++				break
++			}
++			if ( s == "seClap4f" ) {
++				snd SOUNDLIST_CLAP4F
++				s = ""
++				break
++			}
++			if ( s == "seChime2" ) {
++				snd SOUNDLIST_CHIME000R
++				s = ""
++				break
++			}
++			if ( s == "seGunshot1" ) {
++				snd SOUNDLIST_GUNSHOT1
++				s = ""
++				break
++			}
++			if ( s == "seGunshot3" ) {
++				snd SOUNDLIST_GUNSHOT3
++				s = ""
++				break
++			}
++			if ( s == "seCrack" ) {
++				snd SOUNDLIST_CRACK
++				s = ""
++				break
++			}
++			if ( s == "seCrack2" ) {
++				snd SOUNDLIST_CRACK2
++				s = ""
++				break
++			}
++			if ( s == "seBreak" ) {
++				snd SOUNDLIST_ATTACK00
++				s = ""
++				break
++			}
++			if ( s == "seBomH" ) {
++				snd SOUNDLIST_BOM03
++				s = ""
++				break
++			}
++			if ( s == "seBomS" ) {
++				snd SOUNDLIST_BOM06
++				s = ""
++				break
++			}
++			if ( s == "seBomN" ) {
++				snd SOUNDLIST_BOM15
++				s = ""
++				break
++			}
++			if ( s == "sePusyu" ) {
++				snd SOUNDLIST_SWING39
++				s = ""
++				break
++			}
++			if ( s == "seMecha" ) {
++				snd SOUNDLIST_MECHA20
++				s = ""
++				break
++			}
++			if ( s == "seWaterm" ) {
++				snd SOUNDLIST_WATERM
++				s = ""
++				break
++			}
++			if ( s == "seGoto" ) {
++				snd SOUNDLIST_DRAG01
++				s = ""
++				break
++			}
++			if ( s == "seInanaki" ) {
++				snd SOUNDLIST_INANAKI
++				s = ""
++				break
++			}
++			if ( s == "seCar" ) {
++				snd SOUNDLIST_CAR_HORN1
++				s = ""
++				break
++			}
++			if ( s == "seLocomo" ) {
++				snd SOUNDLIST_LOCOMO
++				s = ""
++				break
++			}
++			if ( s == "seSiren" ) {
++				snd SOUNDLIST_SIREN
++				s = ""
++				break
++			}
++			if ( s == "sePipipi" ) {
++				snd SOUNDLIST_POWER07
++				s = ""
++				break
++			}
++			if ( s == "seTaore" ) {
++				snd SOUNDLIST_TAORE08
++				s = ""
++				break
++			}
++			if ( s == "seReload" ) {
++				snd SOUNDLIST_TM2_SWITCH001
++				s = ""
++				break
++			}
++			if ( s == "sePshot" ) {
++				snd SOUNDLIST_TM2_HIT000
++				s = ""
++				break
++			}
+ 			if ( s == "se0" ) {
+ 				snd SOUNDLIST_USER_SE00
+ 				s = ""
+ 				break
+ 			}
+@@ -16655,10 +17587,125 @@
+ 			if ( s == "se99" ) {
+ 				snd SOUNDLIST_USER_SE99
+ 				s = ""
+ 				break
+ 			}
++			if ( s == "seFreeze" ) {
++				snd SOUNDLIST_FREEZE01
++				s = ""
++				break
++			}
++			if ( s == "seTea" ) {
++				snd SOUNDLIST_TM2_ALCHEMIST000
++				s = ""
++				break
++			}
++			if ( s == "seTea2" ) {
++				snd SOUNDLIST_KACHI08
++				s = ""
++				break
++			}
++			if ( s == "seSmoke" ) {
++				snd SOUNDLIST_SMOKE03
++				s = ""
++				break
++			}
++			if ( s == "seBgRiver" ) {
++				snd SOUNDLIST_TM2_RIVER000
++				s = ""
++				break
++			}
++			if ( s == "seBgRiver2" ) {
++				snd SOUNDLIST_TM2_RIVER001
++				s = ""
++				break
++			}
++			if ( s == "seSemi1" ) {
++				snd SOUNDLIST_SEMI1
++				s = ""
++				break
++			}
++			if ( s == "seSemi2" ) {
++				snd SOUNDLIST_SEMI2
++				s = ""
++				break
++			}
++			if ( s == "seSemi3" ) {
++				snd SOUNDLIST_SEMI3
++				s = ""
++				break
++			}
++			if ( s == "seSemi4" ) {
++				snd SOUNDLIST_SEMI4
++				s = ""
++				break
++			}
++			if ( s == "seSemi5" ) {
++				snd SOUNDLIST_SEMI5
++				s = ""
++				break
++			}
++			if ( s == "seGBreak" ) {
++				snd SOUNDLIST_CRASH14
++				s = ""
++				break
++			}
++			if ( s == "seWhistleShort" ) {
++				snd SOUNDLIST_WHISTLE00
++				s = ""
++				break
++			}
++			if ( s == "seLbazooka" ) {
++				snd SOUNDLIST_GUN10
++				s = ""
++				break
++			}
++			if ( s == "seBaby" ) {
++				snd SOUNDLIST_CHANDLER23
++				s = ""
++				break
++			}
++			if ( s == "seHawk" ) {
++				snd SOUNDLIST_HAWK1
++				s = ""
++				break
++			}
++			if ( s == "seBgSeabed" ) {
++				snd SOUNDLIST_UMINADO
++				s = ""
++				break
++			}
++			if ( s == "seMizu2" ) {
++				snd SOUNDLIST_MIZU2
++				s = ""
++				break
++			}
++			if ( s == "seAtkfall" ) {
++				snd SOUNDLIST_BURST00
++				s = ""
++				break
++			}
++			if ( s == "seGoro" ) {
++				snd SOUNDLIST_GORO05
++				s = ""
++				break
++			}
++			if ( s == "seAtkDrill" ) {
++				snd SOUNDLIST_MECHA15
++				s = ""
++				break
++			}
++			if ( s == "seCat" ) {
++				snd SOUNDLIST_CAT03
++				s = ""
++				break
++			}
++			if ( s == "seDog" ) {
++				snd SOUNDLIST_DOG02
++				s = ""
++				break
++			}
+ 			s = "Unknown Code"
+ 		loop
+ 		buff = s(1) + s + s(2)
+ 	loop
+ 	if ( gdata(GDATA_CUSTOM_TEXT_DIALOG) == 1 ) {
+@@ -16792,10 +17839,940 @@
+ 			if ( sg == "guide9" ) {
+ 				cdata(CDATA_CAN_REVIVE, CHARA_PLAYER) = 9
+ 				sg = ""
+ 				break
+ 			}
++			if ( sg == "seChangePage" ) {
++				snd SOUNDLIST_POP1
++				sg = ""
++				break
++			}
++			if ( sg == "seMelee1" ) {
++				snd SOUNDLIST_ATK1
++				sg = ""
++				break
++			}
++			if ( sg == "seMelee2" ) {
++				snd SOUNDLIST_ATK2
++				sg = ""
++				break
++			}
++			if ( sg == "seMiss" ) {
++				snd SOUNDLIST_MISS
++				sg = ""
++				break
++			}
++			if ( sg == "seCursor1" ) {
++				snd SOUNDLIST_CURSOR1
++				sg = ""
++				break
++			}
++			if ( sg == "seFire" ) {
++				snd SOUNDLIST_FIRE1
++				sg = ""
++				break
++			}
++			if ( sg == "seKill" ) {
++				snd SOUNDLIST_KILL1
++				sg = ""
++				break
++			}
++			if ( sg == "seKill2" ) {
++				snd SOUNDLIST_KILL2
++				sg = ""
++				break
++			}
++			if ( sg == "seMore" ) {
++				snd SOUNDLIST_MORE1
++				sg = ""
++				break
++			}
++			if ( sg == "seGetGold" ) {
++				snd SOUNDLIST_GETGOLD1
++				sg = ""
++				break
++			}
++			if ( sg == "sePayGold" ) {
++				snd SOUNDLIST_PAYGOLD1
++				sg = ""
++				break
++			}
++			if ( sg == "seEquip" ) {
++				snd SOUNDLIST_EQUIP1
++				sg = ""
++				break
++			}
++			if ( sg == "seGet" ) {
++				snd SOUNDLIST_GET1
++				sg = ""
++				break
++			}
++			if ( sg == "seGet2" ) {
++				snd SOUNDLIST_GET2
++				sg = ""
++				break
++			}
++			if ( sg == "seDrop" ) {
++				snd SOUNDLIST_DROP1
++				sg = ""
++				break
++			}
++			if ( sg == "seDrink" ) {
++				snd SOUNDLIST_DRINK1
++				sg = ""
++				break
++			}
++			if ( sg == "seEat" ) {
++				snd SOUNDLIST_EAT1
++				sg = ""
++				break
++			}
++			if ( sg == "seSpend" ) {
++				snd SOUNDLIST_SPEND1
++				sg = ""
++				break
++			}
++			if ( sg == "seOk" ) {
++				snd SOUNDLIST_OK1
++				sg = ""
++				break
++			}
++			if ( sg == "seAlert" ) {
++				snd SOUNDLIST_ALERT1
++				sg = ""
++				break
++			}
++			if ( sg == "seLocked" ) {
++				snd SOUNDLIST_LOCKED1
++				sg = ""
++				break
++			}
++			if ( sg == "seOpenChest" ) {
++				snd SOUNDLIST_CHEST1
++				sg = ""
++				break
++			}
++			if ( sg == "seNice" ) {
++				snd SOUNDLIST_DING2
++				sg = ""
++				break
++			}
++			if ( sg == "seCook" ) {
++				snd SOUNDLIST_COOK1
++				sg = ""
++				break
++			}
++			if ( sg == "sePop1" ) {
++				snd SOUNDLIST_POP2
++				sg = ""
++				break
++			}
++			if ( sg == "seFail1" ) {
++				snd SOUNDLIST_FAIL1
++				sg = ""
++				break
++			}
++			if ( sg == "seFile" ) {
++				snd SOUNDLIST_SCENE_SOUND
++				sg = ""
++				break
++			}
++			if ( sg == "seBow1" ) {
++				snd SOUNDLIST_BOW1
++				sg = ""
++				break
++			}
++			if ( sg == "seGun1" ) {
++				snd SOUNDLIST_GUN1
++				sg = ""
++				break
++			}
++			if ( sg == "seThrow1" ) {
++				snd SOUNDLIST_THROW1
++				sg = ""
++				break
++			}
++			if ( sg == "seHeart1" ) {
++				snd SOUNDLIST_HEART1
++				sg = ""
++				break
++			}
++			if ( sg == "seHeal1" ) {
++				snd SOUNDLIST_HEAL1
++				sg = ""
++				break
++			}
++			if ( sg == "seBall1" ) {
++				snd SOUNDLIST_BALL1
++				sg = ""
++				break
++			}
++			if ( sg == "seBreath1" ) {
++				snd SOUNDLIST_BREATH1
++				sg = ""
++				break
++			}
++			if ( sg == "seArrow1" ) {
++				snd SOUNDLIST_ARROW1
++				sg = ""
++				break
++			}
++			if ( sg == "seBolt1" ) {
++				snd SOUNDLIST_BOLT1
++				sg = ""
++				break
++			}
++			if ( sg == "seCurse1" ) {
++				snd SOUNDLIST_CURSE1
++				sg = ""
++				break
++			}
++			if ( sg == "sePop2" ) {
++				snd SOUNDLIST_POP3
++				sg = ""
++				break
++			}
++			if ( sg == "seClick1" ) {
++				snd SOUNDLIST_CLICK1
++				sg = ""
++				break
++			}
++			if ( sg == "seGet3" ) {
++				snd SOUNDLIST_GET3
++				sg = ""
++				break
++			}
++			if ( sg == "seLaser1" ) {
++				snd SOUNDLIST_LASER1
++				sg = ""
++				break
++			}
++			if ( sg == "seFoot" ) {
++				snd SOUNDLIST_FOOT
++				sg = ""
++				break
++			}
++			if ( sg == "seSave" ) {
++				snd SOUNDLIST_WRITE1
++				sg = ""
++				break
++			}
++			if ( sg == "seCrush1" ) {
++				snd SOUNDLIST_CRUSH1
++				sg = ""
++				break
++			}
++			if ( sg == "seWater" ) {
++				snd SOUNDLIST_WATER2
++				sg = ""
++				break
++			}
++			if ( sg == "seCrush2" ) {
++				snd SOUNDLIST_CRUSH2
++				sg = ""
++				break
++			}
++			if ( sg == "seOpenDoor" ) {
++				snd SOUNDLIST_DOOR1
++				sg = ""
++				break
++			}
++			if ( sg == "seExitMap" ) {
++				snd SOUNDLIST_EXITMAP1
++				sg = ""
++				break
++			}
++			if ( sg == "seDead" ) {
++				snd SOUNDLIST_DEAD1
++				sg = ""
++				break
++			}
++			if ( sg == "seComplete" ) {
++				snd SOUNDLIST_COMPLETE1
++				sg = ""
++				break
++			}
++			if ( sg == "seDig" ) {
++				snd SOUNDLIST_DIG1
++				sg = ""
++				break
++			}
++			if ( sg == "seChime1" ) {
++				snd SOUNDLIST_CHIME
++				sg = ""
++				break
++			}
++			if ( sg == "seDig2" ) {
++				snd SOUNDLIST_DIG2
++				sg = ""
++				break
++			}
++			if ( sg == "seBush1" ) {
++				snd SOUNDLIST_BUSH1
++				sg = ""
++				break
++			}
++			if ( sg == "seGasha" ) {
++				snd SOUNDLIST_GASHA
++				sg = ""
++				break
++			}
++			if ( sg == "seFishing1" ) {
++				snd SOUNDLIST_WATER
++				sg = ""
++				break
++			}
++			if ( sg == "seBuild1" ) {
++				snd SOUNDLIST_BUILD1
++				sg = ""
++				break
++			}
++			if ( sg == "seOpenBook" ) {
++				snd SOUNDLIST_BOOK1
++				sg = ""
++				break
++			}
++			if ( sg == "seDing" ) {
++				snd SOUNDLIST_DING1
++				sg = ""
++				break
++			}
++			if ( sg == "seDing2" ) {
++				snd SOUNDLIST_DING3
++				sg = ""
++				break
++			}
++			if ( sg == "sePop3" ) {
++				snd SOUNDLIST_POP4
++				sg = ""
++				break
++			}
++			if ( sg == "sePunish" ) {
++				snd SOUNDLIST_PUNISH1
++				sg = ""
++				break
++			}
++			if ( sg == "sePray" ) {
++				snd SOUNDLIST_PRAY1
++				sg = ""
++				break
++			}
++			if ( sg == "seOffer" ) {
++				snd SOUNDLIST_OFFER1
++				sg = ""
++				break
++			}
++			if ( sg == "seFizzle" ) {
++				snd SOUNDLIST_FIZZLE
++				sg = ""
++				break
++			}
++			if ( sg == "seOpenDoor2" ) {
++				snd SOUNDLIST_DOOR2
++				sg = ""
++				break
++			}
++			if ( sg == "seWeb" ) {
++				snd SOUNDLIST_WEB
++				sg = ""
++				break
++			}
++			if ( sg == "seCheer" ) {
++				snd SOUNDLIST_CHEER
++				sg = ""
++				break
++			}
++			if ( sg == "seTrap" ) {
++				snd SOUNDLIST_TRAP1
++				sg = ""
++				break
++			}
++			if ( sg == "seCard1" ) {
++				snd SOUNDLIST_CARD1
++				sg = ""
++				break
++			}
++			if ( sg == "seTeleport1" ) {
++				snd SOUNDLIST_TELEPORT1
++				sg = ""
++				break
++			}
++			if ( sg == "seBash" ) {
++				snd SOUNDLIST_BASH1
++				sg = ""
++				break
++			}
++			if ( sg == "seNight" ) {
++				snd SOUNDLIST_NIGHT
++				sg = ""
++				break
++			}
++			if ( sg == "seBgRain" ) {
++				snd SOUNDLIST_BG_RAIN
++				sg = ""
++				break
++			}
++			if ( sg == "seBgThunder" ) {
++				snd SOUNDLIST_BG_THUNDER
++				sg = ""
++				break
++			}
++			if ( sg == "seBgWind" ) {
++				snd SOUNDLIST_BG_WIND
++				sg = ""
++				break
++			}
++			if ( sg == "seBgSea" ) {
++				snd SOUNDLIST_BG_SEA
++				sg = ""
++				break
++			}
++			if ( sg == "seBgTown" ) {
++				snd SOUNDLIST_BG_TOWN
++				sg = ""
++				break
++			}
++			if ( sg == "seBgFire" ) {
++				snd SOUNDLIST_BG_FIRE
++				sg = ""
++				break
++			}
++			if ( sg == "seFoot1a" ) {
++				snd SOUNDLIST_FOOT1A
++				sg = ""
++				break
++			}
++			if ( sg == "seFoot1b" ) {
++				snd SOUNDLIST_FOOT1B
++				sg = ""
++				break
++			}
++			if ( sg == "seFoot2a" ) {
++				snd SOUNDLIST_FOOT2A
++				sg = ""
++				break
++			}
++			if ( sg == "seFoot2b" ) {
++				snd SOUNDLIST_FOOT2B
++				sg = ""
++				break
++			}
++			if ( sg == "seFoot2c" ) {
++				snd SOUNDLIST_FOOT2C
++				sg = ""
++				break
++			}
++			if ( sg == "seSnow" ) {
++				snd SOUNDLIST_SNOW
++				sg = ""
++				break
++			}
++			if ( sg == "seFishCast" ) {
++				snd SOUNDLIST_FISH_CAST
++				sg = ""
++				break
++			}
++			if ( sg == "seFishGet" ) {
++				snd SOUNDLIST_FISH_GET
++				sg = ""
++				break
++			}
++			if ( sg == "seFishFight" ) {
++				snd SOUNDLIST_FISH_FIGHT
++				sg = ""
++				break
++			}
++			if ( sg == "seAmmo" ) {
++				snd SOUNDLIST_AMMO
++				sg = ""
++				break
++			}
++			if ( sg == "seThrow2" ) {
++				snd SOUNDLIST_THROW2
++				sg = ""
++				break
++			}
++			if ( sg == "seScroll" ) {
++				snd SOUNDLIST_SCROLL
++				sg = ""
++				break
++			}
++			if ( sg == "seLog" ) {
++				snd SOUNDLIST_LOG
++				sg = ""
++				break
++			}
++			if ( sg == "seChara" ) {
++				snd SOUNDLIST_CHARA
++				sg = ""
++				break
++			}
++			if ( sg == "seWear" ) {
++				snd SOUNDLIST_WEAR
++				sg = ""
++				break
++			}
++			if ( sg == "seFeat" ) {
++				snd SOUNDLIST_FEAT
++				sg = ""
++				break
++			}
++			if ( sg == "sePort" ) {
++				snd SOUNDLIST_PORT
++				sg = ""
++				break
++			}
++			if ( sg == "seUnpop1" ) {
++				snd SOUNDLIST_UNPOP1
++				sg = ""
++				break
++			}
++			if ( sg == "seChat" ) {
++				snd SOUNDLIST_CHAT
++				sg = ""
++				break
++			}
++			if ( sg == "seInv" ) {
++				snd SOUNDLIST_INV
++				sg = ""
++				break
++			}
++			if ( sg == "seSkill" ) {
++				snd SOUNDLIST_SKILL
++				sg = ""
++				break
++			}
++			if ( sg == "seSpell" ) {
++				snd SOUNDLIST_SPELL
++				sg = ""
++				break
++			}
++			if ( sg == "seDice" ) {
++				snd SOUNDLIST_DICE
++				sg = ""
++				break
++			}
++			if ( sg == "seVomit" ) {
++				snd SOUNDLIST_VOMIT
++				sg = ""
++				break
++			}
++			if ( sg == "seAtkSword" ) {
++				snd SOUNDLIST_ATKSWORD
++				sg = ""
++				break
++			}
++			if ( sg == "seAtkIce" ) {
++				snd SOUNDLIST_ATK_ICE
++				sg = ""
++				break
++			}
++			if ( sg == "seAtkElec" ) {
++				snd SOUNDLIST_ATK_ELEC
++				sg = ""
++				break
++			}
++			if ( sg == "seAtkFire" ) {
++				snd SOUNDLIST_ATK_FIRE
++				sg = ""
++				break
++			}
++			if ( sg == "seAtkHell" ) {
++				snd SOUNDLIST_ATK_HELL
++				sg = ""
++				break
++			}
++			if ( sg == "seAtkPoison" ) {
++				snd SOUNDLIST_ATK_POISON
++				sg = ""
++				break
++			}
++			if ( sg == "seAtkNerve" ) {
++				snd SOUNDLIST_ATK_NERVE
++				sg = ""
++				break
++			}
++			if ( sg == "seAtkSound" ) {
++				snd SOUNDLIST_ATK_SOUND
++				sg = ""
++				break
++			}
++			if ( sg == "seAtkMind" ) {
++				snd SOUNDLIST_ATK_MIND
++				sg = ""
++				break
++			}
++			if ( sg == "seAtkChaos" ) {
++				snd SOUNDLIST_ATK_CHAOS
++				sg = ""
++				break
++			}
++			if ( sg == "seAtkDark" ) {
++				snd SOUNDLIST_ATK_DARK
++				sg = ""
++				break
++			}
++			if ( sg == "seCurse2" ) {
++				snd SOUNDLIST_CURSE2
++				sg = ""
++				break
++			}
++			if ( sg == "seCurse3" ) {
++				snd SOUNDLIST_CURSE3
++				sg = ""
++				break
++			}
++			if ( sg == "seEnc" ) {
++				snd SOUNDLIST_ENC
++				sg = ""
++				break
++			}
++			if ( sg == "seEnc2" ) {
++				snd SOUNDLIST_ENC2
++				sg = ""
++				break
++			}
++			if ( sg == "sePray2" ) {
++				snd SOUNDLIST_PRAY2
++				sg = ""
++				break
++			}
++			if ( sg == "seOffer2" ) {
++				snd SOUNDLIST_OFFER2
++				sg = ""
++				break
++			}
++			if ( sg == "seGong" ) {
++				snd SOUNDLIST_GONG
++				sg = ""
++				break
++			}
++			if ( sg == "seSlap" ) {
++				snd SOUNDLIST_SLAP
++				sg = ""
++				break
++			}
++			if ( sg == "seCeffet" ) {
++				snd SOUNDLIST_CEFFECT
++				sg = ""
++				break
++			}
++			if ( sg == "seRain" ) {
++				snd SOUNDLIST_RAIN
++				sg = ""
++				break
++			}
++			if ( sg == "seWave" ) {
++				snd SOUNDLIST_WAVE
++				sg = ""
++				break
++			}
++			if ( sg == "seWhistle" ) {
++				snd SOUNDLIST_WHISTLE
++				sg = ""
++				break
++			}
++			if ( sg == "seQuizBad" ) {
++				snd SOUNDLIST_QUIZBAD
++				sg = ""
++				break
++			}
++			if ( sg == "sePower" ) {
++				snd SOUNDLIST_POWER
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano1" ) {
++				snd SOUNDLIST_PIANO1
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano2" ) {
++				snd SOUNDLIST_PIANO2B
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano3" ) {
++				snd SOUNDLIST_PIANO3
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano4" ) {
++				snd SOUNDLIST_PIANO4B
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano5" ) {
++				snd SOUNDLIST_PIANO5
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano6" ) {
++				snd SOUNDLIST_PIANO6
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano7" ) {
++				snd SOUNDLIST_PIANO7B
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano8" ) {
++				snd SOUNDLIST_PIANO8
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano9" ) {
++				snd SOUNDLIST_PIANO9B
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano10" ) {
++				snd SOUNDLIST_PIANO10
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano11" ) {
++				snd SOUNDLIST_PIANO11B
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano12" ) {
++				snd SOUNDLIST_PIANO12
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano13" ) {
++				snd SOUNDLIST_PIANO13
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano14" ) {
++				snd SOUNDLIST_PIANO14B
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano15" ) {
++				snd SOUNDLIST_PIANO15
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano16" ) {
++				snd SOUNDLIST_PIANO16B
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano17" ) {
++				snd SOUNDLIST_PIANO17
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano18" ) {
++				snd SOUNDLIST_PIANO18
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano19" ) {
++				snd SOUNDLIST_PIANO19B
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano20" ) {
++				snd SOUNDLIST_PIANO20
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano21" ) {
++				snd SOUNDLIST_PIANO21B
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano22" ) {
++				snd SOUNDLIST_PIANO22
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano23" ) {
++				snd SOUNDLIST_PIANO23B
++				sg = ""
++				break
++			}
++			if ( sg == "sePiano24" ) {
++				snd SOUNDLIST_PIANO24
++				sg = ""
++				break
++			}
++			if ( sg == "seSonic" ) {
++				snd SOUNDLIST_SONIC
++				sg = ""
++				break
++			}
++			if ( sg == "seShots" ) {
++				snd SOUNDLIST_SHOTS
++				sg = ""
++				break
++			}
++			if ( sg == "seStab" ) {
++				snd SOUNDLIST_STAB
++				sg = ""
++				break
++			}
++			if ( sg == "seMizu" ) {
++				snd SOUNDLIST_MIZU
++				sg = ""
++				break
++			}
++			if ( sg == "seBuble" ) {
++				snd SOUNDLIST_BUBLE
++				sg = ""
++				break
++			}
++			if ( sg == "seScream" ) {
++				snd SOUNDLIST_SCREAM
++				sg = ""
++				break
++			}
++			if ( sg == "seSwing" ) {
++				snd SOUNDLIST_SWING
++				sg = ""
++				break
++			}
++			if ( sg == "seGrowl" ) {
++				snd SOUNDLIST_BEAST02
++				sg = ""
++				break
++			}
++			if ( sg == "seChatF" ) {
++				snd SOUNDLIST_MIND000
++				sg = ""
++				break
++			}
++			if ( sg == "seChatH" ) {
++				snd SOUNDLIST_LOAD
++				sg = ""
++				break
++			}
++			if ( sg == "seHanabi" ) {
++				snd SOUNDLIST_EXPLOSION
++				sg = ""
++				break
++			}
++			if ( sg == "seClap2f" ) {
++				snd SOUNDLIST_CLAP2F
++				sg = ""
++				break
++			}
++			if ( sg == "seClap4f" ) {
++				snd SOUNDLIST_CLAP4F
++				sg = ""
++				break
++			}
++			if ( sg == "seChime2" ) {
++				snd SOUNDLIST_CHIME000R
++				sg = ""
++				break
++			}
++			if ( sg == "seGunshot1" ) {
++				snd SOUNDLIST_GUNSHOT1
++				sg = ""
++				break
++			}
++			if ( sg == "seGunshot3" ) {
++				snd SOUNDLIST_GUNSHOT3
++				sg = ""
++				break
++			}
++			if ( sg == "seCrack" ) {
++				snd SOUNDLIST_CRACK
++				sg = ""
++				break
++			}
++			if ( sg == "seCrack2" ) {
++				snd SOUNDLIST_CRACK2
++				sg = ""
++				break
++			}
++			if ( sg == "seBreak" ) {
++				snd SOUNDLIST_ATTACK00
++				sg = ""
++				break
++			}
++			if ( sg == "seBomH" ) {
++				snd SOUNDLIST_BOM03
++				sg = ""
++				break
++			}
++			if ( sg == "seBomS" ) {
++				snd SOUNDLIST_BOM06
++				sg = ""
++				break
++			}
++			if ( sg == "seBomN" ) {
++				snd SOUNDLIST_BOM15
++				sg = ""
++				break
++			}
++			if ( sg == "sePusyu" ) {
++				snd SOUNDLIST_SWING39
++				sg = ""
++				break
++			}
++			if ( sg == "seMecha" ) {
++				snd SOUNDLIST_MECHA20
++				sg = ""
++				break
++			}
++			if ( sg == "seWaterm" ) {
++				snd SOUNDLIST_WATERM
++				sg = ""
++				break
++			}
++			if ( sg == "seGoto" ) {
++				snd SOUNDLIST_DRAG01
++				sg = ""
++				break
++			}
++			if ( sg == "seInanaki" ) {
++				snd SOUNDLIST_INANAKI
++				sg = ""
++				break
++			}
++			if ( sg == "seCar" ) {
++				snd SOUNDLIST_CAR_HORN1
++				sg = ""
++				break
++			}
++			if ( sg == "seLocomo" ) {
++				snd SOUNDLIST_LOCOMO
++				sg = ""
++				break
++			}
++			if ( sg == "seSiren" ) {
++				snd SOUNDLIST_SIREN
++				sg = ""
++				break
++			}
++			if ( sg == "sePipipi" ) {
++				snd SOUNDLIST_POWER07
++				sg = ""
++				break
++			}
++			if ( sg == "seTaore" ) {
++				snd SOUNDLIST_TAORE08
++				sg = ""
++				break
++			}
++			if ( sg == "seReload" ) {
++				snd SOUNDLIST_TM2_SWITCH001
++				sg = ""
++				break
++			}
++			if ( sg == "sePshot" ) {
++				snd SOUNDLIST_TM2_HIT000
++				sg = ""
++				break
++			}
+ 			if ( sg == "se0" ) {
+ 				snd SOUNDLIST_USER_SE00
+ 				sg = ""
+ 				break
+ 			}
+@@ -17292,10 +19269,125 @@
+ 			if ( sg == "se99" ) {
+ 				snd SOUNDLIST_USER_SE99
+ 				sg = ""
+ 				break
+ 			}
++			if ( sg == "seFreeze" ) {
++				snd SOUNDLIST_FREEZE01
++				sg = ""
++				break
++			}
++			if ( sg == "seTea" ) {
++				snd SOUNDLIST_TM2_ALCHEMIST000
++				sg = ""
++				break
++			}
++			if ( sg == "seTea2" ) {
++				snd SOUNDLIST_KACHI08
++				sg = ""
++				break
++			}
++			if ( sg == "seSmoke" ) {
++				snd SOUNDLIST_SMOKE03
++				sg = ""
++				break
++			}
++			if ( sg == "seBgRiver" ) {
++				snd SOUNDLIST_TM2_RIVER000
++				sg = ""
++				break
++			}
++			if ( sg == "seBgRiver2" ) {
++				snd SOUNDLIST_TM2_RIVER001
++				sg = ""
++				break
++			}
++			if ( sg == "seSemi1" ) {
++				snd SOUNDLIST_SEMI1
++				sg = ""
++				break
++			}
++			if ( sg == "seSemi2" ) {
++				snd SOUNDLIST_SEMI2
++				sg = ""
++				break
++			}
++			if ( sg == "seSemi3" ) {
++				snd SOUNDLIST_SEMI3
++				sg = ""
++				break
++			}
++			if ( sg == "seSemi4" ) {
++				snd SOUNDLIST_SEMI4
++				sg = ""
++				break
++			}
++			if ( sg == "seSemi5" ) {
++				snd SOUNDLIST_SEMI5
++				sg = ""
++				break
++			}
++			if ( sg == "seGBreak" ) {
++				snd SOUNDLIST_CRASH14
++				sg = ""
++				break
++			}
++			if ( sg == "seWhistleShort" ) {
++				snd SOUNDLIST_WHISTLE00
++				sg = ""
++				break
++			}
++			if ( sg == "seLbazooka" ) {
++				snd SOUNDLIST_GUN10
++				sg = ""
++				break
++			}
++			if ( sg == "seBaby" ) {
++				snd SOUNDLIST_CHANDLER23
++				sg = ""
++				break
++			}
++			if ( sg == "seHawk" ) {
++				snd SOUNDLIST_HAWK1
++				sg = ""
++				break
++			}
++			if ( sg == "seBgSeabed" ) {
++				snd SOUNDLIST_UMINADO
++				sg = ""
++				break
++			}
++			if ( sg == "seMizu2" ) {
++				snd SOUNDLIST_MIZU2
++				sg = ""
++				break
++			}
++			if ( sg == "seAtkfall" ) {
++				snd SOUNDLIST_BURST00
++				sg = ""
++				break
++			}
++			if ( sg == "seGoro" ) {
++				snd SOUNDLIST_GORO05
++				sg = ""
++				break
++			}
++			if ( sg == "seAtkDrill" ) {
++				snd SOUNDLIST_MECHA15
++				sg = ""
++				break
++			}
++			if ( sg == "seCat" ) {
++				snd SOUNDLIST_CAT03
++				sg = ""
++				break
++			}
++			if ( sg == "seDog" ) {
++				snd SOUNDLIST_DOG02
++				sg = ""
++				break
++			}
+ 			sg = "Unknown Code"
+ 		loop
+ 		buffg = sg(1) + sg + sg(2)
+ 	loop
+ 	return
+@@ -20656,11 +22748,11 @@
+ 	dim floorstack, 400
+ 	sdim key_list, 2, 20
+ 	sdim playerheader, 100
+ 	sdim artifactlocation
+ 	sdim newsbuff
+-	sdim soundfile, 30, 309
++	sdim soundfile, 30, 311
+ 	sdim musicfile, 30, 139 + 5
+ 	dim slight, inf_screenw + 4, inf_screenh + 4
+ 	dim slightbk, inf_screenw + 4, inf_screenh + 4
+ 	gsel BUFFER_INF
+ 	gmode 0
+@@ -20805,11 +22897,11 @@
+ 		goto *exit_game
+ 	}
+ 	else {
+ 		errorhack++
+ 	}
+-	buf = "HspError " + wparam + " WinError " + GetLastError() + " Ver " + int(double("6.37") * 1000) + " Mode " + mode + "\n"
++	buf = "HspError " + wparam + " WinError " + GetLastError() + " Ver " + int(double("6.38") * 1000) + " Mode " + mode + "\n"
+ 	buf += "efId " + efid + " efP " + efp + " Area " + gdata(GDATA_AREA) + "/" + gdata(GDATA_LEVEL) + "\n"
+ 	buf += "ci "
+ 	if ( ci < 200 ) {
+ 		buf += "0"
+ 		if ( ci >= 0 ) {
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27-borscht/main.hsp ../2.27R-borscht/main.hsp
+--- ../2.27-borscht/main.hsp	2025-05-19 06:35:57.032903300 +0800
++++ ../2.27R-borscht/main.hsp	2025-06-02 04:42:47.669608700 +0800
+@@ -182,11 +182,11 @@
+ 	if ( dbg_randseed != 0 ) {
+ 		randseed = dbg_randseed
+ 	}
+ 	randomize randseed
+ 	exrand_randomize randseed
+-	title "ElonaPlus 2.27"
++	title "ElonaPlus 2.27R"
+ 	goto *system_init
+ 	goto *label_0003
+ 
+ #deffunc netload str netload_filename
+ 	netrequest netload_filename
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27-borscht/map_user.hsp ../2.27R-borscht/map_user.hsp
+--- ../2.27-borscht/map_user.hsp	2025-05-19 06:35:57.122915400 +0800
++++ ../2.27R-borscht/map_user.hsp	2025-06-02 04:42:47.751757300 +0800
+@@ -642,10 +642,11 @@
+ 				}
+ 				if ( gain2 < 900 ) {
+ 					txt lang(name(tc) + "は特に得るものが無かったようだ。", name(tc) + " didn't seem to have anything to gain from the travel.")
+ 					continue
+ 				}
++				skillexp SKILL_NORMAL_TRAVELING, tc, limit(gdata(GDATA_TRAVEL_DISTANCE) / 10 + 500, 0, 2000), 9999
+ 				repeat 112 - 100, 100
+ 					if ( sorg(cnt, tc) == 0 ) {
+ 						continue
+ 					}
+ 					skillexp cnt, tc, gain2, 9999
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27-borscht/proc.hsp ../2.27R-borscht/proc.hsp
+--- ../2.27-borscht/proc.hsp	2025-05-19 06:35:57.257656900 +0800
++++ ../2.27R-borscht/proc.hsp	2025-06-02 04:42:47.883305900 +0800
+@@ -8991,12 +8991,10 @@
+ 								cbitmod CHARA_BIT_SUMMONED, rc, TRUE
+ 							}
+ 						}
+ 						if ( 0 ) {
+ 							if ( cc == CHARA_PLAYER ) {
+-								flt
+-								characreate -1, CREATURE_ID_FOX_SPIRIT, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER)
+ 							}
+ 						}
+ 					}
+ 					if ( efid != SKILL_SPACT_SUMMON_SISTER ) {
+ 						if ( cdata(CDATA_ID, rc) == cdata(CDATA_ID, cc) ) {
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27-borscht/screen.hsp ../2.27R-borscht/screen.hsp
+--- ../2.27-borscht/screen.hsp	2025-05-19 06:35:57.302584200 +0800
++++ ../2.27R-borscht/screen.hsp	2025-06-02 04:42:47.929202100 +0800
+@@ -1134,11 +1134,11 @@
+ 			color 0, 0, 0
+ 			bmes "You can surrender by pressing the ESC key.", 235, 235, 235
+ 		}
+ 	}
+ 	if ( 0 ) {
+-		paraa = mdata(MDATA_WEREWOLF_PROGRESS)
++		paraa = cdata(CDATA_ROW_ACT_WARNING, CHARA_PLAYER)
+ 		parab = cdata(CDATA_TARGET, CHARA_PLAYER)
+ 		parac = cdata(CDATA_AI_AGGRO, CHARA_PLAYER)
+ 		if ( jp ) {
+ 			pos inf_clockw + 380, inf_clocky + 37
+ 			color 0, 0, 0
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27-borscht/system.hsp ../2.27R-borscht/system.hsp
+--- ../2.27-borscht/system.hsp	2025-05-19 06:35:57.316210700 +0800
++++ ../2.27R-borscht/system.hsp	2025-06-02 04:42:47.942202200 +0800
+@@ -38,11 +38,11 @@
+ 	}
+ 	gdata(GDATA_TEMPORARY_FLAGS2) = 0
+ 	return
+ 
+ *fixSave
+-	if ( gdata(GDATA_VERSION) != int(double("6.37") * 1000) ) {
++	if ( gdata(GDATA_VERSION) != int(double("6.38") * 1000) ) {
+ 		dialog lang("Ver." + gdata(GDATA_VERSION) + "のセーブデータをアップデートします。", "Updating your save data from Ver." + gdata(GDATA_VERSION) + " now.")
+ 	}
+ 	if ( gdata(GDATA_HEIR_DEED) < 0 ) {
+ 		gdata(GDATA_HEIR_DEED) = 1
+ 	}
+@@ -899,18 +899,23 @@
+ 	}
+ 	if ( gdata(GDATA_VERSION) < 6370 ) {
+ 		gdata(GDATA_TRAVEL_DISTANCE) = 0
+ 		repeat 245
+ 			cdata(CDATA_SEALED_MAGIC, cnt) = 0
+-			cdata(CDATA_MATERIAL1_COUNTER, cnt) = 0
++			cdata(CDATA_CHARACTER_TIER, cnt) = CHARACTER_TIER_NONE
+ 		loop
+ 	}
+-	if ( gdata(GDATA_VERSION) != int(double("6.37") * 1000) ) {
++	if ( gdata(GDATA_VERSION) < 6380 ) {
++		repeat 16
++			cdata(CDATA_CHARACTER_TIER, cnt) = CHARACTER_TIER_NONE
++		loop
++	}
++	if ( gdata(GDATA_VERSION) != int(double("6.38") * 1000) ) {
+ 		gdata(GDATA_WORLD_RENEW) = TRUE
+ 	}
+ 	del_chara 56
+-	if ( gdata(GDATA_VERSION) > int(double("6.37") * 1000) ) {
++	if ( gdata(GDATA_VERSION) > int(double("6.38") * 1000) ) {
+ 		dialog "invalid version"
+ 		goto *exit_game
+ 	}
+ 	if ( gdata(GDATA_PLAY_TIME) < 0 ) {
+ 		gdata(GDATA_PLAY_TIME) = 0
+@@ -960,11 +965,11 @@
+ 		if ( gdata(GDATA_GAMEMODE_PENALTY) == 1 ) {
+ 			gdata(GDATA_GAMEMODE_PENALTY) = 0
+ 			snd SOUNDLIST_ENC
+ 		}
+ 	}
+-	gdata(GDATA_VERSION) = int(double("6.37") * 1000)
++	gdata(GDATA_VERSION) = int(double("6.38") * 1000)
+ 	cbitmod CHARA_BIT_PCC, CHARA_PLAYER, TRUE
+ 	gdata(GDATA_SPEEDSUM_RESET) = 1
+ 	gosub *initial_recipe
+ 	return
+ 
+@@ -3427,11 +3432,11 @@
+ 		pos x, y
+ 		mesbox inputlog, 600, 0, 5, val(2) * (1 + en)
+ 		pos x + 4, y + 4
+ 		gfini dx - 1, 35
+ 		gfdec 60, 60, 60
+-		aplsel "ElonaPlus 2.27"
++		aplsel "ElonaPlus 2.27R"
+ 		if ( stat == 1 ) {
+ 			dialog "Failed to get WINDOW ID", 1
+ 			clrobj 1
+ 			cfg_msg_box = 0
+ 			goto *prompt_word
+@@ -3790,11 +3795,11 @@
+ 
+ *game_debug
+ 	notesel dbm
+ 	buff = ""
+ 	if ( dbm == "" ) {
+-		noteadd "ElonaPlus 2.27" + " v" + "6.37" + " Debug Console    Type \"?\" for help. Hit ESC to exit."
++		noteadd "ElonaPlus 2.27R" + " v" + "6.38" + " Debug Console    Type \"?\" for help. Hit ESC to exit."
+ 		noteadd ""
+ 	}
+ 	font lang(cfg_font1, cfg_font2), 14 - en * 2, 0
+ 	objmode 2
+ 	pos 0, 24
+@@ -4201,11 +4206,11 @@
+ 	objprm 1, dbm
+ 	objprm 2, ""
+ 	return
+ 
+ *mutexobj
+-	CreateMutexA 0, 0, "ElonaPlus 2.27"
++	CreateMutexA 0, 0, "ElonaPlus 2.27R"
+ 	mutex_handle = stat
+ 	func_4
+ 	if ( stat == 183 ) {
+ 		dialog lang("二重起動のため終了します。", "The program is already running."), 1
+ 		end

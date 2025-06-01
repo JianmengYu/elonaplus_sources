@@ -1,116 +1,28 @@
---- ./2.26.hsp	2025-05-19 06:35:38.798120400 +0800
-+++ ./2.27.hsp	2025-05-19 06:35:38.828161600 +0800
-@@ -33,10 +33,11 @@
- #define global	ACTION_BEGGING	29
- #define global	ACTION_SLAVE_SPINNER	107
- #define global	ACTION_SLAVE_WHEEL	108
- #define global	ACTION_JUMPING_DROP	30
- #define global	ACTION_DIVING_DRILL	31
-+#define global	ACTION_SEX_2	32
+--- ./2.27.hsp	2025-06-02 04:42:20.781802500 +0800
++++ ./2.27R.hsp	2025-06-02 04:42:20.810712400 +0800
+@@ -6697,11 +6697,11 @@
+ #define global	SOUNDLIST_CURSE3	117
+ #define global	SOUNDLIST_ENC	118
+ #define global	SOUNDLIST_ENC2	119
+ #define global	SOUNDLIST_PRAY2	120
+ #define global	SOUNDLIST_OFFER2	121
+-#define global	SOUNDLIST_MAX	SOUNDLIST_CHANDLER23 + 1
++#define global	SOUNDLIST_MAX	SOUNDLIST_DOG02 + 1
+ #define global	SOUNDLIST_GONG	122
+ #define global	SOUNDLIST_SLAP	123
+ #define global	SOUNDLIST_CEFFECT	124
+ #define global	SOUNDLIST_RAIN	125
+ #define global	SOUNDLIST_WAVE	126
+@@ -6885,10 +6885,12 @@
+ #define global	SOUNDLIST_UMINADO	304
+ #define global	SOUNDLIST_MIZU2	305
+ #define global	SOUNDLIST_BURST00	306
+ #define global	SOUNDLIST_GORO05	307
+ #define global	SOUNDLIST_MECHA15	308
++#define global	SOUNDLIST_CAT03	309
++#define global	SOUNDLIST_DOG02	310
  
- // Group: action_2
- #define global	ACTION_SLEEP	100
- #define global	ACTION_CONSTRUCT	101
- #define global	ACTION_OPEN_HATCH	102
-@@ -357,11 +358,11 @@
- #define global	BUFF_GROW_LEARNING	24
- #define global	BUFF_GROW_WILL	25
- #define global	BUFF_GROW_MAGIC	26
- #define global	BUFF_GROW_CHARISMA	27
- #define global	BUFF_GROW_SPEED	28
--#define global	MAX_BUFF	BUFF_ENERGY_MAX + 1
-+#define global	MAX_BUFF	BUFF_MIASMA_OF_HELL + 1
- #define global	BUFF_CLEAR_MIND	29
- #define global	BUFF_SUPER_REGEN	30
- #define global	BUFF_FEATHER	31
- #define global	BUFF_CHARGE	32
- #define global	BUFF_EMERGENCY_EVASION	33
-@@ -400,10 +401,11 @@
- #define global	BUFF_LIFE_TASTING	67
- #define global	BUFF_MOGRANIC_AURA	66
- #define global	BUFF_CHAIN_OF_MANA	68
- #define global	BUFF_FLAME_OF_LIFE	69
- #define global	BUFF_ENERGY_MAX	70
-+#define global	BUFF_MIASMA_OF_HELL	71
- 
- // Group: buff_type
- #define global	BUFF_TYPE_BUFF	1
- #define global	BUFF_TYPE_HEX	2
- #define global	BUFF_TYPE_FOOD	3
-@@ -895,10 +897,12 @@
- #define global	CHARA_BIT_QUICK_RESTORE	1043
- #define global	CHARA_BIT_ENHANCED_ROCK_THROWING	1044
- #define global	CHARA_BIT_BRAIN_PARASITE	1045
- #define global	CHARA_BIT_SEALED_MAGIC	1046
- #define global	CHARA_BIT_SEALED_ABILITY	1047
-+#define global	CHARA_BIT_HAS_CLEMENTIAD	1048
-+#define global	CHARA_BIT_BEGGING_FOR_LIFE	1049
- 
- // Group: chara_id
- #define global	CREATURE_ID_BUG	0
- #define global	CREATURE_ID_SHOPKEEPER	1
- #define global	CREATURE_ID_ZEOME_THE_FALSE_PROPHET	2
-@@ -2282,10 +2286,11 @@
- #define global	DBMODE_FLAVOR_MIZU_ASOBI	144
- #define global	DBMODE_FLAVOR_MIZU_ASOBI_END	145
- #define global	DBMODE_FLAVOR_TAG	146
- #define global	DBMODE_FLAVOR_TAG_EVO	147
- #define global	DBMODE_FLAVOR_LEADING	148
-+#define global	DBMODE_FLAVOR_CLEMENTIA	149
- 
- // Group: dbmode_normal
- #define global	DBMODE_NONE	0
- #define global	DBMODE_FIND	1
- #define global	DBMODE_REF	2
-@@ -4516,11 +4521,11 @@
- #define global	ITEM_ID_SKULL_BOW	788
- #define global	ITEM_ID_POT_FOR_FUSION	789
- #define global	ITEM_ID_POT_OF_ALCHEMIST	790
- #define global	ITEM_ID_DRAGON_SLAYER	791
- #define global	ITEM_ID_PUTITORO	792
--#define global	MAX_ITEM_ID	ITEM_ID_LIGHTNING_DISCHARGER + 3
-+#define global	MAX_ITEM_ID	ITEM_ID_SNOW_CRYSTAL + 3
- #define global	MAX_ITEM_DBID	1499
- #define global	ITEM_ID_PILE_DRIVER	793
- #define global	ITEM_ID_NEGATIVE_EDGE	794
- #define global	ITEM_ID_GAU_17_CUSTOM	795
- #define global	ITEM_ID_KANEITUUHOU	796
-@@ -5031,10 +5036,12 @@
- #define global	ITEM_ID_HIDEN_MASHI	1301
- #define global	ITEM_ID_KONMOU_HAPPA	1302
- #define global	ITEM_ID_HONEGUM	1303
- #define global	ITEM_ID_ECHINOBOX	1304
- #define global	ITEM_ID_LIGHTNING_DISCHARGER	1305
-+#define global	ITEM_ID_DARKNESSBANG	1306
-+#define global	ITEM_ID_SNOW_CRYSTAL	1307
- 
- // Group: item_known
- #define global	ITEM_KNOWN_NONE	0
- #define global	ITEM_KNOWN_NAME	1
- #define global	ITEM_KNOWN_QUALITY	2
-@@ -6227,11 +6234,11 @@
- #define global	SKILL_SPACT_CHEER	656
- #define global	SKILL_SPACT_MEWMEWMEW	657
- #define global	SKILL_SPACT_DECAPITATION	658
- #define global	SKILL_SPACT_DROP_MINE	659
- #define global	SKILL_SPACT_MANIS_DISASSEMBLY	660
--#define global	MAX_SKILL	SKILL_SPACT_POKER_FORCE + 1
-+#define global	MAX_SKILL	SKILL_SPACT_MIASMA_OF_HELL + 1
- #define global	SKILL_SPACT_INSANE_WAVE	661
- #define global	SKILL_SPACT_SUPER_VIBRATING_FIST	662
- #define global	SKILL_SPACT_TEMPEST_ARROW	663
- #define global	SKILL_SPACT_EXCESSIVE_HEAL	664
- #define global	SKILL_SPACT_SHINE_SNAIL	665
-@@ -6436,10 +6443,12 @@
- #define global	SKILL_SPACT_SHIKIORIGAMI_AIRPLANE	864
- #define global	SKILL_SPACT_BRAIN_PARASITIZE	865
- #define global	SKILL_SPACT_KAMIKAKUSHI	866
- #define global	SKILL_SPACT_HIP_ATTACK	867
- #define global	SKILL_SPACT_POKER_FORCE	868
-+#define global	SKILL_SPACT_CLEMENTIA	869
-+#define global	SKILL_SPACT_MIASMA_OF_HELL	870
- 
- // Group: skill_spell
- #define global	STARTING_SKILL_SPELL	400
- #define global	SKILL_SPELL_HEAL_LIGHT	400
- #define global	SKILL_SPELL_HEAL_CRITICAL	401
+ // Group: sprite_sheet
+ #define global	SPRITE_SHEET_COLS_MAP	33
+ #define global	SPRITE_SHEET_ROWS_MAP	25
+ #define global	SPRITE_SHEET_COLS_ITEM	33
