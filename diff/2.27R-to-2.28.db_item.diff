@@ -1,0 +1,296 @@
+--- ../2.27R-borscht/db_item.hsp	2025-06-02 04:42:47.449796700 +0800
++++ ../2.28-borscht/db_item.hsp	2025-08-01 02:55:10.093789000 +0800
+@@ -3,10 +3,76 @@
+ 		goto *db_item_set
+ 	}
+ 	dbmax = 0
+ 	dbsum = 0
+ 	if ( 1 > objlv ) {
++		goto *db_item_MIMIRROCRY
++	}
++	if ( fltselect != 1 ) {
++		goto *db_item_MIMIRROCRY
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_JUNK ) {
++			goto *db_item_MIMIRROCRY
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_MIMIRROCRY
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_SURSTROMMING), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_MIMIRROCRY
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1309, dbsum
++	dbmax++
++
++*db_item_MIMIRROCRY
++	if ( 1 > objlv ) {
++		goto *db_item_SNOW_CRYSTAL
++	}
++	if ( fltselect != 1 ) {
++		goto *db_item_SNOW_CRYSTAL
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *db_item_SNOW_CRYSTAL
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_SNOW_CRYSTAL
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_MIMIRROCRY), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_SNOW_CRYSTAL
++		}
++	}
++	dbsum += 800000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1308, dbsum
++	dbmax++
++
++*db_item_SNOW_CRYSTAL
++	if ( 1 > objlv ) {
+ 		goto *db_item_DARKNESSBANG
+ 	}
+ 	if ( fltselect != 1 ) {
+ 		goto *db_item_DARKNESSBANG
+ 	}
+@@ -43181,10 +43247,136 @@
+ 		dbid = 25
+ 	}
+ 	return
+ 
+ *db_item_set
++	if ( dbid == 1309 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 200
++			inv(INV_ITEM_WEIGHT, ci) = 500
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_SURSTROMMING
++			inv(INV_ITEM_PIC, ci) = xy2pic(29, 39)
++			reftype = FILTER_JUNK
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_JUNK
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 64000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 200
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "缶の中で発酵し続けた保存食の成れの果て。解読によると古代の魚の塩漬けだったらしい。パンパンに膨らんでおり、強い衝撃を与えると臭気が噴出し生化学と料理の技術に依存した爆発を起こす。開封は危険なので内部を物質感知したところ、中身が分解されてほとんどガス状になっていることが判明した。\n#～移り変わりゆくティリスの食～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "缶詰めだったもの。食べることはできない。\n#～鑑定報告書：＜廃品＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1308 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 1500
++			inv(INV_ITEM_WEIGHT, ci) = 600
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_MIMIRROCRY
++			inv(INV_ITEM_PIC, ci) = xy2pic(29, 38)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_MIMIRROCRY
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 1500
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 800
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "魔石が組み込まれた魔道具。下部のケースにカードをセットすると、そのカードの生物の姿へと変身させる光線が上部の鏡から放たれる。再度使うか死亡するまで効果は解除されないが、変装セットのような認識阻害能力は備わっていないため注意。ミミックの擬態メカニズムを参考にしており、擬態鏡と呼ばれることもある。\n#～魔具全典～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "別の姿を与える道具だ。誰にでも何度でも使用できる。\n#～鑑定報告書：＜魔道具＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
+ 	if ( dbid == 1307 ) {
+ 		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_VALUE, ci) = 300
+ 			inv(INV_ITEM_WEIGHT, ci) = 3000
+ 		}
+@@ -129886,10 +130078,14 @@
+ 		return 0
+ 	}
+ 	return -999
+ 
+ *db_setFilterItem
++	filter_item(ITEM_ID_SURSTROMMING) = ""
++	rffilter_item(ITEM_ID_SURSTROMMING) = ""
++	filter_item(ITEM_ID_MIMIRROCRY) = ""
++	rffilter_item(ITEM_ID_MIMIRROCRY) = ""
+ 	filter_item(ITEM_ID_SNOW_CRYSTAL) = ""
+ 	rffilter_item(ITEM_ID_SNOW_CRYSTAL) = ""
+ 	filter_item(ITEM_ID_DARKNESSBANG) = ""
+ 	rffilter_item(ITEM_ID_DARKNESSBANG) = ""
+ 	filter_item(ITEM_ID_LIGHTNING_DISCHARGER) = ""
+@@ -132505,10 +132701,36 @@
+ 	filter_item(ITEM_ID_DUMMY) = ""
+ 	rffilter_item(ITEM_ID_DUMMY) = ""
+ 	return
+ 
+ *db_setItem
++	ilight(ITEM_ID_SURSTROMMING) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_SURSTROMMING) = ""
++	iorgweight(ITEM_ID_SURSTROMMING) = 500
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_SURSTROMMING) = "シュールストレミング"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_SURSTROMMING) = "surstromming"
++		ioriginalnameref2(ITEM_ID_SURSTROMMING) = ""
++	}
++	ipicref(ITEM_ID_SURSTROMMING) = xy2pic(29, 39)
++	iknownnameref(ITEM_ID_SURSTROMMING) = ioriginalnameref(ITEM_ID_SURSTROMMING)
++	icolref(ITEM_ID_SURSTROMMING) = COLOR_DEFAULT
++	ilight(ITEM_ID_MIMIRROCRY) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_MIMIRROCRY) = ""
++	iorgweight(ITEM_ID_MIMIRROCRY) = 600
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_MIMIRROCRY) = "ミラクリー"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_MIMIRROCRY) = "mimirrocry"
++		ioriginalnameref2(ITEM_ID_MIMIRROCRY) = ""
++	}
++	ipicref(ITEM_ID_MIMIRROCRY) = xy2pic(29, 38)
++	iknownnameref(ITEM_ID_MIMIRROCRY) = ioriginalnameref(ITEM_ID_MIMIRROCRY)
++	icolref(ITEM_ID_MIMIRROCRY) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_SNOW_CRYSTAL) = LIGHT_TYPE_CRYSTAL
+ 	ialphanameref(ITEM_ID_SNOW_CRYSTAL) = ""
+ 	iorgweight(ITEM_ID_SNOW_CRYSTAL) = 3000
+ 	if ( jp ) {
+ 		ioriginalnameref(ITEM_ID_SNOW_CRYSTAL) = "雪の大結晶"
+@@ -151220,11 +151442,11 @@
+ 		ioriginalnameref2(ITEM_ID_DUMMY) = ""
+ 	}
+ 	ipicref(ITEM_ID_DUMMY) = xy2pic(0, 1)
+ 	iknownnameref(ITEM_ID_DUMMY) = ioriginalnameref(ITEM_ID_DUMMY)
+ 	icolref(ITEM_ID_DUMMY) = COLOR_DEFAULT
+-	maxitemid = 1310
++	maxitemid = 1312
+ 	return
+ 	goto *recipe_ref
+ 
+ #deffunc calcweaponfix int calcweaponfix_itemid
+ 	pierce = 0
+@@ -152557,11 +152779,13 @@
+ 		matval = SKILL_NORMAL_JEWELER, 1, 100
+ 		matneed = MATERIAL_PAPER, 2, MATERIAL_MEMORY_FRAGMENT, 1
+ 		return 1
+ 	}
+ 	return -1
+-	goto *label_3640
++	goto *label_3644
++
++
+ 
+ 
+ 
+ 
+ 

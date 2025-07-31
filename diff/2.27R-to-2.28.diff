@@ -1,0 +1,2405 @@
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27R-borscht/action.hsp ../2.28-borscht/action.hsp
+--- ../2.27R-borscht/action.hsp	2025-06-02 04:42:46.242907000 +0800
++++ ../2.28-borscht/action.hsp	2025-08-01 02:55:08.862558600 +0800
+@@ -645,11 +645,11 @@
+ 						cdata(CDATA_CONDITION_SUFFOCATION, tc) = 10
+ 					}
+ 				}
+ 			}
+ 			else {
+-				if ( inv(INV_ITEM_ID, ci) != ITEM_ID_BOMB_BARREL & inv(INV_ITEM_ID, ci) != ITEM_ID_MAGISTUS & inv(INV_ITEM_ID, ci) != ITEM_ID_TRISMAGISTUS & inv(INV_ITEM_ID, ci) != ITEM_ID_OHUDA & inv(INV_ITEM_ID, ci) != ITEM_ID_PRESENT & inv(INV_ITEM_ID, ci) != ITEM_ID_WILD_FLOWER & inv(INV_ITEM_ID, ci) != ITEM_ID_ECHINOBOX & inv(INV_ITEM_ID, ci) != ITEM_ID_LIGHTNING_DISCHARGER & inv(INV_ITEM_ID, ci) != ITEM_ID_DARKNESSBANG & inv(INV_ITEM_ID, ci) != ITEM_ID_SNOW_CRYSTAL ) {
++				if ( inv(INV_ITEM_ID, ci) != ITEM_ID_BOMB_BARREL & inv(INV_ITEM_ID, ci) != ITEM_ID_MAGISTUS & inv(INV_ITEM_ID, ci) != ITEM_ID_TRISMAGISTUS & inv(INV_ITEM_ID, ci) != ITEM_ID_OHUDA & inv(INV_ITEM_ID, ci) != ITEM_ID_PRESENT & inv(INV_ITEM_ID, ci) != ITEM_ID_WILD_FLOWER & inv(INV_ITEM_ID, ci) != ITEM_ID_ECHINOBOX & inv(INV_ITEM_ID, ci) != ITEM_ID_LIGHTNING_DISCHARGER & inv(INV_ITEM_ID, ci) != ITEM_ID_DARKNESSBANG & inv(INV_ITEM_ID, ci) != ITEM_ID_SNOW_CRYSTAL & inv(INV_ITEM_ID, ci) != ITEM_ID_SURSTROMMING ) {
+ 					dmghp tc, limit(sdata(SKILL_WEAPON_THROWING, cc) / 5, 1, 200) * limit(inv(INV_ITEM_WEIGHT, ci) / 1000, 1, 500) + rnd(inv(INV_ITEM_WEIGHT, ci) / 1000 + sdata(SKILL_WEAPON_THROWING, cc) + 1), cc
+ 				}
+ 				if ( inv(INV_ITEM_ID, ci) == ITEM_ID_SKULL_SWORD | inv(INV_ITEM_ID, ci) == ITEM_ID_VIOLENT_SKULL_SWORD ) {
+ 					if ( inv(INV_ITEM_PARAM2, ci) != 0 ) {
+ 						inv(INV_ITEM_PARAM2, ci) = 0
+@@ -719,10 +719,21 @@
+ 					efid = SKILL_SPELL_FIRE_BALL
+ 					efp = (sdata(SKILL_NORMAL_CARPENTRY, CHARA_PLAYER) + sdata(SKILL_NORMAL_GENE_ENGINEER, CHARA_PLAYER) + cdata(CDATA_LEVEL, CHARA_PLAYER)) * 6 + 5
+ 					gosub *effect
+ 					tc = tcbk
+ 				}
++				if ( inv(INV_ITEM_ID, ci) == ITEM_ID_SURSTROMMING ) {
++					tcbk = tc
++					efpori = (sdata(SKILL_NORMAL_COOKING, CHARA_PLAYER) + sdata(SKILL_NORMAL_GENE_ENGINEER, CHARA_PLAYER) + cdata(CDATA_LEVEL, CHARA_PLAYER)) * 6 + 5
++					efid = SKILL_SPELL_ANGUISH_JAIL
++					efp = efpori
++					gosub *effect
++					tc = tcbk
++					if ( cdata(CDATA_EXIST, tc) == CHAR_STATE_ALIVE ) {
++						dmgcon tc, CONDITION_DIM, limit(rnd(efpori / 2 + 1), 1, 5000)
++					}
++				}
+ 				if ( inv(INV_ITEM_ID, ci) == ITEM_ID_SNOW_CRYSTAL ) {
+ 					tcbk = tc
+ 					efpori = (sdata(SKILL_NORMAL_JEWELER, CHARA_PLAYER) + sdata(SKILL_NORMAL_MEDITATION, CHARA_PLAYER) + cdata(CDATA_LEVEL, CHARA_PLAYER)) * 6 + 5
+ 					efid = SKILL_SPELL_ICE_BALL
+ 					efp = efpori
+@@ -2076,10 +2087,13 @@
+ 		}
+ 	}
+ 	if ( cdata(CDATA_CONDITION_BIND, cc) > 0 ) {
+ 		goto *turn_end
+ 	}
++	if ( cdata(CDATA_CONDITION_FEAR, cc) > 0 ) {
++		goto *turn_end
++	}
+ 	if ( cdata(CDATA_IN_TAGTEAM, cc) == (-1) ) {
+ 		tcc = cdata(CDATA_TAGTEAM_PARTNER, cc)
+ 		if ( cdata(CDATA_ROW_ACT, tcc) == ACTION_EAT ) {
+ 			if ( cdata(CDATA_ACTION_PERIOD, tcc) > 0 ) {
+ 				goto *turn_end
+@@ -4213,15 +4227,10 @@
+ 		return
+ 	}
+ 	if ( cdata(CDATA_EXIST, tc) != CHAR_STATE_ALIVE ) {
+ 		return
+ 	}
+-	if ( cdata(CDATA_CONDITION_FEAR, cc) != 0 ) {
+-		msgdup++
+-		txt lang(name(cc) + "は怖気づいた。", name(cc) + " " + is(cc) + " frightened.")
+-		return
+-	}
+ 	gdata(GDATA_FLAG_CURTAIN_CALL)++
+ 	if ( cdata(CDATA_GAUGE_COOLDOWN, cc) == 0 ) {
+ 		if ( cdata(CDATA_SP, cc) > (-50) ) {
+ 			cdata(CDATA_SP, cc)--
+ 		}
+@@ -9081,10 +9090,94 @@
+ 		gosub *charaRefresh
+ 		gosub *calcBurdenPc
+ 		goto *act_use_SWEND1
+ 		_switch_sw++
+ 	}
++	if ( _switch_val == 150 | _switch_sw ) {
++		_switch_sw = 0
++		if ( mdata(MDATA_TYPE) == MAP_TYPE_WORLD ) {
++			goto *act_use_SWEND1
++		}
++		cibk = ci
++		invsubroutine = 1
++		invctrl = INVCTRL_MATERIAL_ENCHANT, 33
++		snd SOUNDLIST_INV
++		gosub *com_inventory
++		if ( stat == 1 ) {
++		}
++		else {
++			txt lang("やっぱりやめた。", "You changed your mind.")
++			goto *act_use_SWEND1
++			goto *act_use_SWEND1
++		}
++		txt lang("誰に使用する？", "Who is target?")
++		gosub *screen_draw
++		val = 0
++		gosub *prompt_direction
++		if ( stat == 0 ) {
++			txt lang("それは無理だ。", "It's impossible.")
++			gosub *screen_draw
++			goto *pc_turn
++		}
++		if ( map(x, y, MAP_CHARA_INDEX_PLUS_ONE) > 0 ) {
++			tc = map(x, y, MAP_CHARA_INDEX_PLUS_ONE) - 1
++		}
++		else {
++			txt lang("それは無理だ。", "It's impossible.")
++			gosub *screen_draw
++			goto *pc_turn
++		}
++		if ( cdata(CDATA_IN_TAGTEAM, tc) != 0 ) {
++			txtselecttc 2
++			repeat 2
++				promptl(0, promptmax) = s(cnt), key_select(cnt), "" + promptmax
++				promptmax++
++			loop
++			val = promptx, prompty, 200, 1
++			gosub *prompt_key
++			if ( stat == 0 ) {
++				gosub *screen_draw
++				goto *pc_turn
++			}
++			if ( rtval == 1 ) {
++				tc = cdata(CDATA_TAGTEAM_PARTNER, tc)
++			}
++		}
++		gazou = inv(INV_ITEM_COL, ci) + 12 * 1000
++		if ( inv(INV_ITEM_COL, ci) >= 1000 ) {
++			senn = 1
++		}
++		if ( tc != CHARA_PLAYER & cdata(CDATA_RELATION, tc) != RELATION_ALLY ) {
++			if ( cdata(CDATA_HP, tc) > cdata(CDATA_MAX_HP, tc) / 4 ) {
++				txt lang("" + name(tc) + "は鏡が放つ光を避けた。もっと弱らせる必要がある。", name(tc) + " avoided the light coming from the mirror. You need to weaken the creature to change it.")
++				goto *turn_end
++			}
++		}
++		animeload 96, tc
++		snd SOUNDLIST_ENC
++		if ( cdata(CDATA_PIC_MIMIRROCRY, tc) == 0 ) {
++			txtef COLOR_YELLOW2
++			txt lang("ミラクリーチェンジ！", "Mimirrocry Change!")
++			cdata(CDATA_PIC_MIMIRROCRY, tc) = cdata(CDATA_PIC, tc)
++			cdata(CDATA_CHARA_PIC_ORG, tc) = cdata(CDATA_CHARA_PIC, tc)
++			cdata(CDATA_PIC, tc) = gazou
++			cdata(CDATA_CHARA_PIC, tc) = senn
++			animeload 97, tc
++		}
++		else {
++			txt lang("" + name(tc) + "の姿が元に戻った。", name(tc) + " returned to the original form.")
++			cdata(CDATA_PIC, tc) = cdata(CDATA_PIC_MIMIRROCRY, tc)
++			cdata(CDATA_CHARA_PIC, tc) = cdata(CDATA_CHARA_PIC_ORG, tc)
++			cdata(CDATA_PIC_MIMIRROCRY, tc) = 0
++			cdata(CDATA_CHARA_PIC_ORG, tc) = 0
++		}
++		ci = cibk
++		gazou = 0
++		senn = 0
++		goto *act_use_SWEND1
++		_switch_sw++
++	}
+ 	if ( _switch_val == effmemory2 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		if ( mdata(MDATA_TYPE) == MAP_TYPE_WORLD ) {
+ 			goto *act_use_SWEND1
+ 		}
+@@ -9209,10 +9302,13 @@
+ 			inv(INV_ITEM_PARAM1, ci) = 165
+ 		}
+ 		if ( inv(INV_ITEM_PARAM2, ci) == 0 ) {
+ 			inv(INV_ITEM_PARAM2, ci) = 1
+ 		}
++		if ( 0 ) {
++			inv(INV_ITEM_PARAM2, ci) = 3000
++		}
+ 		repeat 16
+ 			if ( cnt >= 16 ) {
+ 				continue
+ 			}
+ 			if ( cdata(CDATA_EXIST, cnt) == CHAR_STATE_DEAD ) {
+@@ -9228,12 +9324,10 @@
+ 				skillgain tc, p, 1
+ 				modgrowth tc, p, limit(inv(INV_ITEM_PARAM2, ci), 1, 300)
+ 				txtef COLOR_GREEN
+ 				txt lang("" + cdatan(CDATAN_NAME, tc) + "は" + skillname(p) + "の技術を獲得した！", cdatan(CDATAN_NAME, tc) + " gain" + _s(tc) + " a skill of " + skillname(p) + "!")
+ 				dmgsan tc, 5
+-				inv(INV_ITEM_NUM, ci)--
+-				cell_refresh inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci)
+ 				r1 = tc
+ 				gosub *charaRefresh
+ 				gosub *calcBurdenPc
+ 				continue
+ 			}
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27R-borscht/adv.hsp ../2.28-borscht/adv.hsp
+--- ../2.27R-borscht/adv.hsp	2025-06-02 04:42:46.246914600 +0800
++++ ../2.28-borscht/adv.hsp	2025-08-01 02:55:08.867378200 +0800
+@@ -418,10 +418,15 @@
+ *chara_item
+ 	a = refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE)
+ 	if ( a == 57000 | a == 52000 | a == 53000 ) {
+ 		cdata(CDATA_AI_ITEM, rc) = ci
+ 	}
++	if ( cbit(CHARA_BIT_EAT_RAW_ITEM, rc) == TRUE ) {
++		if ( inv(INV_ITEM_MATERIAL, ci) == ITEM_MATERIAL_RAW ) {
++			cdata(CDATA_AI_ITEM, rc) = ci
++		}
++	}
+ 	return
+ 
+ *adv_gainItem
+ 	f = 0
+ 	inv_getheader rc
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27R-borscht/ai.hsp ../2.28-borscht/ai.hsp
+--- ../2.27R-borscht/ai.hsp	2025-06-02 04:42:46.264044600 +0800
++++ ../2.28-borscht/ai.hsp	2025-08-01 02:55:08.883159100 +0800
+@@ -465,10 +465,13 @@
+ 			cdata(CDATA_AI_AGGRO, cc) = 0
+ 		}
+ 	}
+ 	if ( cdata(CDATA_RELATION, cc) >= RELATION_ALLY ) {
+ 		cdata(CDATA_AI_AGGRO, cc)--
++		if ( cdata(CDATA_TARGET, cc) == 0 ) {
++			cdata(CDATA_AI_AGGRO, cc) = 0
++		}
+ 		if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, cdata(CDATA_TARGET, cc)) == TRUE ) {
+ 			cdata(CDATA_TARGET, cc) = 0
+ 		}
+ 		if ( cdata(CDATA_TARGET, cc) == 0 | cdata(CDATA_AI_AGGRO, cc) <= 0 | (cdata(CDATA_RELATION, cdata(CDATA_TARGET, cc)) >= RELATION_HATE & cdata(CDATA_TARGET, cdata(CDATA_TARGET, cc)) != cc) ) {
+ 			cdata(CDATA_TARGET, cc) = 0
+@@ -614,11 +617,11 @@
+ 			}
+ 		}
+ 	}
+ 	if ( gdata(GDATA_AREA) == AREA_NOYEL ) {
+ 		if ( cc != gdata(GDATA_FLAG_GIANT_ID) ) {
+-			if ( cc > MAX_CHARA_FOLLOWER ) {
++			if ( cc >= MAX_CHARA_FOLLOWER ) {
+ 				if ( gdata(GDATA_FLAG_FIRE_GIANT) != 0 ) {
+ 					if ( cdata(CDATA_EXIST, gdata(GDATA_FLAG_GIANT_ID)) == CHAR_STATE_ALIVE ) {
+ 						if ( cbit(CHARA_BIT_SANDBAG, gdata(GDATA_FLAG_GIANT_ID)) == FALSE ) {
+ 							cdata(CDATA_TARGET, cc) = gdata(GDATA_FLAG_GIANT_ID)
+ 							cdata(CDATA_AI_AGGRO, cc) = 500
+@@ -665,20 +668,38 @@
+ 				if ( rnd(4) == 0 ) {
+ 					if ( cdata(CDATA_X, CHARA_PLAYER) > cdata(CDATA_X, cc) - 10 & cdata(CDATA_X, CHARA_PLAYER) < cdata(CDATA_X, cc) + 10 ) {
+ 						if ( cdata(CDATA_Y, CHARA_PLAYER) > cdata(CDATA_Y, cc) - 10 & cdata(CDATA_Y, CHARA_PLAYER) < cdata(CDATA_Y, cc) + 10 ) {
+ 							if ( cdata(CDATA_ROW_ACT, CHARA_PLAYER) != ACTION_PERFORM ) {
+ 								if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, cc) == FALSE ) {
+-									if ( cdata(CDATA_AI_AGGRO, cc) <= 0 ) {
+-										customtalk cc, DBMODE_FLAVOR_PASSIVE
+-										gosub *convert_word
+-									}
+-									if ( findbuff(cc, BUFF_RUN_WILDLY) == (-1) ) {
+-										if ( cdata(CDATA_AI_AGGRO, cc) != 0 ) {
+-											customtalk cc, DBMODE_FLAVOR_ANGERED
++									if ( cc >= MAX_CHARA_FOLLOWER ) {
++										if ( cdata(CDATA_AI_AGGRO, cc) <= 0 ) {
++											customtalk cc, DBMODE_FLAVOR_PASSIVE
+ 											gosub *convert_word
+ 										}
+ 									}
++									if ( cc >= MAX_CHARA_FOLLOWER ) {
++										if ( cdata(CDATA_AI_AGGRO, cc) > 0 ) {
++											if ( findbuff(cc, BUFF_RUN_WILDLY) == (-1) ) {
++												customtalk cc, DBMODE_FLAVOR_ANGERED
++												gosub *convert_word
++											}
++										}
++									}
++									if ( cc < MAX_CHARA_FOLLOWER ) {
++										if ( cdata(CDATA_AI_AGGRO, cc) >= 0 ) {
++											customtalk cc, DBMODE_FLAVOR_PASSIVE
++											gosub *convert_word
++										}
++									}
++									if ( cc < MAX_CHARA_FOLLOWER ) {
++										if ( cdata(CDATA_AI_AGGRO, cc) < 0 ) {
++											if ( findbuff(cc, BUFF_RUN_WILDLY) == (-1) ) {
++												customtalk cc, DBMODE_FLAVOR_ANGERED
++												gosub *convert_word
++											}
++										}
++									}
+ 								}
+ 								else {
+ 									customtalk cc, DBMODE_FLAVOR_CLEMENTIA
+ 									gosub *convert_word
+ 									if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
+@@ -714,10 +735,13 @@
+ 					}
+ 				}
+ 			}
+ 		}
+ 	}
++	if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, cc) ) {
++		goto *turn_end
++	}
+ 	if ( gdata(GDATA_AREA) != AREA_PET_ARENA & cdata(CDATA_CONDITION_BRAINWASH, cc) > 0 & cc != CHARA_PLAYER ) {
+ 		cdata(CDATA_TARGET, cc) = 0
+ 	}
+ 	if ( cdata(CDATA_RELATION, cc) >= RELATION_NEUTRAL ) {
+ 		if ( cdata(CDATA_CONDITION_SUFFOCATION, CHARA_PLAYER) > 15 ) {
+@@ -761,32 +785,34 @@
+ 			}
+ 		}
+ 	}
+ 	if ( cdata(CDATA_ACT_HEAL, cc) != 0 ) {
+ 		if ( cdata(CDATA_HP, cc) < cdata(CDATA_MAX_HP, cc) / 4 ) {
+-			if ( cdata(CDATA_MP, cc) > 0 | rnd(5) == 0 ) {
+-				efid = cdata(CDATA_ACT_HEAL, cc)
+-				if ( efid == SKILL_SPACT_SHADOW_STEP | efid == SKILL_SPACT_UNCONTROL | efid == BUFF_GROW_PERCEPTION | efid == SKILL_SPACT_CLASH_RUSH ) {
+-					if ( dist(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), cdata(CDATA_X, tc), cdata(CDATA_Y, tc)) > sdataref(SKILL_DATAREF_TG, SKILL_SPACT_CHEER) \ 1000 + 1 | fov_los(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), cdata(CDATA_X, tc), cdata(CDATA_Y, tc)) == 0 ) {
+-						distance = dist(cdata(CDATA_X, tc), cdata(CDATA_Y, tc), cdata(CDATA_X, cc), cdata(CDATA_Y, cc))
+-						goto *ai_followMove
+-					}
+-				}
+-				if ( efid >= SKILL_SPELL_HEAL_LIGHT & efid < MAX_SPELL ) {
+-					npccostmp = 1
+-					gosub *cast
+-					if ( stat == 1 ) {
+-						goto *turn_end
++			if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, cc) == FALSE ) {
++				if ( cdata(CDATA_MP, cc) > 0 | rnd(5) == 0 ) {
++					efid = cdata(CDATA_ACT_HEAL, cc)
++					if ( efid == SKILL_SPACT_SHADOW_STEP | efid == SKILL_SPACT_UNCONTROL | efid == BUFF_GROW_PERCEPTION | efid == SKILL_SPACT_CLASH_RUSH ) {
++						if ( dist(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), cdata(CDATA_X, tc), cdata(CDATA_Y, tc)) > sdataref(SKILL_DATAREF_TG, SKILL_SPACT_CHEER) \ 1000 + 1 | fov_los(cdata(CDATA_X, cc), cdata(CDATA_Y, cc), cdata(CDATA_X, tc), cdata(CDATA_Y, tc)) == 0 ) {
++							distance = dist(cdata(CDATA_X, tc), cdata(CDATA_Y, tc), cdata(CDATA_X, cc), cdata(CDATA_Y, cc))
++							goto *ai_followMove
++						}
+ 					}
+-				}
+-				else {
+-					if ( efid >= (600 /*!!!@[MAX_SKILL_RANGE @@@ STARTING_SKILL_SPACT]@!!! */) ) {
+-						gosub *action
++					if ( efid >= SKILL_SPELL_HEAL_LIGHT & efid < MAX_SPELL ) {
++						npccostmp = 1
++						gosub *cast
+ 						if ( stat == 1 ) {
+ 							goto *turn_end
+ 						}
+ 					}
++					else {
++						if ( efid >= (600 /*!!!@[MAX_SKILL_RANGE @@@ STARTING_SKILL_SPACT]@!!! */) ) {
++							gosub *action
++							if ( stat == 1 ) {
++								goto *turn_end
++							}
++						}
++					}
+ 				}
+ 			}
+ 		}
+ 	}
+ 	if ( cdata(CDATA_AI_ITEM, cc) <= 0 ) {
+@@ -796,11 +822,11 @@
+ 	if ( inv(INV_ITEM_NUM, ci) == 0 ) {
+ 		cdata(CDATA_AI_ITEM, cc) = 0
+ 		goto *ai_item_combat
+ 	}
+ 	a = refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE)
+-	if ( a == 57000 ) {
++	if ( a == 57000 | (cbit(CHARA_BIT_EAT_RAW_ITEM, cc) == TRUE & inv(INV_ITEM_MATERIAL, ci) == ITEM_MATERIAL_RAW) ) {
+ 		if ( cdata(CDATA_RELATION, cc) == RELATION_ALLY & cdata(CDATA_HUNGER, cc) > 10000 ) {
+ 		}
+ 		else {
+ 			if ( cbit(CHARA_BIT_PROHIBIT_EATING_FROM_GROUND, cc) == TRUE ) {
+ 				txtef COLOR_BLUE
+@@ -889,11 +915,11 @@
+ 					cell_itemoncell cdata(CDATA_X, cc), cdata(CDATA_Y, cc)
+ 					if ( stat == 1 ) {
+ 						ci = rtval(1)
+ 						p = refitem(inv(INV_ITEM_ID, ci), DBSPEC_TYPE)
+ 						if ( cdata(CDATA_HUNGER, cc) <= 10000 ) {
+-							if ( p == 57000 ) {
++							if ( p == 57000 | (cbit(CHARA_BIT_EAT_RAW_ITEM, cc) == TRUE & inv(INV_ITEM_MATERIAL, ci) == ITEM_MATERIAL_RAW) ) {
+ 								if ( inv(INV_ITEM_PROPERTY, ci) <= PROP_NONE ) {
+ 									if ( itemusingfind(ci) != (-1) & itemusingfind(ci) == cdata(CDATA_TAGTEAM_PARTNER, cc) ) {
+ 										if ( rnd(5) == 0 ) {
+ 											txtef COLOR_BLUE
+ 											txt lang(name(cc) + "はパートナーの食事を静かに見守っている…。", name(cc) + " is drooling.")
+@@ -1003,23 +1029,16 @@
+ 				else {
+ 					goto *ai_calmMove
+ 				}
+ 			}
+ 		}
+-		if ( cdata(CDATA_CONDITION_FEAR, cc) != 0 | cbit(CHARA_BIT_BEGGING_FOR_LIFE, cc) == TRUE ) {
+-			retreat = 1
+-			goto *ai_followMove
+-		}
+-		else {
+-			retreat = 0
+-		}
+ 		if ( cdata(CDATA_CONDITION_BLIND, cc) != 0 ) {
+ 			if ( rnd(3) ) {
+ 				goto *ai_calmMove
+ 			}
+ 		}
+-		if ( cc > MAX_CHARA_FOLLOWER & (cdata(CDATA_QUALITY, cc) > FIX_QUALITY_GREAT | cdata(CDATA_ID, cc) == CREATURE_ID_MEGA_MOLE | cdata(CDATA_ID, cc) == CREATURE_ID_TALPIDAE | cdata(CDATA_ID, cc) == CREATURE_ID_AILE_THE_ATTENDANT) ) {
++		if ( cc >= MAX_CHARA_FOLLOWER & (cdata(CDATA_QUALITY, cc) > FIX_QUALITY_GREAT | cdata(CDATA_ID, cc) == CREATURE_ID_MEGA_MOLE | cdata(CDATA_ID, cc) == CREATURE_ID_TALPIDAE | cdata(CDATA_ID, cc) == CREATURE_ID_AILE_THE_ATTENDANT) ) {
+ 			if ( cdata(CDATA_HP, cc) <= cdata(CDATA_MAX_HP, cc) * 9 / 10 | cdata(CDATA_MP, cc) <= cdata(CDATA_MAX_MP, cc) * 9 / 10 | cdata(CDATA_SP, cc) <= cdata(CDATA_MAX_SP, cc) * 9 / 10 ) {
+ 				if ( dist(cdata(CDATA_X, tc), cdata(CDATA_Y, tc), cdata(CDATA_X, cc), cdata(CDATA_Y, cc)) > sdataref(SKILL_DATAREF_TG, SKILL_SPACT_CHEER) \ 1000 + 1 | fov_los(cdata(CDATA_X, tc), cdata(CDATA_Y, tc), cdata(CDATA_X, cc), cdata(CDATA_Y, cc)) == 0 ) {
+ 					healsp cc, cdata(CDATA_MAX_SP, cc) / 50 + sqrt(sdata(SKILL_NORMAL_HEALING, cc)) + sqrt(sdata(SKILL_NORMAL_MEDITATION, cc))
+ 					healhp cc, cdata(CDATA_MAX_HP, cc) / 50 + sdata(SKILL_NORMAL_HEALING, cc) * sqrt(sdata(SKILL_NORMAL_HEALING, cc))
+ 					healmp cc, cdata(CDATA_MAX_MP, cc) / 50 + sdata(SKILL_NORMAL_MEDITATION, cc) * sqrt(sdata(SKILL_NORMAL_MEDITATION, cc))
+@@ -1131,11 +1150,11 @@
+ 		}
+ 		if ( distance < 6 ) {
+ 			goto *ai_followMove
+ 		}
+ 	}
+-	if ( cc > MAX_CHARA_FOLLOWER ) {
++	if ( cc >= MAX_CHARA_FOLLOWER ) {
+ 		if ( rnd(5) != 0 ) {
+ 			goto *turn_end
+ 		}
+ 	}
+ 	if ( adata(ADATA_TYPE, gdata(GDATA_AREA)) == MAP_TYPE_WORLD ) {
+@@ -1179,17 +1198,17 @@
+ 						goto *ai_calmMove_WEND1
+ 					}
+ 					txt cnvtalk("Mai-Ya-Hi♪"), cnvtalk("Mai-Ya-Hoo♪"), cnvtalk("Mai-Ya-Ha Ma Mi A♪")
+ 					goto *ai_calmMove_WEND1
+ 				}
+-				goto *label_9398
++				goto *label_9404
+ 			}
+ 		}
+ 	}
+ 
+ *ai_calmMove_WEND1
+-	if ( cc > MAX_CHARA_FOLLOWER ) {
++	if ( cc >= MAX_CHARA_FOLLOWER ) {
+ 		if ( cbit(CHARA_BIT_NECRO, cc) != TRUE ) {
+ 			if ( gdata(GDATA_AREA) != AREA_SEBI ) {
+ 				if ( mdata(MDATA_TYPE) == MAP_TYPE_TOWN | mdata(MDATA_TYPE) == MAP_TYPE_VILLAGE ) {
+ 					if ( gdata(GDATA_HOUR) >= 22 | gdata(GDATA_HOUR) < 7 ) {
+ 						if ( cdata(CDATA_ROW_ACT, cc) == ACTION_NONE ) {
+@@ -1843,11 +1862,11 @@
+ 					goto *turn_end
+ 				}
+ 			}
+ 		}
+ 	}
+-	if ( cc > MAX_CHARA_FOLLOWER & cdata(CDATA_QUALITY, cc) > FIX_QUALITY_GREAT & cdata(CDATA_RELATION, cc) <= RELATION_HATE | findbuff(cc, BUFF_HYPER_DASH) != (-1) | (cdata(CDATA_ID, cc) == CREATURE_ID_MEGA_MOLE | cdata(CDATA_ID, cc) == CREATURE_ID_TALPIDAE | cdata(CDATA_ID, cc) == CREATURE_ID_AILE_THE_ATTENDANT & cc > MAX_CHARA_FOLLOWER) ) {
++	if ( cc >= MAX_CHARA_FOLLOWER & cdata(CDATA_QUALITY, cc) > FIX_QUALITY_GREAT & cdata(CDATA_RELATION, cc) <= RELATION_HATE | findbuff(cc, BUFF_HYPER_DASH) != (-1) | (cdata(CDATA_ID, cc) == CREATURE_ID_MEGA_MOLE | cdata(CDATA_ID, cc) == CREATURE_ID_TALPIDAE | cdata(CDATA_ID, cc) == CREATURE_ID_AILE_THE_ATTENDANT & cc >= MAX_CHARA_FOLLOWER) ) {
+ 		if ( mdata(MDATA_TYPE) != MAP_TYPE_WORLD & cdata(CDATA_CONDITION_BIND, cc) < 20 ) {
+ 			if ( x >= 0 ) {
+ 				if ( x < mdata(MDATA_WIDTH) ) {
+ 					if ( y >= 0 ) {
+ 						if ( y < mdata(MDATA_HEIGHT) ) {
+@@ -3681,11 +3700,11 @@
+ 				}
+ 			}
+ 		}
+ 	}
+ 	if ( cdata(CDATA_ID, cc) == CREATURE_ID_ITZPALT | cdata(CDATA_ID, cc) == CREATURE_ID_THE_ELEMENT | cdata(CDATA_ID, cc) == CREATURE_ID_YACATECT | cdata(CDATA_ID, cc) == CREATURE_ID_HYPER_YACATECT | cdata(CDATA_ID, cc) == CREATURE_ID_JURE | cdata(CDATA_ID, cc) == CREATURE_ID_BLESSED_JURE | cdata(CDATA_ID, cc) == CREATURE_ID_LULWY | cdata(CDATA_ID, cc) == CREATURE_ID_DEVASTATE_LULWY | cdata(CDATA_ID, cc) == CREATURE_ID_BUILDUP_OPATOS | cdata(CDATA_ID, cc) == CREATURE_ID_INSANE_KUMIROMI | cdata(CDATA_ID, cc) == CREATURE_ID_DEUS_EX_MANINA | cdata(CDATA_ID, cc) == CREATURE_ID_EHEKATL | cdata(CDATA_ID, cc) == CREATURE_ID_GOD_INSIDE_EHEKATL | cdata(CDATA_ID, cc) == CREATURE_ID_OPATOS | cdata(CDATA_ID, cc) == CREATURE_ID_KUMIROMI | cdata(CDATA_ID, cc) == CREATURE_ID_MANI ) {
+-		if ( cc > MAX_CHARA_FOLLOWER ) {
++		if ( cc >= MAX_CHARA_FOLLOWER ) {
+ 			if ( cdata(CDATA_ALLIED, cc) == 0 ) {
+ 				if ( rnd(20) == 0 ) {
+ 					if ( findbuff(cc, BUFF_RETENTION) == (-1) ) {
+ 						act = SKILL_SPACT_SPACE_RETENTION
+ 					}
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27R-borscht/calculation.hsp ../2.28-borscht/calculation.hsp
+--- ../2.27R-borscht/calculation.hsp	2025-06-02 04:42:46.289332300 +0800
++++ ../2.28-borscht/calculation.hsp	2025-08-01 02:55:08.909930900 +0800
+@@ -2246,10 +2246,16 @@
+ 			}
+ 		}
+ 	}
+ 	cdata(CDATA_EXTRA_ATTACKS_TYPE, r1) = 0
+ 	slinger = 0
++	if ( cdata(CDATA_CONDITION_FEAR, r1) > 0 ) {
++		cdata(CDATA_POWER_GAUGE, r1) -= 3
++		if ( cdata(CDATA_POWER_GAUGE, r1) < 0 ) {
++			cdata(CDATA_POWER_GAUGE, r1) = 0
++		}
++	}
+ 	if ( cdata(CDATA_POWER_GAUGE, r1) > 0 ) {
+ 		if ( findbuff(r1, BUFF_FORM_SHIFT_OMEGA) == (-1) ) {
+ 			if ( cdata(CDATA_POWER_GAUGE, r1) < 100 ) {
+ 				cdata(CDATA_POWER_GAUGE, r1)--
+ 			}
+@@ -2364,12 +2370,30 @@
+ 			cdata(CDATA_CONDITION_SLEEP, r1) += rnd(5)
+ 		}
+ 		if ( rnd(5) == 0 ) {
+ 			cdata(CDATA_CONDITION_FEAR, r1) += rnd(10)
+ 		}
++		if ( cdata(CDATA_THIRST, r1) > 18000 ) {
++			if ( synccheck(r1, -1) ) {
++				kaiwa = rnd(4)
++				txtef COLOR_RED
++				if ( kaiwa == 0 ) {
++					txt lang(name(r1) + "は猛烈にそわそわしている…。", name(r1) + " is fidgeting like crazy...")
++				}
++				if ( kaiwa == 1 ) {
++					txt lang(name(r1) + "は身をよじって悶えている…。", name(r1) + " writhes and squirms...")
++				}
++				if ( kaiwa == 2 ) {
++					txt lang(name(r1) + "は必死におしっこを我慢している…。", name(r1) + " is desperately trying to hold back...")
++				}
++				if ( kaiwa == 3 ) {
++					txt lang(name(r1) + "は微かに震えながら尿意に耐えている…。", name(r1) + " endures while trembling slightly...")
++				}
++			}
++		}
+ 		if ( cdata(CDATA_CONDITION_FEAR, r1) > 0 ) {
+-			if ( cdata(CDATA_THIRST, r1) > 12000 ) {
++			if ( cdata(CDATA_THIRST, r1) > 20000 ) {
+ 				if ( synccheck(r1, -1) ) {
+ 					snd SOUNDLIST_WATERM
+ 					txt lang(name(r1) + "は漏らした。", name(r1) + " is incontinent.")
+ 				}
+ 				if ( mdata(MDATA_TYPE) != MAP_TYPE_WORLD ) {
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27R-borscht/chara_func.hsp ../2.28-borscht/chara_func.hsp
+--- ../2.27R-borscht/chara_func.hsp	2025-06-02 04:42:46.342230000 +0800
++++ ../2.28-borscht/chara_func.hsp	2025-08-01 02:55:08.963315100 +0800
+@@ -368,10 +368,16 @@
+ 			locvar_customtalk_s = "%txtLeading"
+ 		}
+ 		if ( customtalk_dbmode == DBMODE_FLAVOR_CLEMENTIA ) {
+ 			locvar_customtalk_s = "%txtClementia"
+ 		}
++		if ( customtalk_dbmode == DBMODE_PLEASURE ) {
++			locvar_customtalk_s = "%txtPleasure"
++		}
++		if ( customtalk_dbmode == DBMODE_PLEASURE_HARD ) {
++			locvar_customtalk_s = "%txtPleasureHard"
++		}
+ 		locvar_customtalk_p = instr(locvar_customtalk_buff, 0, locvar_customtalk_s + "," + lang("JP", "EN"))
+ 		locvar_customtalk_buff = strmid(locvar_customtalk_buff, locvar_customtalk_p, instr(locvar_customtalk_buff, locvar_customtalk_p + 1, "%"))
+ 		if ( noteinfo(0) > 1 ) {
+ 			if ( gdata(GDATA_AREA) == AREA_SHOW_HOUSE & customtalk_dbmode == DBMODE_FLAVOR_DIALOG & customtalk_charid > MAX_CHARA_FOLLOWER & cdata(CDATA_ID, customtalk_charid) == CREATURE_ID_USER ) {
+ 				if ( cdata(CDATA_CUSTOM_TALK_LINE, customtalk_charid) > 100 ) {
+@@ -592,10 +598,13 @@
+ 	if ( cdata(CDATA_HEART_LOCK_RELATION, modimp_charid) <= (-1) & cdata(CDATA_HEART_LOCK_RELATION, modimp_charid) >= (-9) ) {
+ 		if ( locvar_modimp_i > 0 ) {
+ 			locvar_modimp_i = locvar_modimp_i * 3 / 2
+ 		}
+ 	}
++	if ( trait(TRAIT_NORMAL_OTHER_GENTLE_FACE) ) {
++		locvar_modimp_i++
++	}
+ 	cdata(CDATA_IMPRESSION, modimp_charid) += locvar_modimp_i
+ 	if ( cdata(CDATA_HEART_LOCK_RELATION, modimp_charid) >= 0 ) {
+ 		if ( cdata(CDATA_IMPRESSION, modimp_charid) > 400 ) {
+ 			cdata(CDATA_IMPRESSION, modimp_charid) = 400
+ 		}
+@@ -691,10 +700,13 @@
+ 	if ( cdata(CDATA_HEART_LOCK_RELATION, modimp2_charid) <= (-11) ) {
+ 		if ( locvar_modimp2_i > 0 ) {
+ 			locvar_modimp2_i = locvar_modimp2_i * 3 / 2
+ 		}
+ 	}
++	if ( trait(TRAIT_NORMAL_OTHER_GENTLE_FACE) ) {
++		locvar_modimp2_i++
++	}
+ 	cdata(CDATA_MASTER_SERVANT, modimp2_charid) += locvar_modimp2_i
+ 	if ( cdata(CDATA_HEART_LOCK_RELATION, modimp2_charid) >= 0 ) {
+ 		if ( cdata(CDATA_MASTER_SERVANT, modimp2_charid) > 300 ) {
+ 			cdata(CDATA_MASTER_SERVANT, modimp2_charid) = 300
+ 		}
+@@ -1859,11 +1871,13 @@
+ 			if ( addbuff_buffid != BUFF_PUNISHMENT ) {
+ 				locvar_addbuff_f = 1
+ 			}
+ 		}
+ 		if ( cdata(CDATA_QUALITY, addbuff_charid) > FIX_QUALITY_GREAT | cdata(CDATA_ID, addbuff_charid) == CREATURE_ID_AILE_THE_ATTENDANT ) {
+-			locvar_addbuff_fixeddur = addbuff_arg4 / 4 + 1
++			if ( addbuff_buffid != BUFF_DEATH_WORD ) {
++				locvar_addbuff_fixeddur = addbuff_arg4 / 4 + 1
++			}
+ 		}
+ 		if ( cdata(CDATA_ALLIED, addbuff_charid) == 0 & cdata(CDATA_QUALITY, addbuff_charid) > FIX_QUALITY_GREAT ) {
+ 			if ( addbuff_buffid == BUFF_DEATH_WORD ) {
+ 				locvar_addbuff_f = 1
+ 			}
+@@ -4924,11 +4938,14 @@
+ 			}
+ 			locvar_dmghp_dmg = locvar_dmghp_dmg * 100 / limit(locvar_dmghp_r + 110, 50, 30000)
+ 		}
+ 		if ( locvar_dmghp_ele == 68 | dmghp_source == DAMAGE_FROM_SUFFOCATION | dmghp_source == DAMAGE_FROM_POISON ) {
+ 			locvar_dmghp_r = sdata(SKILL_ATTR_CON, dmghp_charid) + limit(cdata(CDATA_MASTER_SERVANT, dmghp_charid), 50, 1000) + limit(cdata(CDATA_IMPRESSION, dmghp_charid), 50, 1000)
+-			locvar_dmghp_dmg = locvar_dmghp_dmg * 100 / (locvar_dmghp_r + 50)
++			locvar_dmghp_dmg = locvar_dmghp_dmg * 100 / (locvar_dmghp_r + 50) + 2
++			if ( cbit(CHARA_BIT_GIVEN_BIRTH, dmghp_charid) == TRUE ) {
++				locvar_dmghp_dmg = locvar_dmghp_dmg / 2
++			}
+ 		}
+ 	}
+ 	else {
+ 		locvar_dmghp_r = sdata(locvar_dmghp_ele, dmghp_charid) / 50
+ 		if ( locvar_dmghp_r < 3 ) {
+@@ -6130,10 +6147,19 @@
+ 	}
+ 	if ( cdata(CDATA_GAUGE_COOLDOWN2, dmghp_charid) == 0 ) {
+ 		cdata(CDATA_GAUGE_COOLDOWN2, dmghp_charid) = 1
+ 	}
+ 	if ( cdata(CDATA_HP, dmghp_charid) < 0 ) {
++		if ( cdata(CDATA_PIC_MIMIRROCRY, dmghp_charid) != 0 ) {
++			txt lang("" + name(dmghp_charid) + "の姿が元に戻った。", name(dmghp_charid) + " returned to the original form.")
++			cdata(CDATA_PIC, dmghp_charid) = cdata(CDATA_PIC_MIMIRROCRY, dmghp_charid)
++			cdata(CDATA_CHARA_PIC, dmghp_charid) = cdata(CDATA_CHARA_PIC_ORG, dmghp_charid)
++			cdata(CDATA_PIC_MIMIRROCRY, dmghp_charid) = 0
++			cdata(CDATA_CHARA_PIC_ORG, dmghp_charid) = 0
++		}
++	}
++	if ( cdata(CDATA_HP, dmghp_charid) < 0 ) {
+ 		locvar_dmghp_bakuretu = 0
+ 	}
+ 	if ( cdata(CDATA_HP, dmghp_charid) < 0 ) {
+ 		if ( cdata(CDATA_ID, dmghp_charid) == CREATURE_ID_THE_CHAOS_CHILD ) {
+ 			if ( cdata(CDATA_ALLIED, dmghp_charid) == 0 & gdata(GDATA_AREA) == AREA_CHAOS_CRADLE ) {
+@@ -6358,21 +6384,16 @@
+ 							locvar_dmghp_f = 1
+ 						}
+ 						else {
+ 							locvar_dmghp_f = 0
+ 						}
+-						if ( dmghp_source == (0 /*!!!@[CHARA_PLAYER @@@ DAMAGE_FROM_CHARA]@!!! */) | dmghp_source < MAX_CHARA_FOLLOWER ) {
+-							if ( trait(TRAIT_NORMAL_OTHER_GENTLE_FACE) ) {
+-								locvar_dmghp_f = 0
+-							}
+-						}
+ 						if ( locvar_dmghp_f ) {
+ 							cdata(CDATA_CONDITION_FEAR, dmghp_charid) = rnd(20) + 5
+ 							if ( synccheck(dmghp_charid, -1) ) {
+ 								txtmore
+ 								txtef COLOR_BLUE
+-								txt lang(name(dmghp_charid) + "は恐怖して逃げ出した。", name(dmghp_charid) + " run" + _s(dmghp_charid) + " away in terror.")
++								txt lang(name(dmghp_charid) + "は恐怖で立ちすくんだ。", name(dmghp_charid) + " can't move by fear.")
+ 								if ( cdata(CDATA_THIRST, dmghp_charid) > 12000 ) {
+ 									if ( synccheck(dmghp_charid, -1) ) {
+ 										snd SOUNDLIST_WATERM
+ 										txt lang(name(dmghp_charid) + "は漏らした。", name(dmghp_charid) + " is incontinent.")
+ 										if ( dmghp_charid != CHARA_PLAYER ) {
+@@ -6401,11 +6422,11 @@
+ 		}
+ 		if ( cdata(CDATA_HP, dmghp_charid) < cdata(CDATA_MAX_HP, dmghp_charid) / 10 ) {
+ 			if ( dmghp_charid != CHARA_PLAYER ) {
+ 				if ( cbit(CHARA_BIT_BEGGING_FOR_LIFE, dmghp_charid) == FALSE ) {
+ 					locvar_dmghp_f = 1
+-					if ( cdata(CDATA_RELATION, dmghp_charid) == RELATION_ALLY | dmghp_charid < MAX_CHARA_FOLLOWER | cbit(CHARA_BIT_NECRO, dmghp_charid) == TRUE | cdata(CDATA_QUALITY, dmghp_charid) >= FIX_QUALITY_MIRACLE | cdata(CDATA_ROLE, dmghp_charid) != ROLE_NONE | cbit(CHARA_BIT_PRECIOUS, dmghp_charid) == TRUE | cdata(CDATA_CHARACTER_TIER, dmghp_charid) == CHARACTER_TIER_SUMMONED_NORMAL | cbit(CHARA_BIT_BODYGUARD, dmghp_charid) == TRUE | gdata(GDATA_FLAG_DUEL_TARGET) == dmghp_charid ) {
++					if ( gdata(GDATA_AREA) == AREA_PET_ARENA | cdata(CDATA_RELATION, dmghp_charid) == RELATION_ALLY | dmghp_charid < MAX_CHARA_FOLLOWER | cbit(CHARA_BIT_NECRO, dmghp_charid) == TRUE | cdata(CDATA_QUALITY, dmghp_charid) >= FIX_QUALITY_MIRACLE | cdata(CDATA_ROLE, dmghp_charid) != ROLE_NONE | cbit(CHARA_BIT_PRECIOUS, dmghp_charid) == TRUE | cdata(CDATA_CHARACTER_TIER, dmghp_charid) == CHARACTER_TIER_SUMMONED_NORMAL | cbit(CHARA_BIT_BODYGUARD, dmghp_charid) == TRUE | gdata(GDATA_FLAG_DUEL_TARGET) == dmghp_charid ) {
+ 						locvar_dmghp_f = 0
+ 					}
+ 					if ( locvar_dmghp_f ) {
+ 						if ( cbit(CHARA_BIT_SANDBAG, dmghp_charid) != TRUE ) {
+ 							cdata(CDATA_CONDITION_FEAR, dmghp_charid) = rnd(20) + 50
+@@ -6604,20 +6625,30 @@
+ 			}
+ 		}
+ 		if ( dmghp_source >= (0 /*!!!@[CHARA_PLAYER @@@ DAMAGE_FROM_CHARA]@!!! */) ) {
+ 			if ( cdata(CDATA_TARGET, dmghp_charid) == 0 ) {
+ 				if ( cdata(CDATA_AI_AGGRO, dmghp_charid) == 0 ) {
+-					if ( cdata(CDATA_RELATION, dmghp_charid) <= RELATION_ENEMY ) {
++					if ( cdata(CDATA_RELATION, dmghp_charid) == RELATION_ENEMY ) {
+ 						if ( cdata(CDATA_RELATION_ORG, dmghp_source) > RELATION_ENEMY ) {
+ 							cdata(CDATA_TARGET, dmghp_charid) = dmghp_source
+ 						}
+ 					}
+ 					if ( cdata(CDATA_RELATION, dmghp_charid) > RELATION_ENEMY ) {
+-						if ( cdata(CDATA_RELATION_ORG, dmghp_source) <= RELATION_ENEMY ) {
++						if ( cdata(CDATA_RELATION_ORG, dmghp_source) == RELATION_ENEMY ) {
+ 							cdata(CDATA_TARGET, dmghp_charid) = dmghp_source
+ 						}
+ 					}
++					if ( cdata(CDATA_RELATION, dmghp_charid) > RELATION_ENEMY ) {
++						if ( cdata(CDATA_RELATION_ORG, dmghp_source) > RELATION_ENEMY ) {
++							if ( cdata(CDATA_TARGET, dmghp_source) == dmghp_charid ) {
++								cdata(CDATA_TARGET, dmghp_charid) = dmghp_source
++							}
++							else {
++								cdata(CDATA_AI_AGGRO, dmghp_charid) = -2
++							}
++						}
++					}
+ 				}
+ 			}
+ 			if ( dmghp_charid != CHARA_PLAYER ) {
+ 				if ( cdata(CDATA_AI_AGGRO, dmghp_charid) == 0 ) {
+ 					cdata(CDATA_EMO_ICON, dmghp_charid) = 18 + 100 * 2
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27R-borscht/chat.hsp ../2.28-borscht/chat.hsp
+--- ../2.27R-borscht/chat.hsp	2025-06-02 04:42:46.548816800 +0800
++++ ../2.28-borscht/chat.hsp	2025-08-01 02:55:09.175890700 +0800
+@@ -46067,10 +46067,24 @@
+ 				list(0, listmax) = 57
+ 				listn(0, listmax) = lang("馬を買う", "I want to buy a horse.")
+ 				listmax++
+ 			}
+ 		}
++		if ( tc < MAX_CHARA_FOLLOWER | cbit(CHARA_BIT_NECRO, tc) == TRUE | cbit(CHARA_BIT_LIVESTOCK, tc) == TRUE | cbit(CHARA_BIT_LABOR_CAMP, tc) == TRUE ) {
++			if ( gdata(GDATA_AREA) != AREA_SHOW_HOUSE ) {
++				if ( cdata(CDATA_IMPRESSION, tc) >= 150 | cdata(CDATA_MASTER_SERVANT, tc) >= 150 ) {
++					if ( evid() == (-1) ) {
++						list(0, listmax) = 152
++						listn(0, listmax) = lang("気持ちいいことしよう", "Interested in a little tail t'night?")
++						listmax++
++						list(0, listmax) = 153
++						listn(0, listmax) = lang("激しく気持ちいいことしよう", "Interested in a hard little tail t'night?")
++						listmax++
++					}
++				}
++			}
++		}
+ 		if ( tc < MAX_CHARA_FOLLOWER ) {
+ 			if ( cbit(CHARA_BIT_BODYGUARD, tc) == FALSE ) {
+ 				if ( cbit(CHARA_BIT_GUARD_TEMP, tc) == FALSE ) {
+ 					if ( cbit(CHARA_BIT_NECRO, tc) == FALSE ) {
+ 						if ( cbit(CHARA_BIT_LIVESTOCK, tc) == FALSE ) {
+@@ -51880,10 +51894,18 @@
+ 		invctrl = 0
+ 		gosub *com_reserve
+ 		buff = ""
+ 		goto *chat_default
+ 	}
++	if ( chatval == 152 ) {
++		gosub *sexsex
++		goto *chat_end
++	}
++	if ( chatval == 153 ) {
++		gosub *sexsex2
++		goto *chat_end
++	}
+ 	if ( chatval == 56 ) {
+ 		list(0, listmax) = 1
+ 		listn(0, listmax) = lang("はじめる", "Let's do it.")
+ 		listmax++
+ 		list(0, listmax) = 0
+@@ -55383,11 +55405,11 @@
+ 	pos wx, wy - 20
+ 	gcopy BUFFER_PIC, 0, 0, 600, 380
+ 	if ( cdata(CDATA_TAGTEAM_PARTNER, tc) > 0 ) {
+ 		ttc = cdata(CDATA_TAGTEAM_PARTNER, tc)
+ 	}
+-	if ( cdata(CDATA_PORTRAIT, tc) != (-1) & cdata(CDATA_FACE, tc) == 0 & (evochat < 2 | evochat == 11) | scenemode ) {
++	if ( cdata(CDATA_PORTRAIT, tc) != (-1) & cdata(CDATA_PIC_MIMIRROCRY, tc) <= 0 & cdata(CDATA_FACE, tc) == 0 & (evochat < 2 | evochat == 11) | scenemode ) {
+ 		if ( cdata(CDATA_PORTRAIT, tc) < 80 ) {
+ 			p = cdata(CDATA_SEX, tc) * 80 + cdata(CDATA_PORTRAIT, tc)
+ 		}
+ 		else {
+ 			p = cdata(CDATA_SEX, tc) * 80 + cdata(CDATA_PORTRAIT, tc) - 80
+@@ -55808,55 +55830,55 @@
+ 		if ( ohanasi2 >= 0 ) {
+ 			gosub *setHistory1
+ 			if ( c != 0 ) {
+ 				if ( en ) {
+ 					cnv_str s, "your", his(c, 1)
+-					cnv_str s, "you", him(c, 1)
++					cnv_str s, "you", he(c, 1)
+ 				}
+ 			}
+ 			pos wx + 200, wy + 70
+ 			mes s
+ 		}
+ 		if ( ohanasi2 != 0 ) {
+ 			gosub *setHistory2
+ 			if ( c != 0 ) {
+ 				if ( en ) {
+ 					cnv_str s, "your", his(c, 1)
+-					cnv_str s, "you", him(c, 1)
++					cnv_str s, "you", he(c, 1)
+ 				}
+ 			}
+ 			pos wx + 200, wy + 70 + 1 * 15
+ 			mes s
+ 		}
+ 		if ( ohanasi3 != 0 ) {
+ 			gosub *setHistory3
+ 			if ( c != 0 ) {
+ 				if ( en ) {
+ 					cnv_str s, "your", his(c, 1)
+-					cnv_str s, "you", him(c, 1)
++					cnv_str s, "you", he(c, 1)
+ 				}
+ 			}
+ 			pos wx + 200, wy + 70 + 2 * 15
+ 			mes s
+ 		}
+ 		if ( ohanasi4 != 0 ) {
+ 			gosub *setHistory4
+ 			if ( c != 0 ) {
+ 				if ( en ) {
+ 					cnv_str s, "your", his(c, 1)
+-					cnv_str s, "you", him(c, 1)
++					cnv_str s, "you", he(c, 1)
+ 				}
+ 			}
+ 			pos wx + 200, wy + 70 + 3 * 15
+ 			mes s
+ 		}
+ 		if ( ohanasi5 != 0 ) {
+ 			gosub *setHistory5
+ 			if ( c != 0 ) {
+ 				if ( en ) {
+ 					cnv_str s, "your", his(c, 1)
+-					cnv_str s, "you", him(c, 1)
++					cnv_str s, "you", he(c, 1)
+ 				}
+ 			}
+ 			pos wx + 200, wy + 70 + 4 * 15
+ 			mes s
+ 		}
+@@ -56478,10 +56500,13 @@
+ 		if ( cdata(CDATA_ROLE, tc) == ROLE_SHOP_MOUNTAIN2 ) {
+ 			fltn "spshop"
+ 			if ( rnd(20) == 0 ) {
+ 				dbid = 869
+ 			}
++			if ( rnd(100) == 0 ) {
++				dbid = 1309
++			}
+ 			if ( cnt == 0 ) {
+ 				dbid = 430
+ 			}
+ 			if ( cnt == 1 ) {
+ 				dbid = 287
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27R-borscht/command.hsp ../2.28-borscht/command.hsp
+--- ../2.27R-borscht/command.hsp	2025-06-02 04:42:46.607022800 +0800
++++ ../2.28-borscht/command.hsp	2025-08-01 02:55:09.235930500 +0800
+@@ -2343,10 +2343,20 @@
+ 			list(0, listmax) = 1, 99999
+ 			listn(0, listmax) = lang("[その他]", "[ETC]") + lang("あなたのエーテル病の進行は遅い。", "Your Ether disease grows slow.")
+ 			listmax++
+ 		}
+ 	}
++	if ( cbit(CHARA_BIT_EAT_RAW_ITEM, tc) == TRUE | tc == CHARA_PLAYER ) {
++		list(0, listmax) = 1, 99999
++		listn(0, listmax) = lang("[その他]", "[ETC]") + lang("あなたは生もの製のアイテムを食べる", "You eat raw items.")
++		listmax++
++	}
++	if ( cbit(CHARA_BIT_GIVEN_BIRTH, tc) == TRUE ) {
++		list(0, listmax) = 1, 99999
++		listn(0, listmax) = lang("[その他]", "[ETC]") + lang("あなたには出産経験がある[耐久属性被ﾀﾞﾒｰｼﾞ半減]", "You have given birth. [RES+ ENDattack]")
++		listmax++
++	}
+ 	if ( cbit(CHARA_BIT_AWAKE_DIM_ATTACKER, tc) == TRUE ) {
+ 		list(0, listmax) = 1, 99998
+ 		listn(0, listmax) = lang("[覚醒]", "[AWAKE]") + lang("あなたの魅力は敵さえも朦朧とさせる[直接攻撃してきた敵が朦朧]", "You got Attraction.")
+ 		listmax++
+ 	}
+@@ -9432,55 +9442,55 @@
+ 		if ( ohanasi1 >= 0 ) {
+ 			gosub *setHistory1
+ 			if ( cc != CHARA_PLAYER ) {
+ 				if ( en ) {
+ 					cnv_str s, "your", his(cc, 1)
+-					cnv_str s, "you", him(cc, 1)
++					cnv_str s, "you", he(cc, 1)
+ 				}
+ 			}
+ 			pos wx + 220, wy + 290
+ 			mes s
+ 		}
+ 		if ( ohanasi2 != 0 ) {
+ 			gosub *setHistory2
+ 			if ( cc != CHARA_PLAYER ) {
+ 				if ( en ) {
+ 					cnv_str s, "your", his(cc, 1)
+-					cnv_str s, "you", him(cc, 1)
++					cnv_str s, "you", he(cc, 1)
+ 				}
+ 			}
+ 			pos wx + 220, wy + 290 + 1 * 15
+ 			mes s
+ 		}
+ 		if ( ohanasi3 != 0 ) {
+ 			gosub *setHistory3
+ 			if ( cc != CHARA_PLAYER ) {
+ 				if ( en ) {
+ 					cnv_str s, "your", his(cc, 1)
+-					cnv_str s, "you", him(cc, 1)
++					cnv_str s, "you", he(cc, 1)
+ 				}
+ 			}
+ 			pos wx + 220, wy + 290 + 2 * 15
+ 			mes s
+ 		}
+ 		if ( ohanasi4 != 0 ) {
+ 			gosub *setHistory4
+ 			if ( cc != CHARA_PLAYER ) {
+ 				if ( en ) {
+ 					cnv_str s, "your", his(cc, 1)
+-					cnv_str s, "you", him(cc, 1)
++					cnv_str s, "you", he(cc, 1)
+ 				}
+ 			}
+ 			pos wx + 220, wy + 290 + 3 * 15
+ 			mes s
+ 		}
+ 		if ( ohanasi5 != 0 ) {
+ 			gosub *setHistory5
+ 			if ( cc != CHARA_PLAYER ) {
+ 				if ( en ) {
+ 					cnv_str s, "your", his(cc, 1)
+-					cnv_str s, "you", him(cc, 1)
++					cnv_str s, "you", he(cc, 1)
+ 				}
+ 			}
+ 			pos wx + 220, wy + 290 + 4 * 15
+ 			mes s
+ 		}
+@@ -12322,10 +12332,15 @@
+ 					}
+ 					if ( inv(INV_ITEM_ID, cnt) == ITEM_ID_RECIPE | inv(INV_ITEM_ID, cnt) == ITEM_ID_ANCIENT_BOOK | inv(INV_ITEM_ID, cnt) == ITEM_ID_SPELLBOOK_WISHING ) {
+ 						continue
+ 					}
+ 				}
++				if ( invctrl(1) == 33 ) {
++					if ( inv(INV_ITEM_ID, cnt) != ITEM_ID_CARD ) {
++						continue
++					}
++				}
+ 			}
+ 			if ( invctrl == INVCTRL_PUT ) {
+ 				if ( invctrl(1) == 0 ) {
+ 					if ( gdata(GDATA_AREA) == AREA_LUMIEST | gdata(GDATA_AREA) == AREA_ARCBELC ) {
+ 						if ( inv(INV_ITEM_ID, cnt) != ITEM_ID_ANCIENT_BOOK | inv(INV_ITEM_PARAM2, cnt) == 0 ) {
+@@ -13923,11 +13938,11 @@
+ 			gosub *calcBurdenPc
+ 			invsubroutine = 0
+ 			return 1
+ 		}
+ 		if ( invctrl == INVCTRL_MATERIAL_ENCHANT ) {
+-			if ( invctrl(1) != 31 & invctrl(1) != 21 & invctrl(1) != 23 & invctrl(1) != 24 ) {
++			if ( invctrl(1) != 31 & invctrl(1) != 21 & invctrl(1) != 23 & invctrl(1) != 24 & invctrl(1) != 33 ) {
+ 				item_separate ci
+ 			}
+ 			invsubroutine = 0
+ 			return 1
+ 		}
+@@ -15850,11 +15865,11 @@
+ 	gosub *db_class
+ 	buff = ""
+ 	notesel buff
+ 	procid = (procid + 1) \ 4
+ 	proclist(procid) = "Dump:1" + " ct:" + ct
+-	noteadd "Elona Version " + "6.38" + " キャラクター情報 " + gdata(GDATA_YEAR) + "年" + gdata(GDATA_MONTH) + "月" + gdata(GDATA_DAY) + "日 " + gdata(GDATA_HOUR) + "時" + gdata(GDATA_MIN) + "分  " + mdatan(0)
++	noteadd "Elona Version " + "6.39" + " キャラクター情報 " + gdata(GDATA_YEAR) + "年" + gdata(GDATA_MONTH) + "月" + gdata(GDATA_DAY) + "日 " + gdata(GDATA_HOUR) + "時" + gdata(GDATA_MIN) + "分  " + mdatan(0)
+ 	noteadd ""
+ 	noteadd "  " + fixtxt("" + cdatan(CDATAN_AKA, CHARA_PLAYER) + cdatan(CDATAN_NAME, CHARA_PLAYER), 34) + _sex(cdata(CDATA_SEX, CHARA_PLAYER)) + " " + calcage(0) + "歳" + "  " + cdata(CDATA_HEIGHT, CHARA_PLAYER) + "cm" + " " + cdata(CDATA_WEIGHT, CHARA_PLAYER) + "kg"
+ 	noteadd ""
+ 	noteadd fixtxt("種族       : " + racename, 30) + fixtxt("信仰      : " + godname(cdata(CDATA_GOD, CHARA_PLAYER)), 32)
+ 	noteadd fixtxt("職業       : " + classname, 30) + fixtxt("所属      : " + guildname(), 32)
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27R-borscht/event.hsp ../2.28-borscht/event.hsp
+--- ../2.27R-borscht/event.hsp	2025-06-02 04:42:47.490909000 +0800
++++ ../2.28-borscht/event.hsp	2025-08-01 02:55:10.136318800 +0800
+@@ -313,22 +313,29 @@
+ 					if ( rnd(10) == 0 ) {
+ 						id = 52
+ 						goto *random_eventProc
+ 					}
+ 				}
++				if ( rnd(60) == 0 ) {
++					id = 56
++					goto *random_eventProc
++				}
+ 			}
+ 		}
+ 		if ( mdata(MDATA_TYPE) == MAP_TYPE_TOWN ) {
+ 			if ( rnd(25) == 0 ) {
+ 				id = 15, 80
+ 			}
+ 			goto *random_eventProc
+ 		}
+ 		if ( mdata(MDATA_TYPE) == MAP_TYPE_WORLD ) {
+-			if ( rnd(40) ) {
++			if ( rnd(20) ) {
+ 				return 0
+ 			}
++			if ( rnd(3) == 0 ) {
++				id = 56
++			}
+ 			goto *random_eventProc
+ 		}
+ 		if ( rnd(25) == 0 ) {
+ 			id = 10
+ 		}
+@@ -3283,10 +3290,650 @@
+ 		listmax++
+ 		gosub *re_select
+ 		goto *random_eventProc_SWEND1
+ 		_switch_sw++
+ 	}
++	if ( _switch_val == 56 | _switch_sw ) {
++		_switch_sw = 0
++		txtef COLOR_ORANGE
++		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) += 7
++		txt lang("多めにインスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got many inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
++		txtef COLOR_LIGHT_GREEN
++		gdata(GDATA_TRAVEL_DISTANCE) += 7
++		txt lang("多めに旅経験を得た（現在" + gdata(GDATA_TRAVEL_DISTANCE) + "）", " You got many travelExp.[Currently:" + gdata(GDATA_TRAVEL_DISTANCE) + "]")
++		if ( gdata(GDATA_AREA) == AREA_OCEAN ) {
++			kaiwa = rnd(10)
++			if ( kaiwa == 0 ) {
++				hito = lang("水夫", "sailor")
++			}
++			if ( kaiwa == 1 ) {
++				hito = lang("船長", "captain")
++			}
++			if ( kaiwa == 2 ) {
++				hito = lang("海水浴客", "swimmer")
++			}
++			if ( kaiwa == 3 ) {
++				hito = lang("街の子供", "town child")
++			}
++			if ( kaiwa == 4 ) {
++				hito = lang("観光客", "tourist")
++			}
++			if ( kaiwa == 5 ) {
++				hito = lang("海賊", "pirate")
++			}
++			if ( kaiwa == 6 ) {
++				hito = lang("老人", "old person")
++			}
++			if ( kaiwa == 7 ) {
++				hito = lang("敗残兵", "fallen soldier")
++			}
++			if ( kaiwa == 8 ) {
++				hito = lang("荒くれ海賊", "rough pirate")
++			}
++			if ( kaiwa == 9 ) {
++				hito = lang("海賊銃士", "pirate musketeer")
++			}
++		}
++		else {
++			if ( gdata(GDATA_AREA) == AREA_LOST_YLVA ) {
++				kaiwa = rnd(10)
++				if ( kaiwa == 0 ) {
++					hito = lang("旅人", "traveler")
++				}
++				if ( kaiwa == 1 ) {
++					hito = lang("学者", "scholar")
++				}
++				if ( kaiwa == 2 ) {
++					hito = lang("丘の子", "hill child")
++				}
++				if ( kaiwa == 3 ) {
++					hito = lang("アルケー", "arkhai")
++				}
++				if ( kaiwa == 4 ) {
++					hito = lang("傭兵戦士", "mercenary warrior")
++				}
++				if ( kaiwa == 5 ) {
++					hito = lang("傭兵射手", "mercenary archer")
++				}
++				if ( kaiwa == 6 ) {
++					hito = lang("傭兵魔術士", "mercenary wizard")
++				}
++				if ( kaiwa == 7 ) {
++					hito = lang("盗賊団の用心棒", "rogue warrior")
++				}
++				if ( kaiwa == 8 ) {
++					hito = lang("盗賊団の殺し屋", "rogue archer")
++				}
++				if ( kaiwa == 9 ) {
++					hito = lang("盗賊団の術士", "rogue wizard")
++				}
++			}
++			else {
++				kaiwa = rnd(20)
++				if ( kaiwa == 0 ) {
++					hito = lang("市民", "citizen")
++				}
++				if ( kaiwa == 1 ) {
++					hito = lang("貴族", "noble")
++				}
++				if ( kaiwa == 2 ) {
++					hito = lang("街の子供", "town child")
++				}
++				if ( kaiwa == 3 ) {
++					hito = lang("パンク", "punk")
++				}
++				if ( kaiwa == 4 ) {
++					hito = lang("傭兵", "mercenary")
++				}
++				if ( kaiwa == 5 ) {
++					hito = lang("乞食", "beggar")
++				}
++				if ( kaiwa == 6 ) {
++					hito = lang("老人", "old person")
++				}
++				if ( kaiwa == 7 ) {
++					hito = lang("敗残兵", "fallen soldier")
++				}
++				if ( kaiwa == 8 ) {
++					hito = lang("農夫", "farmer")
++				}
++				if ( kaiwa == 9 ) {
++					hito = lang("鉱夫", "miner")
++				}
++				if ( kaiwa == 10 ) {
++					hito = lang("清掃員", "cleaner")
++				}
++				if ( kaiwa == 11 ) {
++					hito = lang("ならずもの", "rogue")
++				}
++				if ( kaiwa == 12 ) {
++					hito = lang("娼婦", "prostitue")
++				}
++				if ( kaiwa == 13 ) {
++					hito = lang("芸術家", "artist")
++				}
++				if ( kaiwa == 14 ) {
++					hito = lang("ガード", "guard")
++				}
++				if ( kaiwa == 15 ) {
++					hito = lang("温泉マニア", "citizen")
++				}
++				if ( kaiwa == 16 ) {
++					hito = lang("情報屋", "informer")
++				}
++				if ( kaiwa == 17 ) {
++					hito = lang("吟遊詩人", "bard")
++				}
++				if ( kaiwa == 18 ) {
++					hito = lang("観光客", "tourist")
++				}
++				if ( kaiwa == 19 ) {
++					hito = lang("セールスマン", "sales person")
++				}
++			}
++		}
++		if ( gdata(GDATA_AREA) == AREA_OCEAN ) {
++			kaiwa = rnd(8)
++			if ( kaiwa == 0 ) {
++				mon = lang("ナイトメアシャーク", "nightmare shark")
++			}
++			if ( kaiwa == 1 ) {
++				mon = lang("クラーゲン", "jellyfish kraken")
++			}
++			if ( kaiwa == 2 ) {
++				mon = lang("ガンマンボウ", "gunfish")
++			}
++			if ( kaiwa == 3 ) {
++				mon = lang("タカトビウオ", "flight fish")
++			}
++			if ( kaiwa == 4 ) {
++				mon = lang("イトマキシビレエイ", "manta rayarn")
++			}
++			if ( kaiwa == 5 ) {
++				mon = lang("煽りイカ", "provocasquid")
++			}
++			if ( kaiwa == 6 ) {
++				mon = lang("ドルフィンソルジャー", "dolphin soldier")
++			}
++			if ( kaiwa == 7 ) {
++				mon = lang("ドスケベイソギンチャク", "dosukebe sea anemone")
++			}
++		}
++		else {
++			kaiwa = rnd(35)
++			if ( kaiwa == 0 ) {
++				mon = lang("かたつむり", "snail")
++			}
++			if ( kaiwa == 1 ) {
++				mon = lang("やどかり", "hermit crab")
++			}
++			if ( kaiwa == 2 ) {
++				mon = lang("コウモリ", "bat")
++			}
++			if ( kaiwa == 3 ) {
++				mon = lang("うりぼう", "child boar")
++			}
++			if ( kaiwa == 4 ) {
++				mon = lang("野うさぎ", "rabbit")
++			}
++			if ( kaiwa == 5 ) {
++				mon = lang("羊", "wild sheep")
++			}
++			if ( kaiwa == 6 ) {
++				mon = lang("飛び蛙", "flying frog")
++			}
++			if ( kaiwa == 7 ) {
++				mon = lang("猟犬", "hound")
++			}
++			if ( kaiwa == 8 ) {
++				mon = lang("巨大リス", "giant squirrel")
++			}
++			if ( kaiwa == 9 ) {
++				mon = lang("殺人リス", "killer squirrel")
++			}
++			if ( kaiwa == 10 ) {
++				mon = lang("コブラ", "cobra")
++			}
++			if ( kaiwa == 11 ) {
++				mon = lang("サソリ", "scorpion")
++			}
++			if ( kaiwa == 12 ) {
++				mon = lang("まだら蜘蛛", "spider")
++			}
++			if ( kaiwa == 13 ) {
++				mon = lang("猫", "cat")
++			}
++			if ( kaiwa == 14 ) {
++				mon = lang("犬", "dog")
++			}
++			if ( kaiwa == 15 ) {
++				mon = lang("ネズミ", "rat")
++			}
++			if ( kaiwa == 16 ) {
++				mon = lang("鶏", "chicken")
++			}
++			if ( kaiwa == 17 ) {
++				mon = lang("野生馬", "wild horse")
++			}
++			if ( kaiwa == 18 ) {
++				mon = lang("ごろつき", "gangster")
++			}
++			if ( kaiwa == 19 ) {
++				mon = lang("牧羊犬", "sheepdog")
++			}
++			if ( kaiwa == 20 ) {
++				mon = lang("プチ", "putit")
++			}
++			if ( kaiwa == 21 ) {
++				mon = lang("ベスプチ", "red putit")
++			}
++			if ( kaiwa == 22 ) {
++				mon = lang("コボルト", "kobold")
++			}
++			if ( kaiwa == 23 ) {
++				mon = lang("イーク", "yeek")
++			}
++			if ( kaiwa == 24 ) {
++				mon = lang("オーク", "orc")
++			}
++			if ( kaiwa == 25 ) {
++				mon = lang("マンドレイク", "mandrake")
++			}
++			if ( kaiwa == 26 ) {
++				mon = lang("かぶと虫", "beetle")
++			}
++			if ( kaiwa == 27 ) {
++				mon = lang("餓鬼", "hungry demon")
++			}
++			if ( kaiwa == 28 ) {
++				mon = lang("フローティングアイ", "floating eye")
++			}
++			if ( kaiwa == 29 ) {
++				mon = lang("亡霊", "ghost")
++			}
++			if ( kaiwa == 30 ) {
++				mon = lang("ゴブリン", "goblin")
++			}
++			if ( kaiwa == 31 ) {
++				mon = lang("ブラウンベア", "brown bear")
++			}
++			if ( kaiwa == 32 ) {
++				mon = lang("大道芸人", "public performer")
++			}
++			if ( kaiwa == 33 ) {
++				mon = lang("ハリねずみ", "hedgehog")
++			}
++			if ( kaiwa == 34 ) {
++				mon = lang("ゴールドベル", "gold bell")
++			}
++		}
++		kaiwa = rnd(11)
++		if ( kaiwa == 0 ) {
++			nagara = lang("ガタガタ震えながら", "shaking with fear")
++		}
++		if ( kaiwa == 1 ) {
++			nagara = lang("号泣しながら", "with crying")
++		}
++		if ( kaiwa == 2 ) {
++			nagara = lang("頭から血を噴き出しながら", "with blood gushing from the head")
++		}
++		if ( kaiwa == 3 ) {
++			nagara = lang("絶叫しながら", "with screaming")
++		}
++		if ( kaiwa == 4 ) {
++			nagara = lang("必死に", "desperately")
++		}
++		if ( kaiwa == 5 ) {
++			nagara = lang("絶望した顔で", "with despair on the face")
++		}
++		if ( kaiwa == 6 ) {
++			nagara = lang("踊りながら", "with dancing")
++		}
++		if ( kaiwa == 7 ) {
++			nagara = lang("鼻をほじりながら", "while picking nose")
++		}
++		if ( kaiwa == 8 ) {
++			nagara = lang("尻をかきながら", "while scratching buttocks")
++		}
++		if ( kaiwa == 9 ) {
++			nagara = lang("鼻血を流しながら", "while having nosebleed")
++		}
++		if ( kaiwa == 10 ) {
++			nagara = lang("七色に光りながら", "with glowing in seven colors")
++		}
++		kaiwa = rnd(19)
++		if ( kaiwa == 0 ) {
++			item = lang("クラムベリー", "crimberry")
++		}
++		if ( kaiwa == 1 ) {
++			item = lang("栗", "chestnut")
++		}
++		if ( kaiwa == 2 ) {
++			item = lang("動物の骨", "animal bone")
++		}
++		if ( kaiwa == 3 ) {
++			item = lang("魚の死骸", "dead fish")
++		}
++		if ( kaiwa == 4 ) {
++			item = lang("頑丈なロープ", "tight rope")
++		}
++		if ( kaiwa == 5 ) {
++			item = lang("鉱石の欠片", "ore piece")
++		}
++		if ( kaiwa == 6 ) {
++			item = lang("薬草", "healthy leaf")
++		}
++		if ( kaiwa == 7 ) {
++			item = lang("アピの実", "api nut")
++		}
++		if ( kaiwa == 8 ) {
++			item = lang("山菜", "edible wild plant")
++		}
++		if ( kaiwa == 9 ) {
++			item = lang("花で飾られた墓", "ornamented with flowers")
++		}
++		if ( kaiwa == 10 ) {
++			item = lang("崩れた墓", "crumbled grave")
++		}
++		if ( kaiwa == 11 ) {
++			item = lang("風化した墓", "collapsed grave")
++		}
++		if ( kaiwa == 12 ) {
++			item = lang("空のバスケット", "empty basket")
++		}
++		if ( kaiwa == 13 ) {
++			item = lang("骨", "bone fragment")
++		}
++		if ( kaiwa == 14 ) {
++			item = lang("折れた刃", "broken sword")
++		}
++		if ( kaiwa == 15 ) {
++			item = lang("割れたつぼ", "broken vase")
++		}
++		if ( kaiwa == 16 ) {
++			item = lang("クズ", "garbage")
++		}
++		if ( kaiwa == 17 ) {
++			item = lang("クズ石", "junk stone")
++		}
++		if ( kaiwa == 18 ) {
++			item = lang("木片", "wood piece")
++		}
++		kaiwa = rnd(8)
++		if ( kaiwa == 0 ) {
++			tree = lang("モミの木", "fir tree")
++		}
++		if ( kaiwa == 1 ) {
++			tree = lang("トネリコの木", "ash tree")
++		}
++		if ( kaiwa == 2 ) {
++			tree = lang("ヤシの木", "palm tree")
++		}
++		if ( kaiwa == 3 ) {
++			tree = lang("ケヤキの木", "zelkova tree")
++		}
++		if ( kaiwa == 4 ) {
++			tree = lang("枯れ木", "dead tree")
++		}
++		if ( kaiwa == 5 ) {
++			tree = lang("果実の木", "fruits tree")
++		}
++		if ( kaiwa == 6 ) {
++			tree = lang("スギの木", "cedar tree")
++		}
++		if ( kaiwa == 7 ) {
++			tree = lang("ブナの木", "beech tree")
++		}
++		kaiwa = rnd(11)
++		if ( kaiwa == 0 ) {
++			drink = lang("コーラ", "cola")
++		}
++		if ( kaiwa == 1 ) {
++			drink = lang("麦茶", "mugi tea")
++		}
++		if ( kaiwa == 2 ) {
++			drink = lang("緑茶", "green tea")
++		}
++		if ( kaiwa == 3 ) {
++			drink = lang("揮発油", "gasoline")
++		}
++		if ( kaiwa == 4 ) {
++			drink = lang("食塩水", "salt solution")
++		}
++		if ( kaiwa == 5 ) {
++			drink = lang("媚薬", "love potion")
++		}
++		if ( kaiwa == 6 ) {
++			drink = lang("乳", "milk")
++		}
++		if ( kaiwa == 7 ) {
++			drink = lang("ビア", "beer")
++		}
++		if ( kaiwa == 8 ) {
++			drink = lang("ウィスキー", "whisky")
++		}
++		if ( kaiwa == 9 ) {
++			drink = lang("クリムエール", "crim ale")
++		}
++		if ( kaiwa == 10 ) {
++			drink = lang("汚水", "dirty water")
++		}
++		kaiwa = rnd(14)
++		if ( kaiwa == 0 ) {
++			tori = lang("グリーンドラゴン", "green dragon")
++		}
++		if ( kaiwa == 1 ) {
++			tori = lang("レッドドラゴン", "red dragon")
++		}
++		if ( kaiwa == 2 ) {
++			tori = lang("ホワイトドラゴン", "white dragon")
++		}
++		if ( kaiwa == 3 ) {
++			tori = lang("エレキドラゴン", "elec dragon")
++		}
++		if ( kaiwa == 4 ) {
++			tori = lang("冥界ドラゴン", "nether dragon")
++		}
++		if ( kaiwa == 5 ) {
++			tori = lang("カオスドラゴン", "chaos dragon")
++		}
++		if ( kaiwa == 6 ) {
++			tori = lang("ハシビロコウさん", "shoebill")
++		}
++		if ( kaiwa == 7 ) {
++			tori = lang("ストライクイーグル", "strike eagle")
++		}
++		if ( kaiwa == 8 ) {
++			tori = lang("ハーピー", "harpy")
++		}
++		if ( kaiwa == 9 ) {
++			tori = lang("弓矢ガモ", "arrow duck")
++		}
++		if ( kaiwa == 10 ) {
++			tori = lang("邪エナガ", "yokoshima enaga")
++		}
++		if ( kaiwa == 11 ) {
++			tori = lang("ワイバーン", "wyvern")
++		}
++		if ( kaiwa == 12 ) {
++			tori = lang("ブラックグリフォン", "black gryffon")
++		}
++		if ( kaiwa == 13 ) {
++			tori = lang("朱雀", "suzaku")
++		}
++		kaiwa = rnd(12)
++		if ( kaiwa == 0 ) {
++			donna = lang("変な髪形の", "strange hairstyle")
++		}
++		if ( kaiwa == 1 ) {
++			donna = lang("様子のおかしい", "suspicious")
++		}
++		if ( kaiwa == 2 ) {
++			donna = lang("瀕死の", "dying")
++		}
++		if ( kaiwa == 3 ) {
++			donna = lang("傷だらけの", "wounded")
++		}
++		if ( kaiwa == 4 ) {
++			donna = lang("血まみれの", "bloody")
++		}
++		if ( kaiwa == 5 ) {
++			donna = lang("美しい", "beautiful")
++		}
++		if ( kaiwa == 6 ) {
++			donna = lang("顔面蒼白の", "pale-faced")
++		}
++		if ( kaiwa == 7 ) {
++			donna = lang("矢の刺さった", "arrows stuck")
++		}
++		if ( kaiwa == 8 ) {
++			donna = lang("鼻水を垂らした", "runny nose")
++		}
++		if ( kaiwa == 9 ) {
++			donna = lang("痩せこけた", "skinny")
++		}
++		if ( kaiwa == 10 ) {
++			donna = lang("疲れきった", "tired")
++		}
++		if ( kaiwa == 11 ) {
++			donna = lang("もう死んでいる", "dead")
++		}
++		if ( gdata(GDATA_AREA) == AREA_OCEAN ) {
++			s = lang("海の波間に", "Between the waves")
++			file = "bg_re25"
++		}
++		else {
++			s = lang("旅の途中で", "Adventure Days")
++			file = "bg_re9"
++		}
++		if ( gdata(GDATA_AREA) == AREA_OCEAN ) {
++			kaiwa = rnd(12)
++			if ( kaiwa == 0 ) {
++				buff = lang("イルカの群れが" + donna + "" + hito + "を投げ飛ばして遊んでいるのを見かけた…。", "You saw a group of dolphins playing by throwing " + donna + " " + hito + "...")
++			}
++			if ( kaiwa == 1 ) {
++				buff = lang("暴れる" + mon + "に" + hito + "がかぶりついているのを見かけた…。", "You saw a " + hito + " biting into a raging " + mon + "...")
++			}
++			if ( kaiwa == 2 ) {
++				buff = lang("海面から" + hito + "の脚だけが突き出ているのを" + tori + "が二度見しているのを見かけた…。", "You saw " + tori + " take a double take when " + tori + " saw only " + hito + "'s legs sticking out above the water...")
++			}
++			if ( kaiwa == 3 ) {
++				buff = lang("頭に" + hito + "が刺さったクジラが" + nagara + "潮を吹いているのを見かけた…。", "You saw whale with " + hito + " stuck in its head spewing water.")
++			}
++			if ( kaiwa == 4 ) {
++				buff = lang("フグをくわえた" + mon + "が" + hito + "にウザがらみしているのを見かけた…。", "You saw " + mon + " with a pufferfish in its mouth picking a fight with " + hito + "...")
++			}
++			if ( kaiwa == 5 ) {
++				buff = lang("" + mon + "にまたがった" + hito + "が剣を振り回しているのを見かけた…。", "You saw " + hito + " riding " + mon + " and brandishing a sword...")
++			}
++			if ( kaiwa == 6 ) {
++				buff = lang("" + nagara + "イルカにまたがろうとした" + hito + "が尾で股間を強打されているのを見かけた…。", "You saw " + hito + " trying " + nagara + " to straddle a dolphin and getting hit hard in the groin by the dolphin's tail...")
++			}
++			if ( kaiwa == 7 ) {
++				buff = lang("" + hito + "がよく分からない団体と一緒に" + nagara + "サメを殴っているのを見かけた…。", "You saw " + hito + " punching " + nagara + " a shark with some unknown group...")
++			}
++			if ( kaiwa == 8 ) {
++				buff = lang("ラッコから貝を奪おうとした" + hito + "が石で殴られているのを見かけた…。", "You saw " + hito + " being hit with a stone while trying to steal some shells from sea otter...")
++			}
++			if ( kaiwa == 9 ) {
++				buff = lang("海面を走っていたニンジャが浮上してきた" + mon + "につまづいて沈んでいくのを見かけた…。", "You saw a ninja running on the surface of the sea tripping over " + mon + " that had surfaced and sinking...")
++			}
++			if ( kaiwa == 10 ) {
++				buff = lang("ジャンプした" + mon + "が飛んでいた" + tori + "を撃墜するのを見かけた…。", "You saw jumping " + mon + " shoot down flying " + tori + "...")
++			}
++			if ( kaiwa == 11 ) {
++				buff = lang("" + donna + "" + hito + "が白い手に引きずり込まれて海中に消えていくのが見えた…。", "You saw " + donna + " " + hito + " being dragged into the sea by white hands...")
++			}
++		}
++		else {
++			kaiwa = rnd(19)
++			if ( kaiwa == 0 ) {
++				buff = lang("道端で、" + hito + "が" + mon + "に" + nagara + "命乞いをしているのを見かけた…。", "You saw " + hito + " out in the field surrender " + nagara + " to " + mon + "...")
++			}
++			if ( kaiwa == 1 ) {
++				buff = lang("こっそり" + item + "を盗もうとした" + hito + "を、" + mon + "が通報しているのを見かけた…。", "You saw " + mon + " reporting " + hito + " who was trying to secretly steal " + item + "...")
++			}
++			if ( kaiwa == 2 ) {
++				buff = lang("" + hito + "が、" + nagara + "" + item + "を投げ捨てているのを見かけた…。", "You saw " + hito + " " + nagara + " as threw away " + item + "...")
++			}
++			if ( kaiwa == 3 ) {
++				buff = lang("" + mon + "がなぜか" + item + "に向かって" + nagara + "威嚇しているのを見かけた…。", "You saw " + mon + " " + nagara + " trying to intimidate " + item + " for some reason...")
++			}
++			if ( kaiwa == 4 ) {
++				buff = lang("" + mon + "と" + hito + "が" + drink + "を飲みながら一緒に踊っているのを見かけた…。", "You saw " + mon + " and " + hito + " drinking " + drink + " and dancing together...")
++			}
++			if ( kaiwa == 5 ) {
++				buff = lang("" + donna + "" + hito + "が" + tree + "にしがみついてセミの鳴きまねをしているのを見かけた…。", "You saw " + donna + " " + hito + " clinging to " + tree + " and imitating the chirps of a cicada...")
++			}
++			if ( kaiwa == 6 ) {
++				buff = lang("" + donna + "" + hito + "が四つん這いで" + mon + "と一緒に雄たけびをあげているのを見かけた…。", "You saw " + donna + " " + hito + " on all fours roaring along with " + mon + "...")
++			}
++			if ( kaiwa == 7 ) {
++				buff = lang("" + donna + "" + hito + "が" + nagara + "猛烈な勢いでスキップしているのを見かけた…。", "You saw " + donna + " " + hito + " skipping " + nagara + " and furiously...")
++			}
++			if ( kaiwa == 8 ) {
++				buff = lang("道端で" + drink + "を飲んでいた" + hito + "が突然光りだした後に、爆発四散するのを見かけた…。", "You saw " + hito + " drinking " + drink + " on the side of the road suddenly start to glow and then explode into pieces...")
++			}
++			if ( kaiwa == 9 ) {
++				buff = lang("" + mon + "が" + tree + "の上から" + hito + "に" + drink + "をかけられて騒いでいるのを見かけた…。", "You saw " + mon + " making a fuss after " + hito + " had " + drink + " thrown from the top of the " + tree + "...")
++			}
++			if ( kaiwa == 10 ) {
++				buff = lang("" + donna + "" + hito + "たちが" + nagara + "あなたの前を横切っていくのを見かけた…。", "You saw " + donna + " " + hito + " " + nagara + " trying to cross in front of you...")
++			}
++			if ( kaiwa == 11 ) {
++				buff = lang("" + donna + "" + hito + "が" + nagara + "地面にわりばしを植えているのを見かけた…。", "You saw " + donna + " " + hito + " planting " + nagara + " chopsticks in the ground...")
++			}
++			if ( kaiwa == 12 ) {
++				buff = lang("" + donna + "" + hito + "が" + nagara + "人肉をむさぼり食っているのを見かけた…。", "You saw " + donna + " " + hito + " devouring " + nagara + " human flesh....")
++			}
++			if ( kaiwa == 13 ) {
++				buff = lang("寝そべった" + mon + "が" + nagara + "" + item + "に噛みついているのを見かけた…。", "You saw " + mon + " lying down biting " + nagara + " " + item + "...")
++			}
++			if ( kaiwa == 14 ) {
++				buff = lang("骨をくわえた" + mon + "を骸骨戦士が必死に追いかけているのを見かけた…。", "You saw skeleton warrior desperately chasing " + mon + " with bones in its mouth...")
++			}
++			if ( kaiwa == 15 ) {
++				buff = lang("" + hito + "が" + item + "を尻にはさみ、右手の指を鼻の穴に入れ、左手でボクシングをしているのを見かけた…。", "You saw " + hito + " with " + item + " between buttocks, the fingers of right hand in nostrils, and boxing with left hand...")
++			}
++			if ( kaiwa == 16 ) {
++				buff = lang("" + hito + "が全裸で自分の尻を両手でバンバン叩きながら白目をむき、" + nagara + "昇降運動しているのを見かけた…。", "You saw " + hito + " totally naked, eyes rolling back, banging buttocks with both hands, going " + nagara + " up and down...")
++			}
++			if ( kaiwa == 17 ) {
++				buff = lang("" + hito + "が" + mon + "のモノマネの練習をしているのを見かけた…かなりクオリティが高い。", "You saw " + hito + " practicing " + mon + " imitation...the quality is pretty high.")
++			}
++			if ( kaiwa == 18 ) {
++				buff = lang("頭にパンティーをかぶった" + donna + "" + hito + "がガードに連行されているのを見かけた…。", "You saw " + donna + " " + hito + " with panties on the head being taken away by guards...")
++			}
++			if ( gdata(GDATA_AREA) == AREA_LOST_YLVA ) {
++				if ( kaiwa == 15 ) {
++					buff = lang("大陸の結界にぶつかった" + tori + "が弾かれて墜落していくのを見かけた…。", "You saw " + tori + " collide with the continent's barrier, be bounced off, and crash into the world below...")
++				}
++				if ( kaiwa == 16 ) {
++					buff = lang("" + donna + "" + hito + "が" + tori + "にわしづかみにされてどこかへ連れていかれるのを見かけた…。", "You saw " + donna + " " + hito + " being grabbed by " + tori + " and taken away somewhere...")
++				}
++				if ( kaiwa == 17 ) {
++					buff = lang("下半身が地面に埋まった" + hito + "を" + mon + "と" + tori + "がつついているのを見かけた…。", "You saw " + mon + " and " + tori + " pecking at " + hito + " whose lower body was buried in the ground...")
++				}
++				if ( kaiwa == 18 ) {
++					buff = lang("" + tori + "にウンコ爆撃された" + hito + "が負傷しているのを見かけた…。", "You saw " + hito + " injured after being hit by " + tori + "'s dropping shit...")
++				}
++			}
++		}
++		if ( gdata(GDATA_AREA) == AREA_OCEAN ) {
++			list(0, listmax) = 1
++			listn(0, listmax) = lang("海は広いな", "The sea is so wide.")
++			listmax++
++		}
++		else {
++			list(0, listmax) = 1
++			listn(0, listmax) = lang("関わらないでおこう", "I don't want to get involved.")
++			listmax++
++		}
++		gosub *re_select
++		goto *random_eventProc_SWEND1
++		_switch_sw++
++	}
+ 	if ( _switch_val == 47 | _switch_sw ) {
+ 		_switch_sw = 0
+ 		txtef COLOR_ORANGE
+ 		gdata(GDATA_FLAG_MANUSCRIPT_IDEAS)++
+ 		txt lang("インスピレーションを得た（現在" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "）", " You got inspired.[Currently:" + gdata(GDATA_FLAG_MANUSCRIPT_IDEAS) + "]")
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27R-borscht/help.hsp ../2.28-borscht/help.hsp
+--- ../2.27R-borscht/help.hsp	2025-06-02 04:42:47.536471900 +0800
++++ ../2.28-borscht/help.hsp	2025-08-01 02:55:10.181801500 +0800
+@@ -5443,11 +5443,11 @@
+ 	}
+ 	if ( mode == MODELIST_QUICK_START ) {
+ 		repeat 9
+ 			gdata(STARTING_GDATA_RANK + cnt) = 5000
+ 		loop
+-		gdata(GDATA_VERSION) = int(double("6.38") * 1000)
++		gdata(GDATA_VERSION) = int(double("6.39") * 1000)
+ 		gdata(STARTING_GDATA_SHORTCUT + 1) = 424
+ 		gdata(STARTING_GDATA_SHORTCUT + 2) = 300
+ 		gdata(STARTING_GDATA_SHORTCUT + 3) = 631
+ 		gdata(GDATA_COUNT_SHOP) = 1000
+ 		gdata(GDATA_COUNT_SHELTER) = 100
+@@ -6046,11 +6046,11 @@
+ 		gdata(GDATA_AREA) = AREA_HOME
+ 		gdata(GDATA_HOME_LEVEL) = 0
+ 		gosub *setArea
+ 		gdata(GDATA_LEVEL) = 1
+ 		gdata(GDATA_LEVEL_START_ON) = 4
+-		gdata(GDATA_VERSION) = int(double("6.38") * 1000)
++		gdata(GDATA_VERSION) = int(double("6.39") * 1000)
+ 		gdata(GDATA_WEATHER) = WEATHER_RAIN, 6
+ 		repeat 20
+ 			gdata(STARTING_GDATA_RANK + cnt) = 10000
+ 		loop
+ 		gosub *adv_init
+@@ -7113,11 +7113,11 @@
+ 		}
+ 	}
+ 	tc = cc
+ 	if ( map(cdata(CDATA_X, tc), cdata(CDATA_Y, tc), MAP_MEF_INDEX_PLUS_ONE) != 0 ) {
+ 		ef = map(cdata(CDATA_X, tc), cdata(CDATA_Y, tc), MAP_MEF_INDEX_PLUS_ONE) - 1
+-		if ( mef(MEF_TYPE, ef) >= MEF_TYPE_OCEAN_SHIP & mef(MEF_TYPE, ef) <= MEF_TYPE_OCEAN_BIG_CATCH ) {
++		if ( tc == CHARA_PLAYER & mef(MEF_TYPE, ef) >= MEF_TYPE_OCEAN_SHIP & mef(MEF_TYPE, ef) <= MEF_TYPE_OCEAN_BIG_CATCH ) {
+ 			shipevent = mef(MEF_TYPE, ef)
+ 			delmef ef
+ 			gosub *random_event
+ 		}
+ 		if ( mef(MEF_TYPE, ef) == MEF_TYPE_ACID ) {
+@@ -8075,11 +8075,11 @@
+ 		goto *pc_turn_init_WHILE1
+ 	}
+ 
+ *pc_turn_init_WEND1
+ 	if ( dbg_titleinfo ) {
+-		title "ElonaPlus 2.27R" + " ver " + "6.38" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
++		title "ElonaPlus 2.28" + " ver " + "6.39" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
+ 	}
+ 	if ( trait(TRAIT_ETHER_ADDICTED_POTION) != 0 ) {
+ 		if ( rnd(5) == 0 ) {
+ 			inv_getheader 0
+ 			ci = rnd(invrange) + invhead
+@@ -11357,10 +11357,11 @@
+ 			txt lang(name(ccbk) + "の" + babyid + "と" + babyai + "ステージ端数" + cdata(CDATA_PREGNANCY_PROGRESS, ccbk) + "。", name(cc) + " get genes of " + _s(cc) + ".")
+ 		}
+ 		bsid = cdata(CDATA_PREGNANCY_PROGRESS, ccbk) / 100
+ 		bsids = cdata(CDATA_PREGNANCY_PROGRESS, ccbk) \ 100
+ 		babymake = 1
++		cbitmod CHARA_BIT_GIVEN_BIRTH, ccbk, TRUE
+ 		repeat 20
+ 			if ( cdata(CDATA_PREGNANCY_MALE_CHILD, ccbk) <= 0 & cdata(CDATA_PREGNANCY_FEMALE_CHILD, ccbk) <= 0 ) {
+ 				break
+ 			}
+ 			if ( cdata(CDATA_PREGNANCY_MALE_CHILD, ccbk) > 0 ) {
+@@ -11377,10 +11378,13 @@
+ 				cbitmod CHARA_BIT_BIRTHED_CHILD, rc, TRUE
+ 				cdata(CDATA_SEX, rc) = 0
+ 				cdata(CDATA_PORTRAIT, rc) = -1
+ 				cdatan(CDATAN_NAME, rc) = lang(cdatan(CDATAN_NAME, ccbk) + "の息子", "son of " + cdatan(CDATAN_NAME, ccbk))
+ 				cdatan(CDATAN_NAME, rc) = lang("《", "{") + cdatan(CDATAN_NAME, rc) + lang("》", "}")
++				if ( ccbk == 0 | babyai == 0 ) {
++					cbitmod CHARA_BIT_EAT_RAW_ITEM, rc, TRUE
++				}
+ 				cdata(CDATA_AI_MOVE_FREQ, rc) = cdata(CDATA_AI_MOVE_FREQ, MAX_CHARA_NC)
+ 				cdata(CDATA_AI_DISTANCE, rc) = cdata(CDATA_AI_DISTANCE, MAX_CHARA_NC)
+ 				cdata(CDATA_AI_SUB, rc) = cdata(CDATA_AI_SUB, MAX_CHARA_NC)
+ 				cdata(STARTING_CDATA_ACT_MAIN, rc) = cdata(STARTING_CDATA_ACT_MAIN, MAX_CHARA_NC)
+ 				cdata(STARTING_CDATA_ACT_MAIN + 1, rc) = cdata(STARTING_CDATA_ACT_MAIN + 1, MAX_CHARA_NC)
+@@ -11413,10 +11417,13 @@
+ 				cbitmod CHARA_BIT_BIRTHED_CHILD, rc, TRUE
+ 				cdata(CDATA_SEX, rc) = 1
+ 				cdata(CDATA_PORTRAIT, rc) = -1
+ 				cdatan(CDATAN_NAME, rc) = lang(cdatan(CDATAN_NAME, ccbk) + "の娘", "daughter of " + cdatan(CDATAN_NAME, ccbk))
+ 				cdatan(CDATAN_NAME, rc) = lang("《", "{") + cdatan(CDATAN_NAME, rc) + lang("》", "}")
++				if ( ccbk == 0 | babyai == 0 ) {
++					cbitmod CHARA_BIT_EAT_RAW_ITEM, rc, TRUE
++				}
+ 				cdata(CDATA_AI_MOVE_FREQ, rc) = cdata(CDATA_AI_MOVE_FREQ, MAX_CHARA_NC)
+ 				cdata(CDATA_AI_DISTANCE, rc) = cdata(CDATA_AI_DISTANCE, MAX_CHARA_NC)
+ 				cdata(CDATA_AI_SUB, rc) = cdata(CDATA_AI_SUB, MAX_CHARA_NC)
+ 				cdata(STARTING_CDATA_ACT_MAIN, rc) = cdata(STARTING_CDATA_ACT_MAIN, MAX_CHARA_NC)
+ 				cdata(STARTING_CDATA_ACT_MAIN + 1, rc) = cdata(STARTING_CDATA_ACT_MAIN + 1, MAX_CHARA_NC)
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27R-borscht/init.hsp ../2.28-borscht/init.hsp
+--- ../2.27R-borscht/init.hsp	2025-06-02 04:42:47.626610800 +0800
++++ ../2.28-borscht/init.hsp	2025-08-01 02:55:10.268435400 +0800
+@@ -5105,11 +5105,11 @@
+ 	if ( tid == TRAIT_NORMAL_OTHER_GENTLE_FACE ) {
+ 		if ( traitmode == 0 ) {
+ 			traitref = 0, 0, 1, 1, 0, 100, -1
+ 			traitrefn2 = lang("優しい笑顔", "Gentle Face")
+ 			if ( trait(tid) >= 0 ) {
+-				traitrefn(2) = lang("優しい笑顔を習得し、敵が逃げ出すのを防ぐ", "Your gentle face prevents your enemies from escaping."), lang("あなたの笑顔は敵を油断させる", "Your attacks don't cause enemies to run.")
++				traitrefn(2) = lang("笑顔の作り方を勉強し、友好度や従順度を高めやすくする", "Your smile makes it easier to gain friendship and obedience."), lang("あなたの笑顔は相手を安心させる", "Your smile puts people at ease.")
+ 			}
+ 			return 1
+ 		}
+ 		return 1
+ 	}
+@@ -9006,11 +9006,11 @@
+ 		strmore = "(More)"
+ 		strnogold = "(You don't have enough money!)"
+ 		strinteractfail = "There's no valid target in that direction."
+ 		invtitle = "", "Examine", "Drop", "Pick Up", "", "Eat", "Wear", "Read", "Drink", "Zap", "Give", "Buy", "Sell", "Identify", "Use", "Open", "Cook", "Mix", "Mix Target", "Offer", "Trade", "Present", "Take", "Target", "Put", "Take", "Throw", "Pickpocket", "Trade", "Reserve", "　", "　", "Set mark"
+ 		bodyn = "", "Head", "Neck", "Back", "Body", "Hand", "Ring", "Arm", "Waist", "Leg", "Shoot", "Ammo"
+-		actlistn = "current action", "eating", "reading", "moving", "resting", "mining", "playing", "fishing", "collecting materials", "searching", "current action", "current action", "blend", "charge", "felling", "preaching", "eating", "dance", "eating", "persuasion", "joke", "lie", "intimidation", "song", "", "writing", "work", "work", "work", "begging", "jumping drop", "diving drill"
++		actlistn = "current action", "eating", "reading", "moving", "resting", "mining", "playing", "fishing", "collecting materials", "searching", "current action", "current action", "blend", "charge", "felling", "preaching", "eating", "dance", "eating", "persuasion", "joke", "lie", "intimidation", "song", "", "writing", "work", "work", "work", "begging", "jumping drop", "diving drill", "action"
+ 	}
+ 	sdim _cast, 30, 10
+ 	_cast(0) = lang("魔法を詠唱した。", " casts a spell.")
+ 	_cast(1) = lang("糸を飛ばした。", " splits cobweb.")
+ 	_cast(2) = lang("体液を飛ばした。", " spreads body fluid.")
+@@ -22897,11 +22897,11 @@
+ 		goto *exit_game
+ 	}
+ 	else {
+ 		errorhack++
+ 	}
+-	buf = "HspError " + wparam + " WinError " + GetLastError() + " Ver " + int(double("6.38") * 1000) + " Mode " + mode + "\n"
++	buf = "HspError " + wparam + " WinError " + GetLastError() + " Ver " + int(double("6.39") * 1000) + " Mode " + mode + "\n"
+ 	buf += "efId " + efid + " efP " + efp + " Area " + gdata(GDATA_AREA) + "/" + gdata(GDATA_LEVEL) + "\n"
+ 	buf += "ci "
+ 	if ( ci < 200 ) {
+ 		buf += "0"
+ 		if ( ci >= 0 ) {
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27R-borscht/item.hsp ../2.28-borscht/item.hsp
+--- ../2.27R-borscht/item.hsp	2025-06-02 04:42:47.645609400 +0800
++++ ../2.28-borscht/item.hsp	2025-08-01 02:55:10.285949000 +0800
+@@ -1411,10 +1411,19 @@
+ 				flt
+ 				itemcreate -1, ITEM_ID_SECRET_EXP_KUMIROMI, cdata(CDATA_X, rc), cdata(CDATA_Y, rc), 0
+ 			}
+ 		}
+ 	}
++	if ( cdata(CDATA_ID, rc) == CREATURE_ID_SP_CHAMPION | cdata(CDATA_ID, rc) == CREATURE_ID_CAPTAIN_SHARK | cdata(CDATA_ID, rc) == CREATURE_ID_RAGING_SHARK | cdata(CDATA_ID, rc) == CREATURE_ID_NIGHTMARE_SHARK ) {
++		if ( rnd(30) == 0 ) {
++			if ( gdata(GDATA_FLAG_RARE_DROP) == 100 ) {
++				flt
++				itemcreate -1, ITEM_ID_SLIME_FUKAGURUMI, cdata(CDATA_X, rc), cdata(CDATA_Y, rc), 0
++				inv(INV_ITEM_PARAM1, ci) = rnd(1000) + 1
++			}
++		}
++	}
+ 	if ( cdatan(CDATAN_CLASS, rc) == "wizard" ) {
+ 		if ( rnd(100) == 0 ) {
+ 			if ( gdata(GDATA_FLAG_RARE_DROP) == 100 ) {
+ 				flt
+ 				itemcreate -1, ITEM_ID_SNOW_CRYSTAL, cdata(CDATA_X, rc), cdata(CDATA_Y, rc), 0
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27R-borscht/main.hsp ../2.28-borscht/main.hsp
+--- ../2.27R-borscht/main.hsp	2025-06-02 04:42:47.669608700 +0800
++++ ../2.28-borscht/main.hsp	2025-08-01 02:55:10.309964700 +0800
+@@ -182,11 +182,11 @@
+ 	if ( dbg_randseed != 0 ) {
+ 		randseed = dbg_randseed
+ 	}
+ 	randomize randseed
+ 	exrand_randomize randseed
+-	title "ElonaPlus 2.27R"
++	title "ElonaPlus 2.28"
+ 	goto *system_init
+ 	goto *label_0003
+ 
+ #deffunc netload str netload_filename
+ 	netrequest netload_filename
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27R-borscht/map.hsp ../2.28-borscht/map.hsp
+--- ../2.27R-borscht/map.hsp	2025-06-02 04:42:47.721201500 +0800
++++ ../2.28-borscht/map.hsp	2025-08-01 02:55:10.361498100 +0800
+@@ -3601,17 +3601,19 @@
+ 				flttypemajor = FILTER_ENVIRONMENT
+ 				itemcreate -1, ITEM_ID_DUMMY, -1, -1, 0
+ 				inv(INV_ITEM_PROPERTY, ci) = PROP_NPC
+ 				map(inv(INV_ITEM_X, ci), inv(INV_ITEM_Y, ci), MAP_TILE_ID) = xy2pic(0, 0)
+ 			loop
+-			if ( rnd(2) == 0 ) {
+-				gdata(GDATA_FLAG_COLLECTED_WISHES) = 1
++			if ( gdata(GDATA_WORLD) != AREA_AIMWELL ) {
+ 				if ( rnd(2) == 0 ) {
+-					gosub *map_riverHorizontal
+-				}
+-				else {
+-					gosub *map_riverVertical
++					gdata(GDATA_FLAG_COLLECTED_WISHES) = 1
++					if ( rnd(2) == 0 ) {
++						gosub *map_riverHorizontal
++					}
++					else {
++						gosub *map_riverVertical
++					}
+ 				}
+ 			}
+ 		}
+ 		if ( 264 <= gdata(GDATA_WORLD_TILE) & gdata(GDATA_WORLD_TILE) < 363 ) {
+ 			mdatan(0) = lang("水上", "Sea")
+@@ -3630,17 +3632,19 @@
+ 				flt
+ 				flttypemajor = FILTER_ENVIRONMENT
+ 				itemcreate -1, ITEM_ID_DUMMY, -1, -1, 0
+ 				inv(INV_ITEM_PROPERTY, ci) = PROP_NPC
+ 			loop
+-			if ( rnd(3) == 0 ) {
+-				gdata(GDATA_FLAG_COLLECTED_WISHES) = 3
+-				if ( rnd(2) == 0 ) {
+-					gosub *map_riverHorizontal
+-				}
+-				else {
+-					gosub *map_riverVertical
++			if ( gdata(GDATA_WORLD) != AREA_AIMWELL ) {
++				if ( rnd(3) == 0 ) {
++					gdata(GDATA_FLAG_COLLECTED_WISHES) = 3
++					if ( rnd(2) == 0 ) {
++						gosub *map_riverHorizontal
++					}
++					else {
++						gosub *map_riverVertical
++					}
+ 				}
+ 			}
+ 		}
+ 		if ( 13 <= gdata(GDATA_WORLD_TILE) & gdata(GDATA_WORLD_TILE) < 17 ) {
+ 			mdatan(0) = lang("荒野", "Wasteland")
+@@ -3840,17 +3844,19 @@
+ 				flt
+ 				flttypemajor = FILTER_ENVIRONMENT
+ 				itemcreate -1, ITEM_ID_DUMMY, -1, -1, 0
+ 				inv(INV_ITEM_PROPERTY, ci) = PROP_NPC
+ 			loop
+-			if ( rnd(4) == 0 ) {
+-				gdata(GDATA_FLAG_COLLECTED_WISHES) = 5
+-				if ( rnd(2) == 0 ) {
+-					gosub *map_riverHorizontal
+-				}
+-				else {
+-					gosub *map_riverVertical
++			if ( gdata(GDATA_WORLD) != AREA_AIMWELL ) {
++				if ( rnd(4) == 0 ) {
++					gdata(GDATA_FLAG_COLLECTED_WISHES) = 5
++					if ( rnd(2) == 0 ) {
++						gosub *map_riverHorizontal
++					}
++					else {
++						gosub *map_riverVertical
++					}
+ 				}
+ 			}
+ 		}
+ 		if ( chipm(CHIPM_ROLE, gdata(GDATA_WORLD_TILE)) == MAP_CHIP_ROLE_SNOW ) {
+ 			mdatan(0) = lang("雪原", "Snow Field")
+@@ -3881,17 +3887,19 @@
+ 				flt
+ 				flttypemajor = FILTER_ENVIRONMENT
+ 				itemcreate -1, ITEM_ID_DUMMY, -1, -1, 0
+ 				inv(INV_ITEM_PROPERTY, ci) = PROP_NPC
+ 			loop
+-			if ( rnd(4) == 0 ) {
+-				gdata(GDATA_FLAG_COLLECTED_WISHES) = 5
+-				if ( rnd(2) == 0 ) {
+-					gosub *map_riverHorizontal
+-				}
+-				else {
+-					gosub *map_riverVertical
++			if ( gdata(GDATA_WORLD) != AREA_AIMWELL ) {
++				if ( rnd(4) == 0 ) {
++					gdata(GDATA_FLAG_COLLECTED_WISHES) = 5
++					if ( rnd(2) == 0 ) {
++						gosub *map_riverHorizontal
++					}
++					else {
++						gosub *map_riverVertical
++					}
+ 				}
+ 			}
+ 		}
+ 		map_placeplayer
+ 		if ( 264 <= gdata(GDATA_WORLD_TILE) & gdata(GDATA_WORLD_TILE) < 363 ) {
+@@ -9961,10 +9969,19 @@
+ 			inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_NORMAL
+ 			txt lang("何かが足元に転がってきた。", "Something is put on the ground.")
+ 		}
+ 		kamen10 = 0
+ 	}
++	if ( kamen11 >= 100 ) {
++		if ( kamen11 == 100 ) {
++			flt
++			itemcreate -1, ITEM_ID_MIMIRROCRY, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), 0
++			inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_NORMAL
++			txt lang("何かが足元に転がってきた。", "Something is put on the ground.")
++		}
++		kamen11 = 0
++	}
+ 	if ( tuikabui == 100 ) {
+ 		flt
+ 		itemcreate -1, ITEM_ID_WONDER_BODY_FORMER, cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), 6
+ 		inv(INV_ITEM_STATUS, ci) = ITEM_STATUS_NORMAL
+ 		txt lang("何かが足元に転がってきた。", "Something is put on the ground.")
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27R-borscht/module.hsp ../2.28-borscht/module.hsp
+--- ../2.27R-borscht/module.hsp	2025-06-02 04:42:47.788888700 +0800
++++ ../2.28-borscht/module.hsp	2025-08-01 02:55:10.431922600 +0800
+@@ -1806,50 +1806,110 @@
+ 												grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48, 0, 24 * locvar_cell_draw_wide, 40
+ 											}
+ 										}
+ 									}
+ 									else {
+-										gmode 6, 32, 16, 85
+-										color 0, 0, 0
+-										pos locvar_cell_draw_px + 24, locvar_cell_draw_py + 27
+-										grotate BUFFER_INF, 240, 384, 0, 20, 10
+-										if ( cfg_pcc_show == 0 ) {
+-											gmode 2, 32, 48
+-											pos locvar_cell_draw_px + 24, locvar_cell_draw_py + 14
+-											grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48, 0, 24, 36
++										if ( cdata(CDATA_PIC_MIMIRROCRY, CHARA_PLAYER) <= 0 ) {
++											gmode 6, 32, 16, 85
++											color 0, 0, 0
++											pos locvar_cell_draw_px + 24, locvar_cell_draw_py + 27
++											grotate BUFFER_INF, 240, 384, 0, 20, 10
++											if ( cfg_pcc_show == 0 ) {
++												gmode 2, 32, 48
++												pos locvar_cell_draw_px + 24, locvar_cell_draw_py + 14
++												grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48, 0, 24, 36
++											}
++											if ( cfg_pcc_show == 1 ) {
++												gmode 2, 32, 48
++												pos locvar_cell_draw_px + 24, locvar_cell_draw_py + 14
++												grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48, 0, 16, 24
++											}
+ 										}
+-										if ( cfg_pcc_show == 1 ) {
+-											gmode 2, 32, 48
+-											pos locvar_cell_draw_px + 24, locvar_cell_draw_py + 14
+-											grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48, 0, 16, 24
++										if ( cdata(CDATA_PIC_MIMIRROCRY, CHARA_PLAYER) > 0 ) {
++											if ( cdata(CDATA_PIC, CHARA_PLAYER) == xy2pic(0, 0) ) {
++												if ( cdata(CDATA_CHARA_PIC, CHARA_PLAYER) == xy2pic(1, 0) ) {
++													cdata(CDATA_PIC, CHARA_PLAYER) = xy2pic(31, 393)
++												}
++											}
++											locvar_cell_draw_col = (cdata(CDATA_PIC, CHARA_PLAYER) - cdata(CDATA_CHARA_PIC, CHARA_PLAYER) * 1000) / 1000
++											locvar_cell_draw_p = cdata(CDATA_PIC, CHARA_PLAYER) \ 1000 + cdata(CDATA_CHARA_PIC, CHARA_PLAYER) * 1000
++											if ( cdata(CDATA_PIC, CHARA_PLAYER) >= xy2pic(1, 21) & cdata(CDATA_PIC, CHARA_PLAYER) <= xy2pic(31, 21) ) {
++												locvar_cell_draw_col = 0
++												locvar_cell_draw_p = cdata(CDATA_PIC, CHARA_PLAYER)
++											}
++											gsel BUFFER_CHR
++											color 0
++											boxf 0, 960, chipc(CHIPC_WIDTH, locvar_cell_draw_p), chipc(CHIPC_HEIGHT, locvar_cell_draw_p) + 960
++											pos 0, 960
++											gcopy BUFFER_CHR, chipc(CHIPC_X, locvar_cell_draw_p), chipc(CHIPC_Y, locvar_cell_draw_p), chipc(CHIPC_WIDTH, locvar_cell_draw_p), chipc(CHIPC_HEIGHT, locvar_cell_draw_p)
++											gfini chipc(CHIPC_WIDTH, locvar_cell_draw_p), chipc(CHIPC_HEIGHT, locvar_cell_draw_p)
++											gfdec2 c_col(0, locvar_cell_draw_col), c_col(1, locvar_cell_draw_col), c_col(2, locvar_cell_draw_col)
++											gsel selcur
++											gmode 6, 32, 16, 85
++											color 0, 0, 0
++											pos locvar_cell_draw_px + 24, locvar_cell_draw_py + 32
++											grotate BUFFER_INF, 240, 384, 0, 20, 10
++											gmode 2, chipc(CHIPC_WIDTH, locvar_cell_draw_p), chipc(CHIPC_HEIGHT, locvar_cell_draw_p)
++											pos locvar_cell_draw_px + 24, locvar_cell_draw_py + 24 - chipc(CHIPC_F, locvar_cell_draw_p) / 2
++											grotate BUFFER_CHR, 0, 960, 0, 36, chipc(CHIPC_HEIGHT, locvar_cell_draw_p) * 3 / 4
+ 										}
+ 									}
+ 								}
+ 							}
+ 							else {
+ 								if ( chipm(CHIPM_ROLE, locvar_cell_draw_ground) == MAP_CHIP_ROLE_WATER ) {
+-									if ( cfg_pcc_show == 0 ) {
+-										gmode 4, 32, 24, 146
+-										color 0, 0, 0
+-										pos locvar_cell_draw_px + 22, locvar_cell_draw_py + 36
+-										grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48 + 28, 0, 32, 24
++									if ( cdata(CDATA_PIC_MIMIRROCRY, CHARA_PLAYER) <= 0 ) {
++										if ( cfg_pcc_show == 0 ) {
++											gmode 4, 32, 24, 146
++											color 0, 0, 0
++											pos locvar_cell_draw_px + 22, locvar_cell_draw_py + 36
++											grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48 + 28, 0, 32, 24
++										}
++										if ( cfg_pcc_show == 1 ) {
++											gmode 4, 32, 20, 146
++											color 0, 0, 0
++											pos locvar_cell_draw_px + 24, locvar_cell_draw_py + 36
++											grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48 + 28, 0, 24, 16
++										}
++										if ( cfg_pcc_show == 0 ) {
++											gmode 2, 32, 28
++											pos locvar_cell_draw_px + 22, locvar_cell_draw_py + 10
++											grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48, 0, 32, 28
++										}
++										if ( cfg_pcc_show == 1 ) {
++											gmode 2, 32, 28
++											pos locvar_cell_draw_px + 24, locvar_cell_draw_py + 16
++											grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48, 0, 24, 24
++										}
+ 									}
+-									if ( cfg_pcc_show == 1 ) {
+-										gmode 4, 32, 20, 146
++									if ( cdata(CDATA_PIC_MIMIRROCRY, CHARA_PLAYER) > 0 ) {
++										if ( cdata(CDATA_PIC, CHARA_PLAYER) == xy2pic(0, 0) ) {
++											if ( cdata(CDATA_CHARA_PIC, CHARA_PLAYER) == xy2pic(1, 0) ) {
++												cdata(CDATA_PIC, CHARA_PLAYER) = xy2pic(31, 393)
++											}
++										}
++										locvar_cell_draw_col = (cdata(CDATA_PIC, CHARA_PLAYER) - cdata(CDATA_CHARA_PIC, CHARA_PLAYER) * 1000) / 1000
++										locvar_cell_draw_p = cdata(CDATA_PIC, CHARA_PLAYER) \ 1000 + cdata(CDATA_CHARA_PIC, CHARA_PLAYER) * 1000
++										if ( cdata(CDATA_PIC, CHARA_PLAYER) >= xy2pic(1, 21) & cdata(CDATA_PIC, CHARA_PLAYER) <= xy2pic(31, 21) ) {
++											locvar_cell_draw_col = 0
++											locvar_cell_draw_p = cdata(CDATA_PIC, CHARA_PLAYER)
++										}
++										gsel BUFFER_CHR
++										color 0
++										boxf 0, 960, chipc(CHIPC_WIDTH, locvar_cell_draw_p), chipc(CHIPC_HEIGHT, locvar_cell_draw_p) + 960
++										pos 0, 960
++										gcopy BUFFER_CHR, chipc(CHIPC_X, locvar_cell_draw_p), chipc(CHIPC_Y, locvar_cell_draw_p), chipc(CHIPC_WIDTH, locvar_cell_draw_p), chipc(CHIPC_HEIGHT, locvar_cell_draw_p)
++										gfini chipc(CHIPC_WIDTH, locvar_cell_draw_p), chipc(CHIPC_HEIGHT, locvar_cell_draw_p)
++										gfdec2 c_col(0, locvar_cell_draw_col), c_col(1, locvar_cell_draw_col), c_col(2, locvar_cell_draw_col)
++										gsel selcur
++										gmode 4, chipc(CHIPC_WIDTH, locvar_cell_draw_p), chipc(CHIPC_HEIGHT, locvar_cell_draw_p), 100
+ 										color 0, 0, 0
+-										pos locvar_cell_draw_px + 24, locvar_cell_draw_py + 36
+-										grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48 + 28, 0, 24, 16
+-									}
+-									if ( cfg_pcc_show == 0 ) {
+-										gmode 2, 32, 28
+-										pos locvar_cell_draw_px + 22, locvar_cell_draw_py + 10
+-										grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48, 0, 32, 28
+-									}
+-									if ( cfg_pcc_show == 1 ) {
+-										gmode 2, 32, 28
+-										pos locvar_cell_draw_px + 24, locvar_cell_draw_py + 16
+-										grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48, 0, 24, 24
++										pos locvar_cell_draw_px + 24, locvar_cell_draw_py + chipc(CHIPC_HEIGHT, locvar_cell_draw_p) / 2 - cdata(CDATA_SPRITE_SIZE_MILK, CHARA_PLAYER) * 2 - chipc(CHIPC_F, locvar_cell_draw_p) + 16
++										grotate BUFFER_CHR, 0, 960, 0, chipc(CHIPC_WIDTH, locvar_cell_draw_p) + cdata(CDATA_SPRITE_SIZE_MILK, CHARA_PLAYER) * 3, chipc(CHIPC_HEIGHT, locvar_cell_draw_p) + cdata(CDATA_SPRITE_SIZE_MILK, CHARA_PLAYER) * 4
++										gmode 2, chipc(CHIPC_WIDTH, locvar_cell_draw_p), chipc(CHIPC_HEIGHT, locvar_cell_draw_p) + cdata(CDATA_SPRITE_SIZE_MILK, CHARA_PLAYER) * 2 - 16
++										pos locvar_cell_draw_px + 24, locvar_cell_draw_py + chipc(CHIPC_HEIGHT, locvar_cell_draw_p) / 2 - cdata(CDATA_SPRITE_SIZE_MILK, CHARA_PLAYER) * 2 - chipc(CHIPC_F, locvar_cell_draw_p) + 8
++										grotate BUFFER_CHR, 0, 960, 0, chipc(CHIPC_WIDTH, locvar_cell_draw_p) + cdata(CDATA_SPRITE_SIZE_MILK, CHARA_PLAYER) * 3, chipc(CHIPC_HEIGHT, locvar_cell_draw_p) + cdata(CDATA_SPRITE_SIZE_MILK, CHARA_PLAYER) * 4 - 16
+ 									}
+ 								}
+ 								else {
+ 									gmode 6, , , 110
+ 									color 0, 0, 0
+@@ -1892,19 +1952,49 @@
+ 												grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48, 0, 24, 40
+ 											}
+ 										}
+ 									}
+ 									else {
+-										if ( cfg_pcc_show == 0 ) {
+-											gmode 2, 32, 48
+-											pos locvar_cell_draw_px + 22, locvar_cell_draw_py + 8
+-											grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48, 0, 32, 48
++										if ( cdata(CDATA_PIC_MIMIRROCRY, CHARA_PLAYER) <= 0 ) {
++											if ( cfg_pcc_show == 0 ) {
++												gmode 2, 32, 48
++												pos locvar_cell_draw_px + 22, locvar_cell_draw_py + 8
++												grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48, 0, 32, 48
++											}
++											if ( cfg_pcc_show == 1 ) {
++												gmode 2, 32, 48
++												pos locvar_cell_draw_px + 24, locvar_cell_draw_py + 8
++												grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48, 0, 24, 40
++											}
+ 										}
+-										if ( cfg_pcc_show == 1 ) {
+-											gmode 2, 32, 48
+-											pos locvar_cell_draw_px + 24, locvar_cell_draw_py + 8
+-											grotate BUFFER_PCC, locvar_cell_draw_ani, cdata(CDATA_DIR, CHARA_PLAYER) * 48, 0, 24, 40
++										if ( cdata(CDATA_PIC_MIMIRROCRY, CHARA_PLAYER) > 0 ) {
++											if ( cdata(CDATA_PIC, CHARA_PLAYER) == xy2pic(0, 0) ) {
++												if ( cdata(CDATA_CHARA_PIC, CHARA_PLAYER) == xy2pic(1, 0) ) {
++													cdata(CDATA_PIC, CHARA_PLAYER) = xy2pic(31, 393)
++												}
++											}
++											locvar_cell_draw_col = (cdata(CDATA_PIC, CHARA_PLAYER) - cdata(CDATA_CHARA_PIC, CHARA_PLAYER) * 1000) / 1000
++											locvar_cell_draw_p = cdata(CDATA_PIC, CHARA_PLAYER) \ 1000 + cdata(CDATA_CHARA_PIC, CHARA_PLAYER) * 1000
++											if ( cdata(CDATA_PIC, CHARA_PLAYER) >= xy2pic(1, 21) & cdata(CDATA_PIC, CHARA_PLAYER) <= xy2pic(31, 21) ) {
++												locvar_cell_draw_col = 0
++												locvar_cell_draw_p = cdata(CDATA_PIC, CHARA_PLAYER)
++											}
++											gsel BUFFER_CHR
++											color 0
++											boxf 0, 960, chipc(CHIPC_WIDTH, locvar_cell_draw_p), chipc(CHIPC_HEIGHT, locvar_cell_draw_p) + 960
++											pos 0, 960
++											gcopy BUFFER_CHR, chipc(CHIPC_X, locvar_cell_draw_p), chipc(CHIPC_Y, locvar_cell_draw_p), chipc(CHIPC_WIDTH, locvar_cell_draw_p), chipc(CHIPC_HEIGHT, locvar_cell_draw_p)
++											gfini chipc(CHIPC_WIDTH, locvar_cell_draw_p), chipc(CHIPC_HEIGHT, locvar_cell_draw_p)
++											gfdec2 c_col(0, locvar_cell_draw_col), c_col(1, locvar_cell_draw_col), c_col(2, locvar_cell_draw_col)
++											gsel selcur
++											gmode 6, , , 110
++											color 0, 0, 0
++											pos locvar_cell_draw_px + 8, locvar_cell_draw_py + 20
++											gcopy BUFFER_INF, 240, 384, 32, 16
++											gmode 2, chipc(CHIPC_WIDTH, locvar_cell_draw_p), chipc(CHIPC_HEIGHT, locvar_cell_draw_p)
++											pos locvar_cell_draw_px + 24, locvar_cell_draw_py + chipc(CHIPC_HEIGHT, locvar_cell_draw_p) / 2 - cdata(CDATA_SPRITE_SIZE_MILK, CHARA_PLAYER) * 2 - chipc(CHIPC_F, locvar_cell_draw_p)
++											grotate BUFFER_CHR, 0, 960, 0, chipc(CHIPC_WIDTH, locvar_cell_draw_p) + cdata(CDATA_SPRITE_SIZE_MILK, CHARA_PLAYER) * 3, chipc(CHIPC_HEIGHT, locvar_cell_draw_p) + cdata(CDATA_SPRITE_SIZE_MILK, CHARA_PLAYER) * 4
+ 										}
+ 									}
+ 								}
+ 								if ( cdata(CDATA_DIRECTIVE_MODE, CHARA_PLAYER) == DIRECTIVE_MODE_INTERCEPT ) {
+ 									pos locvar_cell_draw_px + 9, locvar_cell_draw_py + 25
+@@ -2718,11 +2808,11 @@
+ 										}
+ 									}
+ 								}
+ 							}
+ 						}
+-						if ( cbit(CHARA_BIT_PCC, locvar_cell_draw_c) == TRUE ) {
++						if ( cbit(CHARA_BIT_PCC, locvar_cell_draw_c) == TRUE & cdata(CDATA_PIC_MIMIRROCRY, locvar_cell_draw_c) == 0 ) {
+ 							if ( mdata(MDATA_TYPE) == MAP_TYPE_WORLD ) {
+ 								gmode 6, 32, 16, 85
+ 								color 0, 0, 0
+ 								pos locvar_cell_draw_dx + 24, locvar_cell_draw_dy + 27
+ 								grotate BUFFER_INF, 240, 384, 0, 20, 10
+@@ -3552,11 +3642,11 @@
+ 												}
+ 											}
+ 										}
+ 									}
+ 								}
+-								if ( cbit(CHARA_BIT_PCC, locvar_cell_draw_c) == TRUE ) {
++								if ( cbit(CHARA_BIT_PCC, locvar_cell_draw_c) == TRUE & cdata(CDATA_PIC_MIMIRROCRY, locvar_cell_draw_c) == 0 ) {
+ 									if ( mdata(MDATA_TYPE) == MAP_TYPE_WORLD ) {
+ 										gmode 6, 32, 16, 85
+ 										color 0, 0, 0
+ 										pos locvar_cell_draw_dx + 24, locvar_cell_draw_dy + 27
+ 										grotate BUFFER_INF, 240, 384, 0, 20, 10
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27R-borscht/proc.hsp ../2.28-borscht/proc.hsp
+--- ../2.27R-borscht/proc.hsp	2025-06-02 04:42:47.883305900 +0800
++++ ../2.28-borscht/proc.hsp	2025-08-01 02:55:10.527576800 +0800
+@@ -3282,15 +3282,19 @@
+ 	if ( cdata(CDATA_ACTION_PERIOD, cc) > 0 ) {
+ 		if ( sexhost == 0 ) {
+ 			if ( cdata(CDATA_ACTION_PERIOD, cc) \ 5 == 0 ) {
+ 				if ( synccheck(cc, -1) ) {
+ 					txtef COLOR_SKY_BLUE
+-					if ( jp ) {
+-						txt "「きくぅ」", "「もふもふ」", "「くやしい、でも…」", "「はぁはぁ！」", "「ウフフフ」"
+-					}
+-					if ( en ) {
+-						txt cnvtalk("Yes!"), cnvtalk("Ohhh"), "*gasp*", "*rumble*", cnvtalk("come on!")
++					customtalk cc, DBMODE_PLEASURE
++					gosub *convert_word
++					if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
++						if ( jp ) {
++							txt "「きくぅ」", "「もふもふ」", "「くやしい、でも…」", "「はぁはぁ！」", "「ウフフフ」"
++						}
++						if ( en ) {
++							txt cnvtalk("Yes!"), cnvtalk("Ohhh"), "*gasp*", "*rumble*", cnvtalk("come on!")
++						}
+ 					}
+ 				}
+ 			}
+ 		}
+ 		return
+@@ -3348,16 +3352,16 @@
+ 		}
+ 	}
+ 	if ( tc != CHARA_PLAYER ) {
+ 		if ( cdata(CDATA_GOLD, tc) >= sexvalue ) {
+ 			if ( synccheck(cc, -1) ) {
+-				txt lang("！さあ、小遣いを受け取って" + _kure(3) + "」", "Here, take this.\"")
++				txt lang("「さあ、小遣いを受け取って" + _kure(3) + "」", "Here, take this.\"")
+ 			}
+ 		}
+ 		else {
+ 			if ( synccheck(cc, -1) ) {
+-				txt lang("！これが" + _ore(3) + "の財布の中身の全て" + _da() + "」", "Take this money, it's all I have!\"")
++				txt lang("「これが" + _ore(3) + "の財布の中身の全て" + _da() + "」", "Take this money, it's all I have!\"")
+ 				if ( rnd(3) == 0 ) {
+ 					if ( cc != CHARA_PLAYER ) {
+ 						txt lang(name(cc) + "は激怒した。「なめてんの？」", name(cc) + " gets furious, " + cnvtalk("And you think you can just run away?"))
+ 						cdata(CDATA_TARGET, cc) = tc
+ 						cdata(CDATA_AI_AGGRO, cc) = 20
+@@ -3435,15 +3439,19 @@
+ 	if ( cdata(CDATA_ACTION_PERIOD, cc) > 0 ) {
+ 		if ( sexhost == 0 ) {
+ 			if ( cdata(CDATA_ACTION_PERIOD, cc) \ 5 == 0 ) {
+ 				if ( synccheck(cc, -1) ) {
+ 					txtef COLOR_SKY_BLUE
+-					if ( jp ) {
+-						txt "「きくぅ」", "「もふもふ」", "「くやしい、でも…」", "「はぁはぁ！」", "「ウフフフ」"
+-					}
+-					if ( en ) {
+-						txt cnvtalk("Yes!"), cnvtalk("Ohhh"), "*gasp*", "*rumble*", cnvtalk("come on!")
++					customtalk cc, DBMODE_PLEASURE_HARD
++					gosub *convert_word
++					if ( gdata(GDATA_CUSTOM_TALK) == 100 ) {
++						if ( jp ) {
++							txt "「ぐぅぅ」", "「もっふもふ！？」", "「くやしいぃ…」", "「はぁっはぁっ！！」", "「激しい…！」"
++						}
++						if ( en ) {
++							txt cnvtalk("Yes!"), cnvtalk("Ohhh"), "*gasp*", "*rumble*", cnvtalk("come on!")
++						}
+ 					}
+ 				}
+ 			}
+ 		}
+ 		return
+@@ -6762,10 +6770,28 @@
+ 	if ( cdata(CDATA_HUNGER, tc) > 12000 * 2 ) {
+ 		if ( rnd(5) == 0 ) {
+ 			chara_vomit tc
+ 		}
+ 	}
++	if ( cdata(CDATA_THIRST, tc) > 18000 ) {
++		if ( synccheck(tc, -1) ) {
++			kaiwa = rnd(4)
++			txtef COLOR_RED
++			if ( kaiwa == 0 ) {
++				txt lang(name(tc) + "は猛烈にそわそわしている…。", name(tc) + " is fidgeting like crazy...")
++			}
++			if ( kaiwa == 1 ) {
++				txt lang(name(tc) + "は身をよじって悶えている…。", name(tc) + " writhes and squirms...")
++			}
++			if ( kaiwa == 2 ) {
++				txt lang(name(tc) + "は必死におしっこを我慢している…。", name(tc) + " is desperately trying to hold back...")
++			}
++			if ( kaiwa == 3 ) {
++				txt lang(name(tc) + "は微かに震えながら尿意に耐えている…。", name(tc) + " endures while trembling slightly...")
++			}
++		}
++	}
+ 	if ( cdata(CDATA_THIRST, tc) >= 12000 * 2 ) {
+ 		if ( rnd(5) == 0 ) {
+ 			chara_morasi tc
+ 		}
+ 	}
+@@ -9737,10 +9763,14 @@
+ 		}
+ 		if ( gdata(GDATA_WORLD) == AREA_OCEAN ) {
+ 			txt lang("それは海の地図ではない。", "It's not a sea map.")
+ 			goto *effect_end
+ 		}
++		if ( gdata(GDATA_WORLD) == AREA_AIMWELL ) {
++			txt lang("それはイムウエルの地図ではない。", "It's not a map of Aimwell.")
++			goto *effect_end
++		}
+ 		if ( efstatus <= (-1) ) {
+ 			if ( rnd(5) == 0 ) {
+ 				txt lang("呪われた地図は触れると崩れ落ちた。", "The cursed map crumbles as you touch.")
+ 				inv(INV_ITEM_NUM, ci)--
+ 				if ( ci >= 5080 ) {
+@@ -24781,18 +24811,17 @@
+ 				gdata(GDATA_FLAG_DESTINY_LETTERS) = 7
+ 				cdata(CDATA_GOD, CHARA_PLAYER) = GOD_EYTH
+ 				repeat 16
+ 					cdata(CDATA_ROLE_SHOP_LEVEL, cnt) = rnd(30) + 1
+ 					cdata(CDATA_ROLE_RESTOCK, cnt) = rnd(30) + 1
++					cbitmod CHARA_BIT_EAT_RAW_ITEM, cnt, TRUE
+ 				loop
+ 				repeat 245
++					cdata(CDATA_CONDITION_FEAR, cnt) = 50
+ 					cdata(CDATA_POWER_GAUGE, cnt) += 52
+ 					cdata(CDATA_GUARD_BREAK, cnt) += 52
+ 					cdata(CDATA_WEIGHT, cnt) = 15000
+-					if ( cnt != 0 ) {
+-						cdata(CDATA_CONDITION_BIND, cnt) += 100
+-					}
+ 					if ( cdata(CDATA_POWER_GAUGE, cnt) > 100 ) {
+ 						if ( cdata(CDATA_SHIFT_FORM, cnt) <= SHIFT_FORM_NONE & (cdata(CDATA_EVOLUTION_STAGE, cnt) <= 0 | cnt == 0) & (cdata(CDATA_QUALITY, cnt) < FIX_QUALITY_MIRACLE | cnt < 16) ) {
+ 							cdata(CDATA_POWER_GAUGE, cnt) = 100
+ 						}
+ 					}
+diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.27R-borscht/system.hsp ../2.28-borscht/system.hsp
+--- ../2.27R-borscht/system.hsp	2025-06-02 04:42:47.942202200 +0800
++++ ../2.28-borscht/system.hsp	2025-08-01 02:55:10.586746700 +0800
+@@ -38,11 +38,11 @@
+ 	}
+ 	gdata(GDATA_TEMPORARY_FLAGS2) = 0
+ 	return
+ 
+ *fixSave
+-	if ( gdata(GDATA_VERSION) != int(double("6.38") * 1000) ) {
++	if ( gdata(GDATA_VERSION) != int(double("6.39") * 1000) ) {
+ 		dialog lang("Ver." + gdata(GDATA_VERSION) + "のセーブデータをアップデートします。", "Updating your save data from Ver." + gdata(GDATA_VERSION) + " now.")
+ 	}
+ 	if ( gdata(GDATA_HEIR_DEED) < 0 ) {
+ 		gdata(GDATA_HEIR_DEED) = 1
+ 	}
+@@ -878,11 +878,11 @@
+ 		}
+ 	}
+ 	if ( gdata(GDATA_VERSION) < 6340 ) {
+ 		repeat 16
+ 			snd SOUNDLIST_ENC
+-			if ( cdata(CDATA_ROCK_THROWING, cnt) > 0 ) {
++			if ( cdata(CDATA_PIC_MIMIRROCRY, cnt) > 0 ) {
+ 				cbitmod CHARA_BIT_ENHANCED_ROCK_THROWING, cnt, TRUE
+ 			}
+ 		loop
+ 	}
+ 	if ( gdata(GDATA_VERSION) < 6350 ) {
+@@ -907,15 +907,21 @@
+ 	if ( gdata(GDATA_VERSION) < 6380 ) {
+ 		repeat 16
+ 			cdata(CDATA_CHARACTER_TIER, cnt) = CHARACTER_TIER_NONE
+ 		loop
+ 	}
+-	if ( gdata(GDATA_VERSION) != int(double("6.38") * 1000) ) {
++	if ( gdata(GDATA_VERSION) < 6390 ) {
++		repeat 245
++			cdata(CDATA_PIC_MIMIRROCRY, cnt) = 0
++		loop
++		kamen11 = 100
++	}
++	if ( gdata(GDATA_VERSION) != int(double("6.39") * 1000) ) {
+ 		gdata(GDATA_WORLD_RENEW) = TRUE
+ 	}
+ 	del_chara 56
+-	if ( gdata(GDATA_VERSION) > int(double("6.38") * 1000) ) {
++	if ( gdata(GDATA_VERSION) > int(double("6.39") * 1000) ) {
+ 		dialog "invalid version"
+ 		goto *exit_game
+ 	}
+ 	if ( gdata(GDATA_PLAY_TIME) < 0 ) {
+ 		gdata(GDATA_PLAY_TIME) = 0
+@@ -965,11 +971,11 @@
+ 		if ( gdata(GDATA_GAMEMODE_PENALTY) == 1 ) {
+ 			gdata(GDATA_GAMEMODE_PENALTY) = 0
+ 			snd SOUNDLIST_ENC
+ 		}
+ 	}
+-	gdata(GDATA_VERSION) = int(double("6.38") * 1000)
++	gdata(GDATA_VERSION) = int(double("6.39") * 1000)
+ 	cbitmod CHARA_BIT_PCC, CHARA_PLAYER, TRUE
+ 	gdata(GDATA_SPEEDSUM_RESET) = 1
+ 	gosub *initial_recipe
+ 	return
+ 
+@@ -3432,11 +3438,11 @@
+ 		pos x, y
+ 		mesbox inputlog, 600, 0, 5, val(2) * (1 + en)
+ 		pos x + 4, y + 4
+ 		gfini dx - 1, 35
+ 		gfdec 60, 60, 60
+-		aplsel "ElonaPlus 2.27R"
++		aplsel "ElonaPlus 2.28"
+ 		if ( stat == 1 ) {
+ 			dialog "Failed to get WINDOW ID", 1
+ 			clrobj 1
+ 			cfg_msg_box = 0
+ 			goto *prompt_word
+@@ -3795,11 +3801,11 @@
+ 
+ *game_debug
+ 	notesel dbm
+ 	buff = ""
+ 	if ( dbm == "" ) {
+-		noteadd "ElonaPlus 2.27R" + " v" + "6.38" + " Debug Console    Type \"?\" for help. Hit ESC to exit."
++		noteadd "ElonaPlus 2.28" + " v" + "6.39" + " Debug Console    Type \"?\" for help. Hit ESC to exit."
+ 		noteadd ""
+ 	}
+ 	font lang(cfg_font1, cfg_font2), 14 - en * 2, 0
+ 	objmode 2
+ 	pos 0, 24
+@@ -4206,11 +4212,11 @@
+ 	objprm 1, dbm
+ 	objprm 2, ""
+ 	return
+ 
+ *mutexobj
+-	CreateMutexA 0, 0, "ElonaPlus 2.27R"
++	CreateMutexA 0, 0, "ElonaPlus 2.28"
+ 	mutex_handle = stat
+ 	func_4
+ 	if ( stat == 183 ) {
+ 		dialog lang("二重起動のため終了します。", "The program is already running."), 1
+ 		end

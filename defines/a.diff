@@ -1,28 +1,102 @@
---- ./2.27.hsp	2025-06-02 04:42:20.781802500 +0800
-+++ ./2.27R.hsp	2025-06-02 04:42:20.810712400 +0800
-@@ -6697,11 +6697,11 @@
- #define global	SOUNDLIST_CURSE3	117
- #define global	SOUNDLIST_ENC	118
- #define global	SOUNDLIST_ENC2	119
- #define global	SOUNDLIST_PRAY2	120
- #define global	SOUNDLIST_OFFER2	121
--#define global	SOUNDLIST_MAX	SOUNDLIST_CHANDLER23 + 1
-+#define global	SOUNDLIST_MAX	SOUNDLIST_DOG02 + 1
- #define global	SOUNDLIST_GONG	122
- #define global	SOUNDLIST_SLAP	123
- #define global	SOUNDLIST_CEFFECT	124
- #define global	SOUNDLIST_RAIN	125
- #define global	SOUNDLIST_WAVE	126
-@@ -6885,10 +6885,12 @@
- #define global	SOUNDLIST_UMINADO	304
- #define global	SOUNDLIST_MIZU2	305
- #define global	SOUNDLIST_BURST00	306
- #define global	SOUNDLIST_GORO05	307
- #define global	SOUNDLIST_MECHA15	308
-+#define global	SOUNDLIST_CAT03	309
-+#define global	SOUNDLIST_DOG02	310
+--- ./2.27R.hsp	2025-08-01 02:55:03.237297200 +0800
++++ ./2.28.hsp	2025-08-01 02:55:03.267593400 +0800
+@@ -674,11 +674,10 @@
+ #define global	CDATA_FORM_SHIFT_PCC_EYE	424
+ #define global	CDATA_FORM_SHIFT_PCC_BODY	425
+ #define global	CDATA_FORM_SHIFT_PCC_RIDE	426
+ #define global	CDATA_FORM_SHIFT_PORTRAIT	427
+ #define global	CDATA_CUSTOM_TALK_LINE	428
+-#define global	CDATA_ROCK_THROWING	429
+ #define global	CDATA_INFANT	430
+ #define global	CDATA_FACE	431
+ #define global	CDATA_FORM_SHIFT_FACE	432
+ #define global	CDATA_EVOCHAT_POINTS	433
+ #define global	CDATA_CONDITION_INVERT	434
+@@ -701,10 +700,11 @@
+ #define global	CDATA_PREGNANCY_PROGRESS	42
+ #define global	CDATA_GUARD_BREAK	60
+ #define global	CDATA_PREGNANCY_FEMALE_CHILD	213
+ #define global	CDATA_PREGNANCY_MALE_CHILD	187
+ #define global	CDATA_FIELD_EFFECT	85
++#define global	CDATA_PIC_MIMIRROCRY	429
  
- // Group: sprite_sheet
- #define global	SPRITE_SHEET_COLS_MAP	33
- #define global	SPRITE_SHEET_ROWS_MAP	25
- #define global	SPRITE_SHEET_COLS_ITEM	33
+ // Group: cdatan
+ #define global	CDATAN_NAME	0
+ #define global	CDATAN_AKA	1
+ #define global	CDATAN_RACE	2
+@@ -899,10 +899,12 @@
+ #define global	CHARA_BIT_BRAIN_PARASITE	1045
+ #define global	CHARA_BIT_SEALED_MAGIC	1046
+ #define global	CHARA_BIT_SEALED_ABILITY	1047
+ #define global	CHARA_BIT_HAS_CLEMENTIAD	1048
+ #define global	CHARA_BIT_BEGGING_FOR_LIFE	1049
++#define global	CHARA_BIT_EAT_RAW_ITEM	1050
++#define global	CHARA_BIT_GIVEN_BIRTH	1051
+ 
+ // Group: chara_id
+ #define global	CREATURE_ID_BUG	0
+ #define global	CREATURE_ID_SHOPKEEPER	1
+ #define global	CREATURE_ID_ZEOME_THE_FALSE_PROPHET	2
+@@ -2287,10 +2289,12 @@
+ #define global	DBMODE_FLAVOR_MIZU_ASOBI_END	145
+ #define global	DBMODE_FLAVOR_TAG	146
+ #define global	DBMODE_FLAVOR_TAG_EVO	147
+ #define global	DBMODE_FLAVOR_LEADING	148
+ #define global	DBMODE_FLAVOR_CLEMENTIA	149
++#define global	DBMODE_PLEASURE	150
++#define global	DBMODE_PLEASURE_HARD	151
+ 
+ // Group: dbmode_normal
+ #define global	DBMODE_NONE	0
+ #define global	DBMODE_FIND	1
+ #define global	DBMODE_REF	2
+@@ -3696,10 +3700,11 @@
+ #define global	EFFECT_AWAKE_DESTONE	145
+ #define global	EFFECT_FLOAT_CAGE	146
+ #define global	EFFECT_SLAVE_SPINNER	147
+ #define global	EFFECT_SLAVE_WHEEL	148
+ #define global	EFFECT_HIDEN_MASHI	149
++#define global	EFFECT_MIMIRROCRY	150
+ 
+ // Group: item_file
+ #define global	ITEM_ROLE_FILE_NONE2	-1
+ #define global	ITEM_ROLE_FILE_NONE	0
+ #define global	ITEM_ROLE_FILE_WANDER	1
+@@ -4521,11 +4526,11 @@
+ #define global	ITEM_ID_SKULL_BOW	788
+ #define global	ITEM_ID_POT_FOR_FUSION	789
+ #define global	ITEM_ID_POT_OF_ALCHEMIST	790
+ #define global	ITEM_ID_DRAGON_SLAYER	791
+ #define global	ITEM_ID_PUTITORO	792
+-#define global	MAX_ITEM_ID	ITEM_ID_SNOW_CRYSTAL + 3
++#define global	MAX_ITEM_ID	ITEM_ID_SURSTROMMING + 3
+ #define global	MAX_ITEM_DBID	1499
+ #define global	ITEM_ID_PILE_DRIVER	793
+ #define global	ITEM_ID_NEGATIVE_EDGE	794
+ #define global	ITEM_ID_GAU_17_CUSTOM	795
+ #define global	ITEM_ID_KANEITUUHOU	796
+@@ -5038,10 +5043,12 @@
+ #define global	ITEM_ID_HONEGUM	1303
+ #define global	ITEM_ID_ECHINOBOX	1304
+ #define global	ITEM_ID_LIGHTNING_DISCHARGER	1305
+ #define global	ITEM_ID_DARKNESSBANG	1306
+ #define global	ITEM_ID_SNOW_CRYSTAL	1307
++#define global	ITEM_ID_MIMIRROCRY	1308
++#define global	ITEM_ID_SURSTROMMING	1309
+ 
+ // Group: item_known
+ #define global	ITEM_KNOWN_NONE	0
+ #define global	ITEM_KNOWN_NAME	1
+ #define global	ITEM_KNOWN_QUALITY	2
+@@ -5776,10 +5783,11 @@
+ #define global	RANDOM_EVENT_SEA_AERIAL_THREAT	51
+ #define global	RANDOM_EVENT_SEA_UNDERSEA_THREAT	52
+ #define global	RANDOM_EVENT_SHIP	53
+ #define global	RANDOM_EVENT_DRIFTER	54
+ #define global	RANDOM_EVENT_BIG_CATCH	55
++#define global	RANDOM_EVENT_SEA_EVENT	56
+ 
+ // Group: rank
+ #define global	RANK_ARENA	0
+ #define global	RANK_PET_ARENA	1
+ #define global	RANK_CRAWLER	2
