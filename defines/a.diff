@@ -1,102 +1,164 @@
---- ./2.27R.hsp	2025-08-01 02:55:03.237297200 +0800
-+++ ./2.28.hsp	2025-08-01 02:55:03.267593400 +0800
-@@ -674,11 +674,10 @@
- #define global	CDATA_FORM_SHIFT_PCC_EYE	424
- #define global	CDATA_FORM_SHIFT_PCC_BODY	425
- #define global	CDATA_FORM_SHIFT_PCC_RIDE	426
- #define global	CDATA_FORM_SHIFT_PORTRAIT	427
- #define global	CDATA_CUSTOM_TALK_LINE	428
--#define global	CDATA_ROCK_THROWING	429
- #define global	CDATA_INFANT	430
- #define global	CDATA_FACE	431
- #define global	CDATA_FORM_SHIFT_FACE	432
- #define global	CDATA_EVOCHAT_POINTS	433
- #define global	CDATA_CONDITION_INVERT	434
+--- ./2.28.hsp	2025-10-06 14:37:07.710238900 +0800
++++ ./2.29.hsp	2025-10-06 14:37:07.740124100 +0800
+@@ -598,11 +598,10 @@
+ #define global	CDATA_REFLECT_MAGIC	94
+ #define global	CDATA_PIC_ORG	95
+ #define global	CDATA_SHIELD_STYLE_TYPE	96
+ #define global	CDATA_WEAPON_STYLE_TYPE	97
+ #define global	CDATA_ENHANCE_SPELL	98
+-#define global	CDATA_PRECIOUS_ALLY	99
+ #define global	CDATA_NECRO_FORCE	146
+ #define global	CDATA_SHOP_INVEST	147
+ #define global	CDATA_EVASION_PENALTY	148
+ #define global	CDATA_AP_TOTAL	159
+ #define global	CDATA_INIT_LIFEMANA	160
 @@ -701,10 +700,11 @@
- #define global	CDATA_PREGNANCY_PROGRESS	42
  #define global	CDATA_GUARD_BREAK	60
  #define global	CDATA_PREGNANCY_FEMALE_CHILD	213
  #define global	CDATA_PREGNANCY_MALE_CHILD	187
  #define global	CDATA_FIELD_EFFECT	85
-+#define global	CDATA_PIC_MIMIRROCRY	429
+ #define global	CDATA_PIC_MIMIRROCRY	429
++#define global	CDATA_MARK_ITEM_ADJUST_L	99
  
  // Group: cdatan
  #define global	CDATAN_NAME	0
  #define global	CDATAN_AKA	1
  #define global	CDATAN_RACE	2
-@@ -899,10 +899,12 @@
- #define global	CHARA_BIT_BRAIN_PARASITE	1045
- #define global	CHARA_BIT_SEALED_MAGIC	1046
+@@ -873,11 +873,10 @@
+ #define global	CHARA_BIT_SHOP_ELEGANCE	1020
+ #define global	CHARA_BIT_SHOP_AESTHETIC_SENSE	1021
+ #define global	CHARA_BIT_SHOP_SALES_ROUTE	1022
+ #define global	CHARA_BIT_SHOP_STRONG_ALLY	1023
+ #define global	CHARA_BIT_SHOP_BUSINESS_SMILE	1024
+-#define global	CHARA_BIT_MARK_ITEM	1025
+ #define global	CHARA_BIT_AWAKE_TACTICAL_THROW	1014
+ #define global	CHARA_BIT_LITERAL_BIRTH_YEAR	1026
+ #define global	CHARA_BIT_HAS_BEEN_CONFESSED_TO	1027
+ #define global	CHARA_BIT_VINDALIAN_JIUJITSU_ACTIVE	1028
+ #define global	CHARA_BIT_MAGNETISM_S_POLE	1029
+@@ -901,10 +900,13 @@
  #define global	CHARA_BIT_SEALED_ABILITY	1047
  #define global	CHARA_BIT_HAS_CLEMENTIAD	1048
  #define global	CHARA_BIT_BEGGING_FOR_LIFE	1049
-+#define global	CHARA_BIT_EAT_RAW_ITEM	1050
-+#define global	CHARA_BIT_GIVEN_BIRTH	1051
+ #define global	CHARA_BIT_EAT_RAW_ITEM	1050
+ #define global	CHARA_BIT_GIVEN_BIRTH	1051
++#define global	CHARA_BIT_ITEM_MARK_FRONTBACK	1025
++#define global	CHARA_BIT_ITEM_MARK_FLIP	1052
++#define global	CHARA_BIT_PRECIOUS_ALLY	1053
  
  // Group: chara_id
  #define global	CREATURE_ID_BUG	0
  #define global	CREATURE_ID_SHOPKEEPER	1
  #define global	CREATURE_ID_ZEOME_THE_FALSE_PROPHET	2
-@@ -2287,10 +2289,12 @@
- #define global	DBMODE_FLAVOR_MIZU_ASOBI_END	145
- #define global	DBMODE_FLAVOR_TAG	146
- #define global	DBMODE_FLAVOR_TAG_EVO	147
- #define global	DBMODE_FLAVOR_LEADING	148
- #define global	DBMODE_FLAVOR_CLEMENTIA	149
-+#define global	DBMODE_PLEASURE	150
-+#define global	DBMODE_PLEASURE_HARD	151
+@@ -3024,11 +3026,10 @@
+ #define global	GDATA_FLAG_GUILD_MAGE	STARTING_GDATA_FLAG + 13
+ #define global	GDATA_FLAG_GUILD_FIGHTER	STARTING_GDATA_FLAG + 14
+ #define global	GDATA_FLAG_GUILD_THIEF	STARTING_GDATA_FLAG + 15
+ #define global	GDATA_FLAG_GUILD_MAGE_NORMA	STARTING_GDATA_FLAG + 16
+ #define global	GDATA_FLAG_GUILD_FIGHTER_NORMA	STARTING_GDATA_FLAG + 17
+-#define global	GDATA_FLAG_GUILD_FIGHTER_THIEF	STARTING_GDATA_FLAG + 18
+ #define global	GDATA_FLAG_GUILD_THIEF_NORMA	STARTING_GDATA_FLAG + 19
+ #define global	GDATA_FLAG_SUB_SLIME	STARTING_GDATA_FLAG + 200
+ #define global	GDATA_FLAG_SUB_ROGUE	STARTING_GDATA_FLAG + 201
+ #define global	GDATA_FLAG_SUB_NIGHTMARE	STARTING_GDATA_FLAG + 202
+ #define global	GDATA_FLAG_SUB_MOTHER	STARTING_GDATA_FLAG + 203
+@@ -3356,16 +3357,17 @@
+ #define global	GDATA_FLAG_WORK_C_REMAINING	STARTING_GDATA_FLAG + 438
+ #define global	GDATA_FLAG_TOTAL_POTION_PLUGS	STARTING_GDATA_FLAG + 439
+ #define global	GDATA_FLAG_SUB_AMURDAD	STARTING_GDATA_FLAG + 440
+ #define global	GDATA_FLAG_TALKA_IN_TRUCE_GROUND	STARTING_GDATA_FLAG + 441
+ #define global	GDATA_FLAG_MOST_EXPENSIVE_WORLD_MAP_VEHICLE_THIS_MONTH	STARTING_GDATA_FLAG + 442
+-#define global	GDATA_FLAG_FIGHTER_GUILD_QUEST_LEVEL	STARTING_GDATA_FLAG + 443
+ #define global	GDATA_FLAG_SHIP_TYPE	STARTING_GDATA_FLAG + 444
+ #define global	GDATA_FLAG_SHIP_IMAGE	STARTING_GDATA_FLAG + 445
+ #define global	GDATA_FLAG_MOST_EXPENSIVE_SHIP_THIS_MONTH	STARTING_GDATA_FLAG + 446
+ #define global	GDATA_FLAG_SHIP_LAST_PORT	STARTING_GDATA_FLAG + 447
+ #define global	GDATA_PRESERVE_PIETY	187
++#define global	GDATA_FLAG_FIGHTER_GUILD_NEFIA_TYPE	STARTING_GDATA_FLAG + 443
++#define global	GDATA_FLAG_FIGHTER_GUILD_NEFIA_MIN_LEVEL	STARTING_GDATA_FLAG + 18
  
- // Group: dbmode_normal
- #define global	DBMODE_NONE	0
- #define global	DBMODE_FIND	1
- #define global	DBMODE_REF	2
-@@ -3696,10 +3700,11 @@
- #define global	EFFECT_AWAKE_DESTONE	145
+ // Group: gdatan
+ #define global	GDATAN_TEAM1	0
+ #define global	GDATAN_TEAM2	1
+ 
+@@ -3701,10 +3703,12 @@
  #define global	EFFECT_FLOAT_CAGE	146
  #define global	EFFECT_SLAVE_SPINNER	147
  #define global	EFFECT_SLAVE_WHEEL	148
  #define global	EFFECT_HIDEN_MASHI	149
-+#define global	EFFECT_MIMIRROCRY	150
+ #define global	EFFECT_MIMIRROCRY	150
++#define global	EFFECT_HAIRMET	151
++#define global	EFFECT_GENOCIDE_TAIL	152
  
  // Group: item_file
  #define global	ITEM_ROLE_FILE_NONE2	-1
  #define global	ITEM_ROLE_FILE_NONE	0
  #define global	ITEM_ROLE_FILE_WANDER	1
-@@ -4521,11 +4526,11 @@
+@@ -4526,11 +4530,11 @@
  #define global	ITEM_ID_SKULL_BOW	788
  #define global	ITEM_ID_POT_FOR_FUSION	789
  #define global	ITEM_ID_POT_OF_ALCHEMIST	790
  #define global	ITEM_ID_DRAGON_SLAYER	791
  #define global	ITEM_ID_PUTITORO	792
--#define global	MAX_ITEM_ID	ITEM_ID_SNOW_CRYSTAL + 3
-+#define global	MAX_ITEM_ID	ITEM_ID_SURSTROMMING + 3
+-#define global	MAX_ITEM_ID	ITEM_ID_SURSTROMMING + 3
++#define global	MAX_ITEM_ID	ITEM_ID_EXPOOPSION + 3
  #define global	MAX_ITEM_DBID	1499
  #define global	ITEM_ID_PILE_DRIVER	793
  #define global	ITEM_ID_NEGATIVE_EDGE	794
  #define global	ITEM_ID_GAU_17_CUSTOM	795
  #define global	ITEM_ID_KANEITUUHOU	796
-@@ -5038,10 +5043,12 @@
- #define global	ITEM_ID_HONEGUM	1303
- #define global	ITEM_ID_ECHINOBOX	1304
+@@ -5045,10 +5049,13 @@
  #define global	ITEM_ID_LIGHTNING_DISCHARGER	1305
  #define global	ITEM_ID_DARKNESSBANG	1306
  #define global	ITEM_ID_SNOW_CRYSTAL	1307
-+#define global	ITEM_ID_MIMIRROCRY	1308
-+#define global	ITEM_ID_SURSTROMMING	1309
+ #define global	ITEM_ID_MIMIRROCRY	1308
+ #define global	ITEM_ID_SURSTROMMING	1309
++#define global	ITEM_ID_HAIRMET	1310
++#define global	ITEM_ID_GENOCIDE_TAIL	1311
++#define global	ITEM_ID_EXPOOPSION	1312
  
  // Group: item_known
  #define global	ITEM_KNOWN_NONE	0
  #define global	ITEM_KNOWN_NAME	1
  #define global	ITEM_KNOWN_QUALITY	2
-@@ -5776,10 +5783,11 @@
- #define global	RANDOM_EVENT_SEA_AERIAL_THREAT	51
+@@ -5784,10 +5791,11 @@
  #define global	RANDOM_EVENT_SEA_UNDERSEA_THREAT	52
  #define global	RANDOM_EVENT_SHIP	53
  #define global	RANDOM_EVENT_DRIFTER	54
  #define global	RANDOM_EVENT_BIG_CATCH	55
-+#define global	RANDOM_EVENT_SEA_EVENT	56
+ #define global	RANDOM_EVENT_SEA_EVENT	56
++#define global	RANDOM_EVENT_RELIEF_SUPPLIES	57
  
  // Group: rank
  #define global	RANK_ARENA	0
  #define global	RANK_PET_ARENA	1
  #define global	RANK_CRAWLER	2
+@@ -5819,10 +5827,11 @@
+ #define global	RECIPE_BLEND_ACTION_SHARP_EQUIP_UPDATE	10016
+ #define global	RECIPE_BLEND_ACTION_MEAT_FILLING	10020
+ #define global	RECIPE_BLEND_ACTION_BARREL_BOMB	10021
+ #define global	RECIPE_BLEND_ACTION_POTTERY	10022
+ #define global	RECIPE_BLEND_ACTION_BIOLOGICAL_RESTORATION	10023
++#define global	RECIPE_BLEND_ACTION_APPEARANCE_IMITATION	10024
+ 
+ // Group: recipe_ingredient
+ 
+ // Group: relation
+ #define global	RELATION_ENEMY	-3
+@@ -5857,14 +5866,15 @@
+ #define global	RF_COFFIN	EXT_RF + 22
+ #define global	RF_BAIT	EXT_RF + 23
+ #define global	RF_BARREL	EXT_RF + 24
+ #define global	RF_LEAF	EXT_RF + 25
+ #define global	RF_DISINFECTANT	EXT_RF + 26
+-#define global	MAX_RF	RF_DEBUFF_POTION + 1
++#define global	MAX_RF	RF_REFERENCE_ITEM + 1
+ #define global	RF_STAR	EXT_RF + 27
+ #define global	RF_BLANKET	EXT_RF + 28
+ #define global	RF_DEBUFF_POTION	EXT_RF + 29
++#define global	RF_REFERENCE_ITEM	EXT_RF + 30
+ 
+ // Group: rfnameorg
+ #define global	RFNAMEORG_ID	0
+ #define global	RFNAMEORG_NAME	1
+ 

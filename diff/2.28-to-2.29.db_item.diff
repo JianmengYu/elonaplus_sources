@@ -1,0 +1,528 @@
+--- ../2.28-borscht/db_item.hsp	2025-08-01 02:55:10.093789000 +0800
++++ ../2.29-borscht/db_item.hsp	2025-10-06 14:37:15.624357300 +0800
+@@ -3,10 +3,109 @@
+ 		goto *db_item_set
+ 	}
+ 	dbmax = 0
+ 	dbsum = 0
+ 	if ( 1 > objlv ) {
++		goto *db_item_GENOCIDE_TAIL
++	}
++	if ( fltselect != 1 ) {
++		goto *db_item_GENOCIDE_TAIL
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_JUNK ) {
++			goto *db_item_GENOCIDE_TAIL
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_GENOCIDE_TAIL
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_EXPOOPSION), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_GENOCIDE_TAIL
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1312, dbsum
++	dbmax++
++
++*db_item_GENOCIDE_TAIL
++	if ( 30 > objlv ) {
++		goto *db_item_HAIRMET
++	}
++	if ( fltselect != 3 ) {
++		goto *db_item_HAIRMET
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_HELM ) {
++			goto *db_item_HAIRMET
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_HELM_LIGHT ) {
++			goto *db_item_HAIRMET
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_GENOCIDE_TAIL), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_HAIRMET
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 30) * 10) + 1
++	dblist(0, dbmax) = 1311, dbsum
++	dbmax++
++
++*db_item_HAIRMET
++	if ( 10 > objlv ) {
++		goto *db_item_SURSTROMMING
++	}
++	if ( fltselect != 3 ) {
++		goto *db_item_SURSTROMMING
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_HELM ) {
++			goto *db_item_SURSTROMMING
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_HELM_HEAVY ) {
++			goto *db_item_SURSTROMMING
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_HAIRMET), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_SURSTROMMING
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 10) * 10) + 1
++	dblist(0, dbmax) = 1310, dbsum
++	dbmax++
++
++*db_item_SURSTROMMING
++	if ( 1 > objlv ) {
+ 		goto *db_item_MIMIRROCRY
+ 	}
+ 	if ( fltselect != 1 ) {
+ 		goto *db_item_MIMIRROCRY
+ 	}
+@@ -43247,10 +43346,205 @@
+ 		dbid = 25
+ 	}
+ 	return
+ 
+ *db_item_set
++	if ( dbid == 1312 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 6666
++			inv(INV_ITEM_WEIGHT, ci) = 200
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_EXPOOPSION
++			inv(INV_ITEM_PIC, ci) = xy2pic(30, 38)
++			reftype = FILTER_JUNK
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_JUNK
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 64000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 6666
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "イチゴ味のソフトクリームではない。あまりにも芸術的な形に仕上がったフン。まごうことなき芸術なので当然爆発する。その威力は宝石細工と生化学の技術に依存するという。\n#～ルミエスト美術目録～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "投げてぶつけると毒爆発を起こすウンチだ。\n#～鑑定報告書：＜美術品＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1311 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_DV, ci) = 3
++			inv(INV_ITEM_PV, ci) = 5
++			inv(INV_ITEM_MATERIAL, ci) = ITEM_MATERIAL_NANOMACHINE
++			inv(INV_ITEM_VALUE, ci) = 25000
++			inv(INV_ITEM_WEIGHT, ci) = 400
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_GENOCIDE_TAIL
++			inv(INV_ITEM_PIC, ci) = xy2pic(0, 40)
++			reftype = FILTER_HELM
++			reftypeminor = FILTER_HELM_LIGHT
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_NETHER, 500, ENCHANT_SKILL * EXT_ENCHANTMENT + SKILL_NORMAL_TACTICS, 100, ENCHANT_SKILL * EXT_ENCHANTMENT + SKILL_NORMAL_STEALTH, 200, 66, 200, 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_GENOCIDE_TAIL
++			ibitmod ITEM_BIT_PRECIOUS, ci, TRUE
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 500
++			fixlv = FIX_QUALITY_UNIQUE
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_HELM
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 12000
++			}
++			if ( dbspec == 9 ) {
++				return 12002
++			}
++			if ( dbspec == 20 ) {
++				return 25000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 30
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "かつて世界征服を目論んだ秘密組織によって開発された。様々な髪型に変化するウィッグであり、染色までされたら装着者を見極めるのは極めて困難。しかも脳波コントロールができ、鞭やドリルのように使って油断した相手を次々に殺害したケースも。現在はわずかに発掘されたものが職人の手で修復されて残っている程度。\n#～イルヴァ幻想辞典～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "使うと見た目が変わるウィッグだ。何度でも使用することができる。\n#～鑑定報告書：＜秘宝＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1310 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_DV, ci) = 12
++			inv(INV_ITEM_PV, ci) = 1
++			inv(INV_ITEM_MATERIAL, ci) = ITEM_MATERIAL_NANOMACHINE
++			inv(INV_ITEM_VALUE, ci) = 20000
++			inv(INV_ITEM_WEIGHT, ci) = 700
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_HAIRMET
++			inv(INV_ITEM_PIC, ci) = xy2pic(0, 41)
++			reftype = FILTER_HELM
++			reftypeminor = FILTER_HELM_HEAVY
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_FIRE, 450, ENCHANT_SKILL * EXT_ENCHANTMENT + SKILL_NORMAL_STEALTH, 300, 64, 250, 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_HAIRMET
++			ibitmod ITEM_BIT_PRECIOUS, ci, TRUE
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 500
++			fixlv = FIX_QUALITY_UNIQUE
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_HELM
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 12000
++			}
++			if ( dbspec == 9 ) {
++				return 12001
++			}
++			if ( dbspec == 20 ) {
++				return 20000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 10
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "かつて世界征服を目論んだ秘密組織によって開発された。様々な髪型に変化するウィッグ。変装にも用いられていたが、装備していることを隠しつつ頭部を保護できるので、防弾チョッキの頭版みたいに使われることもあった。現在はわずかに発掘されたものが職人の手で修復されて残っている程度。\n#～イルヴァ幻想辞典～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "使うと見た目が変わるウィッグだ。何度でも使用することができる。\n#～鑑定報告書：＜秘宝＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
+ 	if ( dbid == 1309 ) {
+ 		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_VALUE, ci) = 200
+ 			inv(INV_ITEM_WEIGHT, ci) = 500
+ 		}
+@@ -43297,11 +43591,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "缶の中で発酵し続けた保存食の成れの果て。解読によると古代の魚の塩漬けだったらしい。パンパンに膨らんでおり、強い衝撃を与えると臭気が噴出し生化学と料理の技術に依存した爆発を起こす。開封は危険なので内部を物質感知したところ、中身が分解されてほとんどガス状になっていることが判明した。\n#～移り変わりゆくティリスの食～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "缶詰めだったもの。食べることはできない。\n#～鑑定報告書：＜廃品＞カテゴリ～"
++				description(3) = "食べられない缶詰め。投げてぶつけると神経爆発を起こす。\n#～鑑定報告書：＜廃品＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -43423,11 +43717,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "魔術士が製造したあまりにもでかい雪の結晶。水にやさしい言葉をかけて凍らせると美しい結晶になる、という怪しい学説を検証したらしい。人間に美醜を決められてたまるか、人間の言葉で話しかけてくるな、そもそも勝手に凍らせるな、といった不満によって瞑想と宝石細工の技術に依存した爆発を起こし敵を傷つける。\n#～魔具全典～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "でかすぎる雪の結晶だ。\n#～鑑定報告書：＜廃品＞カテゴリ～"
++				description(3) = "投げてぶつけると冷気を放つ雪の結晶だ。\n#～鑑定報告書：＜廃品＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -43484,11 +43778,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "周囲を暗黒で包む不殺兵器。その威力は戦術と射撃の技術に依存するという。文献によると、かつてこの世界には閃光弾というものが溢れていた。しかし突如現れた暗黒弾に敗れ、閃光弾は歴史の闇へと葬り去られたのだとか。\n#～続・明日から使えるあなたの為の武具集～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "暗黒を放つ道具だ。\n#～鑑定報告書：＜用具＞カテゴリ～"
++				description(3) = "投げてぶつけると暗黒を放つ道具だ。\n#～鑑定報告書：＜用具＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -43545,11 +43839,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "避雷針から発展した装置。魔力防護によって針自体に落雷のエネルギーを貯めこみ、必要に応じて放電できるようになっている。放電の出力は魔力制御と魔力の限界に依存するらしい。窃盗や破損を恐れて普段は仕舞われているが、雷雨になると魔術士たちが野外に設置し始める。\n#～魔具全典～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "電撃を放つ長い針だ。\n#～鑑定報告書：＜器具＞カテゴリ～"
++				description(3) = "投げてぶつけると電撃を放つ長い針だ。\n#～鑑定報告書：＜器具＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -43606,11 +43900,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "通称、疫の箱。プレゼントに偽装してあるが、狐が相手を化かし殺す際に使う化学兵装。寄生虫を利用して作られており、相手の脳に作用して意識障害をもたらす。その脳波を妖術で周囲の敵に伝播させて二次被害をもたらす。その威力は罠の知識と生化学の技術に依存するという。\n#～もう化かされない！魔物の罠の見抜き方～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "疫が詰め込まれた箱だ。開けないほうがいい。\n#～鑑定報告書：＜箱＞カテゴリ～"
++				description(3) = "開けない方がいい箱だ。投げてぶつけると幻惑爆発を起こす。\n#～鑑定報告書：＜箱＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -55220,11 +55514,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "複数ブロックに火薬が詰められたタル。ぶつけると爆炎を発生させて周囲を焼き払う。それとは別に、火がつくと火炎の残滓を噴き出す。いずれも威力は工作と生化学の技術に依存する。\n#～危険物取扱マニュアル～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "燃焼時に火を噴くタルだ。\n#～鑑定報告書：＜爆弾＞カテゴリ～"
++				description(3) = "燃焼時に火を噴くタルだ。投げてぶつけると火炎爆発を起こす。\n#～鑑定報告書：＜爆弾＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = "Barrel which explodes when burning."
+@@ -64672,11 +64966,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "錬金術で作られた強力な魔力爆弾。護身用に昔の錬金術士が開発したものらしい。放出された魔力が多段爆発するのが特徴。その威力は魔力制御と魔道具の技術に依存する。\n#～魔具全典～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "ぶつけることで多段爆発する結晶だ。\n#～鑑定報告書：＜魔道具＞カテゴリ～"
++				description(3) = "投げてぶつけると多段爆発する結晶だ。\n#～鑑定報告書：＜魔道具＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -64733,11 +65027,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "錬金術により魔力の結晶の組成を組み替えたもの。封じ込めた魔力が不安定になっており、ピンを抜いて衝撃を与えると魔力爆発を起こす。その威力は魔力制御と魔道具の技術に依存する。簡単に作れる危険物として有名。\n#～魔具全典～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "ぶつけることで爆発する結晶だ。\n#～鑑定報告書：＜魔道具＞カテゴリ～"
++				description(3) = "投げてぶつけると爆発する結晶だ。\n#～鑑定報告書：＜魔道具＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -130078,10 +130372,16 @@
+ 		return 0
+ 	}
+ 	return -999
+ 
+ *db_setFilterItem
++	filter_item(ITEM_ID_EXPOOPSION) = ""
++	rffilter_item(ITEM_ID_EXPOOPSION) = ""
++	filter_item(ITEM_ID_GENOCIDE_TAIL) = ""
++	rffilter_item(ITEM_ID_GENOCIDE_TAIL) = ""
++	filter_item(ITEM_ID_HAIRMET) = ""
++	rffilter_item(ITEM_ID_HAIRMET) = ""
+ 	filter_item(ITEM_ID_SURSTROMMING) = ""
+ 	rffilter_item(ITEM_ID_SURSTROMMING) = ""
+ 	filter_item(ITEM_ID_MIMIRROCRY) = ""
+ 	rffilter_item(ITEM_ID_MIMIRROCRY) = ""
+ 	filter_item(ITEM_ID_SNOW_CRYSTAL) = ""
+@@ -132701,10 +133001,59 @@
+ 	filter_item(ITEM_ID_DUMMY) = ""
+ 	rffilter_item(ITEM_ID_DUMMY) = ""
+ 	return
+ 
+ *db_setItem
++	ilight(ITEM_ID_EXPOOPSION) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_EXPOOPSION) = ""
++	iorgweight(ITEM_ID_EXPOOPSION) = 200
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_EXPOOPSION) = "エクソプロージョン"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_EXPOOPSION) = "expoopsion"
++		ioriginalnameref2(ITEM_ID_EXPOOPSION) = ""
++	}
++	ipicref(ITEM_ID_EXPOOPSION) = xy2pic(30, 38)
++	iknownnameref(ITEM_ID_EXPOOPSION) = ioriginalnameref(ITEM_ID_EXPOOPSION)
++	icolref(ITEM_ID_EXPOOPSION) = COLOR_DEFAULT
++	ilight(ITEM_ID_GENOCIDE_TAIL) = LIGHT_TYPE_ITEM
++	ialphanameref(ITEM_ID_GENOCIDE_TAIL) = ""
++	iorgweight(ITEM_ID_GENOCIDE_TAIL) = 400
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_GENOCIDE_TAIL) = "《ジェノサイドテール》"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_GENOCIDE_TAIL) = "<Genocide Tail>"
++		ioriginalnameref2(ITEM_ID_GENOCIDE_TAIL) = ""
++	}
++	ipicref(ITEM_ID_GENOCIDE_TAIL) = xy2pic(0, 40)
++	if ( jp ) {
++		iknownnameref(ITEM_ID_GENOCIDE_TAIL) = "虐殺ウィッグ"
++	}
++	else {
++		iknownnameref(ITEM_ID_GENOCIDE_TAIL) = "changing tailwig"
++	}
++	icolref(ITEM_ID_GENOCIDE_TAIL) = COLOR_DEFAULT
++	ilight(ITEM_ID_HAIRMET) = LIGHT_TYPE_ITEM
++	ialphanameref(ITEM_ID_HAIRMET) = ""
++	iorgweight(ITEM_ID_HAIRMET) = 700
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_HAIRMET) = "《ヘアメット》"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_HAIRMET) = "<Hairmet>"
++		ioriginalnameref2(ITEM_ID_HAIRMET) = ""
++	}
++	ipicref(ITEM_ID_HAIRMET) = xy2pic(0, 41)
++	if ( jp ) {
++		iknownnameref(ITEM_ID_HAIRMET) = "防御ウィッグ"
++	}
++	else {
++		iknownnameref(ITEM_ID_HAIRMET) = "changing wig"
++	}
++	icolref(ITEM_ID_HAIRMET) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_SURSTROMMING) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_SURSTROMMING) = ""
+ 	iorgweight(ITEM_ID_SURSTROMMING) = 500
+ 	if ( jp ) {
+ 		ioriginalnameref(ITEM_ID_SURSTROMMING) = "シュールストレミング"
+@@ -151442,11 +151791,11 @@
+ 		ioriginalnameref2(ITEM_ID_DUMMY) = ""
+ 	}
+ 	ipicref(ITEM_ID_DUMMY) = xy2pic(0, 1)
+ 	iknownnameref(ITEM_ID_DUMMY) = ioriginalnameref(ITEM_ID_DUMMY)
+ 	icolref(ITEM_ID_DUMMY) = COLOR_DEFAULT
+-	maxitemid = 1312
++	maxitemid = 1315
+ 	return
+ 	goto *recipe_ref
+ 
+ #deffunc calcweaponfix int calcweaponfix_itemid
+ 	pierce = 0
+@@ -152779,11 +153128,14 @@
+ 		matval = SKILL_NORMAL_JEWELER, 1, 100
+ 		matneed = MATERIAL_PAPER, 2, MATERIAL_MEMORY_FRAGMENT, 1
+ 		return 1
+ 	}
+ 	return -1
+-	goto *label_3644
++	goto *label_3650
++
++
++
+ 
+ 
+ 
+ 
+ 
