@@ -1,6 +1,6 @@
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borscht/action.hsp ../2.29-borscht/action.hsp
 --- ../2.28-borscht/action.hsp	2025-08-01 02:55:08.862558600 +0800
-+++ ../2.29-borscht/action.hsp	2025-10-06 14:37:14.394210300 +0800
++++ ../2.29-borscht/action.hsp	2025-10-13 00:09:55.690218300 +0800
 @@ -645,11 +645,11 @@
  						cdata(CDATA_CONDITION_SUFFOCATION, tc) = 10
  					}
@@ -126,7 +126,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  					}
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borscht/blend.hsp ../2.29-borscht/blend.hsp
 --- ../2.28-borscht/blend.hsp	2025-08-01 02:55:08.898830100 +0800
-+++ ../2.29-borscht/blend.hsp	2025-10-06 14:37:14.430174000 +0800
++++ ../2.29-borscht/blend.hsp	2025-10-13 00:09:55.724824300 +0800
 @@ -208,11 +208,11 @@
  						break
  					}
@@ -489,7 +489,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  		inv(INV_ITEM_PARAM2, ci) = 10
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borscht/calculation.hsp ../2.29-borscht/calculation.hsp
 --- ../2.28-borscht/calculation.hsp	2025-08-01 02:55:08.909930900 +0800
-+++ ../2.29-borscht/calculation.hsp	2025-10-06 14:37:14.442890900 +0800
++++ ../2.29-borscht/calculation.hsp	2025-10-13 00:09:55.735939100 +0800
 @@ -66,10 +66,16 @@
  		return 72
  	}
@@ -509,7 +509,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  		return 1500
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borscht/chara_func.hsp ../2.29-borscht/chara_func.hsp
 --- ../2.28-borscht/chara_func.hsp	2025-08-01 02:55:08.963315100 +0800
-+++ ../2.29-borscht/chara_func.hsp	2025-10-06 14:37:14.495933300 +0800
++++ ../2.29-borscht/chara_func.hsp	2025-10-13 00:09:55.787123600 +0800
 @@ -1998,20 +1998,29 @@
  		snd SOUNDLIST_ENC
  	}
@@ -1320,7 +1320,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  		if ( locvar_dmghp_dmg > 0 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borscht/chat.hsp ../2.29-borscht/chat.hsp
 --- ../2.28-borscht/chat.hsp	2025-08-01 02:55:09.175890700 +0800
-+++ ../2.29-borscht/chat.hsp	2025-10-06 14:37:14.714046300 +0800
++++ ../2.29-borscht/chat.hsp	2025-10-13 00:09:55.999548300 +0800
 @@ -540,12 +540,14 @@
  					mapitem_fire tlocx, tlocy
  				loop
@@ -2074,6 +2074,19 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  				}
  				if ( cdata(CDATA_JOIN_DATE_DAY, tc) == 0 ) {
  					cdata(CDATA_JOIN_DATE_DAY, tc) = gdata(GDATA_DAY)
+@@ -56167,11 +56631,11 @@
+ 	}
+ 	if ( cdata(CDATA_ROLE, tc) == ROLE_GUEST_MERCHANT ) {
+ 		p = 6 + rnd(4)
+ 	}
+ 	if ( cdata(CDATA_ROLE, tc) == ROLE_SHOP_MIROK ) {
+-		p = 23
++		p = 25
+ 	}
+ 	if ( cdata(CDATA_ROLE, tc) == ROLE_SHOP_MOUNTAIN2 ) {
+ 		p /= 2
+ 	}
+ 	if ( cdata(CDATA_ROLE, tc) == ROLE_SHOP_STOKE ) {
 @@ -56712,11 +57176,17 @@
  				dbid = 1186
  			}
@@ -2095,7 +2108,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  			if ( cnt == 0 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borscht/chips.hsp ../2.29-borscht/chips.hsp
 --- ../2.28-borscht/chips.hsp	2025-08-01 02:55:09.187398800 +0800
-+++ ../2.29-borscht/chips.hsp	2025-10-06 14:37:14.723999900 +0800
++++ ../2.29-borscht/chips.hsp	2025-10-13 00:09:56.009940300 +0800
 @@ -1165,15 +1165,15 @@
  	sdim tname, 16, 38
  	tname(MAP_CHIP_ROLE_DRYROCK) = lang("日干し岩", "a dryrock")
@@ -2116,7 +2129,29 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  	repeat 240, 33 * 37
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borscht/command.hsp ../2.29-borscht/command.hsp
 --- ../2.28-borscht/command.hsp	2025-08-01 02:55:09.235930500 +0800
-+++ ../2.29-borscht/command.hsp	2025-10-06 14:37:14.773065500 +0800
++++ ../2.29-borscht/command.hsp	2025-10-13 00:09:56.059591100 +0800
+@@ -2663,18 +2663,18 @@
+ 			if ( trait(tid) == 0 ) {
+ 				color 0, 0, 0
+ 			}
+ 			else {
+ 				if ( trait(tid) > 0 ) {
+-					color 0, 0, 200
++					color 0, 0, 120
+ 				}
+ 				else {
+-					color 200, 0, 0
++					color 150, 0, 0
+ 				}
+ 			}
+ 			if ( list(1, p) == 99998 ) {
+-				color 0, 200, 0
++				color 0, 100, 0
+ 			}
+ 		}
+ 		else {
+ 			traitref = 5
+ 			color 0, 0, 0
 @@ -6082,26 +6082,50 @@
  					promptl(0, promptmax) = lang("皮を剥ぐ", "Take out skin"), "null", "" + 22
  					promptmax++
@@ -2433,7 +2468,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  	noteadd fixtxt("職業       : " + classname, 30) + fixtxt("所属      : " + guildname(), 32)
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borscht/event.hsp ../2.29-borscht/event.hsp
 --- ../2.28-borscht/event.hsp	2025-08-01 02:55:10.136318800 +0800
-+++ ../2.29-borscht/event.hsp	2025-10-06 14:37:15.666558700 +0800
++++ ../2.29-borscht/event.hsp	2025-10-13 00:09:56.955274300 +0800
 @@ -6,10 +6,14 @@
  		return 0
  	}
@@ -2539,7 +2574,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  				buff = lang("イルカの群れが" + donna + "" + hito + "を投げ飛ばして遊んでいるのを見かけた…。", "You saw a group of dolphins playing by throwing " + donna + " " + hito + "...")
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borscht/help.hsp ../2.29-borscht/help.hsp
 --- ../2.28-borscht/help.hsp	2025-08-01 02:55:10.181801500 +0800
-+++ ../2.29-borscht/help.hsp	2025-10-06 14:37:15.713147400 +0800
++++ ../2.29-borscht/help.hsp	2025-10-13 00:09:57.000366200 +0800
 @@ -5443,11 +5443,11 @@
  	}
  	if ( mode == MODELIST_QUICK_START ) {
@@ -2573,7 +2608,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  *pc_turn_init_WEND1
  	if ( dbg_titleinfo ) {
 -		title "ElonaPlus 2.28" + " ver " + "6.39" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
-+		title "ElonaPlus 2.29" + " ver " + "6.40" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
++		title "ElonaPlus 2.29R" + " ver " + "6.40" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
  	}
  	if ( trait(TRAIT_ETHER_ADDICTED_POTION) != 0 ) {
  		if ( rnd(5) == 0 ) {
@@ -2596,7 +2631,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  						txt lang("ジャーナルが更新された。", "Your journal has been updated.")
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borscht/init.hsp ../2.29-borscht/init.hsp
 --- ../2.28-borscht/init.hsp	2025-08-01 02:55:10.268435400 +0800
-+++ ../2.29-borscht/init.hsp	2025-10-06 14:37:15.795545500 +0800
++++ ../2.29-borscht/init.hsp	2025-10-13 00:09:57.083980100 +0800
 @@ -2955,23 +2955,23 @@
  	skillname(SKILL_SPACT_KAMIKAKUSHI) = lang("紙隠し", "Kamikakushi")
  	skilldesc(SKILL_SPACT_KAMIKAKUSHI) = lang("式折神を消して放射/回復", "Breath(END) or Heal/erasing ShikiOrigami")
@@ -2743,7 +2778,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  		if ( ci >= 0 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borscht/item.hsp ../2.29-borscht/item.hsp
 --- ../2.28-borscht/item.hsp	2025-08-01 02:55:10.285949000 +0800
-+++ ../2.29-borscht/item.hsp	2025-10-06 14:37:15.816668700 +0800
++++ ../2.29-borscht/item.hsp	2025-10-13 00:09:57.102688400 +0800
 @@ -3251,11 +3251,11 @@
  				txt lang("ジャーナルが更新された。", "Your journal has been updated.")
  				cdata(CDATA_SPINDLE_COMBINATION_B, CHARA_PLAYER) += 1000
@@ -2759,7 +2794,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  	}
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borscht/item_data.hsp ../2.29-borscht/item_data.hsp
 --- ../2.28-borscht/item_data.hsp	2025-08-01 02:55:10.297459600 +0800
-+++ ../2.29-borscht/item_data.hsp	2025-10-06 14:37:15.827817900 +0800
++++ ../2.29-borscht/item_data.hsp	2025-10-13 00:09:57.113847100 +0800
 @@ -70,10 +70,15 @@
  			locvar_calcfixlv_fixlv--
  			continue
@@ -2810,7 +2845,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  		encadd ci, randomenc(randomenclv(egolv)), limit(randomencp(), 250, 10000) * (125 + (inv(INV_ITEM_STATUS, ci) == ITEM_STATUS_DOOMED) * 25) / 100
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borscht/item_func.hsp ../2.29-borscht/item_func.hsp
 --- ../2.28-borscht/item_func.hsp	2025-08-01 02:55:10.307962500 +0800
-+++ ../2.29-borscht/item_func.hsp	2025-10-06 14:37:15.838948300 +0800
++++ ../2.29-borscht/item_func.hsp	2025-10-13 00:09:57.125670700 +0800
 @@ -1843,10 +1843,22 @@
  			}
  			if ( inv(INV_ITEM_PARAM1, itemname_itemid) == 5 ) {
@@ -2836,7 +2871,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  			if ( inv(INV_ITEM_PARAM1, itemname_itemid) == 3 ) {
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borscht/main.hsp ../2.29-borscht/main.hsp
 --- ../2.28-borscht/main.hsp	2025-08-01 02:55:10.309964700 +0800
-+++ ../2.29-borscht/main.hsp	2025-10-06 14:37:15.840951000 +0800
++++ ../2.29-borscht/main.hsp	2025-10-13 00:09:57.127670700 +0800
 @@ -182,11 +182,11 @@
  	if ( dbg_randseed != 0 ) {
  		randseed = dbg_randseed
@@ -2844,7 +2879,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  	randomize randseed
  	exrand_randomize randseed
 -	title "ElonaPlus 2.28"
-+	title "ElonaPlus 2.29"
++	title "ElonaPlus 2.29R"
  	goto *system_init
  	goto *label_0003
  
@@ -2852,7 +2887,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  	netrequest netload_filename
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borscht/module.hsp ../2.29-borscht/module.hsp
 --- ../2.28-borscht/module.hsp	2025-08-01 02:55:10.431922600 +0800
-+++ ../2.29-borscht/module.hsp	2025-10-06 14:37:15.961873500 +0800
++++ ../2.29-borscht/module.hsp	2025-10-13 00:09:57.249679600 +0800
 @@ -1616,11 +1616,11 @@
  						}
  						color 0, 0, 0
@@ -3031,7 +3066,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  								}
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borscht/proc.hsp ../2.29-borscht/proc.hsp
 --- ../2.28-borscht/proc.hsp	2025-08-01 02:55:10.527576800 +0800
-+++ ../2.29-borscht/proc.hsp	2025-10-06 14:37:16.057054500 +0800
++++ ../2.29-borscht/proc.hsp	2025-10-13 00:09:57.344871300 +0800
 @@ -4544,11 +4544,12 @@
  	autosave = 1 * (gdata(GDATA_AREA) != AREA_SHOW_HOUSE)
  	if ( gdata(GDATA_FLAG_INSIDE_DEEP_SEA_CASTLE) == 100 ) {
@@ -3085,9 +3120,43 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  			skillexp SKILL_NORMAL_LITERACY, CHARA_PLAYER, 200
  			dmgmp CHARA_PLAYER, cdata(CDATA_MAX_MP, CHARA_PLAYER) / 5
  		}
+@@ -26251,11 +26258,20 @@
+ 		loop
+ 		anepower = cdata(CDATA_LEVEL, cc) * 10
+ 		if ( cc == CHARA_PLAYER ) {
+ 			cdata(CDATA_MATERIAL3_COUNTER, CHARA_PLAYER)++
+ 			if ( cdata(CDATA_MATERIAL3_COUNTER, CHARA_PLAYER) > cdata(CDATA_LEVEL, CHARA_PLAYER) ) {
++				txtef COLOR_RED2
+ 				cdata(CDATA_MATERIAL3_COUNTER, CHARA_PLAYER) = cdata(CDATA_LEVEL, CHARA_PLAYER)
++				txt lang(name(cc) + "のレベルが姉波動に追い付いていない…。", name(cc) + " is not at the level to match the ane power...")
++			}
++			else {
++				if ( cdata(CDATA_MATERIAL3_COUNTER, CHARA_PLAYER) \ 13 == 0 ) {
++					txtef COLOR_PINK
++					txt lang(name(cc) + "は姉波動をより身近に感じるようになった！", name(cc) + " feel" + _s(cc) + " more in touch with the ane power!")
++					snd SOUNDLIST_PRAY2
++				}
+ 			}
+ 			anepower = (cdata(CDATA_MATERIAL3_COUNTER, CHARA_PLAYER) + 13) / 13 * 10
+ 		}
+ 		tcbk = tc
+ 		tc = cc
+@@ -26263,11 +26279,11 @@
+ 		gosub *anime
+ 		tc = tcbk
+ 		healhp cc, anepower
+ 		if ( findbuff(cc, BUFF_ABYSS_IN_THE_EYE) != (-1) ) {
+ 			snd SOUNDLIST_OFFER1
+-			txt lang(name(cc) + "の瞳孔が開いた。", "Touched portion is turned into dust.")
++			txt lang(name(cc) + "の瞳孔が開いた。", name(cc) + " dilated pupils.")
+ 			dmghp tc, sdata(SKILL_ATTR_MAG, cc) / 6 + rnd(5 + sdata(SKILL_ATTR_MAG, cc) / 6)
+ 			healhp cc, sdata(SKILL_ATTR_MAG, cc) / 2 + rnd(5 + sdata(SKILL_ATTR_MAG, cc) / 2)
+ 			dmgmp tc, sdata(SKILL_ATTR_MAG, cc) / 6 + rnd(5 + sdata(SKILL_ATTR_MAG, cc) / 6)
+ 			healmp cc, sdata(SKILL_ATTR_MAG, cc) / 2 + rnd(5 + sdata(SKILL_ATTR_MAG, cc) / 2)
+ 			cdata(CDATA_POWER_GAUGE, tc) -= 2
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borscht/screen.hsp ../2.29-borscht/screen.hsp
 --- ../2.28-borscht/screen.hsp	2025-08-01 02:55:10.573737900 +0800
-+++ ../2.29-borscht/screen.hsp	2025-10-06 14:37:16.102647600 +0800
++++ ../2.29-borscht/screen.hsp	2025-10-13 00:09:57.391675600 +0800
 @@ -10772,11 +10772,11 @@
  	}
  	lvhosei = limit(cdata(CDATA_LEVEL, r1) / 4 + limit(cdata(CDATA_LEVEL, r1) / 5, 0, 20) + limit(cdata(CDATA_LEVEL, r1) / 5, 1, 40) + limit(cdata(CDATA_LEVEL, r1) / 5, 1, 60) + limit(cdata(CDATA_LEVEL, r1) / 5, 1, 100), 1, 3000)
@@ -3115,7 +3184,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  			sdata(SKILL_RES_MIND, r1) += 150
 diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borscht/system.hsp ../2.29-borscht/system.hsp
 --- ../2.28-borscht/system.hsp	2025-08-01 02:55:10.586746700 +0800
-+++ ../2.29-borscht/system.hsp	2025-10-06 14:37:16.116647600 +0800
++++ ../2.29-borscht/system.hsp	2025-10-13 00:09:57.404371200 +0800
 @@ -38,11 +38,11 @@
  	}
  	gdata(GDATA_TEMPORARY_FLAGS2) = 0
@@ -3194,7 +3263,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  		gfini dx - 1, 35
  		gfdec 60, 60, 60
 -		aplsel "ElonaPlus 2.28"
-+		aplsel "ElonaPlus 2.29"
++		aplsel "ElonaPlus 2.29R"
  		if ( stat == 1 ) {
  			dialog "Failed to get WINDOW ID", 1
  			clrobj 1
@@ -3207,7 +3276,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  	buff = ""
  	if ( dbm == "" ) {
 -		noteadd "ElonaPlus 2.28" + " v" + "6.39" + " Debug Console    Type \"?\" for help. Hit ESC to exit."
-+		noteadd "ElonaPlus 2.29" + " v" + "6.40" + " Debug Console    Type \"?\" for help. Hit ESC to exit."
++		noteadd "ElonaPlus 2.29R" + " v" + "6.40" + " Debug Console    Type \"?\" for help. Hit ESC to exit."
  		noteadd ""
  	}
  	font lang(cfg_font1, cfg_font2), 14 - en * 2, 0
@@ -3220,7 +3289,7 @@ diff -U5 --recursive -x 'db_creature*' -x 'db_item*' '-I\*label_' ../2.28-borsch
  
  *mutexobj
 -	CreateMutexA 0, 0, "ElonaPlus 2.28"
-+	CreateMutexA 0, 0, "ElonaPlus 2.29"
++	CreateMutexA 0, 0, "ElonaPlus 2.29R"
  	mutex_handle = stat
  	func_4
  	if ( stat == 183 ) {

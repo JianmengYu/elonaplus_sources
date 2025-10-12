@@ -56633,7 +56633,7 @@
 		p = 6 + rnd(4)
 	}
 	if ( cdata(CDATA_ROLE, tc) == ROLE_SHOP_MIROK ) {
-		p = 23
+		p = 25
 	}
 	if ( cdata(CDATA_ROLE, tc) == ROLE_SHOP_MOUNTAIN2 ) {
 		p /= 2

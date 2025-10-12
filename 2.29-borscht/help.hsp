@@ -8077,7 +8077,7 @@
 
 *pc_turn_init_WEND1
 	if ( dbg_titleinfo ) {
-		title "ElonaPlus 2.29" + " ver " + "6.40" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
+		title "ElonaPlus 2.29R" + " ver " + "6.40" + " " + exedir + " Seed: " + randseed + "  Loop:" + looplev + " SubLoop:" + sublev + " x:" + cdata(CDATA_X, CHARA_PLAYER) + " y:" + cdata(CDATA_Y, CHARA_PLAYER) + " ev:" + evnum + " q:" + gdata(GDATA_QUEST) + " tile:" + map(cdata(CDATA_X, CHARA_PLAYER), cdata(CDATA_Y, CHARA_PLAYER), MAP_TILE_ID) + " unpc:" + usernpcmax + "/" + gdata(GDATA_USERNPC_COUNT)
 	}
 	if ( trait(TRAIT_ETHER_ADDICTED_POTION) != 0 ) {
 		if ( rnd(5) == 0 ) {

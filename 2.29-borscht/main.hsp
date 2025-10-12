@@ -184,7 +184,7 @@
 	}
 	randomize randseed
 	exrand_randomize randseed
-	title "ElonaPlus 2.29"
+	title "ElonaPlus 2.29R"
 	goto *system_init
 	goto *label_0003
 

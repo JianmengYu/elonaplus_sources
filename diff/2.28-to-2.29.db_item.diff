@@ -1,5 +1,5 @@
 --- ../2.28-borscht/db_item.hsp	2025-08-01 02:55:10.093789000 +0800
-+++ ../2.29-borscht/db_item.hsp	2025-10-06 14:37:15.624357300 +0800
++++ ../2.29-borscht/db_item.hsp	2025-10-13 00:09:56.912936300 +0800
 @@ -3,10 +3,109 @@
  		goto *db_item_set
  	}
@@ -110,6 +110,25 @@
  	if ( fltselect != 1 ) {
  		goto *db_item_MIMIRROCRY
  	}
+@@ -8985,16 +9084,16 @@
+ 	}
+ 	if ( fltselect != 3 ) {
+ 		goto *db_item_GASOLINE
+ 	}
+ 	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
+-		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++		if ( flttypemajor != FILTER_GIRDLE ) {
+ 			goto *db_item_GASOLINE
+ 		}
+ 	}
+ 	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
+-		if ( flttypeminor != FILTER_NONE ) {
++		if ( flttypeminor != FILTER_GIRDLE_MEDIUM ) {
+ 			goto *db_item_GASOLINE
+ 		}
+ 	}
+ 	if ( filtermax != 0 ) {
+ 		dbtmp = 1
 @@ -43247,10 +43346,205 @@
  		dbid = 25
  	}
@@ -246,8 +265,8 @@
 +	}
 +	if ( dbid == 1310 ) {
 +		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
-+			inv(INV_ITEM_DV, ci) = 12
-+			inv(INV_ITEM_PV, ci) = 1
++			inv(INV_ITEM_DV, ci) = 1
++			inv(INV_ITEM_PV, ci) = 12
 +			inv(INV_ITEM_MATERIAL, ci) = ITEM_MATERIAL_NANOMACHINE
 +			inv(INV_ITEM_VALUE, ci) = 20000
 +			inv(INV_ITEM_WEIGHT, ci) = 700
@@ -394,6 +413,82 @@
  				description(0) = ""
  				description(1) = ""
  				description(3) = "Barrel which explodes when burning."
+@@ -61378,48 +61672,48 @@
+ 		}
+ 		return 0
+ 	}
+ 	if ( dbid == 1037 ) {
+ 		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_DV, ci) = 4
++			inv(INV_ITEM_PV, ci) = 18
++			inv(INV_ITEM_MATERIAL, ci) = ITEM_MATERIAL_MITHRIL
+ 			inv(INV_ITEM_VALUE, ci) = 28000
+ 			inv(INV_ITEM_WEIGHT, ci) = 1400
+ 		}
+ 		if ( dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_ID, ci) = ITEM_ID_ELEMENTS_EYES
+ 			inv(INV_ITEM_PIC, ci) = xy2pic(4, 31)
+-			reftype = FILTER_ITEM_TOOL
+-			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			reftype = FILTER_GIRDLE
++			reftypeminor = FILTER_GIRDLE_MEDIUM
+ 			inv(INV_ITEM_NUM, ci) = 1
+-			fixeditemenc = 0
++			fixeditemenc = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_FIRE, 100, ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_COLD, 100, ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_LIGHTNING, 100, ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_DARKNESS, 100, ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_MIND, 100, ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_POISON, 100, ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_NETHER, 100, ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_SOUND, 100, ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_NERVE, 100, ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_CHAOS, 100, 2 * 10000 + SKILL_RES_MAGIC, 100, 0
+ 			inv(INV_ITEM_EFFECT, ci) = EFFECT_ELEMENTS_EYES
+ 			ibitmod ITEM_BIT_PRECIOUS, ci, TRUE
+-			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 500
+ 			fixlv = FIX_QUALITY_UNIQUE
+ 			return
+ 		}
+ 		if ( dbmode == DBMODE_REF ) {
+ 			ichargelevel = 0
+ 			infilterref = ""
+-			reftype = FILTER_ITEM_TOOL
++			reftype = FILTER_GIRDLE
+ 			return
+ 		}
+ 		if ( dbmode == DBMODE_REF_SPEC ) {
+ 			if ( dbspec == 5 ) {
+-				return 59000
++				return 19000
+ 			}
+ 			if ( dbspec == 9 ) {
+-				return 99999
++				return 19001
+ 			}
+ 			if ( dbspec == 20 ) {
+ 				return 28000
+ 			}
+ 			if ( dbspec == 19 ) {
+ 				return
+ 			}
+-			if ( dbspec == 11 ) {
+-				return 1
+-			}
+ 			if ( dbspec == 18 ) {
+ 				return 0
+ 			}
+ 			if ( dbspec == 7 ) {
+ 				return 20
+@@ -61429,14 +61723,14 @@
+ 			}
+ 			return 0
+ 		}
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+-				description(0) = "自我を持った魔道具。得意属性を一時的に変換する光を放つ。眼を模した宝石が散りばめられており、そのひとつひとつが各属性を司っている。本体も巨大な眼の形をしているが、これは漫然と作っている内に偶然こんなデザインになっただけらしい。\n#～イルヴァ幻想辞典～"
++				description(0) = "巨大なバックルのベルト。得意属性を一時的に変換する光を放つ。眼を模した宝石が散りばめられており、そのひとつひとつが各属性を司っている。本体も巨大な眼の形をしているが、これは漫然と作っている内に偶然こんなデザインになっただけらしい。\n#～イルヴァ幻想辞典～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "一部技能の参照属性を変える道具だ。何度でも使用することができる。\n#～鑑定報告書：＜秘宝＞カテゴリ～"
++				description(3) = "一部技能の参照属性を変える腰装備だ。何度でも使用することができる。\n#～鑑定報告書：＜秘宝＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
 @@ -64672,11 +64966,11 @@
  		if ( dbmode == DBMODE_DESC ) {
  			if ( jp ) {
@@ -497,6 +592,28 @@
  	iorgweight(ITEM_ID_SURSTROMMING) = 500
  	if ( jp ) {
  		ioriginalnameref(ITEM_ID_SURSTROMMING) = "シュールストレミング"
+@@ -136582,18 +136931,18 @@
+ 	}
+ 	else {
+ 		iknownnameref(ITEM_ID_HELTIARRE) = "lightning bow"
+ 	}
+ 	icolref(ITEM_ID_HELTIARRE) = COLOR_DEFAULT
+-	ilight(ITEM_ID_ELEMENTS_EYES) = LIGHT_TYPE_NONE
++	ilight(ITEM_ID_ELEMENTS_EYES) = LIGHT_TYPE_ITEM
+ 	ialphanameref(ITEM_ID_ELEMENTS_EYES) = ""
+ 	iorgweight(ITEM_ID_ELEMENTS_EYES) = 1400
+ 	if ( jp ) {
+-		ioriginalnameref(ITEM_ID_ELEMENTS_EYES) = "エレメントアイズ"
++		ioriginalnameref(ITEM_ID_ELEMENTS_EYES) = "《エレメントアイズ》"
+ 	}
+ 	else {
+-		ioriginalnameref(ITEM_ID_ELEMENTS_EYES) = "Elements Eyes"
++		ioriginalnameref(ITEM_ID_ELEMENTS_EYES) = "<Elements Eyes>"
+ 		ioriginalnameref2(ITEM_ID_ELEMENTS_EYES) = ""
+ 	}
+ 	ipicref(ITEM_ID_ELEMENTS_EYES) = xy2pic(4, 31)
+ 	if ( jp ) {
+ 		iknownnameref(ITEM_ID_ELEMENTS_EYES) = "属性の瞳"
 @@ -151442,11 +151791,11 @@
  		ioriginalnameref2(ITEM_ID_DUMMY) = ""
  	}
