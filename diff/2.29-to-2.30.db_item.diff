@@ -1,0 +1,316 @@
+--- ../2.29-borscht/db_item.hsp	2025-10-13 00:09:56.912936300 +0800
++++ ../2.30-borscht/db_item.hsp	2026-01-01 03:00:22.097467400 +0800
+@@ -2,10 +2,76 @@
+ 	if ( dbmode != DBMODE_FIND ) {
+ 		goto *db_item_set
+ 	}
+ 	dbmax = 0
+ 	dbsum = 0
++	if ( 30 > objlv ) {
++		goto *db_item_BLANK_CARD
++	}
++	if ( fltselect != 3 ) {
++		goto *db_item_BLANK_CARD
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_SHIELD ) {
++			goto *db_item_BLANK_CARD
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_SHIELD_SMALL ) {
++			goto *db_item_BLANK_CARD
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_TURAHAGI), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_BLANK_CARD
++		}
++	}
++	dbsum += 1000000 / (1000 + abs(objlv - 30) * 10) + 1
++	dblist(0, dbmax) = 1314, dbsum
++	dbmax++
++
++*db_item_BLANK_CARD
++	if ( 1 > objlv ) {
++		goto *db_item_EXPOOPSION
++	}
++	if ( fltselect != 0 ) {
++		goto *db_item_EXPOOPSION
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_JUNK ) {
++			goto *db_item_EXPOOPSION
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_EXPOOPSION
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_BLANK_CARD), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_EXPOOPSION
++		}
++	}
++	dbsum += 100000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1313, dbsum
++	dbmax++
++
++*db_item_EXPOOPSION
+ 	if ( 1 > objlv ) {
+ 		goto *db_item_GENOCIDE_TAIL
+ 	}
+ 	if ( fltselect != 1 ) {
+ 		goto *db_item_GENOCIDE_TAIL
+@@ -43346,10 +43412,140 @@
+ 		dbid = 25
+ 	}
+ 	return
+ 
+ *db_item_set
++	if ( dbid == 1314 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ATTACK, ci) = 5
++			inv(INV_ITEM_DAMAGE, ci) = 30
++			inv(INV_ITEM_DV, ci) = -10
++			inv(INV_ITEM_PV, ci) = 10
++			inv(INV_ITEM_MATERIAL, ci) = ITEM_MATERIAL_BONE
++			inv(INV_ITEM_VALUE, ci) = 24000
++			inv(INV_ITEM_WEIGHT, ci) = 1100
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_SKILL_REF, ci) = SKILL_NORMAL_SHIELD
++			inv(INV_ITEM_ID, ci) = ITEM_ID_TURAHAGI
++			inv(INV_ITEM_PIC, ci) = xy2pic(19, 26)
++			reftype = FILTER_SHIELD
++			reftypeminor = FILTER_SHIELD_SMALL
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = ENCHANT_RESISTANCE * EXT_ENCHANTMENT + SKILL_RES_NERVE, 300, ENCHANT_SKILL * EXT_ENCHANTMENT + SKILL_NORMAL_EYE_OF_MIND, 200, ENCHANT_ATTRIBUTE * EXT_ENCHANTMENT + SKILL_ATTR_CON, 400, 24, 100, 44, 600, 0
++			ibitmod ITEM_BIT_PRECIOUS, ci, TRUE
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 500
++			fixlv = FIX_QUALITY_UNIQUE
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_SHIELD
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 14000
++			}
++			if ( dbspec == 9 ) {
++				return 14003
++			}
++			if ( dbspec == 20 ) {
++				return 24000
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 30
++			}
++			if ( dbspec == 8 ) {
++				return 1000
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "大きな人喰い熊の爪。鉄板を引き裂くほど頑丈であり、一撃で現代イルヴァ生物の顔面を骨ごと吹き飛ばし、攻撃の余波で近くのインド象まで死に至らしめる。\n#～イルヴァ幻想辞典～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "とても丈夫で鋭い爪だ。\n#～鑑定報告書：＜秘宝＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1313 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 60
++			inv(INV_ITEM_WEIGHT, ci) = 200
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_BLANK_CARD
++			inv(INV_ITEM_PIC, ci) = xy2pic(31, 38)
++			reftype = FILTER_JUNK
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_JUNK
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 64000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 60
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 100
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "情報がまだ記載されていないカード。特殊な魔術が施されており、ぶつけた相手の情報を記録する。個人情報を勝手に持ち出すも同然であり、身内意外に使うと怒られるのは必至。\n#～ルミエスト美術目録～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "ぶつけた相手の情報を登録するカードだ。\n#～鑑定報告書：＜紙片＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = "A card of a creature."
++			}
++			return
++		}
++		return 0
++	}
+ 	if ( dbid == 1312 ) {
+ 		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_VALUE, ci) = 6666
+ 			inv(INV_ITEM_WEIGHT, ci) = 200
+ 		}
+@@ -130372,10 +130568,14 @@
+ 		return 0
+ 	}
+ 	return -999
+ 
+ *db_setFilterItem
++	filter_item(ITEM_ID_TURAHAGI) = ""
++	rffilter_item(ITEM_ID_TURAHAGI) = ""
++	filter_item(ITEM_ID_BLANK_CARD) = ""
++	rffilter_item(ITEM_ID_BLANK_CARD) = ""
+ 	filter_item(ITEM_ID_EXPOOPSION) = ""
+ 	rffilter_item(ITEM_ID_EXPOOPSION) = ""
+ 	filter_item(ITEM_ID_GENOCIDE_TAIL) = ""
+ 	rffilter_item(ITEM_ID_GENOCIDE_TAIL) = ""
+ 	filter_item(ITEM_ID_HAIRMET) = ""
+@@ -133001,10 +133201,41 @@
+ 	filter_item(ITEM_ID_DUMMY) = ""
+ 	rffilter_item(ITEM_ID_DUMMY) = ""
+ 	return
+ 
+ *db_setItem
++	ilight(ITEM_ID_TURAHAGI) = LIGHT_TYPE_ITEM
++	ialphanameref(ITEM_ID_TURAHAGI) = ""
++	iorgweight(ITEM_ID_TURAHAGI) = 1100
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_TURAHAGI) = "《ツラハギ》"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_TURAHAGI) = "<Turahagi>"
++		ioriginalnameref2(ITEM_ID_TURAHAGI) = ""
++	}
++	ipicref(ITEM_ID_TURAHAGI) = xy2pic(19, 26)
++	if ( jp ) {
++		iknownnameref(ITEM_ID_TURAHAGI) = "大熊の剛爪"
++	}
++	else {
++		iknownnameref(ITEM_ID_TURAHAGI) = "strong claws"
++	}
++	icolref(ITEM_ID_TURAHAGI) = COLOR_BROWN
++	ilight(ITEM_ID_BLANK_CARD) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_BLANK_CARD) = ""
++	iorgweight(ITEM_ID_BLANK_CARD) = 200
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_BLANK_CARD) = "ブランクカード"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_BLANK_CARD) = "blank card"
++		ioriginalnameref2(ITEM_ID_BLANK_CARD) = ""
++	}
++	ipicref(ITEM_ID_BLANK_CARD) = xy2pic(31, 38)
++	iknownnameref(ITEM_ID_BLANK_CARD) = ioriginalnameref(ITEM_ID_BLANK_CARD)
++	icolref(ITEM_ID_BLANK_CARD) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_EXPOOPSION) = LIGHT_TYPE_NONE
+ 	ialphanameref(ITEM_ID_EXPOOPSION) = ""
+ 	iorgweight(ITEM_ID_EXPOOPSION) = 200
+ 	if ( jp ) {
+ 		ioriginalnameref(ITEM_ID_EXPOOPSION) = "エクソプロージョン"
+@@ -151791,17 +152022,22 @@
+ 		ioriginalnameref2(ITEM_ID_DUMMY) = ""
+ 	}
+ 	ipicref(ITEM_ID_DUMMY) = xy2pic(0, 1)
+ 	iknownnameref(ITEM_ID_DUMMY) = ioriginalnameref(ITEM_ID_DUMMY)
+ 	icolref(ITEM_ID_DUMMY) = COLOR_DEFAULT
+-	maxitemid = 1315
++	maxitemid = 1317
+ 	return
+ 	goto *recipe_ref
+ 
+ #deffunc calcweaponfix int calcweaponfix_itemid
+ 	pierce = 0
+ 	rangemap = 100, 20, 20, 20, 20, 20, 20, 20, 20, 20
++	if ( calcweaponfix_itemid == ITEM_ID_TURAHAGI ) {
++		pierce = 0
++		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
++		return 1
++	}
+ 	if ( calcweaponfix_itemid == ITEM_ID_HONEGUM ) {
+ 		pierce = 0
+ 		rangemap = 100, 150, 150, 150, 50, 50, 50, 10, 10
+ 		return 1
+ 	}
+@@ -153128,11 +153364,13 @@
+ 		matval = SKILL_NORMAL_JEWELER, 1, 100
+ 		matneed = MATERIAL_PAPER, 2, MATERIAL_MEMORY_FRAGMENT, 1
+ 		return 1
+ 	}
+ 	return -1
+-	goto *label_3650
++	goto *label_3654
++
++
+ 
+ 
+ 
+ 
+ 
