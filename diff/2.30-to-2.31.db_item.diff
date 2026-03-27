@@ -1,0 +1,904 @@
+--- ../2.30-borscht/db_item.hsp	2026-01-01 03:00:22.097467400 +0800
++++ ../2.31-borscht/db_item.hsp	2026-03-23 06:50:55.950288300 +0800
+@@ -2,10 +2,208 @@
+ 	if ( dbmode != DBMODE_FIND ) {
+ 		goto *db_item_set
+ 	}
+ 	dbmax = 0
+ 	dbsum = 0
++	if ( 10 > objlv ) {
++		goto *db_item_TZC_500
++	}
++	if ( fltselect != 0 ) {
++		goto *db_item_TZC_500
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *db_item_TZC_500
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_TZC_500
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_TZ500_K), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_TZC_500
++		}
++	}
++	dbsum += 150000 / (1000 + abs(objlv - 10) * 10) + 1
++	dblist(0, dbmax) = 1320, dbsum
++	dbmax++
++
++*db_item_TZC_500
++	if ( 10 > objlv ) {
++		goto *db_item_TZ30_C
++	}
++	if ( fltselect != 0 ) {
++		goto *db_item_TZ30_C
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *db_item_TZ30_C
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_TZ30_C
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_TZC_500), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_TZ30_C
++		}
++	}
++	dbsum += 150000 / (1000 + abs(objlv - 10) * 10) + 1
++	dblist(0, dbmax) = 1319, dbsum
++	dbmax++
++
++*db_item_TZ30_C
++	if ( 10 > objlv ) {
++		goto *db_item_TZ_30
++	}
++	if ( fltselect != 0 ) {
++		goto *db_item_TZ_30
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *db_item_TZ_30
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_TZ_30
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_TZ30_C), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_TZ_30
++		}
++	}
++	dbsum += 150000 / (1000 + abs(objlv - 10) * 10) + 1
++	dblist(0, dbmax) = 1318, dbsum
++	dbmax++
++
++*db_item_TZ_30
++	if ( 10 > objlv ) {
++		goto *db_item_WARIBASI
++	}
++	if ( fltselect != 0 ) {
++		goto *db_item_WARIBASI
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *db_item_WARIBASI
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_WARIBASI
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_TZ_30), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_WARIBASI
++		}
++	}
++	dbsum += 150000 / (1000 + abs(objlv - 10) * 10) + 1
++	dblist(0, dbmax) = 1317, dbsum
++	dbmax++
++
++*db_item_WARIBASI
++	if ( 1 > objlv ) {
++		goto *db_item_MESUGAKI
++	}
++	if ( fltselect != 0 ) {
++		goto *db_item_MESUGAKI
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_TOOL ) {
++			goto *db_item_MESUGAKI
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_NONE ) {
++			goto *db_item_MESUGAKI
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_WARIBASI), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_MESUGAKI
++		}
++	}
++	dbsum += 400000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1316, dbsum
++	dbmax++
++
++*db_item_MESUGAKI
++	if ( 1 > objlv ) {
++		goto *db_item_TURAHAGI
++	}
++	if ( fltselect != 0 ) {
++		goto *db_item_TURAHAGI
++	}
++	if ( flttypemajor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypemajor != FILTER_ITEM_FOOD ) {
++			goto *db_item_TURAHAGI
++		}
++	}
++	if ( flttypeminor != (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */) ) {
++		if ( flttypeminor != FILTER_JUNK_SEABED ) {
++			goto *db_item_TURAHAGI
++		}
++	}
++	if ( filtermax != 0 ) {
++		dbtmp = 1
++		repeat filtermax
++			if ( instr(filter_item(ITEM_ID_MESUGAKI), 0, filtern(cnt)) == (-1) ) {
++				dbtmp = 0
++				break
++			}
++		loop
++		if ( dbtmp == 0 ) {
++			goto *db_item_TURAHAGI
++		}
++	}
++	dbsum += 100000 / (1000 + abs(objlv - 1) * 10) + 1
++	dblist(0, dbmax) = 1315, dbsum
++	dbmax++
++
++*db_item_TURAHAGI
+ 	if ( 30 > objlv ) {
+ 		goto *db_item_BLANK_CARD
+ 	}
+ 	if ( fltselect != 3 ) {
+ 		goto *db_item_BLANK_CARD
+@@ -43412,10 +43610,447 @@
+ 		dbid = 25
+ 	}
+ 	return
+ 
+ *db_item_set
++	if ( dbid == 1320 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 4500
++			inv(INV_ITEM_WEIGHT, ci) = 3200
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_TZ500_K
++			inv(INV_ITEM_PIC, ci) = xy2pic(30, 39)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_TRANQ_RIFLE
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) = 6 + rnd(6) - rnd(6)
++			ibitmod ITEM_BIT_CHARGE_ITEM, ci, TRUE
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 6
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 4500
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 10
++			}
++			if ( dbspec == 8 ) {
++				return 150
++			}
++			if ( dbspec == 12 ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_MANI ) {
++					return 1
++				}
++				else {
++					return 0
++				}
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "連射可能なライフル型の麻酔銃。体重５００キログラム以上１０００キログラム未満のターゲットを気絶させる特殊麻酔弾を発射するが、効果が出るまでに少し時間がかかる。過剰投与すると神経を破壊してしまうし、適正体重を超える相手には効果が激減する。着弾の衝撃でダメージを与えないよう威力の弱いガス発射式になっているため、遠距離からだと麻酔弾が刺さらないのも欠点。\n#～これからの魔物被害対策～"
++				description(1) = "「相手に応じて細かく調合を変える手間がなく、有効射程内なら確実に命中して刺さる精度を誇り、一定の時間で確実に効果が出て、連射までできる。間違いなく現代において最強の麻酔銃シリーズだ」\n#～麻酔の射手の言葉～"
++				description(2) = "「駆除目的の場合は、普通に射殺したほうが早くて確実じゃないか？」\n#～熟練狩人の言葉～"
++				description(3) = "対象の体重で効果変動する麻酔銃だ。何度か使用することができる。\n#～鑑定報告書：＜用具＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1319 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 4500
++			inv(INV_ITEM_WEIGHT, ci) = 3200
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_TZC_500
++			inv(INV_ITEM_PIC, ci) = xy2pic(30, 39)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_TRANQ_RIFLE
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) = 6 + rnd(6) - rnd(6)
++			ibitmod ITEM_BIT_CHARGE_ITEM, ci, TRUE
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 6
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 4500
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 10
++			}
++			if ( dbspec == 8 ) {
++				return 150
++			}
++			if ( dbspec == 12 ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_MANI ) {
++					return 1
++				}
++				else {
++					return 0
++				}
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "連射可能なライフル型の麻酔銃。体重１００キログラム以上５００キログラム未満のターゲットを気絶させる特殊麻酔弾を発射するが、効果が出るまでに少し時間がかかる。過剰投与すると神経を破壊してしまうし、適正体重を超える相手には効果が激減する。着弾の衝撃でダメージを与えないよう威力の弱いガス発射式になっているため、遠距離からだと麻酔弾が刺さらないのも欠点。\n#～これからの魔物被害対策～"
++				description(1) = "「相手に応じて細かく調合を変える手間がなく、有効射程内なら確実に命中して刺さる精度を誇り、一定の時間で確実に効果が出て、連射までできる。間違いなく現代において最強の麻酔銃シリーズだ」\n#～麻酔の射手の言葉～"
++				description(2) = "「駆除目的の場合は、普通に射殺したほうが早くて確実じゃないか？」\n#～熟練狩人の言葉～"
++				description(3) = "対象の体重で効果変動する麻酔銃だ。何度か使用することができる。\n#～鑑定報告書：＜用具＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1318 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 4500
++			inv(INV_ITEM_WEIGHT, ci) = 3200
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_TZ30_C
++			inv(INV_ITEM_PIC, ci) = xy2pic(30, 39)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_TRANQ_RIFLE
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) = 6 + rnd(6) - rnd(6)
++			ibitmod ITEM_BIT_CHARGE_ITEM, ci, TRUE
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 6
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 4500
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 10
++			}
++			if ( dbspec == 8 ) {
++				return 150
++			}
++			if ( dbspec == 12 ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_MANI ) {
++					return 1
++				}
++				else {
++					return 0
++				}
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "連射可能なライフル型の麻酔銃。体重３０キログラム以上１００キログラム未満のターゲットを気絶させる特殊麻酔弾を発射するが、効果が出るまでに少し時間がかかる。過剰投与すると神経を破壊してしまうし、適正体重を超える相手には効果が激減する。着弾の衝撃でダメージを与えないよう威力の弱いガス発射式になっているため、遠距離からだと麻酔弾が刺さらないのも欠点。\n#～これからの魔物被害対策～"
++				description(1) = "「相手に応じて細かく調合を変える手間がなく、有効射程内なら確実に命中して刺さる精度を誇り、一定の時間で確実に効果が出て、連射までできる。間違いなく現代において最強の麻酔銃シリーズだ」\n#～麻酔の射手の言葉～"
++				description(2) = "「駆除目的の場合は、普通に射殺したほうが早くて確実じゃないか？」\n#～熟練狩人の言葉～"
++				description(3) = "対象の体重で効果変動する麻酔銃だ。何度か使用することができる。\n#～鑑定報告書：＜用具＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1317 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 4500
++			inv(INV_ITEM_WEIGHT, ci) = 3200
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_TZ_30
++			inv(INV_ITEM_PIC, ci) = xy2pic(30, 39)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_TRANQ_RIFLE
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			inv((9 /*!!!@[INV_ITEM_AMMO @@@ INV_ITEM_CHARGE @@@ INV_ITEM_CLIENT @@@ INV_ITEM_FILE @@@ INV_ITEM_NEXT_PERIOD]@!!! */), ci) = 6 + rnd(6) - rnd(6)
++			ibitmod ITEM_BIT_CHARGE_ITEM, ci, TRUE
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 6
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 4500
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 10
++			}
++			if ( dbspec == 8 ) {
++				return 150
++			}
++			if ( dbspec == 12 ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_MANI ) {
++					return 1
++				}
++				else {
++					return 0
++				}
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "連射可能なライフル型の麻酔銃。体重３０キログラム未満のターゲットを気絶させる特殊麻酔弾を発射するが、効果が出るまでに少し時間がかかる。過剰投与すると神経を破壊してしまうし、適正体重を超える相手には効果が激減する。着弾の衝撃でダメージを与えないよう威力の弱いガス発射式になっているため、遠距離からだと麻酔弾が刺さらないのも欠点。\n#～これからの魔物被害対策～"
++				description(1) = "「相手に応じて細かく調合を変える手間がなく、有効射程内なら確実に命中して刺さる精度を誇り、一定の時間で確実に効果が出て、連射までできる。間違いなく現代において最強の麻酔銃シリーズだ」\n#～麻酔の射手の言葉～"
++				description(2) = "「駆除目的の場合は、普通に射殺したほうが早くて確実じゃないか？」\n#～熟練狩人の言葉～"
++				description(3) = "対象の体重で効果変動する麻酔銃だ。何度か使用することができる。\n#～鑑定報告書：＜用具＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1316 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_VALUE, ci) = 30
++			inv(INV_ITEM_WEIGHT, ci) = 100
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_WARIBASI
++			inv(INV_ITEM_PIC, ci) = xy2pic(32, 39)
++			reftype = FILTER_ITEM_TOOL
++			reftypeminor = (0 /*!!!@[FILTER_NOTHING @@@ FILTER_NOTHING]@!!! */)
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_EFFECT, ci) = EFFECT_WARIBASI
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = ""
++			reftype = FILTER_ITEM_TOOL
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 59000
++			}
++			if ( dbspec == 9 ) {
++				return 99999
++			}
++			if ( dbspec == 20 ) {
++				return 30
++			}
++			if ( dbspec == 19 ) {
++				return
++			}
++			if ( dbspec == 11 ) {
++				return 1
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 400
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "木で作られた箸。材木を作る際に端材を利用して作られる。眼前の相手に使用することでフェイントを仕掛け、パワーゲージを低下させて相手のゲージ技を使えなくさせることができる。足元に植えることもできる。\n#～料理を支える脇役達～"
++				description(1) = ""
++				description(2) = ""
++				description(3) = "木製の箸だ。使うことができる(使い捨て)。\n#～鑑定報告書：＜用具＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
++	if ( dbid == 1315 ) {
++		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_MATERIAL, ci) = ITEM_MATERIAL_RAW
++			inv(INV_ITEM_VALUE, ci) = 3000
++			inv(INV_ITEM_WEIGHT, ci) = 1700
++		}
++		if ( dbmode == DBMODE_SET ) {
++			inv(INV_ITEM_ID, ci) = ITEM_ID_MESUGAKI
++			inv(INV_ITEM_PIC, ci) = xy2pic(31, 39)
++			reftype = FILTER_ITEM_FOOD
++			reftypeminor = FILTER_JUNK_SEABED
++			inv(INV_ITEM_NUM, ci) = 1
++			fixeditemenc = 0
++			inv(INV_ITEM_PARAM1, ci) = 6000
++			inv(INV_ITEM_PARAM3, ci) = 24
++			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
++			return
++		}
++		if ( dbmode == DBMODE_REF ) {
++			ichargelevel = 0
++			infilterref = "/fish/"
++			reftype = FILTER_ITEM_FOOD
++			return
++		}
++		if ( dbmode == DBMODE_REF_SPEC ) {
++			if ( dbspec == 5 ) {
++				return 57000
++			}
++			if ( dbspec == 9 ) {
++				return 64101
++			}
++			if ( dbspec == 20 ) {
++				return 3000
++			}
++			if ( dbspec == 19 ) {
++				return 24
++			}
++			if ( dbspec == 18 ) {
++				return 0
++			}
++			if ( dbspec == 7 ) {
++				return 1
++			}
++			if ( dbspec == 8 ) {
++				return 100
++			}
++			if ( dbspec == 12 ) {
++				if ( cdata(CDATA_GOD, CHARA_PLAYER) == GOD_EHEKATL ) {
++					return 1
++				}
++				else {
++					return 0
++				}
++			}
++			return 0
++		}
++		if ( dbmode == DBMODE_DESC ) {
++			if ( jp ) {
++				description(0) = "クリーミーな旨味とぷりっとした食感が魅力の貝。本来は二枚貝なのだが、わざと露出して周囲の反応を楽しんでいる。有害な個体が結構な確率で混ざっており、それに当たった場合は連日にわたって尊厳を踏みにじられることになる。しっかりわからせてある個体は安全なのだが、わからせが不十分で生イキな部分が残っているものは危険。メス牡蠣に敗北して地獄を味わったにも関わらず、運任せで挑み続ける者も多い。\n#～移り変わりゆくティリスの食～"
++				description(1) = "「牡蠣食えば　腹が鳴るなり　通勤時」\n#～敗北者のうめき声～"
++				description(2) = "「誹謗中傷してくる最低な奴です！法的措置を検討します」\n#～涙目の煽りイカの言葉～"
++				description(3) = "満腹度を回復することができる食物。調理することができる。\n#～鑑定報告書：＜食物＞カテゴリ～"
++			}
++			else {
++				description(0) = ""
++				description(1) = ""
++				description(3) = ""
++			}
++			return
++		}
++		return 0
++	}
+ 	if ( dbid == 1314 ) {
+ 		if ( dbmode == DBMODE_SET_STATS | dbmode == DBMODE_SET ) {
+ 			inv(INV_ITEM_ATTACK, ci) = 5
+ 			inv(INV_ITEM_DAMAGE, ci) = 30
+ 			inv(INV_ITEM_DV, ci) = -10
+@@ -43536,11 +44171,11 @@
+ 				description(3) = "ぶつけた相手の情報を登録するカードだ。\n#～鑑定報告書：＜紙片＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+-				description(3) = "A card of a creature."
++				description(3) = ""
+ 			}
+ 			return
+ 		}
+ 		return 0
+ 	}
+@@ -44696,11 +45331,11 @@
+ 		if ( dbmode == DBMODE_DESC ) {
+ 			if ( jp ) {
+ 				description(0) = "エウダーナで開発された拘束器具。主に実験動物や重罪魔導士を連行するために用いられていた。近年は即時従順にさせるモンスターボールや支配魔法が普及したため、骨董品と化している。起動すると青くなるが、節約のため浮遊魔術は常時発動しておらず、檻を移動させる時のみ浮く仕様。\n#～拘束器具の歴史～"
+ 				description(1) = ""
+ 				description(2) = ""
+-				description(3) = "瀕死の相手を捕まえて連行できる檻。何度でも使用することができる。\n#～鑑定報告書：＜器具＞カテゴリ～"
++				description(3) = "瀕死や行動不能の相手を連行できる檻。何度でも使用することができる。\n#～鑑定報告書：＜器具＞カテゴリ～"
+ 			}
+ 			else {
+ 				description(0) = ""
+ 				description(1) = ""
+ 				description(3) = ""
+@@ -45201,10 +45836,11 @@
+ 			reftype = FILTER_ITEM_FOOD
+ 			reftypeminor = FILTER_JUNK_SEABED
+ 			inv(INV_ITEM_NUM, ci) = 1
+ 			fixeditemenc = 0
+ 			inv(INV_ITEM_PARAM1, ci) = 6000
++			inv(INV_ITEM_PARAM3, ci) = 24
+ 			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
+ 			return
+ 		}
+ 		if ( dbmode == DBMODE_REF ) {
+ 			ichargelevel = 0
+@@ -45221,11 +45857,11 @@
+ 			}
+ 			if ( dbspec == 20 ) {
+ 				return 2000
+ 			}
+ 			if ( dbspec == 19 ) {
+-				return
++				return 24
+ 			}
+ 			if ( dbspec == 18 ) {
+ 				return 0
+ 			}
+ 			if ( dbspec == 7 ) {
+@@ -45272,10 +45908,11 @@
+ 			reftype = FILTER_ITEM_FOOD
+ 			reftypeminor = FILTER_JUNK_SEABED
+ 			inv(INV_ITEM_NUM, ci) = 1
+ 			fixeditemenc = 0
+ 			inv(INV_ITEM_PARAM1, ci) = 6000
++			inv(INV_ITEM_PARAM3, ci) = 24
+ 			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
+ 			return
+ 		}
+ 		if ( dbmode == DBMODE_REF ) {
+ 			ichargelevel = 0
+@@ -45292,11 +45929,11 @@
+ 			}
+ 			if ( dbspec == 20 ) {
+ 				return 1000
+ 			}
+ 			if ( dbspec == 19 ) {
+-				return
++				return 24
+ 			}
+ 			if ( dbspec == 18 ) {
+ 				return 0
+ 			}
+ 			if ( dbspec == 7 ) {
+@@ -45343,10 +45980,11 @@
+ 			reftype = FILTER_ITEM_FOOD
+ 			reftypeminor = FILTER_JUNK_SEABED
+ 			inv(INV_ITEM_NUM, ci) = 1
+ 			fixeditemenc = 0
+ 			inv(INV_ITEM_PARAM1, ci) = 6000
++			inv(INV_ITEM_PARAM3, ci) = 24
+ 			inv(INV_ITEM_IDENTIFY_LEVEL, ci) = 0
+ 			return
+ 		}
+ 		if ( dbmode == DBMODE_REF ) {
+ 			ichargelevel = 0
+@@ -45363,11 +46001,11 @@
+ 			}
+ 			if ( dbspec == 20 ) {
+ 				return 1600
+ 			}
+ 			if ( dbspec == 19 ) {
+-				return
++				return 24
+ 			}
+ 			if ( dbspec == 18 ) {
+ 				return 0
+ 			}
+ 			if ( dbspec == 7 ) {
+@@ -130568,10 +131206,22 @@
+ 		return 0
+ 	}
+ 	return -999
+ 
+ *db_setFilterItem
++	filter_item(ITEM_ID_TZ500_K) = ""
++	rffilter_item(ITEM_ID_TZ500_K) = ""
++	filter_item(ITEM_ID_TZC_500) = ""
++	rffilter_item(ITEM_ID_TZC_500) = ""
++	filter_item(ITEM_ID_TZ30_C) = ""
++	rffilter_item(ITEM_ID_TZ30_C) = ""
++	filter_item(ITEM_ID_TZ_30) = ""
++	rffilter_item(ITEM_ID_TZ_30) = ""
++	filter_item(ITEM_ID_WARIBASI) = ""
++	rffilter_item(ITEM_ID_WARIBASI) = ""
++	filter_item(ITEM_ID_MESUGAKI) = "/fish/"
++	rffilter_item(ITEM_ID_MESUGAKI) = "/fish/"
+ 	filter_item(ITEM_ID_TURAHAGI) = ""
+ 	rffilter_item(ITEM_ID_TURAHAGI) = ""
+ 	filter_item(ITEM_ID_BLANK_CARD) = ""
+ 	rffilter_item(ITEM_ID_BLANK_CARD) = ""
+ 	filter_item(ITEM_ID_EXPOOPSION) = ""
+@@ -133201,10 +133851,88 @@
+ 	filter_item(ITEM_ID_DUMMY) = ""
+ 	rffilter_item(ITEM_ID_DUMMY) = ""
+ 	return
+ 
+ *db_setItem
++	ilight(ITEM_ID_TZ500_K) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_TZ500_K) = ""
++	iorgweight(ITEM_ID_TZ500_K) = 3200
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_TZ500_K) = "TZ500-K型麻酔銃"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_TZ500_K) = "TZ500-K"
++		ioriginalnameref2(ITEM_ID_TZ500_K) = ""
++	}
++	ipicref(ITEM_ID_TZ500_K) = xy2pic(30, 39)
++	iknownnameref(ITEM_ID_TZ500_K) = ioriginalnameref(ITEM_ID_TZ500_K)
++	icolref(ITEM_ID_TZ500_K) = COLOR_BLACK
++	ilight(ITEM_ID_TZC_500) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_TZC_500) = ""
++	iorgweight(ITEM_ID_TZC_500) = 3200
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_TZC_500) = "TZC-500型麻酔銃"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_TZC_500) = "TZC-500"
++		ioriginalnameref2(ITEM_ID_TZC_500) = ""
++	}
++	ipicref(ITEM_ID_TZC_500) = xy2pic(30, 39)
++	iknownnameref(ITEM_ID_TZC_500) = ioriginalnameref(ITEM_ID_TZC_500)
++	icolref(ITEM_ID_TZC_500) = COLOR_BLUE
++	ilight(ITEM_ID_TZ30_C) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_TZ30_C) = ""
++	iorgweight(ITEM_ID_TZ30_C) = 3200
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_TZ30_C) = "TZ30-C型麻酔銃"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_TZ30_C) = "TZ30-C"
++		ioriginalnameref2(ITEM_ID_TZ30_C) = ""
++	}
++	ipicref(ITEM_ID_TZ30_C) = xy2pic(30, 39)
++	iknownnameref(ITEM_ID_TZ30_C) = ioriginalnameref(ITEM_ID_TZ30_C)
++	icolref(ITEM_ID_TZ30_C) = COLOR_GREEN
++	ilight(ITEM_ID_TZ_30) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_TZ_30) = ""
++	iorgweight(ITEM_ID_TZ_30) = 3200
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_TZ_30) = "TZ-30型麻酔銃"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_TZ_30) = "TZ-30"
++		ioriginalnameref2(ITEM_ID_TZ_30) = ""
++	}
++	ipicref(ITEM_ID_TZ_30) = xy2pic(30, 39)
++	iknownnameref(ITEM_ID_TZ_30) = ioriginalnameref(ITEM_ID_TZ_30)
++	icolref(ITEM_ID_TZ_30) = COLOR_DEFAULT
++	ilight(ITEM_ID_WARIBASI) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_WARIBASI) = ""
++	iorgweight(ITEM_ID_WARIBASI) = 100
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_WARIBASI) = "わりばし"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_WARIBASI) = "waribasi"
++		ioriginalnameref2(ITEM_ID_WARIBASI) = ""
++	}
++	ipicref(ITEM_ID_WARIBASI) = xy2pic(32, 39)
++	iknownnameref(ITEM_ID_WARIBASI) = ioriginalnameref(ITEM_ID_WARIBASI)
++	icolref(ITEM_ID_WARIBASI) = COLOR_DEFAULT
++	ilight(ITEM_ID_MESUGAKI) = LIGHT_TYPE_NONE
++	ialphanameref(ITEM_ID_MESUGAKI) = ""
++	iorgweight(ITEM_ID_MESUGAKI) = 1700
++	if ( jp ) {
++		ioriginalnameref(ITEM_ID_MESUGAKI) = "メス牡蠣"
++	}
++	else {
++		ioriginalnameref(ITEM_ID_MESUGAKI) = "mesugaki"
++		ioriginalnameref2(ITEM_ID_MESUGAKI) = ""
++	}
++	ipicref(ITEM_ID_MESUGAKI) = xy2pic(31, 39)
++	iknownnameref(ITEM_ID_MESUGAKI) = ioriginalnameref(ITEM_ID_MESUGAKI)
++	icolref(ITEM_ID_MESUGAKI) = COLOR_DEFAULT
+ 	ilight(ITEM_ID_TURAHAGI) = LIGHT_TYPE_ITEM
+ 	ialphanameref(ITEM_ID_TURAHAGI) = ""
+ 	iorgweight(ITEM_ID_TURAHAGI) = 1100
+ 	if ( jp ) {
+ 		ioriginalnameref(ITEM_ID_TURAHAGI) = "《ツラハギ》"
+@@ -152022,11 +152750,11 @@
+ 		ioriginalnameref2(ITEM_ID_DUMMY) = ""
+ 	}
+ 	ipicref(ITEM_ID_DUMMY) = xy2pic(0, 1)
+ 	iknownnameref(ITEM_ID_DUMMY) = ioriginalnameref(ITEM_ID_DUMMY)
+ 	icolref(ITEM_ID_DUMMY) = COLOR_DEFAULT
+-	maxitemid = 1317
++	maxitemid = 1323
+ 	return
+ 	goto *recipe_ref
+ 
+ #deffunc calcweaponfix int calcweaponfix_itemid
+ 	pierce = 0
+@@ -153364,11 +154092,17 @@
+ 		matval = SKILL_NORMAL_JEWELER, 1, 100
+ 		matneed = MATERIAL_PAPER, 2, MATERIAL_MEMORY_FRAGMENT, 1
+ 		return 1
+ 	}
+ 	return -1
+-	goto *label_3654
++	goto *label_3666
++
++
++
++
++
++
+ 
+ 
+ 
+ 
+ 
